@@ -1,0 +1,56 @@
+@(mobileRegistrationForm:Form[model.domains.domain.MobileRegisterForm])(implicit flash: Flash)
+@import helper._
+@header("hello")
+@main("Mycellwasstolen"){
+@helper.form(action = routes.MobileRegistrationController.mobileRegistration, 'id -> "mobileRegistrationForm") {
+			        
+			        <fieldset>
+			        	<!--<input type="hidden" name="userType" id="userType" value="user">-->
+			        	
+			            @inputText(mobileRegistrationForm("username"), '_label -> "Name")
+			            
+			             @inputText(mobileRegistrationForm("mobileName"), '_label -> "Email")
+			         <!--   @select(
+							   mobileRegistrationForm("mobileName"), 
+							   options(Map(("n","NOKIA"),("h","HTC"),("m","MICROMAX"),("s","SAMSUNG"),("l","LAVA"),("lg","LG"),("mo","MOTOROLA"),("bb","BLACKBERRY"))),
+							   '_label -> "mobileName", '_default -> "-- Select --",
+							'_id-> "mobileName")-->
+			            
+			            @inputText(mobileRegistrationForm("mobileModel"), '_label -> "Mobile Model") 
+			            
+			            <!--  @select(
+							   mobileRegistrationForm("mobileModel"), 
+							   options(Map(("n","NOKIA"),("h","HTC"),("m","MICROMAX"),("s","SAMSUNG"),("l","LAVA"),("lg","LG"),("mo","MOTOROLA"),("bb","BLACKBERRY"))),
+							   '_label -> "mobileName", '_default -> "-- Select --",
+							'_id-> "mobileModel") -->
+			            
+						
+			            
+			            @inputText(mobileRegistrationForm("mobileIMEI"), '_label -> "Mobile IMEI/MEID")
+			            
+			            @inputText(mobileRegistrationForm("purchaseDate"), '_label -> "Purchase Date", '_id-> "purchaseDate", '_class->"datepicker")
+			            
+			            @inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact No.")
+			             
+			       
+			            
+			            @inputText(mobileRegistrationForm("description"), '_label -> "Description")
+			            
+			        </fieldset>			               
+			            <input type="submit"  value="Register">
+			            <script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
+			            <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+			            <script>
+			            $(document).ready(function(){
+			            	$("#mobileName").change(function(){
+			            		//var val=$(this).value;
+			            		var selectVal = $('#mobileName :selected').val();
+			            		alert(selectVal);
+			            	});
+			            });
+			            </script>
+
+}
+
+}
+@footer("hello")

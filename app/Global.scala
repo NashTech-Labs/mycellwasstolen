@@ -12,7 +12,7 @@ import com.typesafe.config.ConfigFactory
 import java.io.File
 import play.api.cache.Cache
 import play.api.Play.current
-import model.domains.Domain._
+import model.domains.domain._
 
 object Global extends GlobalSettings{
   

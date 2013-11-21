@@ -2,7 +2,7 @@ package model.domains
 
 import scala.slick.driver.PostgresDriver.simple._
 
-object Domain {
+object domain {
 
   /**
    *  Question  object and mapping with question table in database
@@ -46,4 +46,19 @@ object Domain {
           Some((mobileregistration.username,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
         }) returning id
   }
+  
+ 
+  case class MobileRegisterForm(
+      username:String,
+      mobileName:String,
+      monileModel:String,
+      mobileIMEI:String,
+      purchaseDate:java.sql.Date,
+      contactNo:String,
+      email:String,
+      description:String
+     //id:Option[Int]=None
+      //docproof:String
+      
+  )
 }
