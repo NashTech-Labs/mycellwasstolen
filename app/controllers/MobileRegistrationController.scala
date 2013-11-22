@@ -8,7 +8,7 @@ import play.api.data.Forms._
 import model.domains.domain._
 import model.users.UserService
 import model.users._
-
+import java.io.File
 object MobileRegistrationController extends Controller {
   //this(userService: UserServiceComponent)
   val mobileregistrationform = Form(
@@ -25,28 +25,29 @@ object MobileRegistrationController extends Controller {
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Ok(views.html.mobileRegistrationForm(mobileregistrationform))
   }
-  def mobileRegistration: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+
+  def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
     Logger.info("mobileregistrationform" + mobileregistrationform)
-    /*mobileregistrationform.bindFromRequest.fold(formWithErrors => BadRequest("errors"),*/ //views.html.mobileRegistrationForm(formWithErrors)
-      
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors)),
-    mobileuser => {
+      mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
+
         val regMobile = UserService.mobileRegistration(MobileRegister(mobileuser.username, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.description))
 
+        request.body.file("fileUpload").map { image =>
+          val imageFilename = image.filename
+          val contentType = image.contentType.get
+          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
+        }
+
         regMobile match {
           case Right(mobileuser) => {
             Redirect(routes.Home.index)
-            /* if (mobileuser != None) {
-              Redirect("/").flashing("success" -> "Suggestion send successfully.")
-            } else {
-              Redirect("/").flashing("error" ->"Suggestion is not inserted.")
-            }*/
-            
+
           }
           case Left(message) =>
             Redirect(routes.MobileRegistrationController.mobileRegistrationForm).flashing("message" -> "error")

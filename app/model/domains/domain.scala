@@ -60,7 +60,7 @@ object domain {
       email:String,
       description:String
      //id:Option[Int]=None
-      //docproof:String
+    // fileUpload:java.io.File
       
   )
 }
