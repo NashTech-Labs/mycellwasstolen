@@ -10,9 +10,9 @@ import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.session.Session
 import com.typesafe.config.ConfigFactory
 import java.io.File
-import play.api.cache.Cache
 import play.api.Play.current
 import model.domains.domain._
+import model.users.UserService
 
 object Global extends GlobalSettings{
   
@@ -27,7 +27,7 @@ object Global extends GlobalSettings{
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-       (MobileRegistrationPool.ddl).create
+      // (MobileRegistrationTable.ddl).create
       Logger.info("All tables have been created")
       }
     } catch {
@@ -63,7 +63,7 @@ object InitialData {
   def insert(): Any = {
     try {
       val date = new java.sql.Date(new java.util.Date().getTime())
-
+      
         Logger.info("Adding new users in users table")
       } catch {
       case ex: Exception => Logger.info("Error in  initial data population" + ex.printStackTrace())
