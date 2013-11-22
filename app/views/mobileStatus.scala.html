@@ -1,0 +1,60 @@
+@(mobileStatusForm: Form[model.domains.Domain.MobileStatus])(implicit flash: Flash)
+@import helper._
+@header("hello")
+@title = { @Messages("default.login") }
+@main("Mycellwasstolen"){
+	
+	<fieldset> 
+		<input type="text" id="imeiMeid" name="imeiMeid">
+		
+		<div class="form-actions">
+		   <input type="submit" value="Check Status" class="btn" onClick="showMobileRecord();">Check Status</a>
+	   </div>
+	   
+	   <div id="mobileRecords"></div>
+		</fieldset>
+		
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+	<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
+			           
+	<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>	
+	<script>
+
+	function showMobileRecord() {
+		alert("Call Javascript");
+		var imeid = $('#imeiMeid').val();
+ 		mobileRecord(imeid);
+ 	}
+ 
+ 	var mobileAjaxSuccess = function(data) {
+ 	 	if(data.status == "Ok"){
+ 	 	  alert("Success" + data);
+ 	 	  var mobile = data.mobileData;
+ 	 	  var mobileData = "<table><thead><tr><th>Username</th></tr></thead><tr><td>Supriya</td></tr></table>";
+ 	 	  $("#mobileRecords").html(mobileData);
+ 	 	}else {
+ 	 	   console.debug("Data no found");
+ 	 	}
+		console.debug("Success of Ajax Call");
+		console.debug(data);
+	};
+	
+	var mobileAjaxError = function(err) {
+		alert("Error" + err);
+		//console.debug("Error of ajax Call");
+		//console.debug(err);
+	};
+    
+    var mobileRecord = function(imeid) {
+    	
+    	var mobileAjaxCallBack = {
+			success: mobileAjaxSuccess,
+			error: mobileAjaxError
+		};
+    	
+		jsRoutes.controllers.MobileController.getImeiMeidList(imeid).ajax(mobileAjaxCallBack);
+    };
+
+	</script>	           	
+	
+}
