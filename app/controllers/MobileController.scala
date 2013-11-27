@@ -15,7 +15,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
   //this(userService: UserServiceComponent)
   val mobileregistrationform = Form(
     mapping(
-      "username" -> nonEmptyText,
+      "userName" -> nonEmptyText,
       "mobileName" -> nonEmptyText,
       "mobileModel" -> nonEmptyText,
       "imeiMeid" -> nonEmptyText,
@@ -40,14 +40,14 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
 
-        val regMobile = UserService.mobileRegistration(Mobile(mobileuser.username, mobileuser.mobileName,
+        val regMobile = UserService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.description))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/swati/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {

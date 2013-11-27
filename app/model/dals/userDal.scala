@@ -1,22 +1,24 @@
 package model.dals
+
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.session.Session
 
-import model.domains.domain._
+import model.domains.Domain._
 import play.api.Logger
 import utils.Connection
 
 trait UserDalComponent {
-def insertMobileUser(mobileuser: MobileRegister): Either[String, Option[Int]]
+def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
+def getMobileRecordByIMEID(imeid: String): List[Mobile]
 }
 
 
-object userDal extends UserDalComponent {
+class UserDal extends UserDalComponent {
 
-  override def insertMobileUser(mobileuser: MobileRegister): Either[String, Option[Int]] = {
+  override def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(MobileRegistrationTable.insert.insert(mobileuser))
+        Right(Mobiles.insert.insert(mobileuser))
       }
     } catch {
       case ex: Exception =>
@@ -25,5 +27,13 @@ object userDal extends UserDalComponent {
     }
 
   }
-
+  
+  override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getMobileRecordByIMEID" +imeid)
+       (for { mobile <- Mobiles if (mobile.imeiMeid === imeid) } yield mobile).list
+      }
+    }
 }
+
+object UserDal extends UserDal

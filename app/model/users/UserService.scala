@@ -1,20 +1,29 @@
 package model.users
-import model.domains.domain._
-import model.dals.userDal
+import model.domains.Domain._
+import model.dals.UserDal
+import play.api.Logger
 
 trait UserServiceComponent{
-  def mobileRegistration(mobileuser: MobileRegister): Either[String, MobileRegister]
+  def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
+  def getMobileRecordByIMEID(imeid: String): List[Mobile]
 }
 
-object UserService extends UserServiceComponent{
+class UserService extends UserServiceComponent{
   
-  override def mobileRegistration(mobileuser: MobileRegister): Either[String, MobileRegister] = {
-    userDal.insertMobileUser(mobileuser) match {
-      case Right(id) => Right(MobileRegister(mobileuser.username, mobileuser.mobileName,
+  override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
+    UserDal.insertMobileUser(mobileuser) match {
+      case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
          mobileuser.email,mobileuser.description))
       case Left(error) => Left(error)
     }
   }
+  
+  override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
+    Logger.info("getMobileRecordByIMEID called")
+    UserDal.getMobileRecordByIMEID(imeid)
+  }
 
 }
+
+object UserService extends UserService

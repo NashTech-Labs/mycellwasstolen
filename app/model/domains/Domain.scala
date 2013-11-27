@@ -9,7 +9,7 @@ object Domain {
    *
    */
   case class Mobile(
-    username:String,
+    userName:String,
     mobileName:String,
     mobileModel:String,
     imeiMeid:String,
@@ -22,7 +22,7 @@ object Domain {
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def username: Column[String] = column[String]("username", O.NotNull, O DBType ("VARCHAR(100)"))
+    def userName: Column[String] = column[String]("username", O.NotNull, O DBType ("VARCHAR(100)"))
     def mobileName: Column[String] = column[String]("mobile_name", O.NotNull, O DBType ("VARCHAR(100)"))
     def mobileModel: Column[String] = column[String]("mobile_model", O.NotNull, O DBType ("VARCHAR(100)"))
     def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
@@ -34,16 +34,16 @@ object Domain {
     //def * : scala.slick.lifted.MappedProjection[MobileRegistration,(String,String,String,String,java.sql.Date,Int,String,String, Option[Int])]= username ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (MobileRegistration.apply _, MobileRegistration.unapply _)
     
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, Option[Int])] =
-      username ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (Mobile, Mobile unapply _)
+      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (Mobile, Mobile unapply _)
     
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
-      username ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
+      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
       email ~ description<> (
         { (username,mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , description) =>
           Mobile(username,mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , description)
         },
         { mobileregistration: Mobile =>
-          Some((mobileregistration.username,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
+          Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
         }) returning id
   }
   
@@ -51,7 +51,7 @@ object Domain {
   
  
   case class MobileRegisterForm(
-      username:String,
+      userName:String,
       mobileName:String,
       mobileModel:String,
       imeiMeid:String,

@@ -3,13 +3,16 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Home.index
+GET     /                           controllers.Application.index
 
 #registration
-GET     /registerCell               controllers.MobileRegistrationController.mobileRegistrationForm
-POST	/mobileRegistration			controllers.MobileRegistrationController.mobileRegistration
+GET     /registerCell               controllers.MobileController.mobileRegistrationForm
+POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+#Javascript Routes
+GET    /javascriptRoutes            controllers.Application.javascriptRoutes 
+GET    /mobile                      controllers.MobileController.getImeiMeidList(imeid: String)
+GET    /mobileStatus                controllers.MobileController.mobileStatus
+
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file                  controllers.Assets.at(path="/public", file)

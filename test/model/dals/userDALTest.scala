@@ -1,7 +1,7 @@
 package model.dals
 
 import org.scalatest.FunSuite
-import model.domains.domain._
+import model.domains.Domain._
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import play.api.Logger
@@ -10,7 +10,7 @@ class userDALTest extends FunSuite {
 
   test("userDAL: ") {
 
-    val mobileUser = MobileRegister(
+    val mobileUser = Mobile(
       "gs", "nokia", "glaxacy", "313dsd", new java.sql.Date(new java.util.Date().getTime()), 983131313,
       "gs@gmail.com", "ddas  asd")
 

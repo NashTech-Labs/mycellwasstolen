@@ -1,0 +1,30 @@
+
+#Application
+
+app.org.name=Knoldus Software LLP, 2013
+app.name=My Cell Was Stolen
+
+#Default
+
+default.status=Check Cell Status-stolencell
+default.lemon=Ensure that you are not buying a lemon!
+default.lemon.ques=What is a cell lemon?
+default.status=A lemon cell is analogous to a
+default.lemon.link=lemon automobile
+default.text1=where you find out problems, much after the purchase has
+default.text2=been made.If you buy a cell phone, which has a stolen record, then you could get into multiple problems.
+default.text3=all you need is the IMEI/MEID number of the cell that you want to check.
+default.text4=It is found printed inside the battery compartment of the phone. It can also be displayed on the screen
+default.text5=of the phone by entering 
+default.text6=To check the cell phone status,
+default.blackberry=onto the keypad on most phones. Blackberry users click
+default.help=help
+default.sms=Coming Soon - Check IMEI by sending an
+default.premium=(premium service)
+default.mobile.status=Check Status Of your Phone
+default.home=Home
+default.mobile.status=Check Cell Status
+default.stolen.cell.registration=Register	Stolen / Lost Phone
+default.cell.registration=Secure Your Phone
+default.resources=Resources
+default.search=Search this site
