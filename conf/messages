@@ -23,9 +23,13 @@ default.sms=Coming Soon - Check IMEI by sending an
 default.premium=(premium service)
 default.mobile.status=Check Status Of your Phone
 default.home=Home
-default.mobile.status=Check Cell Status
-default.stolen.cell.registration=Register	Stolen / Lost Phone
+#default.mobile.status=Check Cell Status
+default.stolen.cell.registration=Register Stolen / Lost Phone
 default.cell.registration=Secure Your Phone
 default.resources=Resources
 default.search=Search this site
 default.details=(c) MCWS A social movement making the mobile space secure
+
+#Status 
+
+mobile.status.message=Please Enter Mobile IMEI/MEID To Check Phone Status
