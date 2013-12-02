@@ -12,7 +12,7 @@ import java.io.File
 import play.api.libs.json.Json
 
 class MobileController(userService: UserServiceComponent) extends Controller {
-  //this(userService: UserServiceComponent)
+  
   val mobileregistrationform = Form(
     mapping(
       "userName" -> nonEmptyText,
@@ -47,7 +47,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/swati/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {
@@ -64,24 +64,20 @@ class MobileController(userService: UserServiceComponent) extends Controller {
   
    def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action {implicit request =>
       Logger.info("MobileController: getImeiMeidList method has been called.")
-      val mobileData = userService.getMobileRecordByIMEID(imeid).head
+      val mobileData = userService.getMobileRecordByIMEID(imeid)
       Logger.info("Mobile Records" + mobileData)
       implicit val resultWrites = Json.writes[model.domains.Domain.Mobile]
-       val obj = Json.toJson(mobileData)(resultWrites)
-       if(mobileData.id != None){
-         Logger.info("mobileData>>>>>>" +mobileData)
+      if(mobileData != None && mobileData.get.id != None){
+       val obj = Json.toJson(mobileData.get)(resultWrites)
          Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
-         //Ok(Json.toJson("success"))
        }else {
         Ok(Json.obj("status" -> "Error"))
-        // Ok(Json.toJson("error"))
        }
   }
   
   def mobileStatus:  Action[play.api.mvc.AnyContent] = Action {implicit request =>
     Ok(views.html.mobileStatus(mobilestatus))   
   }
-
 }
 
 object MobileController extends MobileController(UserService)

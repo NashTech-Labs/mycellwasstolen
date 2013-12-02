@@ -31,8 +31,6 @@ object Domain {
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(100)"))
     
-    //def * : scala.slick.lifted.MappedProjection[MobileRegistration,(String,String,String,String,java.sql.Date,Int,String,String, Option[Int])]= username ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (MobileRegistration.apply _, MobileRegistration.unapply _)
-    
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, Option[Int])] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (Mobile, Mobile unapply _)
     
@@ -46,9 +44,6 @@ object Domain {
           Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
         }) returning id
   }
-  
-  
-  
  
   case class MobileRegisterForm(
       userName:String,
@@ -56,13 +51,9 @@ object Domain {
       mobileModel:String,
       imeiMeid:String,
       purchaseDate:java.sql.Date,
-      contactNo:Int,
+      contactNo:Int, 
       email:String,
-      description:String
-     //id:Option[Int]=None
-    // fileUpload:java.io.File
-      
-  )
+      description:String)
   
   case class MobileStatus(
     imeiMeid:String)

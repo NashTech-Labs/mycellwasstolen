@@ -38,17 +38,16 @@
 								</div>
 									<br></br>
 								<div class="mobile-status">
-									<span ><b>@Messages("default.mobile.status")</b></span>
-								</div>
+									<span class="font-color-heading"><b>@Messages("default.mobile.status")</b></span><br><br>
+									<span class="font-text">@Messages("mobile.status.message"):</span>
+								</div><br>
 								<div class="sites-embed-align-center-wrapping-off">
-									<fieldset> 
-										<input type="text" id="imeiMeid" name="imeiMeid">
-											<div class="form-actions">
-												<input type="submit" value="Check Status" class="btn" onClick="showMobileRecord();"></a>
-											</div>
-										<div id="mobileRecords" class="table">
+									<input type="text" id="imeiMeid" name="imeiMeid">
+										<div class="form-actions">
+											<br><input type="submit" value="Check Status" class="btn btn-primary" onClick="showMobileRecord();"></a>
 										</div>
-									</fieldset>
+									<br><div id="mobileRecords">
+									</div>
 								</div>
 							</td>
 							<td></td>
@@ -61,14 +60,12 @@
 <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>	
 <script>
 		function showMobileRecord() {
-			alert("Call Javascript");
 			var imeid = $('#imeiMeid').val();
 			mobileRecord(imeid);
 		}
 
 		var mobileAjaxSuccess = function(data) {
 			if (data.status == "Ok") {
-				alert("Success" + data);
 				var mobile = data.mobileData;
 				var mobileData = '<table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th></tr><tr><td>'
 						+ mobile.userName
@@ -77,9 +74,12 @@
 						+ '</td><td>'
 						+ mobile.mobileModel
 						+ '</td><td>'
-						+ mobile.contactNo + '</td></tr></table>'
+						+ mobile.contactNo + '</td></tr></table>';
+				$("#mobileRecords").removeClass("alert alert-danger");
 				$("#mobileRecords").html(mobileData);
 			} else {
+				$("#mobileRecords").addClass("alert alert-danger");
+				$("#mobileRecords").html("Data Not Found");
 				console.debug("Data no found");
 			}
 			console.debug("Success of Ajax Call");
@@ -87,9 +87,8 @@
 		};
 
 		var mobileAjaxError = function(err) {
-			alert("Error" + err);
-			//console.debug("Error of ajax Call");
-			//console.debug(err);
+			console.debug("Error of ajax Call");
+			console.debug(err);
 		};
 
 		var mobileRecord = function(imeid) {

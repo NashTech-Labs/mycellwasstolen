@@ -5,7 +5,7 @@ import play.api.Logger
 
 trait UserServiceComponent{
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
-  def getMobileRecordByIMEID(imeid: String): List[Mobile]
+  def getMobileRecordByIMEID(imeid: String): Option[Mobile]
 }
 
 class UserService extends UserServiceComponent{
@@ -19,9 +19,10 @@ class UserService extends UserServiceComponent{
     }
   }
   
-  override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
+  override def getMobileRecordByIMEID(imeid: String): Option[Mobile] = {
     Logger.info("getMobileRecordByIMEID called")
-    UserDal.getMobileRecordByIMEID(imeid)
+    val mobileData = UserDal.getMobileRecordByIMEID(imeid)
+    if (mobileData.length != 0) Some(mobileData.head) else None
   }
 
 }

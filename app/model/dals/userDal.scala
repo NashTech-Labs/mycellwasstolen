@@ -12,7 +12,6 @@ def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
 def getMobileRecordByIMEID(imeid: String): List[Mobile]
 }
 
-
 class UserDal extends UserDalComponent {
 
   override def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]] = {
@@ -25,7 +24,6 @@ class UserDal extends UserDalComponent {
         Logger.info("Error in insert user" + ex.printStackTrace())
         Left(ex.getMessage())
     }
-
   }
   
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
