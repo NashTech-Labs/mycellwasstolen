@@ -1,8 +1,7 @@
-#logo-img{
-	width: 445px;
-	height:100px;
+.page-header {
+    margin: auto;
 }
 
-.margin{
-	margin-top:50px !important;
+.carousel-panel {
+	margin-top: 20px;
 }

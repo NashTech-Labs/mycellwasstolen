@@ -1,43 +1,32 @@
-@(message:String)
-<div class="navbar-wrapper">
+@(selectedMenu: String)
+
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
-		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button class="navbar-toggle" data-target=".navbar-collapse"
-						data-toggle="collapse" type="button">
-						<span class="sr-only">Toggle navigation</span> <span
-							class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-					<a></a> <a href="#"> <img id="logo-img"
-						src="@routes.Assets.at("images/Logo1.png")" alt="stolencell" />
-					</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="/">Home</a></li>
-						<li><a href="/mobileStatus">Check Cell Status</a></li>
-						<li><a href="/registerCell">Register Stolen / Lost Phone</a></li>
-						<li><a href="#contact">Secure Your Phone</a></li>
-						<li class="dropdown"><a class="dropdown-toggle"
-							data-toggle="dropdown" href="#"> Resource <b class="caret"></b>
-						</a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Blogs</a></li>
-								<li><a href="#">FAQs</a></li>
-								<li><a href="#">Discussion Forum</a></li>
-								<li><a href="#">Contact-Us</a></li>
-							</ul></li>
-					</ul>
-					<form class="navbar-form navbar-right">
-						<div class="form-group">
-							<input class="form-control" type="text" placeholder="Search the site">
-						</div>
-						<button class="btn btn-default" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MCWS</a>
 		</div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">Check Cell Status</a></li>
+				<li><a href="#">Register Stolen / Lost Phone</a></li>
+				<li><a href="#">Secure Your Phone</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Blogs</a></li>
+						<li><a href="#">FAQs</a></li>
+						<li><a href="#">Discussion Forum</a></li>
+						<li><a href="#">Contact-Us</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div><!--/.nav-collapse -->
 	</div>
 </div>
