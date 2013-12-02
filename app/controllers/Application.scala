@@ -22,7 +22,8 @@ class Application extends Controller {
 def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
-      routes.javascript.MobileController.getImeiMeidList)).as("text/javascript")
+      routes.javascript.MobileController.getImeiMeidList,
+      routes.javascript.MobileController.getMobileModels)).as("text/javascript")
   }
 }
 
