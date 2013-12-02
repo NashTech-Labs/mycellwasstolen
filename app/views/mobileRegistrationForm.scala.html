@@ -5,6 +5,8 @@
 @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 <fieldset>
+<legend>Legend</legend>
+<div class="form-group margin">
 	<!--<input type="hidden" name="userType" id="userType" value="user">-->
 
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
@@ -35,7 +37,7 @@
 	@inputText(mobileRegistrationForm("description"), '_label ->"Description") 
 	
 	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
-
+</div>
 </fieldset>
 <input type="submit" value="Register">
 <script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -50,4 +52,4 @@ $("#purchaseDate").datepicker();
 			            
 
 
-} } @footer("hello")
+} } 
