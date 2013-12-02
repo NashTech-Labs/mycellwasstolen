@@ -24,3 +24,4 @@ dist
 .metadata/*
 src/main/webapp/css-generated/styles.css
 tmp/
+/bin
