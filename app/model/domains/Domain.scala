@@ -21,6 +21,29 @@ object Domain {
     description: String,
     id: Option[Int] = None
     )
+    
+  case class MobileStatus(
+    imeiMeid:String)
+    
+  case class MobileModels(
+    mobileModel:String,
+    id: Option[Int] = None)
+    
+    
+  case class MobileRegisterForm(
+      userName:String,
+      mobileName:String,
+      mobileModel:String,
+      imeiMeid:String,
+      purchaseDate:java.sql.Date,
+      contactNo:Int,
+      email:String,
+      regType:String,
+      description:String)
+  
+  case class MobilesName(
+    mobileName:String,
+    id: Option[Int] = None)
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -31,8 +54,8 @@ object Domain {
     def purchaseDate: Column[java.sql.Date] = column[java.sql.Date]("purchase_date", O.NotNull)
     def contactNo: Column[Int] = column[Int]("contact_no", O.NotNull)
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
-    def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(100)"))
-    def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(100)"))
+    def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
+    def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(500)"))
     
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, String, Option[Int])] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ description ~ id <> (Mobile, Mobile unapply _)
@@ -48,10 +71,6 @@ object Domain {
         }) returning id
   }
   
-  case class MobilesName(
-    mobileName:String,
-    id: Option[Int] = None)
-  
    object MobileName extends Table[MobilesName]("mobilesname") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O.NotNull, O DBType ("VARCHAR(30)"))
@@ -60,24 +79,6 @@ object Domain {
       name ~ id <> (MobilesName, MobilesName unapply _)
    }
   
-  case class MobileRegisterForm(
-      userName:String,
-      mobileName:String,
-      mobileModel:String,
-      imeiMeid:String,
-      purchaseDate:java.sql.Date,
-      contactNo:Int, 
-      email:String,
-      regType:String,
-      description:String)
-  
-  case class MobileStatus(
-    imeiMeid:String)
-    
-  case class MobileModels(
-    mobileModel:String,
-    id: Option[Int] = None)
-
   object MobileModel extends Table[MobileModels]("mobilesmodel") {
     def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.NotNull)
     def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))

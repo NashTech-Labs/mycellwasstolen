@@ -22,7 +22,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       "purchaseDate" -> sqlDate("yyyy-MM-dd"),
       "contactNo" -> number,
       "email" -> email,
-      "type" -> nonEmptyText,
+      "regType" -> nonEmptyText,
       "description" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   val mobilestatus = Form(
@@ -46,7 +46,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
 
         val regMobile = userService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.description))
+          mobileuser.email, mobileuser.regType, mobileuser.description))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
@@ -79,7 +79,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     }
   }
 
-  def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  /*def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
     val mobileModel = userService.getMobileModelsById(id).head
     Logger.info("Mobile Records" + mobileModel)
@@ -91,6 +91,14 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     } else {
       Ok(Json.obj("status" -> "Error"))
     }
+  }*/
+   
+   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action {implicit request =>
+      Logger.info("MobileController: getMobileModels method has been called.")
+      val mobileModel = userService.getMobileModelsById(id)
+      Logger.info("Mobile Models" + mobileModel)
+      implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
+      Ok(Json.toJson(mobileModel))
   }
 
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>

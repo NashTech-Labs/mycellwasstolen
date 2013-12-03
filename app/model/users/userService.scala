@@ -1,7 +1,8 @@
 package model.users
+
+import model.dals._
 import model.domains.Domain._
 import play.api.Logger
-import model.dals._
 
 trait UserServiceComponent{
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
@@ -16,7 +17,7 @@ class UserService(userdal: UserDALComponent) extends UserServiceComponent{
     userdal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
-         mobileuser.email,mobileuser.description))
+         mobileuser.email, mobileuser.regType, mobileuser.description))
       case Left(error) => Left(error)
     }
   }
