@@ -34,6 +34,12 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
   }
+  
+  def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    val mobilesName = userService.getMobilesName()
+    Logger.info("mobilesName>>" + mobilesName)
+    Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
+  }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
@@ -78,20 +84,6 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       Ok(Json.obj("status" -> "Error"))
     }
   }
-
-  /*def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("MobileController: getImeiMeidList method has been called.")
-    val mobileModel = userService.getMobileModelsById(id).head
-    Logger.info("Mobile Records" + mobileModel)
-    implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
-    val obj = Json.toJson(mobileModel)(resultWrites)
-    if (mobileModel.id != None) {
-      Logger.info("mobileModel>>>>>>" + mobileModel)
-      Ok(Json.obj("status" -> "Ok", "mobileModel" -> obj))
-    } else {
-      Ok(Json.obj("status" -> "Error"))
-    }
-  }*/
    
    def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action {implicit request =>
       Logger.info("MobileController: getMobileModels method has been called.")
@@ -104,6 +96,19 @@ class MobileController(userService: UserServiceComponent) extends Controller {
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Ok(views.html.mobileStatus(mobilestatus))
   }
+
+  def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("MobileController:isImeiExist - Checking mobile is exist or not with : " + imeiId)
+    val isExist = userService.isImeiExist(imeiId)
+    if (isExist) {
+      Logger.info("MobileController:isImeiExist - true")
+      Ok("false")
+    } else {
+      Logger.info("MobileController:isImeiExist - false")
+      Ok("true")
+    }
+  }
+  
 }
 
 object MobileController extends MobileController(UserService)

@@ -9,6 +9,7 @@ trait UserServiceComponent{
   def getMobileRecordByIMEID(imeid: String): Option[Mobile]
   def getMobilesName(): List[MobilesName]
   def getMobileModelsById(id: Int): List[MobileModels]
+  def isImeiExist(imeid: String): Boolean
 }
 
 class UserService(userdal: UserDALComponent) extends UserServiceComponent{
@@ -36,6 +37,11 @@ class UserService(userdal: UserDALComponent) extends UserServiceComponent{
   override def getMobileModelsById(id: Int): List[MobileModels] = {
     Logger.info("getMobileRecordByIMEID called")
     userdal.getMobileModelsById(id)
+  }
+  
+  override def isImeiExist(imeid: String): Boolean = {
+    val mobile = userdal.getMobileRecordByIMEID(imeid)
+    if (mobile.length != 0) true else false
   }
 
 }

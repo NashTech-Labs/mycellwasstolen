@@ -23,7 +23,8 @@ def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit reques
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
       routes.javascript.MobileController.getImeiMeidList,
-      routes.javascript.MobileController.getMobileModels)).as("text/javascript")
+      routes.javascript.MobileController.getMobileModels,
+      routes.javascript.MobileController.isImeiExist)).as("text/javascript")
   }
 }
 

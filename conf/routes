@@ -6,14 +6,18 @@
 GET     /                           controllers.Application.index
 
 #registration
-GET     /registerCell               controllers.MobileController.mobileRegistrationForm
+GET     /registerStolenPhone        controllers.MobileController.mobileRegistrationForm
+GET     /registerSecurePhone        controllers.MobileController.mobileRegistrationSecureForm
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
+GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)
+
 #Javascript Routes
+
 GET    /javascriptRoutes            controllers.Application.javascriptRoutes 
 GET    /mobile                      controllers.MobileController.getImeiMeidList(imeid: String)
 GET    /mobileStatus                controllers.MobileController.mobileStatus
 GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
 
 # Map static resources from the /public folder to the /assets URL path
-GET   /assets/*file                  controllers.Assets.at(path="/public", file)
+GET   /assets/*file                 controllers.Assets.at(path="/public", file)
