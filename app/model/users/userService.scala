@@ -1,19 +1,20 @@
 package model.users
+
+import model.dals._
 import model.domains.Domain._
-import model.dals.UserDal
 import play.api.Logger
 
 trait UserServiceComponent{
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
-  def getMobileRecordByIMEID(imeid: String): List[Mobile]
+  def getMobileRecordByIMEID(imeid: String): Option[Mobile]
   def getMobilesName(): List[MobilesName]
   def getMobileModelsById(id: Int): List[MobileModels]
 }
 
-class UserService extends UserServiceComponent{
+class UserService(userdal: UserDALComponent) extends UserServiceComponent{
   
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
-    UserDal.insertMobileUser(mobileuser) match {
+    userdal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
          mobileuser.email,mobileuser.description))
@@ -21,20 +22,22 @@ class UserService extends UserServiceComponent{
     }
   }
   
-  override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
+  override def getMobileRecordByIMEID(imeid: String): Option[Mobile] = {
     Logger.info("getMobileRecordByIMEID called")
-    UserDal.getMobileRecordByIMEID(imeid)
+    val mobileData = userdal.getMobileRecordByIMEID(imeid)
+    if (mobileData.length != 0) Some(mobileData.head) else None
   }
+  
   override def getMobilesName(): List[MobilesName] = {
     Logger.info("getMobilesName called")
-    UserDal.getMobilesName()
+    userdal.getMobilesName()
   }
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
-    Logger.info("getMobileModelsById called")
-    UserDal.getMobileModelsById(id)
+    Logger.info("getMobileRecordByIMEID called")
+    userdal.getMobileModelsById(id)
   }
 
 }
 
-object UserService extends UserService
+object UserService extends UserService(UserDAL)

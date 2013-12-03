@@ -1,6 +1,7 @@
 package model.domains
 
 import scala.slick.driver.PostgresDriver.simple._
+import scala.slick.lifted.ForeignKeyQuery
 
 object Domain {
 
@@ -36,11 +37,7 @@ object Domain {
       purchaseDate:java.sql.Date,
       contactNo:Int,
       email:String,
-      description:String
-     //id:Option[Int]=None
-    // fileUpload:java.io.File
-      
-  )
+      description:String)
   
   case class MobilesName(
     mobileName:String,
@@ -57,8 +54,6 @@ object Domain {
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(100)"))
     
-    //def * : scala.slick.lifted.MappedProjection[MobileRegistration,(String,String,String,String,java.sql.Date,Int,String,String, Option[Int])]= username ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (MobileRegistration.apply _, MobileRegistration.unapply _)
-    
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, Option[Int])] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (Mobile, Mobile unapply _)
     
@@ -73,8 +68,6 @@ object Domain {
         }) returning id
   }
   
-   
-  
    object MobileName extends Table[MobilesName]("mobilesname") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O.NotNull, O DBType ("VARCHAR(30)"))
@@ -83,13 +76,15 @@ object Domain {
       name ~ id <> (MobilesName, MobilesName unapply _)
    }
   
-   
-    object MobileModel extends Table[MobileModels]("mobilesmodel") {
-    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.PrimaryKey, O.AutoInc)
-    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
     
-     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
+  object MobileModel extends Table[MobileModels]("mobilesmodel") {
+    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.NotNull)
+    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
+
+    def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
       model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
-   }
-  
+
+    def mobilenameFkey: ForeignKeyQuery[MobileName.type, MobilesName] = foreignKey("mobilemodal_mobilename_fkey", mobilesnameid, MobileName)(_.id.get)
+  }
+
 }

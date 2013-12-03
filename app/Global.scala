@@ -27,9 +27,8 @@ object Global extends GlobalSettings{
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-//       (Mobiles.ddl).create
-       // (Mobiles_Name.ddl).create
-        
+     //(Mobiles.ddl ++ MobileName.ddl ++ MobileModel.ddl).create
+       (MobileModel.ddl).create 
       Logger.info("All tables have been created")
       }
     } catch {

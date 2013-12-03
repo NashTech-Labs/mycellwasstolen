@@ -7,15 +7,14 @@ import model.domains.Domain._
 import play.api.Logger
 import utils.Connection
 
-trait UserDalComponent {
+trait UserDALComponent {
 def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
 def getMobileRecordByIMEID(imeid: String): List[Mobile]
 def getMobilesName(): List[MobilesName]
 def getMobileModelsById(id: Int): List[MobileModels]
 }
 
-
-class UserDal extends UserDalComponent {
+class UserDAL extends UserDALComponent {
 
   override def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]] = {
     try {
@@ -27,7 +26,6 @@ class UserDal extends UserDalComponent {
         Logger.info("Error in insert user" + ex.printStackTrace())
         Left(ex.getMessage())
     }
-
   }
   
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
@@ -46,10 +44,10 @@ class UserDal extends UserDalComponent {
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileModelsById" +id)
+        Logger.info("Calling getMobileRecordByIMEID" +id)
        (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }
 }
 
-object UserDal extends UserDal
+object UserDAL extends UserDAL
