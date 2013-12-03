@@ -18,7 +18,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       "userName" -> nonEmptyText,
       "mobileName" -> nonEmptyText,
       "mobileModel" -> nonEmptyText,
-      "imeiMeid" -> nonEmptyText,
+      "imeiMeid" -> nonEmptyText.verifying(" IMEI must be of minimum 14 digits",_.matches("[0-9]{14,17}")),
       "purchaseDate" -> sqlDate("yyyy-MM-dd"),
       "contactNo" -> number,
       "email" -> email,

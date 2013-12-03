@@ -14,12 +14,12 @@
 	(x.id.get.toString -> (x.mobileName))).toSeq, '_label -> "Mobile Name",
 	'_default -> "-- Choose Mobile Name --", '_showConstraints ->
 	false,'_error ->
-	mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
+	mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Name Required")))
 
 	@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
 	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
 	'_showConstraints -> false,'_error ->
-	mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
+	mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
 
 
 	@inputText(mobileRegistrationForm("email"), '_label -> "email")
@@ -27,8 +27,8 @@
 	@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class ->
 	"datepicker", 'style -> "datepicker")
 
-	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact	No.") 
-	@inputText(mobileRegistrationForm("description"), '_label->"Description")
+	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact	No.",'_type->"tel") 
+	@textarea(field=mobileRegistrationForm("description"), args = 'rows -> 3, 'cols -> 25, '_label->"Description")
 
 	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
 </fieldset>
@@ -40,48 +40,53 @@
 	<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/intlTelInput.min.js")" type="text/javascript"></script>
 
 		<script type="text/javascript">
-			$(document).ready(function() {
-				$("#mobileName").change(function() {
+		$(document).ready(function() {
+            $("#mobileName").change(function() {
 
-					var mobileNameId = $(this).val();
-					mobileModels(mobileNameId);
-				});
+                var mobileNameId = $(this).val();
+                mobileModels(mobileNameId);
+            });
+           
+        });
 
-				var mobileAjaxSuccess = function(data) {
+            var mobileAjaxSuccess = function(data) {
 
-					$("#mobileModel").empty();
-					$('#mobileModel').append($('<option>', {
-						value : "-- Choose Mobile Model --",
-						text : "-- Choose Mobile Model --"
-					}));
-					$.each(data, function(i, d) {
+                $("#mobileModel").empty();
+                $('#mobileModel').append($('<option>', {
+                    value : "-- Choose Mobile Model --",
+                    text : "-- Choose Mobile Model --"
+                }));
+                $.each(data, function(i, d) {
 
-						$('#mobileModel').append($('<option>', {
-							value : d.mobileModel,
-							text : d.mobileModel
-						}));
-					});
-					console.debug("Success of Ajax Call");
-					console.debug(data);
-				};
 
-				var mobileAjaxError = function(err) {
-					console.debug("Error of ajax Call");
-					console.debug(err);
-				};
+                    $('#mobileModel').append($('<option>', {
+                        value : d.mobileModel,
+                        text : d.mobileModel
+                    }));
+                });
+                console.debug("Success of Ajax Call");
+                console.debug(data);
+            };
 
-				var mobileModels = function(mobileNameId) {
+            var mobileAjaxError = function(err) {
+                console.debug("Error of ajax Call");
+                console.debug(err);
+            };
 
-					var mobileAjaxCallBack = {
-						success : mobileAjaxSuccess,
-						error : mobileAjaxError
-					};
+            var mobileModels = function(mobileNameId) {
 
-					jsRoutes.controllers.MobileController.getMobileModels(
-							mobileNameId).ajax(mobileAjaxCallBack);
-				};
+                var mobileAjaxCallBack = {
+                    success : mobileAjaxSuccess,
+                    error : mobileAjaxError
+                };
 
-			});
+                jsRoutes.controllers.MobileController.getMobileModels(mobileNameId).ajax(mobileAjaxCallBack);
+            };
+
 		</script>
+		<script>
+    $("#contactNo").intlTelInput();
+  </script>
