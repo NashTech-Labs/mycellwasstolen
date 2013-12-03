@@ -1,6 +1,7 @@
 package model.domains
 
 import scala.slick.driver.PostgresDriver.simple._
+import scala.slick.lifted.ForeignKeyQuery
 
 object Domain {
 
@@ -45,7 +46,7 @@ object Domain {
         }) returning id
   }
   
-   case class MobilesName(
+  case class MobilesName(
     mobileName:String,
     id: Option[Int] = None)
   
@@ -56,7 +57,6 @@ object Domain {
      def * : scala.slick.lifted.MappedProjection[MobilesName, (String, Option[Int])] =
       name ~ id <> (MobilesName, MobilesName unapply _)
    }
-  
   
   case class MobileRegisterForm(
       userName:String,
@@ -74,17 +74,15 @@ object Domain {
   case class MobileModels(
     mobileModel:String,
     id: Option[Int] = None)
-    
-    
-    object MobileModel extends Table[MobileModels]("mobilesmodel") {
-    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
-    
-     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
-      model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
-   }
 
- /* case class MobileModel(
-      mobileModel:String)*/
-  
+  object MobileModel extends Table[MobileModels]("mobilesmodel") {
+    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.NotNull)
+    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
+
+    def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
+      model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
+
+    def mobilenameFkey: ForeignKeyQuery[MobileName.type, MobilesName] = foreignKey("mobilemodal_mobilename_fkey", mobilesnameid, MobileName)(_.id.get)
+  }
+
 }
