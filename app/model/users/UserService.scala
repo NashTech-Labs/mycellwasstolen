@@ -31,7 +31,7 @@ class UserService extends UserServiceComponent{
   }
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
-    Logger.info("getMobileRecordByIMEID called")
+    Logger.info("getMobileModelsById called")
     UserDal.getMobileModelsById(id)
   }
 

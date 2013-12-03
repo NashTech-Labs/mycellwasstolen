@@ -74,28 +74,18 @@ class MobileController(userService: UserServiceComponent) extends Controller {
        if(mobileData.id != None){
          Logger.info("mobileData>>>>>>" +mobileData)
          Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
-         //Ok(Json.toJson("success"))
        }else {
         Ok(Json.obj("status" -> "Error"))
-        // Ok(Json.toJson("error"))
        }
   }
    
    
    def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action {implicit request =>
-      Logger.info("MobileController: getImeiMeidList method has been called.")
-      val mobileModel = userService.getMobileModelsById(id).head
-      Logger.info("Mobile Records" + mobileModel)
+      Logger.info("MobileController: getMobileModels method has been called.")
+      val mobileModel = userService.getMobileModelsById(id)
+      Logger.info("Mobile Models" + mobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
-       val obj = Json.toJson(mobileModel)(resultWrites)
-       if(mobileModel.id != None){
-         Logger.info("mobileModel>>>>>>" +mobileModel)
-         Ok(Json.obj("status" -> "Ok", "mobileModel" -> obj))
-         //Ok(Json.toJson("success"))
-       }else {
-        Ok(Json.obj("status" -> "Error"))
-        // Ok(Json.toJson("error"))
-       }
+      Ok(Json.toJson(mobileModel))
   }
    
    

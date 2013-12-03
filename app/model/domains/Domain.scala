@@ -19,6 +19,32 @@ object Domain {
     description: String,
     id: Option[Int] = None
     )
+    
+  case class MobileStatus(
+    imeiMeid:String)
+    
+  case class MobileModels(
+    mobileModel:String,
+    id: Option[Int] = None)
+    
+    
+  case class MobileRegisterForm(
+      userName:String,
+      mobileName:String,
+      mobileModel:String,
+      imeiMeid:String,
+      purchaseDate:java.sql.Date,
+      contactNo:Int,
+      email:String,
+      description:String
+     //id:Option[Int]=None
+    // fileUpload:java.io.File
+      
+  )
+  
+  case class MobilesName(
+    mobileName:String,
+    id: Option[Int] = None)
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -47,9 +73,7 @@ object Domain {
         }) returning id
   }
   
-   case class MobilesName(
-    mobileName:String,
-    id: Option[Int] = None)
+   
   
    object MobileName extends Table[MobilesName]("mobilesname") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -59,39 +83,13 @@ object Domain {
       name ~ id <> (MobilesName, MobilesName unapply _)
    }
   
-  
- 
-  case class MobileRegisterForm(
-      userName:String,
-      mobileName:String,
-      mobileModel:String,
-      imeiMeid:String,
-      purchaseDate:java.sql.Date,
-      contactNo:Int,
-      email:String,
-      description:String
-     //id:Option[Int]=None
-    // fileUpload:java.io.File
-      
-  )
-  
-  case class MobileStatus(
-    imeiMeid:String)
-    
-  case class MobileModels(
-    mobileModel:String,
-    id: Option[Int] = None)
-    
-    
+   
     object MobileModel extends Table[MobileModels]("mobilesmodel") {
-    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
+    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.PrimaryKey, O.AutoInc)
     def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
     
      def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
       model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
    }
-
- /* case class MobileModel(
-      mobileModel:String)*/
   
 }

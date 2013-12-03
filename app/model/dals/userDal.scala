@@ -46,7 +46,7 @@ class UserDal extends UserDalComponent {
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileRecordByIMEID" +id)
+        Logger.info("Calling getMobileModelsById" +id)
        (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }

@@ -10,11 +10,7 @@
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
 	<!-- @inputText(mobileRegistrationForm("mobileName"), '_label -> "Mobile Name" ) -->
-	<!-- @select(
-							   mobileRegistrationForm("mobileName"), 
-							   options(Map(("n","NOKIA"),("h","HTC"),("m","MICROMAX"),("s","SAMSUNG"),("l","LAVA"),("lg","LG"),("mo","MOTOROLA"),("bb","BLACKBERRY"))),
-							   '_label -> "mobileName", '_default -> "-- Select --",
-							'_id-> "mobileName") -->
+	
 
 		 @select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x => (x.id.get.toString -> (x.mobileName))).toSeq,
             '_label -> "Mobile Name",
@@ -22,10 +18,14 @@
             '_showConstraints -> false,'_error -> mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
 							
 							
-	@inputText(mobileRegistrationForm("mobileModel"), '_label -> "Mobile Model")
+	<!-- @inputText(mobileRegistrationForm("mobileModel"), '_label -> "Mobile Model") -->
+	
+	    @select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
+            '_label->"Mobile Model",
+            '_default -> "-- Choose Mobile Model --",
+            '_showConstraints -> false,'_error -> mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
+	
 	@inputText(mobileRegistrationForm("email"), '_label -> "email")
-
-
 
 	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
 	@inputText(mobileRegistrationForm("purchaseDate"), '_label-> "Purchase Date", '_id-> "purchaseDate", 'class -> "datepicker", 'style -> "datepicker")
@@ -47,12 +47,24 @@
 $(document).ready(function(){
   $("#mobileName").change(function(){
 	  var mobileNameId=$(this).val();
-      alert(mobileNameId);
+      //alert(mobileNameId);
       mobileModels(mobileNameId);
   });
   
   var mobileAjaxSuccess = function(data) {
-	   alert("Data" +data)
+	   
+	   $("#mobileModel").empty();
+	   $('#mobileModel').append($('<option>', { 
+	        value: "-- Choose Mobile Model --",
+	        text : "-- Choose Mobile Model --"
+	    }));
+	   $.each(data, function (i, d) {
+		   
+		    $('#mobileModel').append($('<option>', { 
+		        value: d.mobileModel,
+		        text : d.mobileModel
+		    }));
+		});
 		console.debug("Success of Ajax Call");
 		console.debug(data);
 	};
