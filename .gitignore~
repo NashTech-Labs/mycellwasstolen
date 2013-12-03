@@ -2,6 +2,7 @@ logs
 project/project
 project/target
 target
+bin/
 tmp
 .history
 dist
@@ -24,4 +25,3 @@ dist
 .metadata/*
 src/main/webapp/css-generated/styles.css
 tmp/
-/bin

@@ -29,14 +29,17 @@ class MobileController(userService: UserServiceComponent) extends Controller {
          "imeiMeid" -> nonEmptyText )(MobileStatus.apply)(MobileStatus.unapply))
          
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Ok(views.html.mobileRegistrationForm(mobileregistrationform))
+    val mobilesName=userService.getMobilesName()
+    Logger.info("mobilesName>>" +mobilesName)
+    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
   }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
     Logger.info("mobileregistrationform" + mobileregistrationform)
+    val mobilesName=userService.getMobilesName()
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors)),
+      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
 
@@ -74,6 +77,25 @@ class MobileController(userService: UserServiceComponent) extends Controller {
         Ok(Json.obj("status" -> "Error"))
        }
   }
+   
+   
+   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action {implicit request =>
+      Logger.info("MobileController: getImeiMeidList method has been called.")
+      val mobileModel = userService.getMobileModelsById(id).head
+      Logger.info("Mobile Records" + mobileModel)
+      implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
+       val obj = Json.toJson(mobileModel)(resultWrites)
+       if(mobileModel.id != None){
+         Logger.info("mobileModel>>>>>>" +mobileModel)
+         Ok(Json.obj("status" -> "Ok", "mobileModel" -> obj))
+         //Ok(Json.toJson("success"))
+       }else {
+        Ok(Json.obj("status" -> "Error"))
+        // Ok(Json.toJson("error"))
+       }
+  }
+   
+   
   
   def mobileStatus:  Action[play.api.mvc.AnyContent] = Action {implicit request =>
     Ok(views.html.mobileStatus(mobilestatus))   

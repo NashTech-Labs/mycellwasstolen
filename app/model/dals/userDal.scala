@@ -10,6 +10,8 @@ import utils.Connection
 trait UserDalComponent {
 def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
 def getMobileRecordByIMEID(imeid: String): List[Mobile]
+def getMobilesName(): List[MobilesName]
+def getMobileModelsById(id: Int): List[MobileModels]
 }
 
 class UserDal extends UserDalComponent {
@@ -30,6 +32,20 @@ class UserDal extends UserDalComponent {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getMobileRecordByIMEID" +imeid)
        (for { mobile <- Mobiles if (mobile.imeiMeid === imeid) } yield mobile).list
+      }
+    }
+  
+  override def getMobilesName(): List[MobilesName] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getMobilesName")
+       (for { mobilesName <- MobileName } yield mobilesName).list
+      }
+    }
+  
+  override def getMobileModelsById(id: Int): List[MobileModels] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getMobileRecordByIMEID" +id)
+       (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }
 }

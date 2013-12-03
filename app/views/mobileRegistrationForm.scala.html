@@ -1,82 +1,101 @@
 @(mobileRegistrationForm:Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName])(implicit flash: Flash) 
+
 @import helper._ 
 @header("Registration Cell")
 @main("Mycellwasstolen"){ 
-@helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
-<fieldset>
-	<!--<input type="hidden" name="userType" id="userType" value="user">-->
+ @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
-	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
+	<fieldset>
+		<div class="container margin">
+			<div id="carousel-example-generic" class="carousel slide"
+				data-ride="carousel">
+				<div class="carousel-inner">
+					<div class="carousel-panel">
+						<div class="col-md-4">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h1 class="panel-title">It is pay back time for offenders I
+										want to make my cell unusable for everyone else ...</h1>
+								</div>
+								<div class="panel-body">
+									This is exactly the reason why this database exists. Please
+									enter your details here and we could send you a confirmation
+									mail as soon as your details reflect in our database. Please
+									make sure that you upload a proof of purchase in your name
+									and/or a police complaint. Once all the required information is
+									available to us, your stolen cell IMEI would appear on the
+									database in less than 24 hours. Within the next 72 hours, it
+									would have reached the local authorities and cell phone service
+									providers around the globe. You can <a href="/mobileStatus">
+										view your stolen IMEI report</a> once you are done.
+								</div>
+							</div>
+						</div>
+						<div class="form-margin">
+						@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
-	<!-- @inputText(mobileRegistrationForm("mobileName"), '_label -> "Mobile Name" ) -->
-	<!-- @select(
-							   mobileRegistrationForm("mobileName"), 
-							   options(Map(("n","NOKIA"),("h","HTC"),("m","MICROMAX"),("s","SAMSUNG"),("l","LAVA"),("lg","LG"),("mo","MOTOROLA"),("bb","BLACKBERRY"))),
-							   '_label -> "mobileName", '_default -> "-- Select --",
-							'_id-> "mobileName") -->
+						@select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x=> (x.id.get.toString -> (x.mobileName))).toSeq, '_label ->
+						"Mobile Name", '_default -> "-- Choose Mobile Name --",	'_showConstraints -> false,'_error ->
+						mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
 
-		 @select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x => (x.id.get.toString -> (x.mobileName))).toSeq,
-            '_label -> "Mobile Name",
-            '_default -> "-- Choose Mobile Name --",
-            '_showConstraints -> false,'_error -> mobileRegistrationForm("mobileName").error.map(_.withMessage(Messages("recruiter.exam.type.remind"))))
-							
-							
-	@inputText(mobileRegistrationForm("mobileModel"), '_label -> "Mobile Model")
-	@inputText(mobileRegistrationForm("email"), '_label -> "email")
+						@inputText(mobileRegistrationForm("mobileModel"), '_label ->
+						"Mobile Model") @inputText(mobileRegistrationForm("email"),
+						'_label -> "email") @inputText(mobileRegistrationForm("imeiMeid"),
+						'_label -> "Mobile IMEI/MEID")
+						
+						@inputText(mobileRegistrationForm("purchaseDate"), '_label->
+						"Purchase Date", '_id-> "purchaseDate", 'class -> "datepicker",
+						'style -> "datepicker")
 
+						@inputText(mobileRegistrationForm("contactNo"), '_label ->
+						"Contact No.") @inputText(mobileRegistrationForm("description"),
+						'_label ->"Description")
 
-
-	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
-	@inputText(mobileRegistrationForm("purchaseDate"), '_label-> "Purchase Date", '_id-> "purchaseDate", 'class -> "datepicker", 'style -> "datepicker")
-
-	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact No.") 
+						@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+	<input type="submit" value="Register">
+   }
+	<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
 	
-	@inputText(mobileRegistrationForm("description"), '_label ->"Description") 
-	
-	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
+	<script type="text/javascript">
 
-</fieldset>
-<input type="submit" value="Register">
-<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
-<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-<script>
-			       
-//$("#purchaseDate").datepicker();
-$(document).ready(function(){
-  $("#mobileName").change(function(){
-	  var mobileNameId=$(this).val();
-      alert(v);
-      mobileModels(mobileNameId);
-  });
-  
-  var mobileAjaxSuccess = function(data) {
-	   alert("Data" +data)
-		console.debug("Success of Ajax Call");
-		console.debug(data);
-	};
-	
-	var mobileAjaxError = function(err) {
-		console.debug("Error of ajax Call");
-		console.debug(err);
-	};
-  
-  var mobileModels = function(mobileNameId) {
-  	
-  	var mobileAjaxCallBack = {
-			success: mobileAjaxSuccess,
-			error: mobileAjaxError
-		};
-  	
-		jsRoutes.controllers.MobileController.getMobileModels(mobileNameId).ajax(mobileAjaxCallBack);
-  }; 
- 
-});
+		$(document).ready(function(){
+		  $("#mobileName").change(function(){
+			  var mobileNameId=$(this).val();
+		      alert(v);
+		      mobileModels(mobileNameId);
+		  });
+		  
+		  var mobileAjaxSuccess = function(data) {
+			   alert("Data" +data)
+				console.debug("Success of Ajax Call");
+				console.debug(data);
+			};
+			
+			var mobileAjaxError = function(err) {
+				console.debug("Error of ajax Call");
+				console.debug(err);
+			};
+		  
+		  var mobileModels = function(mobileNameId) {
+		  	
+		  	var mobileAjaxCallBack = {
+					success: mobileAjaxSuccess,
+					error: mobileAjaxError
+				};
+		  	
+			jsRoutes.controllers.MobileController.getMobileModels(mobileNameId).ajax(mobileAjaxCallBack);
+		  }; 
+		 
+		});
 			            	
- </script>
-			            
-			            
-
-
-} } @footer("hello")
+   </script>
+} 

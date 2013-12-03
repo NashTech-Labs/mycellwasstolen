@@ -44,7 +44,20 @@ object Domain {
           Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
         }) returning id
   }
- 
+  
+   case class MobilesName(
+    mobileName:String,
+    id: Option[Int] = None)
+  
+   object MobileName extends Table[MobilesName]("mobilesname") {
+    def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
+    def name: Column[String] = column[String]("name", O.NotNull, O DBType ("VARCHAR(30)"))
+    
+     def * : scala.slick.lifted.MappedProjection[MobilesName, (String, Option[Int])] =
+      name ~ id <> (MobilesName, MobilesName unapply _)
+   }
+  
+  
   case class MobileRegisterForm(
       userName:String,
       mobileName:String,
@@ -57,4 +70,21 @@ object Domain {
   
   case class MobileStatus(
     imeiMeid:String)
+    
+  case class MobileModels(
+    mobileModel:String,
+    id: Option[Int] = None)
+    
+    
+    object MobileModel extends Table[MobileModels]("mobilesmodel") {
+    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
+    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
+    
+     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
+      model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
+   }
+
+ /* case class MobileModel(
+      mobileModel:String)*/
+  
 }
