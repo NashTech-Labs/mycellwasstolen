@@ -2,6 +2,41 @@
 
 @import helper._ 
 @main("Mycellwasstolen"){ 
-	
+	<div class="container margin form-margin">
+			<div id="carousel-example-generic" data-ride="carousel">
+				<div class="carousel-inner">
+					<div class="carousel-panel">
+						<div class="col-md-4">
+							<div class="panel panel-success">
+								<div class="panel-heading">
+									<h1 class="panel-title">Register and be safe</h1>
+								</div>
+								<div class="panel-heading">
+									<h1 class="panel-title">I want to declare my ownership</h1>
+								</div>
+								<div class="panel-body">
+									 This is one of the best things you can do.
+									 Not only would your information be safe 
+									 with us but it would help us to inform 
+									 you immediately if someone else tries to 
+									 register your cell phone IMEI in his name.
+									 Once your ownership is authenticated by
+									 MCWS database, we would send out an alarm
+									 to you via an SMS / email immediately if 
+									 someone else tries to register the IMEI again.
+								</div>
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="panel panel-success">
+								<div class="panel-heading">
+									<h1 class="panel-title">Registration Form</h1>
+								</div>
+							</div>
 	@registerForm("clean", mobileRegistrationForm, mobilesName)
+		</div>
+					</div>
+				</div>
+			</div>
+		</div>
 } 

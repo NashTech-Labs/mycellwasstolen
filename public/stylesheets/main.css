@@ -30,5 +30,10 @@
 }
 
 .form-margin{
-	margin-top: 40px;
+	margin-top: -20px;
+}
+
+.title-margin{
+	margin-top: -1px;
+	margin-bottom: 0px;
 }
