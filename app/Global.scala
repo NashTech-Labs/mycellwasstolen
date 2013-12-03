@@ -28,7 +28,6 @@ object Global extends GlobalSettings{
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
      //(Mobiles.ddl ++ MobileName.ddl ++ MobileModel.ddl).create
-       (MobileModel.ddl).create 
       Logger.info("All tables have been created")
       }
     } catch {
@@ -43,10 +42,9 @@ object Global extends GlobalSettings{
   }
   
   /*override def onError(request: RequestHeader, ex: Throwable) = {
-    InternalServerError(
-      views.html.errorPage("error")
+    InternalServerError(views.html.errorPage("error")
     )
-  }*/  
+  } */ 
 
  /*override def onHandlerNotFound(request: RequestHeader): Result = {
     NotFound(

@@ -1,0 +1,7 @@
+@(mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName: List[model.domains.Domain.MobilesName], )(implicit flash: Flash) 
+
+@import helper._ 
+@main("Mycellwasstolen"){ 
+	
+	@registerForm("Stolen", mobileRegistrationForm, mobilesName)
+} 

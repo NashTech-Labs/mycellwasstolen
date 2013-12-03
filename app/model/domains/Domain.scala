@@ -17,6 +17,7 @@ object Domain {
     purchaseDate: java.sql.Date,
     contactNo:Int,
     email: String,
+    regType: String,
     description: String,
     id: Option[Int] = None
     )
@@ -30,19 +31,20 @@ object Domain {
     def purchaseDate: Column[java.sql.Date] = column[java.sql.Date]("purchase_date", O.NotNull)
     def contactNo: Column[Int] = column[Int]("contact_no", O.NotNull)
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
+    def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(100)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(100)"))
     
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, Option[Int])] =
-      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ description ~ id <> (Mobile, Mobile unapply _)
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, Int, String, String, String, Option[Int])] =
+      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ description ~ id <> (Mobile, Mobile unapply _)
     
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
-      email ~ description<> (
-        { (username,mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , description) =>
-          Mobile(username,mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , description)
+      email ~ regType ~ description<> (
+        { (username, mobileName, mobileModel,imeiMeid, purchaseDate, contactNo, email, regType, description) =>
+          Mobile(username, mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , regType, description)
         },
         { mobileregistration: Mobile =>
-          Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.description))
+          Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.regType,  mobileregistration.description))
         }) returning id
   }
   
@@ -66,6 +68,7 @@ object Domain {
       purchaseDate:java.sql.Date,
       contactNo:Int, 
       email:String,
+      regType:String,
       description:String)
   
   case class MobileStatus(
