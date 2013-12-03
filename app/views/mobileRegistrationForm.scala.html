@@ -7,7 +7,7 @@
  @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 	<fieldset>
-		<div class="container margin">
+		<div class="container margin form-margin">
 			<div id="carousel-example-generic" class="carousel slide"
 				data-ride="carousel">
 				<div class="carousel-inner">
@@ -32,7 +32,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-margin">
+						<div class="col-md-8">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h1 class="panel-title">Registration Form</h1>
+								</div>
+							</div>
 						@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
 						@select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x=> (x.id.get.toString -> (x.mobileName))).toSeq, '_label ->
@@ -53,7 +58,7 @@
 						'_label ->"Description")
 
 						@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
-					</div>
+						</div>
 					</div>
 				</div>
 			</div>

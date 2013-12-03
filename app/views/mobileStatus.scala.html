@@ -67,14 +67,14 @@
 		var mobileAjaxSuccess = function(data) {
 			if (data.status == "Ok") {
 				var mobile = data.mobileData;
-				var mobileData = '<table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th></tr><tr><td>'
+				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th></tr><tr><td>'
 						+ mobile.userName
 						+ '</td><td>'
 						+ mobile.mobileName
 						+ '</td><td>'
 						+ mobile.mobileModel
 						+ '</td><td>'
-						+ mobile.contactNo + '</td></tr></table>';
+						+ mobile.contactNo + '</td></tr></table><p><button id="statusCheck" class="btn btn-primary" onClick="hideMobileRecord();" value="ok">OK</button></div>';
 				$("#mobileRecords").removeClass("alert alert-danger");
 				$("#mobileRecords").html(mobileData);
 			} else {
@@ -101,6 +101,11 @@
 			jsRoutes.controllers.MobileController.getImeiMeidList(imeid).ajax(
 					mobileAjaxCallBack);
 		};
+		
+	     function hideMobileRecord() {
+	        $("#mobile-status").hide();
+		}
+		
 </script>	           	
 	
 }
