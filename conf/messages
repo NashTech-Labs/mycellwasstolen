@@ -33,3 +33,6 @@ default.details=(c) MCWS A social movement making the mobile space secure
 #Status 
 
 mobile.status.message=Please Enter Mobile IMEI/MEID To Check Phone Status
+
+error.mobilename.message=Please select mobile name
+error.mobilemodal.message=Please select mobile modal

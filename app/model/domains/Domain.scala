@@ -67,7 +67,8 @@ object Domain {
           Mobile(username, mobileName, mobileModel,imeiMeid, purchaseDate, contactNo ,  email , regType, description)
         },
         { mobileregistration: Mobile =>
-          Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid, mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.regType,  mobileregistration.description))
+          Some((mobileregistration.userName,mobileregistration.mobileName, mobileregistration.mobileModel,mobileregistration.imeiMeid,
+              mobileregistration.purchaseDate, mobileregistration.contactNo ,  mobileregistration.email , mobileregistration.regType,  mobileregistration.description))
         }) returning id
   }
   
