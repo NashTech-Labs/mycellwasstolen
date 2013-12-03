@@ -1,60 +1,57 @@
 @(mobileStatusForm: Form[model.domains.Domain.MobileStatus])(implicit flash: Flash)
 @import helper._
-@header("Check Cell Status- stolencell")
-@title = { @Messages("default.status") }
-@main("Mycellwasstolen"){
-<div class="well margin">
-	<div id="sites-canvas-main" class="sites-canvas-main">
-		<div dir="ltr">
-			<b class="lemon">@Messages("default.lemon")</b>
+@main("Mobile Status"){
+<div class="container margin form-margin">
+	<div id="carousel-example-generic" data-ride="carousel">
+		<div class="carousel-inner">
+			<div class="carousel-panel">
+				<div class="col-md-4">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							<h1 class="panel-title">Ensure that you are not buying a lemon!</h1>
+						</div>
+						<div class="panel panel-info title-margin">
+							<div class="panel-heading">
+							<h1 class="panel-title">What is a cell lemon?</h1>
+							</div>
+							<div class="panel-body">
+									A lemon cell is analogous to a <a href="http://en.wikipedia.org/wiki/Lemon_(automobile)">lemon automobile</a> where 
+									you find out problems, much after the purchase has been 
+									made. If you buy a cell phone, which has a stolen record, 
+									then you could get into multiple problems.<b>To check the cell
+									 phone status</b>, all you need is the IMEI/MEID number of the
+									  cell that you want to check. It is found printed inside 
+									  the battery compartment of the phone. It can also be 
+									  displayed on the screen of the phone by entering 
+									  <b>*#06#</b> onto the keypad on most phones. Blackberry users click 
+									  <a href="https://bis.na.blackberry.com/html/web/help/en/find_BB_PIN_IMEI_ESN_MEID_221674_11.html">here </a>.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h1 class="panel-title">Coming Soon - Check IMEI by sending an <img src="@routes.Assets.at("images/sms2.jpg")" alt="...">(premium service)</h1>
+						</div>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h1 class="panel-title">Check Cell Status</h1>
+						</div>
+					</div>
+					<input type="text" id="imeiMeid" name="imeiMeid">
+					<div class="form-actions">
+					<br>
+					<input type="submit" value="Check Status" class="btn btn-primary"
+									onClick="showMobileRecord();"></a>
+					</div>
+					<br>
+					<div id="mobileRecords"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-			<br>
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								<div>
-									<font size="5" color="#6aa84f">
-										<b>@Messages("default.lemon.ques")</b>
-									</font>
-								</div>
-								<br>
-								<div class="status-text">@Messages("default.status")
-									<a href="http://en.wikipedia.org/wiki/Lemon_(automobile)">@Messages("default.lemon.link")
-									</a>
-									@Messages("default.text1")
-									<p> @Messages("default.text2")
-									<p><b>@Messages("default.text6")</b>@Messages("default.text3")
-									<br>@Messages("default.text4") 
-									<br>@Messages("default.text5") 
-									<br>
-									<b class="#06">*#06#</b>@Messages("default.blackberry") 
-									<a href="https://bis.na.blackberry.com/html/web/help/en/find_BB_PIN_IMEI_ESN_MEID_221674_11.html">@Messages("default.help")
-									</a>
-								</div>
-								<br></br>
-								<div class="imei-sms status-text">@Messages("default.sms") 
-									<img src="@routes.Assets.at("images/sms2.jpg")" alt="stolencell"/>@Messages("default.premium")
-								</div>
-									<br></br>
-								<div class="mobile-status">
-									<span class="font-color-heading"><b>@Messages("default.mobile.status")</b></span><br><br>
-									<span class="font-text">@Messages("mobile.status.message"):</span>
-								</div><br>
-								<div class="sites-embed-align-center-wrapping-off">
-									<input type="text" id="imeiMeid" name="imeiMeid">
-										<div class="form-actions">
-											<br><input type="submit" value="Check Status" class="btn btn-primary" onClick="showMobileRecord();"></a>
-										</div>
-									<br><div id="mobileRecords">
-									</div>
-								</div>
-							</td>
-							<td></td>
-						</tr>
-				</tbody>
-		</table>
-	</div>	
+	</div>
 </div>
 <script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>	
