@@ -43,3 +43,8 @@
 	vertical-align: sub;
 	color: red;
 }
+
+.error {
+	color: #FF0000;
+    margin-top: 5px;
+}

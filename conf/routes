@@ -5,6 +5,9 @@
 # Home page
 GET     /                           controllers.Application.index
 
+GET		/showExampleForm			controllers.Application.showExampleForm
+POST	/handleFormExample			controllers.Application.handleFormExample
+
 #registration
 GET     /registerStolenPhone        controllers.MobileController.mobileRegistrationForm
 GET     /registerSecurePhone        controllers.MobileController.mobileRegistrationSecureForm

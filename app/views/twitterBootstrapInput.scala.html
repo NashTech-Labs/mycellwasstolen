@@ -3,18 +3,17 @@
 @**************************************************
 * Generate input according twitter bootsrap rules *
 **************************************************@
-<div class="control-group @if(elements.hasErrors) {error}">
-    <label class="control-label" for="@elements.id">@elements.label 
+<div class="form-group @if(elements.hasErrors) {has-error}">
+    <label class="col-sm-4 control-label" for="@elements.id">
+    	@elements.label 
     	@if(elements.infos.length > 0) {
        		<span class="required-field">*</span>
        	}
-        </label>
-    <div class="controls">
+    </label>
+    <div class="col-sm-6">
     	@elements.input
         @if(elements.hasErrors) {
-        	<span class="help-inline">@elements.errors.mkString(", ")</span>
-        }<!--  else {
-        	<span class="help-inline">@elements.infos.mkString(", ")</span>
-        } -->
+        	<span class="help-block">@elements.errors.mkString(", ")</span>
+        }
     </div>
 </div>
