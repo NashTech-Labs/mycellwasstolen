@@ -1,25 +1,40 @@
 package controllers
 
-import model.domains.Domain._
-import play.api._
-import play.api.Play.current
-import play.api.data.Forms._
-import play.api.mvc._
-import play.api.Logger
-import play.api.Play.current
+import play.api.Routes
 import play.api.data.Form
+import play.api.data.Forms.email
+import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.tuple
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import play.api.mvc.Security
-import play.api.Routes
 
 class Application extends Controller {
+
+  val formExample = Form(
+    tuple(
+      "name" -> nonEmptyText,
+      "email" -> email,
+      "password" -> nonEmptyText,
+      "confPassword" -> nonEmptyText))
+
+  def showExampleForm = Action { implicit request =>
+    Ok(views.html.formExample(formExample))
+  }
   
+  def handleFormExample = Action { implicit request =>
+    formExample.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.formExample(formWithErrors)),
+      {
+        case (name, email, password, confPassword) =>
+          Redirect(routes.Application.index).flashing("SUCCESS" -> "Form submited successfully")
+      })
+  }
+
   def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Ok(views.html.index("Hello"))
   }
-  
-def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+
+  def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
       routes.javascript.MobileController.getImeiMeidList,

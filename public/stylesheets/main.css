@@ -37,3 +37,14 @@
 	margin-top: -1px;
 	margin-bottom: 0px;
 }
+
+.required-field {
+	font-size: 25px;
+	vertical-align: sub;
+	color: red;
+}
+
+.error {
+	color: #FF0000;
+    margin-top: 5px;
+}
