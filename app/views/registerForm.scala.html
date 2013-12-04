@@ -1,6 +1,7 @@
 @(status: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
 
-@import helper._ 
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
