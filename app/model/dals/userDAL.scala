@@ -8,10 +8,10 @@ import play.api.Logger
 import utils.Connection
 
 trait UserDALComponent {
-def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
-def getMobileRecordByIMEID(imeid: String): List[Mobile]
-def getMobilesName(): List[MobilesName]
-def getMobileModelsById(id: Int): List[MobileModels]
+	def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
+	def getMobileRecordByIMEID(imeid: String): List[Mobile]
+	def getMobilesName(): List[MobilesName]
+	def getMobileModelsById(id: Int): List[MobileModels]
 }
 
 class UserDAL extends UserDALComponent {
@@ -48,6 +48,7 @@ class UserDAL extends UserDALComponent {
        (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }
+  
 }
 
 object UserDAL extends UserDAL

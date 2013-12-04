@@ -18,7 +18,7 @@ class UserService(userdal: UserDALComponent) extends UserServiceComponent{
     userdal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
-         mobileuser.email, mobileuser.regType, mobileuser.description))
+         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus, mobileuser.description))
       case Left(error) => Left(error)
     }
   }

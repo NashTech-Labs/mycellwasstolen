@@ -1,4 +1,4 @@
-@(status: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
+@(regType: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
 
 @import helper._ 
 
@@ -6,7 +6,7 @@
 
 	<fieldset>
 		
-	<input type="hidden" name="regType" id="regType" value="@status">
+	<input type="hidden" name="regType" id="regType" value="@regType">
 
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
