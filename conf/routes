@@ -9,8 +9,8 @@ GET		/showExampleForm			controllers.Application.showExampleForm
 POST	/handleFormExample			controllers.Application.handleFormExample
 
 #registration
-GET     /registerStolenPhone        controllers.MobileController.mobileRegistrationForm
-GET     /registerSecurePhone        controllers.MobileController.mobileRegistrationSecureForm
+GET     /register-stolen-phone        controllers.MobileController.mobileRegistrationForm
+GET     /register-new-phone        controllers.MobileController.mobileRegistrationSecureForm
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
 GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)

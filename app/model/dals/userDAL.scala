@@ -38,7 +38,7 @@ class UserDAL extends UserDALComponent {
   override def getMobilesName(): List[MobilesName] = {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getMobilesName")
-       (for { mobilesName <- MobileName } yield mobilesName).list
+       (for { mobilename <- MobileName } yield mobilename).list
       }
     }
   
