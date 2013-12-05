@@ -7,10 +7,10 @@ import play.api.Logger
 trait MobileServiceComponent{
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
   def getMobileRecordByIMEID(imeid: String): Option[Mobile]
-  def getMobilesName(): List[MobilesName]
+  def getMobilesName(): List[Brand]
   def getMobileModelsById(id: Int): List[MobileModels]
   def isImeiExist(imeid: String): Boolean
-  def addMobileName(mobilename: MobilesName): Either[String, MobilesName]
+  def addMobileName(brand: Brand): Either[String, Option[Int]]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -30,9 +30,9 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     if (mobileData.length != 0) Some(mobileData.head) else None
   }
   
-  override def getMobilesName(): List[MobilesName] = {
+  override def getMobilesName(): List[Brand] = {
     Logger.info("getMobilesName called")
-    mobiledal.getMobilesName()
+    mobiledal.getMobilesName
   }
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
@@ -45,11 +45,8 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     if (mobile.length != 0) true else false
   }
 
-  override def addMobileName(mobilename: MobilesName): Either[String, MobilesName] = {
-    mobiledal.insertMobileName(mobilename) match {
-      case Right(id) => Right(MobilesName(mobilename.mobileName))
-      case Left(error) => Left(error)
-    }
+  override def addMobileName(brand: Brand): Either[String, Option[Int]] = {
+    mobiledal.insertMobileName(brand) 
   }
 
 }

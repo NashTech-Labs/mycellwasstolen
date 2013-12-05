@@ -1,4 +1,4 @@
-@(regType: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
+@(regType: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], brands: List[model.domains.Domain.Brand]) 
 
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
@@ -10,11 +10,11 @@
 	
 		@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 	
-		@select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x=>
-		(x.id.get.toString -> (x.mobileName))).toSeq, '_label -> "Mobile Name",
+		@select(field=mobileRegistrationForm("mobileName"),options=brands.map(x=>
+		(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
 		'_default -> "-- Choose Mobile Name --", '_showConstraints ->
 		false,'_error ->
-		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Name Required")))
+		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Brand Required")))
 	
 		@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
 		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",

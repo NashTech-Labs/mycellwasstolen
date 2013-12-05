@@ -9,6 +9,7 @@ import model.domains.Domain._
 import model.users._
 import java.io.File
 import play.api.libs.json.Json
+import play.api.i18n.Messages
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
@@ -28,9 +29,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
       
-  val addmobilenameform = Form(
+  val brandregisterform = Form(
     mapping(
-      "mobileName" -> nonEmptyText)(MobilesNameForm.apply)(MobilesNameForm.unapply))
+      "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
 
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
@@ -44,15 +45,13 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
   
-   
-  def addmobileNameForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("addMobileform call>>")
-    Ok(views.html.addmobileNameForm(addmobilenameform))
+  def brandRegisterForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("Calling MobileNameform")
+    Ok(views.html.createMobileNameForm(brandregisterform))
   }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
-    Logger.info("mobileregistrationform" + mobileregistrationform)
     val mobilesName = mobileService.getMobilesName()
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
@@ -71,14 +70,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
         regMobile match {
           case Right(mobileuser) => {
-            Redirect(routes.Application.index)
-
+            Redirect(routes.Application.index).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
           }
           case Left(message) =>
-            Redirect(routes.MobileController.mobileRegistrationForm).flashing("message" -> "error")
+            Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
         }
       })
-
   }
 
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
@@ -120,25 +117,25 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     }
   }
   
-  def addMobileName = Action(parse.multipartFormData) { implicit request =>
-    Logger.info("addMobileNameController:addmobileNameForm - Mobile Name.")
-    Logger.info("addmobilenameform" + addmobilenameform)
-    addmobilenameform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.addmobileNameForm(formWithErrors)),
-      mobilename => {
-        Logger.info("addMobileNameController:addMobileName - found valid data.")
-        val addMobile = mobileService.addMobileName(MobilesName(mobilename.mobileName))
+  def saveMobileName:Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("MobileController: brandRegisterForm")
+    Logger.info("brandregisterform" + brandregisterform)
+    brandregisterform.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors)),
+      brand => {
+        Logger.info("MobileNameController: saveMobileName - found valid data.")
+        val date = new java.sql.Date(new java.util.Date().getTime())
+        val regbrand = mobileService.addMobileName(Brand(brand.name, date))
 
-        addMobile match {
-          case Right(mobilename) => {
-            Redirect(routes.Application.index)
+        regbrand match {
+          case Right(id) => {
+            Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
           }
           case Left(message) =>
-            Redirect(routes.MobileController.addmobileNameForm).flashing("message" -> "error")
+            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
         }
       })
   }
-  
 }
 
 object MobileController extends MobileController(MobileService)

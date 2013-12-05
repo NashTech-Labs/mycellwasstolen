@@ -10,17 +10,17 @@ import utils.Connection
 trait MobileDALComponent {
 	def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
 	def getMobileRecordByIMEID(imeid: String): List[Mobile]
-	def getMobilesName(): List[MobilesName]
+	def getMobilesName: List[Brand]
 	def getMobileModelsById(id: Int): List[MobileModels]
-	def insertMobileName(mobilename: MobilesName): Either[String, Int]
+	def insertMobileName(brand: Brand): Either[String, Option[Int]]
 }
 
 class MobileDAL extends MobileDALComponent {
 
-  override def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]] = {
+  override def insertMobileUser(mobile: Mobile): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(Mobiles.insert.insert(mobileuser))
+        Right(Mobiles.insert.insert(mobile))
       }
     } catch {
       case ex: Exception =>
@@ -36,10 +36,10 @@ class MobileDAL extends MobileDALComponent {
       }
     }
   
-  override def getMobilesName(): List[MobilesName] = {
+  override def getMobilesName(): List[Brand] = {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getMobilesName")
-       (for { mobilename <- MobileName } yield mobilename).list
+       (for { brand <- Brands } yield brand).list
       }
     }
   
@@ -50,14 +50,14 @@ class MobileDAL extends MobileDALComponent {
       }
     }
   
-  override def insertMobileName(mobilename: MobilesName): Either[String, Int] = {
+  override def insertMobileName(brand: Brand): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(MobileName.insert(mobilename))
+        Right(Brands.insert.insert(brand))
       }
     } catch {
       case ex: Exception =>
-        Logger.info("Error in insert user" + ex.printStackTrace())
+        Logger.info("Error in insert mobile name" + ex.printStackTrace())
         Left(ex.getMessage())
     }
   }

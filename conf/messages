@@ -42,6 +42,14 @@ password=Password
 confPassword=Confirm Password
 email=Email
 
+#Mesages
+
+messages.mobile.brand.added.success=Brand successfully added
+messages.mobile.brand.added.error=Error in Mobile Brand
+
+messages.mobile.register.success=Mobile registered successfully
+messages.mobile.register.error=Error in Mobile register
+
 #email
 
 #messages.signature=<br><b>Thanks & Regards !<br>MCWS Support Team <br>http://www.mycellwasstolen.com<b>

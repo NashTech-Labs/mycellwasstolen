@@ -12,7 +12,9 @@ import com.typesafe.config.ConfigFactory
 import java.io.File
 import play.api.Play.current
 import model.domains.Domain._
-import model.users.UserService
+import model.users._
+import org.h2.table.Plan
+import model.dals.MobileDAL
 
 object Global extends GlobalSettings{
   
@@ -27,15 +29,15 @@ object Global extends GlobalSettings{
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-     //(Mobiles.ddl ++ MobileName.ddl ++ MobileModel.ddl).create
-       // Mobiles.ddl.create
-      Logger.info("All tables have been created")
+     //(Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
+       //(Brands.ddl)create
+        //Logger.info("All tables have been created")
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
 
-//     InitialData.insert
+   // InitialData.insert
   }
 
   override def onStop(app: Application): Unit = {
@@ -60,13 +62,32 @@ object Global extends GlobalSettings{
 
 object InitialData {
 
-  def insert(): Any = {
+ /* def insert(): Any = {
     try {
       val date = new java.sql.Date(new java.util.Date().getTime())
-      
         Logger.info("Adding new users in users table")
       } catch {
       case ex: Exception => Logger.info("Error in  initial data population" + ex.printStackTrace())
+    }
+  }*/
+  
+  def insert(): Any = {
+    try {
+      val mobileService = new MobileService(MobileDAL)
+
+      val date = new java.sql.Date(new java.util.Date().getTime())
+
+      if (mobileService.getMobilesName.isEmpty) {
+        Logger.info("Adding new mobile name in mobile table")
+       /* val mobileList = List(
+          MobilesName("Nokia"),
+          MobilesName("Samsung"),
+          MobilesName("Micromax"),
+          MobilesName("Sony"))
+          mobileList foreach { mobilename => mobileService.addMobileName(mobilename) }*/
+      }else {
+        Logger.info("Not adding new mobile name in mobile table")
+      }
     }
   }
 }
