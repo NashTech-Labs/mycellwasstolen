@@ -1,6 +1,6 @@
 @(mobileStatusForm: Form[model.domains.Domain.MobileStatus])(implicit flash: Flash)
 @import helper._
-@main("Mobile Status"){
+@main("Check Cell Status-stolencell"){
 <div class="container">
 		<div class="page-header">
 			<h1>Check Mobile Status</h1>
@@ -29,7 +29,7 @@
 							</div>
 							<br>
 							<div id="mobileRecords">
-						</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-lg-4">
@@ -53,6 +53,26 @@
 									  displayed on the screen of the phone by entering 
 									  <b>*#06#</b> onto the keypad on most phones. Blackberry users click 
 									  <a href="https://bis.na.blackberry.com/html/web/help/en/find_BB_PIN_IMEI_ESN_MEID_221674_11.html">here </a>.
+										<div><h5>How To Read The Report ?</h5>
+											<div>
+												<img src="@routes.Assets.at("images/Green.jpg")" alt="...">
+													<div>Indicates that this Phone is registered with us as a clean phone.
+													</div>
+											</div>
+											<div>
+												<img src="@routes.Assets.at("images/yellow.svg")" alt="...">
+													<div>Indicates that the cell's IMEI is found in records but
+													is yet to be approved. We will provide the reports soon.
+													</div>
+											</div>
+											<div>
+												<img src="@routes.Assets.at("images/red.jpg")" alt="...">
+													<div>Indicates that this Phone is registered as stolen/lost. 
+												You must exercise extreme caution if you are planning to buy
+												 this phone.
+													</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -68,19 +88,30 @@
 		function showMobileRecord() {
 			var imeid = $('#imeiMeid').val();
 			mobileRecord(imeid);
+			add_status_image();
 		}
 
 		var mobileAjaxSuccess = function(data) {
 			if (data.status == "Ok") {
 				var mobile = data.mobileData;
-				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th></tr><tr><td>'
+				if(mobile.regType=="stolen"){
+					var image='<img src="/assets/images/red.jpg"  alt="...gjkbjkhjk..."/>';
+				}
+				else{
+					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
+				}
+				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
 						+ mobile.userName
 						+ '</td><td>'
 						+ mobile.mobileName
 						+ '</td><td>'
 						+ mobile.mobileModel
 						+ '</td><td>'
-						+ mobile.contactNo + '</td></tr></table><p><button id="statusCheck" class="btn btn-primary" onClick="hideMobileRecord();" value="ok">OK</button></div>';
+						+ mobile.contactNo
+						+ '</td><td>'
+						+ mobile.regType
+						+'</td><td>'
+						+ image + '</td></tr></table><p><button id="statusCheck" class="btn btn-primary" onClick="hideMobileRecord();" value="ok">OK</button></div>';
 				$("#mobileRecords").removeClass("alert alert-danger");
 				$("#mobileRecords").html(mobileData);
 			} else {
