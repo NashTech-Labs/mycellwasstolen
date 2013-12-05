@@ -1,7 +1,7 @@
 @(mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], brands: List[model.domains.Domain.Brand])(implicit flash: Flash) 
 
 @import helper._ 
-@main("Mycellwasstolen"){ 
+@main("Register Stolen/Lost Phone-stolencell"){ 
 	<div class="container">
 		<div class="page-header">
 			<h1>Register Form</h1>
@@ -32,7 +32,28 @@
 					</div>
 					<div class="col-lg-4">
 						<div class="well">
-							Info part
+							<div class="panel panel-warning">
+								<div class="panel-heading">
+									<h1 class="panel-title">It is pay back time for offenders</h1>
+								</div>
+								<div class="panel panel-info title-margin">
+									<div class="panel-heading">
+										<h1 class="panel-title">I want to make my cell unusable for everyone else ...</h1>
+									</div>
+									<div class="text-margin">
+									This is exactly the reason why this database exists. Please
+									enter your details here and we could send you a confirmation
+									mail as soon as your details reflect in our database. Please
+									make sure that you upload a proof of purchase in your name
+									and/or a police complaint. Once all the required information is
+									available to us, your stolen cell IMEI would appear on the
+									database in less than 24 hours. Within the next 72 hours, it
+									would have reached the local authorities and cell phone service
+									providers around the globe. You can <a href="/mobileStatus">
+										view your stolen IMEI report</a> once you are done.
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -13,8 +13,11 @@ GET     /register-stolen-phone      controllers.MobileController.mobileRegistrat
 GET     /register-new-phone         controllers.MobileController.mobileRegistrationSecureForm
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
-GET     /brandForm             controllers.MobileController.brandRegisterForm
+GET     /brandForm                  controllers.MobileController.brandRegisterForm
 POST    /saveMobileName             controllers.MobileController.saveMobileName
+
+GET     /createMobileModelForm      controllers.MobileController.createMobileModelForm
+POST    /createMobileModel          controllers.MobileController.createMobileModel
 
 GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)
 

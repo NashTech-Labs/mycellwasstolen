@@ -1,20 +1,21 @@
-import play.api._
-import play.api.Logger
-import play.api.mvc.SimpleResult
-import play.api.mvc.RequestHeader
-import play.api.mvc.Results.InternalServerError
-import play.api.mvc.Result
+import java.io.File
 import java.sql.Date
-import utils.Connection
+
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.session.Session
+
 import com.typesafe.config.ConfigFactory
-import java.io.File
-import play.api.Play.current
+
+import model.dals.MobileDAL
 import model.domains.Domain._
 import model.users._
-import org.h2.table.Plan
-import model.dals.MobileDAL
+import model.users.MobileService
+import play.api._
+import play.api.Logger
+import play.api.Play.current
+import play.api.mvc.Result
+import play.api.mvc.Results.InternalServerError
+import utils.Connection
 
 object Global extends GlobalSettings{
   
@@ -30,14 +31,17 @@ object Global extends GlobalSettings{
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
      //(Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
-       //(Brands.ddl)create
+       (Brands.ddl ++ MobileModel.ddl)create
         //Logger.info("All tables have been created")
+    // (MobileName.ddl ++ MobileModel.ddl).create
+        //MobileModel.ddl.create
+      //Logger.info("All tables have been created")
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
 
-   // InitialData.insert
+    //InitialData.insert
   }
 
   override def onStop(app: Application): Unit = {

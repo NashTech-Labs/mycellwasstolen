@@ -50,6 +50,9 @@ messages.mobile.brand.added.error=Error in Mobile Brand
 messages.mobile.register.success=Mobile registered successfully
 messages.mobile.register.error=Error in Mobile register
 
+messages.mobile.model.added.success=Mobile Model successfully added
+messages.mobile.model.added.error=Error in Insert Mobile Model
+
 #email
 
 #messages.signature=<br><b>Thanks & Regards !<br>MCWS Support Team <br>http://www.mycellwasstolen.com<b>

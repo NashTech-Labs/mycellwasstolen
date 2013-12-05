@@ -60,7 +60,7 @@ object Domain {
 
   case class MobileModels(
     mobileModel: String,
-    id: Option[Int] = None)
+    mobileName: Int)
 
   case class MobileRegisterForm(
     userName: String,
@@ -75,6 +75,14 @@ object Domain {
 
   case class BrandForm(
     name: String)
+    
+   case class MobilesNameForm(
+    mobileName:String
+    )
+    case class MobilesModelForm(
+    mobileName:String,
+    mobileModel:String)
+  
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -121,10 +129,10 @@ object Domain {
   }
 
   object MobileModel extends Table[MobileModels]("mobilesmodel") {
-    def mobilesnameid: Column[Option[Int]] = column[Option[Int]]("mobilesnameid", O.NotNull)
+    def mobilesnameid: Column[Int] = column[Int]("mobilesnameid", O.NotNull)
     def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
 
-    def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Option[Int])] =
+    def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Int)] =
       model ~ mobilesnameid <> (MobileModels, MobileModels unapply _)
 
     def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)

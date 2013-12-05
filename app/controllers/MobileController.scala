@@ -32,6 +32,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   val brandregisterform = Form(
     mapping(
       "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
+      
+   val createmobilemodelform = Form(
+    mapping(
+      "mobileName" -> nonEmptyText,
+      "mobileModel"->nonEmptyText)(MobilesModelForm.apply)(MobilesModelForm.unapply))
 
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
@@ -49,6 +54,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("Calling MobileNameform")
     Ok(views.html.createMobileNameForm(brandregisterform))
   }
+  
+  def createMobileModelForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    val mobilesName = mobileService.getMobilesName()
+    Logger.info("createmobilemodelform call>>")
+    Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName))
+  }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
@@ -58,14 +69,16 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
         val status = model.domains.Domain.Status.pending
-        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
+        val mobileName = mobileService.getMobileNamesById(mobileuser.mobileName.toInt)
+       Logger.info("MobileName - found valid data."+mobileName)
+        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {
@@ -136,6 +149,27 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
+  
+  def createMobileModel: Action[play.api.mvc.AnyContent] = Action  { implicit request =>
+    Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
+    Logger.info("createmobilemodelform" + createmobilemodelform)
+    val mobilesName = mobileService.getMobilesName()
+    createmobilemodelform.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors,mobilesName)),
+      mobilemodel => {
+        Logger.info("createmobilemodelController:createmobilemodel - found valid data.")
+        val createMobileModel = mobileService.createMobileModel(MobileModels(mobilemodel.mobileModel,mobilemodel.mobileName.toInt))
+
+        createMobileModel match {
+          case Right(mobilename) => {
+            Redirect(routes.MobileController.createMobileModelForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
+          }
+          case Left(message) =>
+            Redirect(routes.MobileController.createMobileModelForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+        }
+      })
+  }
+  
 }
 
 object MobileController extends MobileController(MobileService)
