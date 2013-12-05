@@ -10,6 +10,9 @@ GET     /registerStolenPhone        controllers.MobileController.mobileRegistrat
 GET     /registerSecurePhone        controllers.MobileController.mobileRegistrationSecureForm
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
+GET     /addmobileNameForm          controllers.MobileController.addmobileNameForm
+POST     /addmobileName              controllers.MobileController.addMobileName
+
 GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)
 
 #Javascript Routes
