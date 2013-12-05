@@ -7,7 +7,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "1.0.1",
   "postgresql" % "postgresql" % "9.1-901.jdbc4",
   "org.scalatest" %   "scalatest_2.10" %  "2.0.M5b" %  "test",
-    "junit"  %  "junit"  %       "4.11"   
+    "junit"  %  "junit"  %       "4.11"   ,
+    "org.apache.commons" % "commons-email" % "1.3.1"
 )     
 
 play.Project.playScalaSettings
