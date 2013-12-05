@@ -7,16 +7,15 @@ import model.domains.Domain._
 import play.api.Logger
 import utils.Connection
 
-trait UserDALComponent {
-def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
-def getMobileRecordByIMEID(imeid: String): List[Mobile]
-def getMobilesName(): List[MobilesName]
-def getMobileModelsById(id: Int): List[MobileModels]
-def insertMobileName(mobilename: MobilesName): Either[String, Int]
-
+trait MobileDALComponent {
+	def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
+	def getMobileRecordByIMEID(imeid: String): List[Mobile]
+	def getMobilesName(): List[MobilesName]
+	def getMobileModelsById(id: Int): List[MobileModels]
+	def insertMobileName(mobilename: MobilesName): Either[String, Int]
 }
 
-class UserDAL extends UserDALComponent {
+class MobileDAL extends MobileDALComponent {
 
   override def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]] = {
     try {
@@ -64,4 +63,4 @@ class UserDAL extends UserDALComponent {
   }
 }
 
-object UserDAL extends UserDAL
+object MobileDAL extends MobileDAL

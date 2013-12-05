@@ -6,12 +6,11 @@ import play.api.data._
 import play.api.data.Form
 import play.api.data.Forms._
 import model.domains.Domain._
-import model.users.UserService
 import model.users._
 import java.io.File
 import play.api.libs.json.Json
 
-class MobileController(userService: UserServiceComponent) extends Controller {
+class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
   val mobileregistrationform = Form(
     mapping(
@@ -34,13 +33,13 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       "mobileName" -> nonEmptyText)(MobilesNameForm.apply)(MobilesNameForm.unapply))
 
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val mobilesName = userService.getMobilesName()
+    val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
   }
   
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val mobilesName = userService.getMobilesName()
+    val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
@@ -54,20 +53,20 @@ class MobileController(userService: UserServiceComponent) extends Controller {
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
     Logger.info("mobileregistrationform" + mobileregistrationform)
-    val mobilesName = userService.getMobilesName()
+    val mobilesName = mobileService.getMobilesName()
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
         val status = model.domains.Domain.Status.pending
-        val regMobile = userService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
+        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {
@@ -84,7 +83,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
 
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
-    val mobileData = userService.getMobileRecordByIMEID(imeid)
+    val mobileData = mobileService.getMobileRecordByIMEID(imeid)
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
 	  val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
@@ -99,7 +98,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
 
   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileModels method has been called.")
-    val mobileModel = userService.getMobileModelsById(id)
+    val mobileModel = mobileService.getMobileModelsById(id)
     Logger.info("Mobile Models" + mobileModel)
     implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
     Ok(Json.toJson(mobileModel))
@@ -111,7 +110,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
 
   def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist - Checking mobile is exist or not with : " + imeiId)
-    val isExist = userService.isImeiExist(imeiId)
+    val isExist = mobileService.isImeiExist(imeiId)
     if (isExist) {
       Logger.info("MobileController:isImeiExist - true")
       Ok("false")
@@ -121,7 +120,6 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     }
   }
   
-  
   def addMobileName = Action(parse.multipartFormData) { implicit request =>
     Logger.info("addMobileNameController:addmobileNameForm - Mobile Name.")
     Logger.info("addmobilenameform" + addmobilenameform)
@@ -129,22 +127,18 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       formWithErrors => BadRequest(views.html.addmobileNameForm(formWithErrors)),
       mobilename => {
         Logger.info("addMobileNameController:addMobileName - found valid data.")
-
-        val addMobile = userService.addMobileName(MobilesName(mobilename.mobileName))
+        val addMobile = mobileService.addMobileName(MobilesName(mobilename.mobileName))
 
         addMobile match {
           case Right(mobilename) => {
             Redirect(routes.Application.index)
-
           }
           case Left(message) =>
             Redirect(routes.MobileController.addmobileNameForm).flashing("message" -> "error")
         }
       })
-
   }
-
   
 }
 
-object MobileController extends MobileController(UserService)
+object MobileController extends MobileController(MobileService)

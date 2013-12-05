@@ -4,7 +4,7 @@ import model.dals._
 import model.domains.Domain._
 import play.api.Logger
 
-trait UserServiceComponent{
+trait MobileServiceComponent{
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
   def getMobileRecordByIMEID(imeid: String): Option[Mobile]
   def getMobilesName(): List[MobilesName]
@@ -13,10 +13,10 @@ trait UserServiceComponent{
   def addMobileName(mobilename: MobilesName): Either[String, MobilesName]
 }
 
-class UserService(userdal: UserDALComponent) extends UserServiceComponent{
+class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
   
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
-    userdal.insertMobileUser(mobileuser) match {
+    mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
          mobileuser.email, mobileuser.regType, mobileuser.mobileStatus, mobileuser.description))
@@ -26,26 +26,27 @@ class UserService(userdal: UserDALComponent) extends UserServiceComponent{
   
   override def getMobileRecordByIMEID(imeid: String): Option[Mobile] = {
     Logger.info("getMobileRecordByIMEID called")
-    val mobileData = userdal.getMobileRecordByIMEID(imeid)
+    val mobileData = mobiledal.getMobileRecordByIMEID(imeid)
     if (mobileData.length != 0) Some(mobileData.head) else None
   }
   
   override def getMobilesName(): List[MobilesName] = {
     Logger.info("getMobilesName called")
-    userdal.getMobilesName()
+    mobiledal.getMobilesName()
   }
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
     Logger.info("getMobileRecordByIMEID called")
-    userdal.getMobileModelsById(id)
+    mobiledal.getMobileModelsById(id)
   }
   
   override def isImeiExist(imeid: String): Boolean = {
-    val mobile = userdal.getMobileRecordByIMEID(imeid)
+    val mobile = mobiledal.getMobileRecordByIMEID(imeid)
     if (mobile.length != 0) true else false
   }
-override def addMobileName(mobilename: MobilesName): Either[String, MobilesName] = {
-    userdal.insertMobileName(mobilename) match {
+
+  override def addMobileName(mobilename: MobilesName): Either[String, MobilesName] = {
+    mobiledal.insertMobileName(mobilename) match {
       case Right(id) => Right(MobilesName(mobilename.mobileName))
       case Left(error) => Left(error)
     }
@@ -53,4 +54,4 @@ override def addMobileName(mobilename: MobilesName): Either[String, MobilesName]
 
 }
 
-object UserService extends UserService(UserDAL)
+object MobileService extends MobileService(MobileDAL)

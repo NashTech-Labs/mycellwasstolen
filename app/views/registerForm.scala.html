@@ -6,33 +6,32 @@
 @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 	<fieldset>
-		
-	<input type="hidden" name="regType" id="regType" value="@regType">
-
-	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
-
-	@select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x=>
-	(x.id.get.toString -> (x.mobileName))).toSeq, '_label -> "Mobile Name",
-	'_default -> "-- Choose Mobile Name --", '_showConstraints ->
-	false,'_error ->
-	mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Name Required")))
-
-	@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
-	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
-	'_showConstraints -> false,'_error ->
-	mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
-
-
-	@inputText(mobileRegistrationForm("email"), '_label -> "email")
-	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
-	@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class ->
-	"datepicker", 'style -> "datepicker")
-
-	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact	No.",'_type->"tel") 
-	@textarea(field=mobileRegistrationForm("description"), args = 'rows -> 3, 'cols -> 25, '_label->"Description")
-
-	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
-</fieldset>
+		<input type="hidden" name="regType" id="regType" value="@regType">
+	
+		@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
+	
+		@select(field=mobileRegistrationForm("mobileName"),options=mobilesName.map(x=>
+		(x.id.get.toString -> (x.mobileName))).toSeq, '_label -> "Mobile Name",
+		'_default -> "-- Choose Mobile Name --", '_showConstraints ->
+		false,'_error ->
+		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Name Required")))
+	
+		@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
+		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
+		'_showConstraints -> false,'_error ->
+		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
+	
+	
+		@inputText(mobileRegistrationForm("email"), '_label -> "email")
+		@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
+		@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class ->
+		"datepicker", 'style -> "datepicker")
+	
+		@inputText(mobileRegistrationForm("contactNo"), '_label -> "Contact	No.",'_type->"tel") 
+		@textarea(field=mobileRegistrationForm("description"), args = 'rows -> 3, 'cols -> 25, '_label->"Description")
+	
+		@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
+	</fieldset>
 
 	<div class="form-group">
 		<div class="col-lg-10 col-lg-offset-4">
@@ -45,108 +44,103 @@
 	<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.at("javascripts/intlTelInput.min.js")" type="text/javascript"></script>
 
-<script type="text/javascript">
-
-   $("#contactNo").intlTelInput();
-
-	$(document).ready(function() {
-		$("#mobileName").change(function() {
-
-			var mobileNameId = $(this).val();
-			mobileModels(mobileNameId);
+	<script type="text/javascript">
+	
+	   $("#contactNo").intlTelInput();
+	
+		$(document).ready(function() {
+			$("#mobileName").change(function() {
+				var mobileNameId = $(this).val();
+				mobileModels(mobileNameId);
+			});
 		});
-
-	});
-
-	var mobileAjaxSuccess = function(data) {
-
-		$("#mobileModel").empty();
-		$('#mobileModel').append($('<option>', {
-			value : "-- Choose Mobile Model --",
-			text : "-- Choose Mobile Model --"
-		}));
-		$.each(data, function(i, d) {
-
+	
+		var mobileAjaxSuccess = function(data) {
+			$("#mobileModel").empty();
 			$('#mobileModel').append($('<option>', {
-				value : d.mobileModel,
-				text : d.mobileModel
+				value : "-- Choose Mobile Model --",
+				text : "-- Choose Mobile Model --"
 			}));
-		});
-		console.debug("Success of Ajax Call");
-		console.debug(data);
-	};
-
-	var mobileAjaxError = function(err) {
-		console.debug("Error of ajax Call");
-		console.debug(err);
-	};
-
-	var mobileModels = function(mobileNameId) {
-
-		var mobileAjaxCallBack = {
-			success : mobileAjaxSuccess,
-			error : mobileAjaxError
+			
+			$.each(data, function(i, d) {
+				$('#mobileModel').append($('<option>', {
+					value : d.mobileModel,
+					text : d.mobileModel
+				}));
+			});
+			console.debug("Success of Ajax Call");
+			console.debug(data);
 		};
-
-		jsRoutes.controllers.MobileController.getMobileModels(mobileNameId)
-				.ajax(mobileAjaxCallBack);
-	};
-
-	 $("#mobileRegistrationForm").validate({
-		rules : {
-			imeiMeid : {
-				required : true,
-				remote : {
-					url : '/isImeiExist',
-					type : 'GET',
-					data : {
-						imeiId : function() {
-							return $("#imeiMeid").val();
+	
+		var mobileAjaxError = function(err) {
+			console.debug("Error of ajax Call");
+			console.debug(err);
+		};
+	
+		var mobileModels = function(mobileNameId) {
+	
+			var mobileAjaxCallBack = {
+				success : mobileAjaxSuccess,
+				error : mobileAjaxError
+			};
+	
+			jsRoutes.controllers.MobileController.getMobileModels(mobileNameId)
+					.ajax(mobileAjaxCallBack);
+		};
+	
+		 $("#mobileRegistrationForm").validate({
+			rules : {
+				imeiMeid : {
+					required : true,
+					remote : {
+						url : '/isImeiExist',
+						type : 'GET',
+						data : {
+							imeiId : function() {
+								return $("#imeiMeid").val();
+							}
 						}
 					}
+				},
+				email : {
+					required : true,
+					maxlength : 100,
+					email : true,
+				},
+				userName : {
+					required : true,
+					maxlength : 100
+				},
+				mobileModel : {
+					required : true,
+					maxlength : 100
+				},
+				mobileName : {
+					required : true,
+					maxlength : 100
+				},
+				contactNo : {
+					required : true,
+					maxlength : 100
+				},
+				purchaseDate : {
+					required : true,
+					maxlength : 100
+				},
+				description : {
+					required : true,
+					maxlength : 100
+				},
+				fileUpload : {
+					required : true,
+					maxlength : 100
 				}
 			},
-			email : {
-				required : true,
-				maxlength : 100,
-				email : true,
-			},
-			userName : {
-				required : true,
-				maxlength : 100
-			},
-			mobileModel : {
-				required : true,
-				maxlength : 100
-			},
-			mobileName : {
-				required : true,
-				maxlength : 100
-			},
-			contactNo : {
-				required : true,
-				maxlength : 100
-			},
-			purchaseDate : {
-				required : true,
-				maxlength : 100
-			},
-			description : {
-				required : true,
-				maxlength : 100
-			},
-			fileUpload : {
-				required : true,
-				maxlength : 100
+			messages : {
+				imeiMeid : {
+					remote : "This imeiMeid is already exist."
+				}
 			}
-
-		},
-		messages : {
-			imeiMeid : {
-				remote : "This imeiMeid is already exist."
-			}
-		}
-	});
-	
-	
-</script>
+		});
+		
+	</script>
