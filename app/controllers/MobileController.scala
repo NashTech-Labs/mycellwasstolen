@@ -28,6 +28,10 @@ class MobileController(userService: UserServiceComponent) extends Controller {
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
+      
+  val addmobilenameform = Form(
+    mapping(
+      "mobileName" -> nonEmptyText)(MobilesNameForm.apply)(MobilesNameForm.unapply))
 
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = userService.getMobilesName()
@@ -39,6 +43,12 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     val mobilesName = userService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
+  }
+  
+   
+  def addmobileNameForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("addMobileform call>>")
+    Ok(views.html.addmobileNameForm(addmobilenameform))
   }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
@@ -57,7 +67,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {
@@ -110,6 +120,30 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       Ok("true")
     }
   }
+  
+  
+  def addMobileName = Action(parse.multipartFormData) { implicit request =>
+    Logger.info("addMobileNameController:addmobileNameForm - Mobile Name.")
+    Logger.info("addmobilenameform" + addmobilenameform)
+    addmobilenameform.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.addmobileNameForm(formWithErrors)),
+      mobilename => {
+        Logger.info("addMobileNameController:addMobileName - found valid data.")
+
+        val addMobile = userService.addMobileName(MobilesName(mobilename.mobileName))
+
+        addMobile match {
+          case Right(mobilename) => {
+            Redirect(routes.Application.index)
+
+          }
+          case Left(message) =>
+            Redirect(routes.MobileController.addmobileNameForm).flashing("message" -> "error")
+        }
+      })
+
+  }
+
   
 }
 

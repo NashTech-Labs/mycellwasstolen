@@ -8,10 +8,12 @@ import play.api.Logger
 import utils.Connection
 
 trait UserDALComponent {
-	def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
-	def getMobileRecordByIMEID(imeid: String): List[Mobile]
-	def getMobilesName(): List[MobilesName]
-	def getMobileModelsById(id: Int): List[MobileModels]
+def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
+def getMobileRecordByIMEID(imeid: String): List[Mobile]
+def getMobilesName(): List[MobilesName]
+def getMobileModelsById(id: Int): List[MobileModels]
+def insertMobileName(mobilename: MobilesName): Either[String, Int]
+
 }
 
 class UserDAL extends UserDALComponent {
@@ -49,6 +51,17 @@ class UserDAL extends UserDALComponent {
       }
     }
   
+  override def insertMobileName(mobilename: MobilesName): Either[String, Int] = {
+    try {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Right(MobileName.insert(mobilename))
+      }
+    } catch {
+      case ex: Exception =>
+        Logger.info("Error in insert user" + ex.printStackTrace())
+        Left(ex.getMessage())
+    }
+  }
 }
 
 object UserDAL extends UserDAL
