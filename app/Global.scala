@@ -12,7 +12,7 @@ import com.typesafe.config.ConfigFactory
 import java.io.File
 import play.api.Play.current
 import model.domains.Domain._
-import model.users.UserService
+import model.users.MobileService
 
 object Global extends GlobalSettings{
   
@@ -27,15 +27,15 @@ object Global extends GlobalSettings{
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-     //(Mobiles.ddl ++ MobileName.ddl ++ MobileModel.ddl).create
-       // Mobiles.ddl.create
+    // (MobileName.ddl ++ MobileModel.ddl).create
+        //MobileModel.ddl.create
       Logger.info("All tables have been created")
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
 
-//     InitialData.insert
+    //InitialData.insert
   }
 
   override def onStop(app: Application): Unit = {

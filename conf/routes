@@ -14,7 +14,9 @@ GET     /register-new-phone        controllers.MobileController.mobileRegistrati
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
 GET     /addmobileNameForm          controllers.MobileController.addmobileNameForm
-POST     /addmobileName              controllers.MobileController.addMobileName
+GET     /createMobileModelForm      controllers.MobileController.createMobileModelForm
+POST     /addmobileName             controllers.MobileController.addMobileName
+POST     /createMobileModel         controllers.MobileController.createMobileModel
 
 GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)
 

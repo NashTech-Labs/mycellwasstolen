@@ -13,6 +13,8 @@ trait MobileDALComponent {
 	def getMobilesName(): List[MobilesName]
 	def getMobileModelsById(id: Int): List[MobileModels]
 	def insertMobileName(mobilename: MobilesName): Either[String, Int]
+	def getMobileNamesById(id: Int): List[MobilesName]
+	def insertMobileModel(mobilemodel: MobileModels): Either[String, Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -41,6 +43,8 @@ class MobileDAL extends MobileDALComponent {
         Logger.info("Calling getMobilesName")
        (for { mobilename <- MobileName } yield mobilename).list
       }
+      
+      
     }
   
   override def getMobileModelsById(id: Int): List[MobileModels] = {
@@ -61,6 +65,27 @@ class MobileDAL extends MobileDALComponent {
         Left(ex.getMessage())
     }
   }
+  
+  
+  override def insertMobileModel(mobilemodel: MobileModels): Either[String, Int] = {
+    try {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Right(MobileModel.insert(mobilemodel))
+      }
+    } catch {
+      case ex: Exception =>
+        Logger.info("Error in insert user" + ex.printStackTrace())
+        Left(ex.getMessage())
+    }
+  }
+  
+  override def getMobileNamesById(mid: Int): List[MobilesName] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getMobileNameById" +mid)
+       (for { mobilename <- MobileName if (mobilename.id === mid) } yield mobilename).list
+      }
+    }
+  
 }
 
 object MobileDAL extends MobileDAL

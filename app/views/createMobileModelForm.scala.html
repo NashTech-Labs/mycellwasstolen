@@ -1,0 +1,20 @@
+@(createmobilemodelform: Form[model.domains.Domain.MobilesModelForm], mobilesName:List[model.domains.Domain.MobilesName])
+@import helper._ 
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+@helper.form(action =routes.MobileController.createMobileModel, 'id ->"mobileModelForm",'enctype -> "multipart/form-data") {
+<fieldset>
+	@select(field=createmobilemodelform("mobileName"),options=mobilesName.map(x=>
+		(x.id.get.toString -> (x.mobileName))).toSeq, '_label -> "Mobile Name",
+		'_default -> "-- Choose Mobile Name --", '_showConstraints ->
+		false,'_error ->
+		createmobilemodelform("mobileName").error.map(_.withMessage("Mobile Name Required")))	
+
+	@inputText(createmobilemodelform("mobileModel"), '_label -> "Mobile Model")
+
+</fieldset>
+		
+	<div class="form-action">
+		<input type="submit" value="Add">
+	</div>
+
+}

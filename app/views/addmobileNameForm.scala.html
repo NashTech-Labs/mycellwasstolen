@@ -1,5 +1,6 @@
 @(addmobilenameform: Form[model.domains.Domain.MobilesNameForm])
 @import helper._ 
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 @helper.form(action =routes.MobileController.addMobileName, 'id ->"mobileNameForm",'enctype -> "multipart/form-data") {
 
 	<fieldset>

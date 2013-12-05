@@ -11,6 +11,8 @@ trait MobileServiceComponent{
   def getMobileModelsById(id: Int): List[MobileModels]
   def isImeiExist(imeid: String): Boolean
   def addMobileName(mobilename: MobilesName): Either[String, MobilesName]
+  def getMobileNamesById(id: Int): Option[MobilesName]
+  def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -40,6 +42,13 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     mobiledal.getMobileModelsById(id)
   }
   
+  
+  override def getMobileNamesById(id: Int): Option[MobilesName] = {
+    Logger.info("getMobileNamesById called")
+    val mobileName = mobiledal.getMobileNamesById(id)
+    if (mobileName.length != 0) Some(mobileName.head) else None
+  }
+  
   override def isImeiExist(imeid: String): Boolean = {
     val mobile = mobiledal.getMobileRecordByIMEID(imeid)
     if (mobile.length != 0) true else false
@@ -48,6 +57,13 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def addMobileName(mobilename: MobilesName): Either[String, MobilesName] = {
     mobiledal.insertMobileName(mobilename) match {
       case Right(id) => Right(MobilesName(mobilename.mobileName))
+      case Left(error) => Left(error)
+    }
+  }
+  
+  override def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels] = {
+    mobiledal.insertMobileModel(mobilemodel) match {
+      case Right(id) => Right(MobileModels(mobilemodel.mobileModel,mobilemodel.mobileName))
       case Left(error) => Left(error)
     }
   }
