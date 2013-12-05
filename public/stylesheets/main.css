@@ -30,12 +30,14 @@
 }
 
 .form-margin{
-	margin-top: -20px;
+	margin-top: -34px;
 }
 
 .title-margin{
 	margin-top: -1px;
 	margin-bottom: 0px;
+	background-color: #f5f5f5;
+	padding:15px;
 }
 
 .required-field {
@@ -47,4 +49,13 @@
 .error {
 	color: #FF0000;
     margin-top: 5px;
+}
+
+.well{
+	margin-top: 60px !important;
+}
+
+.text-margin{
+	margin-top: 10px;
+	background-color: #f5f5f5;
 }
