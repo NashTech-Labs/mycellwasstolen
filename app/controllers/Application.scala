@@ -31,7 +31,7 @@ class Application extends Controller {
   }
 
   def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Ok(views.html.index("Hello"))
+    Ok(views.html.index("Welcome"))
   }
 
   def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>

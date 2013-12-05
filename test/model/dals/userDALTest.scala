@@ -8,18 +8,18 @@ import play.api.Logger
 
 class userDALTest extends FunSuite {
 
-  test("userDAL: ") {
+  /*test("userDAL: ") {
 
     val mobileUser = Mobile(
       "gs", "nokia", "glaxacy", "313dsd", new java.sql.Date(new java.util.Date().getTime()), 983131313,
       "gs@gmail.com", "ddas  asd")
 
     running(FakeApplication()) {
-     /* val mobileId = userDal.insertMobileUser(mobileUser)
+      val mobileId = userDal.insertMobileUser(mobileUser)
       println("mobileId: " + mobileId)
-      assert(mobileId.right.get.get > 0)*/
+      assert(mobileId.right.get.get > 0)
     }
 
-  }
+  }*/
 
 }

@@ -41,3 +41,10 @@ name=Name
 password=Password
 confPassword=Confirm Password
 email=Email
+
+#email
+
+#messages.signature=<br><b>Thanks & Regards !<br>MCWS Support Team <br>http://www.mycellwasstolen.com<b>
+#mobile.register.message=We have received your request for marking the IMEI - {0} as Stolen/Lost.
+#We are going through the documentation that has been provided and would be updating you soon.Thank you for updating your record on www.mycellwasstolen.com and helping us in breaking the theft cycle.
+#Meanwhile, you might be interested in the following information
