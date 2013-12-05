@@ -5,7 +5,7 @@ import play.api.i18n.Messages
 
 object Common {
   
- /* def registerMessage(name: String, userId: String, password: String): String = {
+  def registerMessage(name: String, userId: String, password: String): String = {
     Messages("messages.user.register", name, userId, signature)
   }
   
@@ -13,7 +13,7 @@ object Common {
     Messages("messages.signature")
   }
   
-  def sendMailWithReplyTo(email: String, subject: String, message: String, replyTo: String): Unit = {
+ /* def sendMailWithReplyTo(email: String, subject: String, message: String, replyTo: String): Unit = {
     val mail = use[MailerPlugin].email
     mail.setSubject(subject)
     mail.addRecipient(email)
