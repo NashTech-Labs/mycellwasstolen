@@ -1,12 +1,13 @@
-@(status: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
+@(regType: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], mobilesName:List[model.domains.Domain.MobilesName]) 
 
-@import helper._ 
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 	<fieldset>
 		
-	<input type="hidden" name="regType" id="regType" value="@status">
+	<input type="hidden" name="regType" id="regType" value="@regType">
 
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
@@ -43,6 +44,9 @@
 	<script src="@routes.Assets.at("javascripts/intlTelInput.min.js")" type="text/javascript"></script>
 
 <script type="text/javascript">
+
+   $("#contactNo").intlTelInput();
+
 	$(document).ready(function() {
 		$("#mobileName").change(function() {
 
@@ -85,7 +89,6 @@
 		jsRoutes.controllers.MobileController.getMobileModels(mobileNameId)
 				.ajax(mobileAjaxCallBack);
 	};
-	$("#contactNo").intlTelInput();
 
 	 $("#mobileRegistrationForm").validate({
 		rules : {

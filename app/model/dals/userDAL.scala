@@ -13,6 +13,7 @@ def getMobileRecordByIMEID(imeid: String): List[Mobile]
 def getMobilesName(): List[MobilesName]
 def getMobileModelsById(id: Int): List[MobileModels]
 def insertMobileName(mobilename: MobilesName): Either[String, Int]
+
 }
 
 class UserDAL extends UserDALComponent {
@@ -39,7 +40,7 @@ class UserDAL extends UserDALComponent {
   override def getMobilesName(): List[MobilesName] = {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getMobilesName")
-       (for { mobilesName <- MobileName } yield mobilesName).list
+       (for { mobilename <- MobileName } yield mobilename).list
       }
     }
   

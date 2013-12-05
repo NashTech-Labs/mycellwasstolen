@@ -18,7 +18,7 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       "userName" -> nonEmptyText,
       "mobileName" -> nonEmptyText,
       "mobileModel" -> nonEmptyText,
-      "imeiMeid" -> nonEmptyText.verifying(" IMEI must be of minimum 14 digits",_.matches("[0-9]{14,17}")),
+      "imeiMeid" -> nonEmptyText,
       "purchaseDate" -> sqlDate("yyyy-MM-dd"),
       "contactNo" -> nonEmptyText,
       "email" -> email,
@@ -59,10 +59,10 @@ class MobileController(userService: UserServiceComponent) extends Controller {
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
-
+        val status = model.domains.Domain.Status.pending
         val regMobile = userService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, mobileuser.description))
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
@@ -86,21 +86,23 @@ class MobileController(userService: UserServiceComponent) extends Controller {
     Logger.info("MobileController: getImeiMeidList method has been called.")
     val mobileData = userService.getMobileRecordByIMEID(imeid)
     Logger.info("Mobile Records" + mobileData)
-    implicit val resultWrites = Json.writes[model.domains.Domain.Mobile]
     if (mobileData != None && mobileData.get.id != None) {
-      val obj = Json.toJson(mobileData.get)(resultWrites)
+	  val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
+	                     mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
+	  implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
+      val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
       Ok(Json.obj("status" -> "Error"))
     }
   }
-   
-   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action {implicit request =>
-      Logger.info("MobileController: getMobileModels method has been called.")
-      val mobileModel = userService.getMobileModelsById(id)
-      Logger.info("Mobile Models" + mobileModel)
-      implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
-      Ok(Json.toJson(mobileModel))
+
+  def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("MobileController: getMobileModels method has been called.")
+    val mobileModel = userService.getMobileModelsById(id)
+    Logger.info("Mobile Models" + mobileModel)
+    implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
+    Ok(Json.toJson(mobileModel))
   }
 
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>
