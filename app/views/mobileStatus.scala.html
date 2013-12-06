@@ -1,5 +1,7 @@
 @(mobileStatusForm: Form[model.domains.Domain.MobileStatus])(implicit flash: Flash)
 @import helper._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
 @main("Check Cell Status-stolencell"){
 <div class="container">
 		<div class="page-header">
@@ -10,6 +12,19 @@
 				<h3 class="panel-title">Check Status</h3>
 			</div>
 			<div class="panel-body">
+				<div class="row">
+					@flash.get("ERROR").map { message =>
+						<div class="alert alert-dismissable alert-danger">
+							<strong>@message</strong>
+						</div>
+					}
+					
+					@flash.get("SUCCESS").map { message =>
+						<div class="alert alert-dismissable alert-success">
+							<strong>@message</strong>
+						</div>
+					}
+				</div>
 				<div class="row">
 					<div class="col-lg-8">
 						<div class="well">
@@ -88,17 +103,16 @@
 		function showMobileRecord() {
 			var imeid = $('#imeiMeid').val();
 			mobileRecord(imeid);
-			add_status_image();
 		}
 
 		var mobileAjaxSuccess = function(data) {
 			if (data.status == "Ok") {
 				var mobile = data.mobileData;
 				if(mobile.regType=="stolen"){
-					var image='<img src="/assets/images/red.jpg"  alt="...stolen cell..."/>';
+					var image='<img src="/assets/images/red.jpg"  alt="...gjkbjkhjk..."/>';
 				}
 				else{
-					var image='<img src="/assets/images/Green.jpg"  alt="...clean cell..."/>';
+					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
 				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
 						+ mobile.userName
@@ -117,7 +131,7 @@
 			} else {
 				$("#mobileRecords").addClass("alert alert-danger");
 				$("#mobileRecords").html("Data Not Found");
-				console.debug("Data not found");
+				console.debug("Data no found");
 			}
 			console.debug("Success of Ajax Call");
 			console.debug("Success of Ajax Call" + data);
@@ -142,7 +156,10 @@
 	     function hideMobileRecord() {
 	        $("#mobile-status").hide();
 		}
-		
+	     
+	    $("#imeiMeid").rules("add", {
+	 			required : true
+	 		});		
 </script>	           	
 	
 }
