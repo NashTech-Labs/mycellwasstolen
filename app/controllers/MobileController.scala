@@ -10,6 +10,7 @@ import model.users._
 import java.io.File
 import play.api.libs.json.Json
 import play.api.i18n.Messages
+import utils.Common
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
@@ -78,11 +79,17 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/gaurav/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
         }
 
         regMobile match {
           case Right(mobileuser) => {
+            try {
+              Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+                "Registration Confirmed on MCWS", Common.registerMessage(mobileuser.imeiMeid))
+            } catch {
+              case e: Exception => Logger.info("" + e.printStackTrace())
+            }
             Redirect(routes.Application.index).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
           }
           case Left(message) =>

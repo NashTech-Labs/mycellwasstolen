@@ -8,7 +8,6 @@ libraryDependencies ++= Seq(
   "postgresql" % "postgresql" % "9.1-901.jdbc4",
   "org.scalatest" %   "scalatest_2.10" %  "2.0.M5b" %  "test",
   "com.typesafe" %% "play-plugins-mailer" % "2.1-RC2",
-   "junit"  %  "junit"  %  "4.11"
-)     
+   "junit"  %  "junit"  %  "4.11")     
 
 play.Project.playScalaSettings
