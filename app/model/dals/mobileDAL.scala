@@ -15,6 +15,7 @@ trait MobileDALComponent {
 	def insertMobileName(brand: Brand): Either[String, Option[Int]]
 	def getMobileNamesById(id: Int): List[Brand]
 	def insertMobileModel(mobilemodel: MobileModels): Either[String, Int]
+	def getUserRecord() : List[Mobile]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -84,6 +85,13 @@ class MobileDAL extends MobileDALComponent {
       }
     }
   
+   override def getUserRecord() : List[Mobile] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getUserRecord")
+       (for { mobileRecords <- Mobiles } yield mobileRecords).list
+      }
+    }
+   
 }
 
 object MobileDAL extends MobileDAL
