@@ -1,6 +1,6 @@
 package utils
 
-//import com.typesafe.plugin._
+import com.typesafe.plugin._
 import play.api.i18n.Messages
 
 object Common {
