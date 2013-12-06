@@ -27,9 +27,10 @@ import play.api.cache.Cache
 import model.users.MobileService
 
 class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured{
-   val adminProfile = Form(
+   
+ val adminProfile = Form(
     mapping(
-      "emal"-> nonEmptyText,
+      "email"-> email,
       "password" -> nonEmptyText)(Admin.apply)(Admin.unapply))
   
   def mobileRecord: Action[play.api.mvc.AnyContent] = Action { implicit request =>
@@ -37,19 +38,27 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
         Ok(html.admin.users(adminProfile))
   }
    
-  def showAllMobileList:  EssentialAction = withAuth { username =>
-    implicit request =>
-      Logger.info("showAllMobileList has been called")
-      val user: Option[Mobile] = Cache.getAs[Mobile](username)
-      val users: List[Mobile] = mobileService.getUserList
-        Ok(html.admin.users(adminProfile))
- }
-  
-    def authenticate: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def authenticate: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     adminProfile.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.users(formWithErrors)),
       adminrecord => Redirect(routes.AdminController.mobileRecord).withSession(Security.username -> adminrecord.email))
   }
+
+  /*def mobiles: EssentialAction = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:mobiles method has been called.")
+      //val user: Option[Mobile] = Cache.getAs[User](username)
+      val mobiles: List[Mobile] = mobileService.getAllMobiles
+      Ok(html.admin.mobiles(mobiles))
+  }*/
+
+  def mobiles: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("AdminController:mobiles method has been called.")
+    //val user: Option[Mobile] = Cache.getAs[User](username)
+    val mobiles: List[Mobile] = mobileService.getAllMobiles
+    Ok(html.admin.mobiles(mobiles))
+  }
+    
 }
 
 trait Secured {

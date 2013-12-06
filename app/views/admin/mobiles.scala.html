@@ -1,0 +1,77 @@
+@(mobiles: List[model.domains.Domain.Mobile])(implicit flash: Flash)
+
+@import model.domains.Domain.Status
+
+@main("Mycellwasstolen") {
+
+	<div class="content-body span10">
+		<div class="well">
+			<div class="row">
+				<div class="span6" style="padding-left: 20px;">
+					<h3>@Messages("admin.requestapproval")</h3>
+				</div>
+				<div class="span6">
+					<a class="btn btn-info" style="float: right;" href="#">Proof</a>
+					<a class="btn btn-info" style="float: right;" href="#">Proof Demanded</a>
+				</div>
+			</div>
+			@flash.get("error").map { message =>
+                <div class="alert alert-error">
+        			<strong>@message</strong>
+      			</div>
+            }
+            
+            @flash.get("success").map { message =>
+                <div class="alert alert-success">
+        			<strong>@message</strong>
+      			</div>
+            }
+            
+            @if(mobiles.size > 0) {
+            	<table id="mobileTable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
+            		<thead>
+						<tr>
+							<th>@Messages("mobile.name")</th>
+							<th>@Messages("mobile.model")</th>
+							<th>@Messages("mobile.imei")</th>
+							<th>@Messages("mobile.purchaseDate")</th>
+							<th>@Messages("mobile.email")</th>
+							<th>@Messages("mobile.approval")</th>
+							<th>@Messages("mobile.status")</th>
+							<th>@Messages("mobile.proof")</th>
+							<th>@Messages("mobile.approve")</th>
+							<th>@Messages("mobile.demandProof")</th>
+							<th>@Messages("mobile.registrationTime")</th>
+						</tr>
+					</thead>
+					<tbody>
+           			@for(mobile <- mobiles) {
+			    		<tr>
+			    			<td>@mobile.mobileName</td>
+			    			<td>@mobile.mobileModel</td>
+			    			<td>@mobile.imeiMeid</td>
+			    			<td>@mobile.purchaseDate</td>
+			    			<td>@mobile.email</td>
+			    			<td>@mobile.mobileStatus</td>
+			    			<td>@mobile.regType</td>
+			    			<td>
+		    					<a title="Get Proof" class="btn btn-info" href="">Get Proof</a>
+		    				</td>
+		    				<td>
+		    					<a title="Approve" class="btn btn-info" href="#">Approve</a>
+		    				</td>
+		    				<td>
+		    					<a title="Demand Proof" class="btn btn-info" href="#">Demand Proof</a>
+		    				</td>
+		    				<td>@mobile.purchaseDate</td>
+			    		</tr>
+                      }
+           			</tbody>
+            	</table>
+            } else {
+            	<h1>@Messages("default.notShow")</h1>
+            }
+            
+		</div>
+	</div>
+}

@@ -11,10 +11,9 @@ trait MobileServiceComponent{
   def getMobileModelsById(id: Int): List[MobileModels]
   def isImeiExist(imeid: String): Boolean
   def addMobileName(brand: Brand): Either[String, Option[Int]]
-  //def addMobileName(mobilename: MobilesName): Either[String, MobilesName]
   def getMobileNamesById(id: Int): Option[Brand]
   def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
-  def getUserList(): List[Mobile]
+  def getAllMobiles: List[Mobile]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -67,9 +66,9 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     }
   }
 
-  override def getUserList(): List[Mobile] = {
-    Logger.info("getUserList called")
-    mobiledal.getUserRecord()
+  override def getAllMobiles: List[Mobile] = {
+    Logger.info("getAllMobiles called")
+    mobiledal.getAllMobiles
   }
   
 }

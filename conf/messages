@@ -60,3 +60,18 @@ default.email.title=MCWS <cellsupport@mycellwasstolen.com>
 messages.signature=<br><b>Thanks & Regards !<br>MCWS Support Team <br>http://www.mycellwasstolen.com<b>
 
 messages.mobile.register=Dear Mobile Owner, <br><br>We have received your request for marking the <b>IMEI - {0}</b> as Stolen/Lost.We are going through the documentation that has been provided and would be updating you soon.Thank you for updating your record on www.mycellwasstolen.com and helping us in breaking the theft cycle. Meanwhile, you might be interested in the following information.<br><br><a href="#">Finding Stolen Cell</a><br><a href="#">Ok I lost it, what next</a><br><a href="#">Tips to save your cell</a><br><br>{1}
+
+#admin
+
+admin.requestapproval=Request Approval page
+mobile.name=Name
+mobile.model=Model
+mobile.imei=IMEI/MEID
+mobile.purchaseDate=Date
+mobile.email=Email
+mobile.approval=Approval
+mobile.status=Status
+mobile.proof=Get Proof
+mobile.approve=Approve
+mobile.demandProof=Demand Proof
+mobile.registrationTime=Registration Time
