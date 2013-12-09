@@ -70,17 +70,25 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
         val status = model.domains.Domain.Status.pending
+        val date = new java.sql.Date(new java.util.Date().getTime())
         val mobileName = mobileService.getMobileNamesById(mobileuser.mobileName.toInt)
-       Logger.info("MobileName - found valid data."+mobileName)
-        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
+       Logger.info("MobileName - found valid data." + mobileName)
+        /*val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, ))*/
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
+          val exte = imageFilename.split(".")
+          Logger.info("extension" + exte)
+          Logger.info("imageFilename" +imageFilename)
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("/home/supriya/Desktop/" + mobileuser.imeiMeid))
+          image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." +exte))
         }
+        
+        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
+          mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
 
         regMobile match {
           case Right(mobileuser) => {

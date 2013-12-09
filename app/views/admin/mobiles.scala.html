@@ -25,9 +25,9 @@
                 <div class="alert alert-success">
         			<strong>@message</strong>
       			</div>
-            }
-            
-            @if(mobiles.size > 0) {
+		}
+
+		@if(mobiles.size > 0) {
             	<table id="mobileTable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
             		<thead>
 						<tr>
@@ -55,23 +55,44 @@
 			    			<td>@mobile.mobileStatus</td>
 			    			<td>@mobile.regType</td>
 			    			<td>
-		    					<a title="Get Proof" class="btn btn-info" href="">Get Proof</a>
-		    				</td>
-		    				<td>
-		    					<a title="Approve" class="btn btn-info" href="#">Approve</a>
-		    				</td>
-		    				<td>
-		    					<a title="Demand Proof" class="btn btn-info" href="#">Demand Proof</a>
-		    				</td>
-		    				<td>@mobile.purchaseDate</td>
-			    		</tr>
+								<button class="btn btn-info" data-toggle="modal"
+									data-target="#myModal_@mobile.imeiMeid">Get Proof</button> <!-- Modal -->
+								<div class="modal fade" id="myModal_@mobile.imeiMeid" tabindex="-1" role="dialog"
+									aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">&times;</button>
+												<h4 class="modal-title" id="myModalLabel">Proof Document</h4>
+											</div>
+											<div class="modal-body"><img style="height: 200px;" alt="Proof Document" src="@routes.Assets.at("images/Green.jpg")" /></div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
+													data-dismiss="modal">Close</button>
+											</div>
+										</div>
+									</div>
+								</div> 
+					    </td>
+	    				<td>
+	    					<a title="Approve" class="btn btn-info" href="#">Approve</a>
+	    				</td>
+	    				<td>
+	    					<a title="Demand Proof" class="btn btn-info" href="#">Demand Proof</a>
+	    				</td>
+	    				<td>@mobile.purchaseDate</td>
+			    	</tr>
+			    		
                       }
            			</tbody>
             	</table>
             } else {
             	<h1>@Messages("default.notShow")</h1>
             }
-            
-		</div>
 	</div>
+	</div>
+	
+	<script type="text/javascript">
+	</script>
 }

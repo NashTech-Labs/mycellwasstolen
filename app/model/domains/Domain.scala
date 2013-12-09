@@ -97,19 +97,21 @@ object Domain {
     def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O.NotNull, O DBType ("VARCHAR(50)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(500)"))
+    //def registrationDate: Column[java.sql.Date] = column[java.sql.Date]("registration_date", O.NotNull)
+    //def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(500)"))
 
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, String, String, String, Status.Value, String, Option[Int])] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ mobileStatus ~ description ~ id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
-        email ~ regType ~ mobileStatus ~ description <> (
+        email ~ regType ~ mobileStatus ~ description<> (
           { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description) =>
             Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description)
           },
           { mobileregistration: Mobile =>
-            Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,
-              mobileregistration.purchaseDate, mobileregistration.contactNo, mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus, mobileregistration.description))
+            Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,mobileregistration.purchaseDate, mobileregistration.contactNo,
+              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus, mobileregistration.description))
           }) returning id
   }
 
