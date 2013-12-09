@@ -52,7 +52,7 @@ class MobileDAL extends MobileDALComponent {
        (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }
- 
+
   override def insertMobileName(brand: Brand): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -64,7 +64,7 @@ class MobileDAL extends MobileDALComponent {
         Left(ex.getMessage())
     }
   }
- 
+
   override def insertMobileModel(mobilemodel: MobileModels): Either[String, Int] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -90,7 +90,7 @@ class MobileDAL extends MobileDALComponent {
        (for { mobile <- Mobiles } yield mobile).list
       }
     }
-   
+
 }
 
 object MobileDAL extends MobileDAL

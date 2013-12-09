@@ -30,11 +30,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
-      
+
   val brandregisterform = Form(
     mapping(
       "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
-      
+
    val createmobilemodelform = Form(
     mapping(
       "mobileName" -> nonEmptyText,
@@ -45,18 +45,18 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
   }
-  
+
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
-  
+
   def brandRegisterForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("Calling MobileNameform")
     Ok(views.html.createMobileNameForm(brandregisterform))
   }
-  
+
   def createMobileModelForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("createmobilemodelform call>>")
@@ -86,7 +86,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val contentType = image.contentType.get
           image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." +exte))
         }
-        
+
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, mobileuser.document))
@@ -145,7 +145,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       Ok("true")
     }
   }
-  
+
   def saveMobileName:Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: brandRegisterForm")
     Logger.info("brandregisterform" + brandregisterform)
@@ -165,7 +165,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
-  
+
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action  { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
     Logger.info("createmobilemodelform" + createmobilemodelform)
@@ -185,7 +185,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
-  
+
 }
 
 object MobileController extends MobileController(MobileService)
