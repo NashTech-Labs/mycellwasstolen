@@ -82,9 +82,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val imageFilename = image.filename
           val exte = imageFilename.split(".")
           Logger.info("extension" + exte)
-          Logger.info("imageFilename" +imageFilename)
+          Logger.info("imageFilename" + imageFilename)
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." +exte))
+          image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." + exte))
         }
 
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
@@ -112,9 +112,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     val mobileData = mobileService.getMobileRecordByIMEID(imeid)
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
-	  val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
-	                     mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
-	  implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
+     val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
+                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
+      implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
