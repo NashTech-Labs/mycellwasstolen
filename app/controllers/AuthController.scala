@@ -23,11 +23,6 @@ import play.api.mvc.EssentialAction
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured{
    
-  def mobileRecord: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-        Logger.info("ddfjhkljhk")
-        Ok(html.admin.login(loginForm))
-  }
-   
   def mobiles: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")

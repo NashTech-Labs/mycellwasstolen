@@ -29,11 +29,10 @@ GET    /mobileStatus                controllers.MobileController.mobileStatus
 GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
 
 #Admin
-GET    /admin                      controllers.AuthController.mobileRecord
 GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
 GET    /admin/mobiles              controllers.AuthController.mobiles
 
 # Map static resources from the /public folder to the /assets URL path
-GET   /assets/*file                 controllers.Assets.at(path="/public", file)
+GET   /assets/*file                controllers.Assets.at(path="/public", file)
