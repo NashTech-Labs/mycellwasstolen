@@ -22,7 +22,7 @@ import views.html
 import play.api.mvc.EssentialAction
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured{
-   
+
   def mobiles: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
@@ -41,7 +41,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   )
 
   def check(username: String, password: String) = {
-    (username == "admin" && password == "1234")  
+    (username == "admin" && password == "1234")
     val user = User("admin", "1234")
     Cache.set(username, user, 60 * 60)
     true
@@ -64,7 +64,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
     )
   }
 }
-    
+
 trait Secured {
 
   def username(request: RequestHeader): Option[String] = request.session.get(Security.username)

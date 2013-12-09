@@ -17,7 +17,7 @@ trait MobileServiceComponent{
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
-  
+
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
     mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
@@ -26,39 +26,38 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
       case Left(error) => Left(error)
     }
   }
-  
+
   override def getMobileRecordByIMEID(imeid: String): Option[Mobile] = {
     Logger.info("getMobileRecordByIMEID called")
     val mobileData = mobiledal.getMobileRecordByIMEID(imeid)
     if (mobileData.length != 0) Some(mobileData.head) else None
   }
-  
+
   override def getMobilesName(): List[Brand] = {
     Logger.info("getMobilesName called")
     mobiledal.getMobilesName
   }
-  
+
   override def getMobileModelsById(id: Int): List[MobileModels] = {
     Logger.info("getMobileRecordByIMEID called")
     mobiledal.getMobileModelsById(id)
   }
-  
-  
+
   override def getMobileNamesById(id: Int): Option[Brand] = {
     Logger.info("getMobileNamesById called")
     val mobileName = mobiledal.getMobileNamesById(id)
     if (mobileName.length != 0) Some(mobileName.head) else None
   }
-  
+
   override def isImeiExist(imeid: String): Boolean = {
     val mobile = mobiledal.getMobileRecordByIMEID(imeid)
     if (mobile.length != 0) true else false
   }
 
   override def addMobileName(brand: Brand): Either[String, Option[Int]] = {
-    mobiledal.insertMobileName(brand) 
+    mobiledal.insertMobileName(brand)
   }
-  
+
   override def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels] = {
     mobiledal.insertMobileModel(mobilemodel) match {
       case Right(id) => Right(MobileModels(mobilemodel.mobileModel,mobilemodel.mobileName))
@@ -70,7 +69,7 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     Logger.info("getAllMobiles called")
     mobiledal.getAllMobiles
   }
-  
+
 }
 
 object MobileService extends MobileService(MobileDAL)
