@@ -38,6 +38,8 @@ object Domain {
     regType: String,
     mobileStatus: Status.Value,
     description: String,
+    regDate: java.sql.Date,
+    document: String,
     id: Option[Int] = None)
 
   case class MobileDetail(
@@ -71,17 +73,18 @@ object Domain {
     contactNo: String,
     email: String,
     regType: String,
+    document: String,
     description: String)
 
   case class BrandForm(
     name: String)
     
    case class MobilesNameForm(
-    mobileName:String
-    )
-    case class MobilesModelForm(
-    mobileName:String,
-    mobileModel:String)
+    mobileName:String)
+  
+   case class MobilesModelForm(
+    mobileName: String,
+    mobileModel: String)
   
 
   object Mobiles extends Table[Mobile]("mobiles") {
@@ -97,21 +100,21 @@ object Domain {
     def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O.NotNull, O DBType ("VARCHAR(50)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(500)"))
-    //def registrationDate: Column[java.sql.Date] = column[java.sql.Date]("registration_date", O.NotNull)
-    //def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(500)"))
+    def registrationDate: Column[java.sql.Date] = column[java.sql.Date]("registration_date", O.NotNull)
+    def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(500)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, String, String, String, Status.Value, String, Option[Int])] =
-      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ mobileStatus ~ description ~ id <> (Mobile, Mobile unapply _)
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, String, String, String, Status.Value, String, java.sql.Date, String, Option[Int])] =
+      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
-        email ~ regType ~ mobileStatus ~ description<> (
-          { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description) =>
-            Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description)
+        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document<> (
+          { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description, registrationDate, document) =>
+            Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description, registrationDate, document)
           },
           { mobileregistration: Mobile =>
             Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,mobileregistration.purchaseDate, mobileregistration.contactNo,
-              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus, mobileregistration.description))
+              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus, mobileregistration.description, mobileregistration.regDate, mobileregistration.document))
           }) returning id
   }
 

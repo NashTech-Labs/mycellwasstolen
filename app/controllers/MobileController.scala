@@ -24,6 +24,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       "contactNo" -> nonEmptyText,
       "email" -> email,
       "regType" -> nonEmptyText,
+      "document" -> nonEmptyText,
       "description" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   val mobilestatus = Form(
@@ -88,7 +89,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description))
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, mobileuser.document))
 
         regMobile match {
           case Right(mobileuser) => {

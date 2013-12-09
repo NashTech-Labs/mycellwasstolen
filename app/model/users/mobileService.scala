@@ -22,7 +22,7 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
-         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus, mobileuser.description))
+         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus, mobileuser.description, mobileuser.regDate, mobileuser.document))
       case Left(error) => Left(error)
     }
   }
