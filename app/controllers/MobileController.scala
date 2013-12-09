@@ -33,11 +33,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
-      
+
   val brandregisterform = Form(
     mapping(
       "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
-      
+
    val createmobilemodelform = Form(
     mapping(
       "mobileName" -> nonEmptyText,
@@ -48,20 +48,20 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
   }
-  
+
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
-  
+
   def brandRegisterForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("Calling MobileNameform")
     val email = request.session.get(Security.username).getOrElse("")
     val user: Option[User] = Cache.getAs[User](email)
     Ok(views.html.createMobileNameForm(brandregisterform,user))
   }
-  
+
   def createMobileModelForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("createmobilemodelform call>>")
@@ -89,11 +89,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val imageFilename = image.filename
           val exte = imageFilename.split(".")
           Logger.info("extension" + exte)
-          Logger.info("imageFilename" +imageFilename)
+          Logger.info("imageFilename" + imageFilename)
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." +exte))
+          image.ref.moveTo(new File("proofDocuments/" + mobileuser.imeiMeid + "." + exte))
         }
-        
+
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, mobileuser.document))
@@ -119,9 +119,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     val mobileData = mobileService.getMobileRecordByIMEID(imeid)
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
-	  val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
-	                     mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
-	  implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
+     val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
+                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
+      implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
@@ -152,7 +152,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       Ok("true")
     }
   }
-  
+
   def saveMobileName:Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: brandRegisterForm")
     Logger.info("brandregisterform" + brandregisterform)
@@ -174,7 +174,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
-  
+
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action  { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
     Logger.info("createmobilemodelform" + createmobilemodelform)
@@ -196,7 +196,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
-  
+
 }
 
 object MobileController extends MobileController(MobileService)

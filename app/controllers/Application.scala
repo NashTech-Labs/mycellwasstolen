@@ -20,7 +20,7 @@ class Application extends Controller {
   def showExampleForm = Action { implicit request =>
     Ok(views.html.formExample(formExample))
   }
-  
+
   def handleFormExample = Action { implicit request =>
     formExample.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.formExample(formWithErrors)),

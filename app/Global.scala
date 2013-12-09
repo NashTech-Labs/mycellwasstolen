@@ -18,7 +18,7 @@ import play.api.mvc.Results.InternalServerError
 import utils.Connection
 
 object Global extends GlobalSettings{
-  
+
    override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
@@ -44,21 +44,21 @@ object Global extends GlobalSettings{
   override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
   }
-  
+
   /*override def onError(request: RequestHeader, ex: Throwable) = {
     InternalServerError(views.html.errorPage("error")
     )
-  } */ 
+  } */
 
  /*override def onHandlerNotFound(request: RequestHeader): Result = {
     NotFound(
       views.html.notFoundPage(request.path)
     )
-  }  
+  }
 */
    /*override def onBadRequest(request: RequestHeader, error: String) = {
     BadRequest("Bad Request: " + error)
-  }*/ 
+  }*/
 }
 
 object InitialData {
@@ -71,7 +71,7 @@ object InitialData {
       case ex: Exception => Logger.info("Error in  initial data population" + ex.printStackTrace())
     }
   }*/
-  
+
   def insert(): Any = {
     try {
       val mobileService = new MobileService(MobileDAL)

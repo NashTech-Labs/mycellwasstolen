@@ -78,14 +78,13 @@ object Domain {
 
   case class BrandForm(
     name: String)
-    
+ 
    case class MobilesNameForm(
     mobileName:String)
-  
+
    case class MobilesModelForm(
     mobileName: String,
     mobileModel: String)
-  
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)

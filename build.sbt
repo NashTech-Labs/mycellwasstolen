@@ -13,3 +13,5 @@ libraryDependencies ++= Seq(
    "junit"  %  "junit"  %  "4.11")     
 
 play.Project.playScalaSettings
+
+org.scalastyle.sbt.ScalastylePlugin.Settings
