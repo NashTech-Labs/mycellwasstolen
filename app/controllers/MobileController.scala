@@ -1,16 +1,19 @@
 package controllers
 
+import java.io.File
+
+import model.domains.Domain._
+import model.users._
 import play.api._
-import play.api.mvc._
 import play.api.data._
 import play.api.data.Form
 import play.api.data.Forms._
-import model.domains.Domain._
-import model.users._
-import java.io.File
-import play.api.libs.json.Json
 import play.api.i18n.Messages
+import play.api.libs.json.Json
+import play.api.mvc._
 import utils.Common
+import play.api.cache.Cache
+import play.api.Play.current
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
@@ -54,13 +57,17 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   
   def brandRegisterForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("Calling MobileNameform")
-    Ok(views.html.createMobileNameForm(brandregisterform))
+    val email = request.session.get(Security.username).getOrElse("")
+    val user: Option[User] = Cache.getAs[User](email)
+    Ok(views.html.createMobileNameForm(brandregisterform,user))
   }
   
   def createMobileModelForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("createmobilemodelform call>>")
-    Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName))
+    val email = request.session.get(Security.username).getOrElse("")
+    val user: Option[User] = Cache.getAs[User](email)
+    Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName,user))
   }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
@@ -149,8 +156,10 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def saveMobileName:Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: brandRegisterForm")
     Logger.info("brandregisterform" + brandregisterform)
+     val email = request.session.get(Security.username).getOrElse("")
+    val user: Option[User] = Cache.getAs[User](email)
     brandregisterform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors)),
+      formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors,user)),
       brand => {
         Logger.info("MobileNameController: saveMobileName - found valid data.")
         val date = new java.sql.Date(new java.util.Date().getTime())
@@ -170,8 +179,10 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
     Logger.info("createmobilemodelform" + createmobilemodelform)
     val mobilesName = mobileService.getMobilesName()
+    val email = request.session.get(Security.username).getOrElse("")
+    val user: Option[User] = Cache.getAs[User](email)
     createmobilemodelform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors,mobilesName)),
+      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors,mobilesName,user)),
       mobilemodel => {
         Logger.info("createmobilemodelController:createmobilemodel - found valid data.")
         val createMobileModel = mobileService.createMobileModel(MobileModels(mobilemodel.mobileModel,mobilemodel.mobileName.toInt))

@@ -31,14 +31,14 @@ object Global extends GlobalSettings{
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
      //(Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
-     // (Mobiles.ddl)create
+      (Mobiles.ddl)create
         //Logger.info("All tables have been created")
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
 
-    //InitialData.insert
+    InitialData.insert
   }
 
   override def onStop(app: Application): Unit = {

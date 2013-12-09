@@ -13,12 +13,6 @@ GET     /register-stolen-phone      controllers.MobileController.mobileRegistrat
 GET     /register-new-phone         controllers.MobileController.mobileRegistrationSecureForm
 POST	/mobileRegistration			controllers.MobileController.mobileRegistration
 
-GET     /brandForm                  controllers.MobileController.brandRegisterForm
-POST    /saveMobileName             controllers.MobileController.saveMobileName
-
-GET     /createMobileModelForm      controllers.MobileController.createMobileModelForm
-POST    /createMobileModel          controllers.MobileController.createMobileModel
-
 GET     /isImeiExist                controllers.MobileController.isImeiExist(imeiId: String)
 
 #Javascript Routes
@@ -34,6 +28,11 @@ GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
 GET    /admin/mobiles              controllers.AuthController.mobiles
+GET     /admin/brandForm                  controllers.MobileController.brandRegisterForm
+POST    /saveMobileName             controllers.MobileController.saveMobileName
+
+GET     /admin/createMobileModelForm      controllers.MobileController.createMobileModelForm
+POST    /createMobileModel          controllers.MobileController.createMobileModel
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file                 controllers.Assets.at(path="/public", file)

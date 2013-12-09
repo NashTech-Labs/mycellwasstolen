@@ -1,9 +1,9 @@
-@(mobilenameform: Form[model.domains.Domain.BrandForm])(implicit flash: Flash)
+@(mobilenameform: Form[model.domains.Domain.BrandForm],user: Option[model.domains.Domain.User])(implicit flash: Flash)
 
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
-@main("Mycellwasstolen"){ 
+@main("Mycellwasstolen",user){ 
 	<div class="container">
 		<div class="page-header">
 			<h1>Register Mobile Name</h1>

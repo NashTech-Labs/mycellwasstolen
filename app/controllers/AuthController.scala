@@ -33,7 +33,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
       val mobiles: List[Mobile] = mobileService.getAllMobiles
-      Ok(html.admin.mobiles(mobiles))
+      Ok(html.admin.mobiles(mobiles,user))
   }
 
   val loginForm = Form(
