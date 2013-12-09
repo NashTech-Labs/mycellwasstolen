@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, user: Option[model.domains.Domain.User])(content: Html)
 
 <!DOCTYPE html>
 
@@ -23,7 +23,7 @@
 	    <div id="wrap" class="margin">
 	    	
 	    	<!-- Header -->
-	    	@header("")
+	    	@header("",user)
 	    	
 	    	<!-- Begin page content -->
 	    	@content

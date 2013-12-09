@@ -1,8 +1,8 @@
-@(mobiles: List[model.domains.Domain.Mobile])(implicit flash: Flash)
+@(mobiles: List[model.domains.Domain.Mobile], user: Option[model.domains.Domain.User])(implicit flash: Flash)
 
 @import model.domains.Domain.Status
 
-@main("Mycellwasstolen") {
+@main("Mycellwasstolen",user) {
 
 	<div class="content-body span10">
 		<div class="well">
