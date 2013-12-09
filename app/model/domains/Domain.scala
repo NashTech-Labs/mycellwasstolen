@@ -143,7 +143,7 @@ object Domain {
     def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)
   }
 
-  case class Admin(
+  case class User(
     email:String,
     password:String)
 }

@@ -1,20 +1,16 @@
 package controllers
 
-import model.domains.Domain._
-import model.domains.Domain._
+import model.domains.Domain.Mobile
+import model.domains.Domain.User
+import model.users.MobileService
 import model.users.MobileServiceComponent
-import play.api._
 import play.api.Logger
 import play.api.Play.current
-import play.api.data._
+import play.api.cache.Cache
 import play.api.data.Form
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.data.Forms.email
-import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.text
 import play.api.data.Forms.tuple
 import play.api.i18n.Messages
-import play.api.mvc._
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.mvc.Request
@@ -22,9 +18,8 @@ import play.api.mvc.RequestHeader
 import play.api.mvc.Result
 import play.api.mvc.Results
 import play.api.mvc.Security
-import views._
-import play.api.cache.Cache
-import model.users.MobileService
+import views.html
+import play.api.mvc.EssentialAction
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured{
    
@@ -33,21 +28,14 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
         Ok(html.admin.login(loginForm))
   }
    
-  /*def mobiles: EssentialAction = withAuth { username =>
+  def mobiles: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
-      val user: String = Cache.getAs[String](username).get
+      val user: Option[User] = Cache.getAs[User](username)
       val mobiles: List[Mobile] = mobileService.getAllMobiles
       Ok(html.admin.mobiles(mobiles))
-  }*/
-
- def mobiles: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:mobiles method has been called.")
-    //val user: Option[Mobile] = Cache.getAs[User](username)
-    val mobiles: List[Mobile] = mobileService.getAllMobiles
-    Ok(html.admin.mobiles(mobiles))
   }
-  
+
   val loginForm = Form(
     tuple(
       "email" -> text,
@@ -59,6 +47,9 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
 
   def check(username: String, password: String) = {
     (username == "admin" && password == "1234")  
+    val user = User("admin", "1234")
+    Cache.set(username, user, 60 * 60)
+    true
   }
 
   def login = Action { implicit request =>
@@ -90,7 +81,7 @@ trait Secured {
   def withAuth(f: => String => Request[play.api.mvc.AnyContent] => Result): play.api.mvc.EssentialAction = {
     Security.Authenticated(username, onUnauthorized) { username =>
       {
-        val cachedUser: Option[Mobile] = Cache.getAs[Mobile](username)
+        val cachedUser: Option[User] = Cache.getAs[User](username)
         cachedUser match {
           case Some(user) => { Cache.set(username, user, 60 * 60); Action(request => f(username)(request)) }
           case None => Action(request => onUnauthorized(request))
