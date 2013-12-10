@@ -23,7 +23,7 @@
 		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
 	
 	
-		@inputText(mobileRegistrationForm("email"), '_label -> "email")
+		@inputText(mobileRegistrationForm("email"), '_label -> "Email")
 		@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
 		@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class ->
 		"datepicker", 'style -> "datepicker")
@@ -48,11 +48,8 @@
 	<script type="text/javascript">
 	
 		function setValue(){
-			alert("Supriya");
 			var file = $("#fileUpload").val();
-			alert("file" +file);
 			$("#document").val(file);
-			//$("#document").attr("value",file);
 		}
 	
 	   $("#contactNo").intlTelInput();

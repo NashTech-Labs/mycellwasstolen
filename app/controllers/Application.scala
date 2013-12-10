@@ -39,7 +39,9 @@ class Application extends Controller {
     Ok(Routes.javascriptRouter("jsRoutes")(
       routes.javascript.MobileController.getImeiMeidList,
       routes.javascript.MobileController.getMobileModels,
-      routes.javascript.MobileController.isImeiExist)).as("text/javascript")
+      routes.javascript.MobileController.isImeiExist,
+      routes.javascript.AuthController.approve,
+      routes.javascript.AuthController.proofDemanded)).as("text/javascript")
   }
 }
 
