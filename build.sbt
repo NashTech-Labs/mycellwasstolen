@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.scalatest" %   "scalatest_2.10" %  "2.0.M5b" %  "test",
   "com.typesafe" %% "play-plugins-mailer" % "2.1-RC2",
   "org.mockito" % "mockito-all" % "1.8.5",
-   "junit"  %  "junit"  %  "4.11")     
+   "junit"  %  "junit"  %  "4.11",
+   "com.restfb" % "restfb" % "1.6.12")     
 
 play.Project.playScalaSettings
 
