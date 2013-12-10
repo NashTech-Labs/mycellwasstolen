@@ -11,7 +11,7 @@
 					<h3>@Messages("admin.requestapproval")</h3>
 				</div>
 				<div class="span6">
-					<a class="btn btn-info" style="float: right;" href="#">Proof</a>
+					<a class="btn btn-info" style="float: right;" href="#">Pending</a>
 					<a class="btn btn-info" style="float: right;" href="#">Proof Demanded</a>
 				</div>
 			</div>
@@ -52,7 +52,7 @@
 			    			<td>@mobile.imeiMeid</td>
 			    			<td>@mobile.purchaseDate</td>
 			    			<td>@mobile.email</td>
-			    			<td>@mobile.mobileStatus</td>
+			    			<td id="status_@mobile.imeiMeid">@mobile.mobileStatus</td>
 			    			<td>@mobile.regType</td>
 			    			<td>
 								<button class="btn btn-info" data-toggle="modal"
@@ -75,12 +75,25 @@
 									</div>
 								</div> 
 					    </td>
+					
+					    @if(mobile.mobileStatus==Status.approved){
 	    				<td>
-	    					<a title="Approve" class="btn btn-info" href="#">Approve</a>
+	    					<button title="Approve" class="btn btn-info" id="approve_@mobile.imeiMeid" disabled>Approve</button>
 	    				</td>
+	    				} else{
 	    				<td>
-	    					<a title="Demand Proof" class="btn btn-info" href="#">Demand Proof</a>
+	    					<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile.imeiMeid);" id="approve_@mobile.imeiMeid" >Approve</button>
 	    				</td>
+	    				}
+	    				@if(mobile.mobileStatus==Status.proofdemanded){
+	    				<td>
+	    					<button title="Demand Proof" class="btn btn-info"  id="demand_@mobile.imeiMeid" disabled>Demand Proof</button>
+	    				</td>
+	    				}else{
+	    				<td>
+	    					<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile.imeiMeid);" id="demand_@mobile.imeiMeid" >Demand Proof</button>
+	    				</td>
+	    				}
 	    				<td>@mobile.purchaseDate</td>
 			    	</tr>
 			    		
@@ -94,5 +107,62 @@
 	</div>
 	
 	<script type="text/javascript">
+	    var imeId = "";
+	    
+	    function changeStatusToDemand(imeid) {
+			imeId = imeid;
+			changeStatusToDemandProof(imeid);
+		}
+	    
+	    var statusAjaxSuccessDemandProof = function(data) {
+			$("#demand_"+imeId).prop("disabled",true);
+			$("#status_"+imeId).text('ProofDemanded');
+			console.debug("Success of Ajax Call for demand proof");
+			console.debug(data);
+		};
+		
+		var statusAjaxErrorDemandProof = function(err) {
+			console.debug("Error of ajax Call for demand proof");
+			console.debug(err);
+		};
+		
+		var changeStatusToDemandProof = function(imeid) {
+        	
+        	var statusAjaxCallBackDemandProof = {
+    			success: statusAjaxSuccessDemandProof,
+    			error: statusAjaxErrorDemandProof
+    		};
+        	
+			jsRoutes.controllers.AuthController.proofDemanded(imeid).ajax(statusAjaxCallBackDemandProof);
+        };
+	    
+		function changeStatus(imeid) {
+			imeId = imeid;
+			changeStatusToApprove(imeid);
+		}
+		
+		var statusAjaxSuccess = function(data) {
+			$("#approve_"+imeId).prop("disabled",true);
+			$("#status_"+imeId).text('approved');
+			console.debug("Success of Ajax Call");
+			console.debug(data);
+		};
+		
+		var statusAjaxError = function(err) {
+			console.debug("Error of ajax Call");
+			console.debug(err);
+		};
+        
+        var changeStatusToApprove = function(imeid) {
+        	
+        	var statusAjaxCallBack = {
+    			success: statusAjaxSuccess,
+    			error: statusAjaxError
+    		};
+        	
+			jsRoutes.controllers.AuthController.approve(imeid).ajax(statusAjaxCallBack);
+        };
+		
+	
 	</script>
 }

@@ -16,6 +16,8 @@ trait MobileDALComponent {
     def getMobileNamesById(id: Int): List[Brand]
     def insertMobileModel(mobilemodel: MobileModels): Either[String, Int]
     def getAllMobiles: List[Mobile]
+    def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int]
+    def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -90,6 +92,42 @@ class MobileDAL extends MobileDALComponent {
        (for { mobile <- Mobiles } yield mobile).list
       }
     }
+   
+   override def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
+    	Connection.databaseObject().withSession {
+      implicit session: Session =>
+        try {
+        	val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
+        	Logger.info("updateQuery data:"+ updateQuery)
+         // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
+        	Right(updateQuery.update(mobileUser))
+         // Right(mobile.update(mobileUser))
+    }
+        catch {
+          case ex: Exception =>
+            Logger.info("Error in update user method: " + ex.printStackTrace())
+            Left(ex.getMessage())
+        }
+   }
+}
+   
+   override def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
+    	Connection.databaseObject().withSession {
+      implicit session: Session =>
+        try {
+        	val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
+        	Logger.info("updateQuery data:"+ updateQuery)
+         // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
+        	Right(updateQuery.update(mobileUser))
+         // Right(mobile.update(mobileUser))
+    }
+        catch {
+          case ex: Exception =>
+            Logger.info("Error in update user method: " + ex.printStackTrace())
+            Left(ex.getMessage())
+        }
+   }
+}
 
 }
 

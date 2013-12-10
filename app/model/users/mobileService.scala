@@ -14,6 +14,8 @@ trait MobileServiceComponent{
   def getMobileNamesById(id: Int): Option[Brand]
   def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
   def getAllMobiles: List[Mobile]
+  def changeStatusToApprove(mobileUser: Mobile): Boolean
+  def changeStatusToDemandProof(mobileUser: Mobile): Boolean
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -68,6 +70,22 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def getAllMobiles: List[Mobile] = {
     Logger.info("getAllMobiles called")
     mobiledal.getAllMobiles
+  }
+  
+  override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
+   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
+   mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
+      case Right(id) => true
+      case Left(error) => false
+    } 
+  }
+  
+  override def changeStatusToDemandProof(mobileUser: Mobile): Boolean = {
+   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
+   mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
+      case Right(id) => true
+      case Left(error) => false
+    } 
   }
 
 }
