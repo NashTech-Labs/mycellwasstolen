@@ -20,15 +20,25 @@ import play.api.mvc.Results
 import play.api.mvc.Security
 import views.html
 import play.api.mvc.EssentialAction
+import utils.Common
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured{
 
-  def mobiles: EssentialAction = withAuth { username =>
+  def mobiles(status:String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles: List[Mobile] = mobileService.getAllMobiles
+      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
+      if(mobiles.isEmpty){
+      Logger.info("AuthController mobile list: - false")
+      Ok("error")
+      }else{
+      Logger.info("AuthController mobile list: - true")
+     // Ok("success")
       Ok(html.admin.mobiles(mobiles,user))
+     
+      }
+      
   }
 
   val loginForm = Form(
@@ -54,7 +64,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AuthController.mobiles).withSession(Security.username -> user._1)
+      user => Redirect(routes.AuthController.mobiles("approved")).withSession(Security.username -> user._1)
     )
   }
 
@@ -64,7 +74,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
     )
   }
   
-    def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AuthController:approve - change status to approve : " + imeiId)
     
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
@@ -80,7 +90,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
     }
   }
     
-    def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AuthController:proofDemanded - change status to proofDemanded : " + imeiId)
     
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
@@ -95,6 +105,25 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
       Ok("error")
     }
   }
+  
+  def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    Logger.info("AuthController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
+    
+    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
+    Logger.info("AuthController:mobileUser - change status to proofDemanded : " + mobileUser)
+    try {
+      Common.sendMail(mobileUser.imeiMeid + " <" + mobileUser.email + ">",
+        "Registration Confirmed on MCWS", Common.registerMessage(mobileUser.imeiMeid))
+      Logger.info("AuthController: - true")
+      Ok("success")
+    } catch {
+      case e: Exception => Logger.info("" + e.printStackTrace())
+      Logger.info("AuthController: - false")
+      Ok("error")
+    }
+    
+  }
+    
 }
 
 trait Secured {

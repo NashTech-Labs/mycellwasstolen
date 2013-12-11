@@ -15,7 +15,7 @@ trait MobileDALComponent {
     def insertMobileName(brand: Brand): Either[String, Option[Int]]
     def getMobileNamesById(id: Int): List[Brand]
     def insertMobileModel(mobilemodel: MobileModels): Either[String, Int]
-    def getAllMobiles: List[Mobile]
+    def getAllMobiles(status:String): List[Mobile]
     def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int]
     def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
 }
@@ -86,10 +86,15 @@ class MobileDAL extends MobileDALComponent {
       }
     }
 
-   override def getAllMobiles : List[Mobile] = {
+   override def getAllMobiles(status:String) : List[Mobile] = {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getUserRecord")
-       (for { mobile <- Mobiles } yield mobile).list
+        if(status.equals("pending")){
+       (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.pending)} yield mobile).list
+      }
+        else if(status.equals("proofdemanded")){
+          (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.proofdemanded)} yield mobile).list
+        }else (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.approved)} yield mobile).list
       }
     }
    

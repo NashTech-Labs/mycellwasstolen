@@ -1,7 +1,6 @@
 @(mobiles: List[model.domains.Domain.Mobile], user: Option[model.domains.Domain.User])(implicit flash: Flash)
 
 @import model.domains.Domain.Status
-
 @main("Mycellwasstolen",user) {
 
 	<div class="content-body span10">
@@ -11,8 +10,9 @@
 					<h3>@Messages("admin.requestapproval")</h3>
 				</div>
 				<div class="span6">
-					<a class="btn btn-info" style="float: right;" href="#">Pending</a>
-					<a class="btn btn-info" style="float: right;" href="#">Proof Demanded</a>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('pending');" >Pending</button>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('proofdemanded');" >Proof Demanded</button>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('approved');" >Approved</button>
 				</div>
 			</div>
 			@flash.get("error").map { message =>
@@ -26,7 +26,7 @@
         			<strong>@message</strong>
       			</div>
 		}
-
+<div id="emptylistmessage">
 		@if(mobiles.size > 0) {
             	<table id="mobileTable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
             		<thead>
@@ -105,13 +105,14 @@
             }
 	</div>
 	</div>
-	
+	</div>
 	<script type="text/javascript">
 	    var imeId = "";
 	    
 	    function changeStatusToDemand(imeid) {
 			imeId = imeid;
 			changeStatusToDemandProof(imeid);
+			sendMailForDemandProof(imeid); // for mail 
 		}
 	    
 	    var statusAjaxSuccessDemandProof = function(data) {
@@ -135,6 +136,26 @@
         	
 			jsRoutes.controllers.AuthController.proofDemanded(imeid).ajax(statusAjaxCallBackDemandProof);
         };
+        
+        var sendMailForDemandProof=function(imeid){
+        	alert(imeid);
+        	var statusAjaxCallBackForSendMail={
+        			success: statusAjaxSuccessForSendmail,
+        			error: statusAjaxErrorForSendmail	
+        	};
+        	jsRoutes.controllers.AuthController.sendMailForDemandProof(imeid).ajax(statusAjaxCallBackForSendMail)
+        };
+        
+        var statusAjaxSuccessForSendmail = function(data) {
+			console.debug("Success of Ajax Call");
+			console.debug(data);
+		};
+		
+		var statusAjaxErrorForSendmail = function(err) {
+			console.debug("Error of ajax Call");
+			console.debug(err);
+		};
+        
 	    
 		function changeStatus(imeid) {
 			imeId = imeid;
@@ -162,6 +183,35 @@
         	
 			jsRoutes.controllers.AuthController.approve(imeid).ajax(statusAjaxCallBack);
         };
+        
+      //script for getting pending mobile list
+      
+      function getPendingMobiles(status){
+    	  getPendingMobileList(status);
+      }
+      var statusAjaxSuccessForPendingMobileList=function(data){
+    	 if(data=="error")
+    		 $('#emptylistmessage').html("Requested Data are empty");
+    	 else{
+    	alert(data);
+    	$('.content-body.span10').html(data);}
+    	  console.debug("Success of Ajax Call for Pending Mobile List");
+		  console.debug(data);
+      };
+      var statusAjaxErrorForPendingMobileList=function(err){
+    	  alert();
+    	  console.debug("Error of ajax Call for Pending Mobile List");
+		  console.debug(err);
+      };
+      
+      var getPendingMobileList=function(status){
+    	  var statusAjaxCallBackForPendingList={
+    			  success:statusAjaxSuccessForPendingMobileList,
+    			  error:statusAjaxErrorForPendingMobileList
+    	  };
+    	  
+    	  jsRoutes.controllers.AuthController.mobiles(status).ajax(statusAjaxCallBackForPendingList);
+      };
 		
 	
 	</script>

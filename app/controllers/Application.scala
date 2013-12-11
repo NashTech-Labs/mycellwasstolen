@@ -41,7 +41,9 @@ class Application extends Controller {
       routes.javascript.MobileController.getMobileModels,
       routes.javascript.MobileController.isImeiExist,
       routes.javascript.AuthController.approve,
-      routes.javascript.AuthController.proofDemanded)).as("text/javascript")
+      routes.javascript.AuthController.proofDemanded,
+      routes.javascript.AuthController.sendMailForDemandProof,
+      routes.javascript.AuthController.mobiles)).as("text/javascript")
   }
 }
 

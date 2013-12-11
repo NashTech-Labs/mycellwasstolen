@@ -13,7 +13,7 @@ trait MobileServiceComponent{
   def addMobileName(brand: Brand): Either[String, Option[Int]]
   def getMobileNamesById(id: Int): Option[Brand]
   def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
-  def getAllMobiles: List[Mobile]
+  def getAllMobiles(status:String): List[Mobile]
   def changeStatusToApprove(mobileUser: Mobile): Boolean
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
 }
@@ -67,9 +67,10 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     }
   }
 
-  override def getAllMobiles: List[Mobile] = {
+  override def getAllMobiles(status:String): List[Mobile] = {
     Logger.info("getAllMobiles called")
-    mobiledal.getAllMobiles
+    mobiledal.getAllMobiles(status)
+    
   }
   
   override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
