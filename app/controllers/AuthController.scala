@@ -32,6 +32,7 @@ import net.liftweb.json.JString
 import net.liftweb.json.JField
 import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
+import utils.TwitterTweet
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
@@ -89,7 +90,8 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AuthController.mobiles("pending")).withSession(Security.username -> user._1))
+      user => Redirect(routes.AuthController.mobiles("pending")).withSession(Security.username -> user._1)
+    )
   }
 
   def logout = Action {
@@ -106,6 +108,11 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
     val isExist = mobileService.changeStatusToApprove(updatedMobile)
     if (isExist) {
       Logger.info("AuthController: - true")
+      if(mobileUser.regType == "stolen"){
+      TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+      }else{
+      TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+      }
       Ok("success")
     } else {
       Logger.info("AuthController: - false")
