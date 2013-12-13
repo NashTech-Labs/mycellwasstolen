@@ -21,6 +21,7 @@ import play.api.mvc.Security
 import views.html
 import play.api.mvc.EssentialAction
 import utils.Common
+import utils.TwitterTweet
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured{
 
@@ -64,7 +65,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AuthController.mobiles("approved")).withSession(Security.username -> user._1)
+      user => Redirect(routes.AuthController.mobiles("pending")).withSession(Security.username -> user._1)
     )
   }
 
@@ -83,6 +84,11 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
     val isExist = mobileService.changeStatusToApprove(updatedMobile)
     if (isExist) {
       Logger.info("AuthController: - true")
+      if(mobileUser.regType == "stolen"){
+      TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+      }else{
+        TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+      }
       Ok("success")
     } else {
       Logger.info("AuthController: - false")

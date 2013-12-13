@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import model.domains.Domain._
 import model.users._
 import play.api._
@@ -14,6 +13,7 @@ import play.api.mvc._
 import utils.Common
 import play.api.cache.Cache
 import play.api.Play.current
+import utils.TwitterTweet
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
@@ -101,6 +101,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
             try {
               Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
                 "Registration Confirmed on MCWS", Common.registerMessage(mobileuser.imeiMeid))
+                if(mobileuser.regType == "stolen"){
+                   TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
+                 }else{
+                   TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")    
+                      }
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())
             }
