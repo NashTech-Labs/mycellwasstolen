@@ -43,7 +43,7 @@ class Application extends Controller {
       routes.javascript.AuthController.approve,
       routes.javascript.AuthController.proofDemanded,
       routes.javascript.AuthController.sendMailForDemandProof,
-      routes.javascript.AuthController.mobiles)).as("text/javascript")
+      routes.javascript.AuthController.mobilesForAjaxCall)).as("text/javascript")
   }
 }
 

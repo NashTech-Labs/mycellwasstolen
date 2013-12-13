@@ -27,7 +27,7 @@
       			</div>
 		}
 <div id="emptylistmessage">
-		@if(mobiles.size > 0) {
+		@if(mobiles.size >= 0) {
             	<table id="mobileTable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
             		<thead>
 						<tr>
@@ -44,7 +44,7 @@
 							<th>@Messages("mobile.registrationTime")</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="mobileData">
            			@for(mobile <- mobiles) {
 			    		<tr>
 			    			<td>@mobile.mobileName</td>
@@ -55,8 +55,7 @@
 			    			<td id="status_@mobile.imeiMeid">@mobile.mobileStatus</td>
 			    			<td>@mobile.regType</td>
 			    			<td>
-								<button class="btn btn-info" data-toggle="modal"
-									data-target="#myModal_@mobile.imeiMeid">Get Proof</button> <!-- Modal -->
+								<button class="btn btn-info" onclick="showDocumentProof('@mobile.document');">Get Proof</button> <!-- Modal -->
 								<div class="modal fade" id="myModal_@mobile.imeiMeid" tabindex="-1" role="dialog"
 									aria-labelledby="myModalLabel" aria-hidden="true">
 									<div class="modal-dialog">
@@ -94,15 +93,15 @@
 	    					<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile.imeiMeid);" id="demand_@mobile.imeiMeid" >Demand Proof</button>
 	    				</td>
 	    				}
-	    				<td>@mobile.purchaseDate</td>
+	    				<td>@mobile.regDate</td>
 			    	</tr>
 			    		
                       }
            			</tbody>
             	</table>
-            } else {
+            } <!-- else {
             	<h1>@Messages("default.notShow")</h1>
-            }
+            } -->
 	</div>
 	</div>
 	</div>
@@ -138,7 +137,6 @@
         };
         
         var sendMailForDemandProof=function(imeid){
-        	alert(imeid);
         	var statusAjaxCallBackForSendMail={
         			success: statusAjaxSuccessForSendmail,
         			error: statusAjaxErrorForSendmail	
@@ -164,7 +162,7 @@
 		
 		var statusAjaxSuccess = function(data) {
 			$("#approve_"+imeId).prop("disabled",true);
-			$("#status_"+imeId).text('approved');
+			$("#approve_"+imeId).text('approved');
 			console.debug("Success of Ajax Call");
 			console.debug(data);
 		};
@@ -186,33 +184,53 @@
         
       //script for getting pending mobile list
       
-      function getPendingMobiles(status){
+        function getPendingMobiles(status){
+
     	  getPendingMobileList(status);
-      }
-      var statusAjaxSuccessForPendingMobileList=function(data){
-    	 if(data=="error")
-    		 $('#emptylistmessage').html("Requested Data are empty");
-    	 else{
-    	alert(data);
-    	$('.content-body.span10').html(data);}
-    	  console.debug("Success of Ajax Call for Pending Mobile List");
-		  console.debug(data);
-      };
-      var statusAjaxErrorForPendingMobileList=function(err){
-    	  alert();
-    	  console.debug("Error of ajax Call for Pending Mobile List");
-		  console.debug(err);
-      };
-      
-      var getPendingMobileList=function(status){
-    	  var statusAjaxCallBackForPendingList={
-    			  success:statusAjaxSuccessForPendingMobileList,
-    			  error:statusAjaxErrorForPendingMobileList
-    	  };
-    	  
-    	  jsRoutes.controllers.AuthController.mobiles(status).ajax(statusAjaxCallBackForPendingList);
-      };
-		
+        }
+        
+        var statusAjaxSuccessForPendingMobileList = function(data){
+      	 if (data.status == "Error"){
+      		$('#mobileData').empty();
+      		$('#mobileData').append("Requested Data are empty");
+        }
+      	 else{
+      		// console.log(data.toSource());
+      		$('#mobileData').empty();
+      		$.each(data, function(index, value){
+                var tBody= '<tr><td>'+value.mobileName+
+                '</td><td>'+value.mobileModel+
+                '</td><td>'+value.imeiMeid+
+                '</td><td>'+value.purchaseDate+
+                '</td><td>'+value.email+'</td><td>'
+                +value.mobileStatus.name+'</td><td>'
+                +value.regType+'</td><td><button class="btn btn-info" data-toggle="modal" data-target="#myModal_'+value.imeiMeid+'" onclick="showDocumentProof(\''+value.document+'\');"'
+                +'>Get Proof</button></td><td><button title="Approve" class="btn btn-info" id="approve_'+value.imeiMeid+'" onclick="changeStatus('+value.imeiMeid+');"'
+                +'>Approve</button></td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');">Demand Proof</button></td><td>'+value.regDate+'</td></tr>';
+                $('#mobileData').append(tBody);
+      		});
+      	}
+      	  console.debug("Success of Ajax Call for Pending Mobile List");
+  		  console.debug(data);
+        };
+        var statusAjaxErrorForPendingMobileList=function(err){
+      	  console.debug("Error of ajax Call for Pending Mobile List");
+  		  console.debug(err);
+        };
+        
+        var getPendingMobileList = function(status){
+      	  var statusAjaxCallBackForPendingList={
+      			  success: statusAjaxSuccessForPendingMobileList,
+      			  error: statusAjaxErrorForPendingMobileList
+      	  };
+      	  
+      	  jsRoutes.controllers.AuthController.mobilesForAjaxCall(status).ajax(statusAjaxCallBackForPendingList);
+        };
+        
+        function showDocumentProof(documentProofId){
+        	popupWindow = window.open('/assets/proofDocuments/'+documentProofId+'','popUpWindow','height=700,width=800,left=10,top=10,resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+        	}
+       
 	
 	</script>
 }

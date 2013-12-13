@@ -1,7 +1,6 @@
 package controllers
 
 import java.io.File
-
 import model.domains.Domain._
 import model.users._
 import play.api._
@@ -14,6 +13,7 @@ import play.api.mvc._
 import utils.Common
 import play.api.cache.Cache
 import play.api.Play.current
+import java.text.SimpleDateFormat
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller {
 
@@ -23,7 +23,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       "mobileName" -> nonEmptyText,
       "mobileModel" -> nonEmptyText,
       "imeiMeid" -> nonEmptyText,
-      "purchaseDate" -> sqlDate("yyyy-MM-dd"),
+      "purchaseDate" -> nonEmptyText,
       "contactNo" -> nonEmptyText,
       "email" -> email,
       "regType" -> nonEmptyText,
@@ -78,7 +78,13 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       mobileuser => {
         Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
         val status = model.domains.Domain.Status.pending
-        val date = new java.sql.Date(new java.util.Date().getTime())
+        val sqldate = new java.sql.Date(new java.util.Date().getTime())
+ 
+        val df = new SimpleDateFormat("MM/dd/yyyy")
+        val date= df.format(sqldate)
+        
+        //val date=mydate.toString()
+        Logger.info("date"+date)
         val mobileName = mobileService.getMobileNamesById(mobileuser.mobileName.toInt)
        Logger.info("MobileName - found valid data." + mobileName)
        

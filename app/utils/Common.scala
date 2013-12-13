@@ -9,6 +9,10 @@ object Common {
   def registerMessage(imeid: String): String = {
     Messages("messages.mobile.register", imeid, signature)
   }
+  
+  def demandProofMessage(imeid: String): String = {
+    Messages("messages.mobile.demandProof", imeid, signature)
+  }
 
   def signature(): String = {
     Messages("messages.signature")

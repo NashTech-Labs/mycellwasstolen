@@ -27,6 +27,7 @@ GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
 GET    /admin/mobiles              controllers.AuthController.mobiles(status:String)
+GET    /admin/mobile              controllers.AuthController.mobilesForAjaxCall(status:String)
 GET    /admin/brandForm            controllers.MobileController.brandRegisterForm
 POST   /saveMobileName             controllers.MobileController.saveMobileName
 GET	   /approve					   controllers.AuthController.approve(imeid: String)

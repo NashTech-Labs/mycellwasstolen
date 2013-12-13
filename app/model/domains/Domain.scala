@@ -32,13 +32,13 @@ object Domain {
     mobileName: String,
     mobileModel: String,
     imeiMeid: String,
-    purchaseDate: java.sql.Date,
+    purchaseDate: String,
     contactNo: String,
     email: String,
     regType: String,
     mobileStatus: Status.Value,
     description: String,
-    regDate: java.sql.Date,
+    regDate: String,
     document: String,
     id: Option[Int] = None)
 
@@ -47,7 +47,7 @@ object Domain {
     mobileName: String,
     mobileModel: String,
     imeiMeid: String,
-    purchaseDate: java.sql.Date,
+    purchaseDate: String,
     contactNo: String,
     email: String,
     regType: String)
@@ -69,7 +69,7 @@ object Domain {
     mobileName: String,
     mobileModel: String,
     imeiMeid: String,
-    purchaseDate: java.sql.Date,
+    purchaseDate: String,
     contactNo: String,
     email: String,
     regType: String,
@@ -92,17 +92,17 @@ object Domain {
     def mobileName: Column[String] = column[String]("mobile_name", O.NotNull, O DBType ("VARCHAR(100)"))
     def mobileModel: Column[String] = column[String]("mobile_model", O.NotNull, O DBType ("VARCHAR(100)"))
     def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
-    def purchaseDate: Column[java.sql.Date] = column[java.sql.Date]("purchase_date", O.NotNull)
+    def purchaseDate: Column[String] = column[String]("purchase_date", O.NotNull)
 
     def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(100)"))
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
     def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O.NotNull, O DBType ("VARCHAR(50)"))
     def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(500)"))
-    def registrationDate: Column[java.sql.Date] = column[java.sql.Date]("registration_date", O.NotNull)
+    def registrationDate: Column[String] = column[String]("registration_date", O.NotNull)
     def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(500)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, java.sql.Date, String, String, String, Status.Value, String, java.sql.Date, String, Option[Int])] =
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, String, String, String, String, Status.Value, String, String, String, Option[Int])] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
