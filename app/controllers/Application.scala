@@ -40,9 +40,9 @@ class Application extends Controller {
       routes.javascript.MobileController.getImeiMeidList,
       routes.javascript.MobileController.getMobileModels,
       routes.javascript.MobileController.isImeiExist,
-      routes.javascript.AuthController.approve,
-      routes.javascript.AuthController.proofDemanded,
-      routes.javascript.AuthController.sendMailForDemandProof,
+      routes.javascript.AdminController.approve,
+      routes.javascript.AdminController.proofDemanded,
+      routes.javascript.AdminController.sendMailForDemandProof,
       routes.javascript.AuthController.mobilesForAjaxCall)).as("text/javascript")
   }
 }

@@ -21,21 +21,22 @@ GET    /javascriptRoutes            controllers.Application.javascriptRoutes
 GET    /mobile                      controllers.MobileController.getImeiMeidList(imeid: String)
 GET    /mobileStatus                controllers.MobileController.mobileStatus
 GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
+GET	   /approve					    controllers.AdminController.approve(imeid: String)
+GET	   /proofDemanded			    controllers.AdminController.proofDemanded(imeid: String)
+GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
+
 
 #Admin
 GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
 GET    /admin/mobiles              controllers.AuthController.mobiles(status:String)
-GET    /admin/mobile              controllers.AuthController.mobilesForAjaxCall(status:String)
+GET    /admin/mobile               controllers.AuthController.mobilesForAjaxCall(status:String)
 GET    /admin/brandForm            controllers.MobileController.brandRegisterForm
 POST   /saveMobileName             controllers.MobileController.saveMobileName
-GET	   /approve					   controllers.AuthController.approve(imeid: String)
-GET	   /proofDemanded					   controllers.AuthController.proofDemanded(imeid: String)
-GET	   /sendMailForDemandProof							controllers.AuthController.sendMailForDemandProof(imeid: String)
 
 GET     /admin/createMobileModelForm      controllers.MobileController.createMobileModelForm
-POST    /createMobileModel          controllers.MobileController.createMobileModel
+POST    /createMobileModel                controllers.MobileController.createMobileModel
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file                controllers.Assets.at(path="/public", file)

@@ -10,9 +10,9 @@
 					<h3>@Messages("admin.requestapproval")</h3>
 				</div>
 				<div class="span6">
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('pending');" >Pending</button>
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('proofdemanded');" >Proof Demanded</button>
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getPendingMobiles('approved');" >Approved</button>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
+					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('approved');" >Approved</button>
 				</div>
 			</div>
 			@flash.get("error").map { message =>
@@ -116,7 +116,7 @@
 	    
 	    var statusAjaxSuccessDemandProof = function(data) {
 			$("#demand_"+imeId).prop("disabled",true);
-			$("#status_"+imeId).text('ProofDemanded');
+			$("#demand_"+imeId).text('Proof Demanded');
 			console.debug("Success of Ajax Call for demand proof");
 			console.debug(data);
 		};
@@ -133,7 +133,7 @@
     			error: statusAjaxErrorDemandProof
     		};
         	
-			jsRoutes.controllers.AuthController.proofDemanded(imeid).ajax(statusAjaxCallBackDemandProof);
+        	jsRoutes.controllers.AdminController.proofDemanded(imeid).ajax(statusAjaxCallBackDemandProof);
         };
         
         var sendMailForDemandProof=function(imeid){
@@ -141,7 +141,7 @@
         			success: statusAjaxSuccessForSendmail,
         			error: statusAjaxErrorForSendmail	
         	};
-        	jsRoutes.controllers.AuthController.sendMailForDemandProof(imeid).ajax(statusAjaxCallBackForSendMail)
+        	jsRoutes.controllers.AdminController.sendMailForDemandProof(imeid).ajax(statusAjaxCallBackForSendMail)
         };
         
         var statusAjaxSuccessForSendmail = function(data) {
@@ -179,14 +179,14 @@
     			error: statusAjaxError
     		};
         	
-			jsRoutes.controllers.AuthController.approve(imeid).ajax(statusAjaxCallBack);
+        	jsRoutes.controllers.AdminController.approve(imeid).ajax(statusAjaxCallBack);
         };
         
-      //script for getting pending mobile list
+      //script for getting  mobile list by status
       
-        function getPendingMobiles(status){
+        function getMobilesByStatus(status){
 
-    	  getPendingMobileList(status);
+        	getMobileListByStatus(status);
         }
         
         var statusAjaxSuccessForPendingMobileList = function(data){
@@ -218,7 +218,7 @@
   		  console.debug(err);
         };
         
-        var getPendingMobileList = function(status){
+        var getMobileListByStatus = function(status){
       	  var statusAjaxCallBackForPendingList={
       			  success: statusAjaxSuccessForPendingMobileList,
       			  error: statusAjaxErrorForPendingMobileList
