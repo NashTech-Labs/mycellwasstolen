@@ -43,7 +43,7 @@ class Application extends Controller {
       routes.javascript.AdminController.approve,
       routes.javascript.AdminController.proofDemanded,
       routes.javascript.AdminController.sendMailForDemandProof,
-      routes.javascript.AuthController.mobilesForAjaxCall)).as("text/javascript")
+      routes.javascript.AdminController.mobilesForAjaxCall)).as("text/javascript")
   }
 }
 

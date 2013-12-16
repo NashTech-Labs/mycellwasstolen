@@ -19,55 +19,9 @@ import play.api.mvc.RequestHeader
 import play.api.mvc.Result
 import play.api.mvc.Results
 import play.api.mvc.Security
-import utils.Common
 import views.html
-import play.api.libs.json.Json
-import net.liftweb.json.DefaultFormats
-import net.liftweb.json.Serialization.write
-import play.api.libs.json.JsValue
-import net.liftweb.json.JObject
-import net.liftweb.json.JString
-import net.liftweb.json.JObject
-import net.liftweb.json.JString
-import net.liftweb.json.JField
-import net.liftweb.json.JsonAST._
-import net.liftweb.json.JsonDSL._
-import utils.TwitterTweet
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured {
-
-  implicit val formats = DefaultFormats
-
-  def mobiles(status:String): EssentialAction = withAuth { username =>
-    implicit request =>
-      Logger.info("AdminController:mobiles method has been called.")
-      val user: Option[User] = Cache.getAs[User](username)
-      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
-      if(mobiles.isEmpty){
-      Logger.info("AuthController mobile list: - false")
-      Ok(html.admin.mobiles(mobiles,user))
-      }else{
-      Logger.info("AuthController mobile list: - true")
-      Ok(html.admin.mobiles(mobiles,user))
-     
-      }
-      
-  }
-
-  def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
-    implicit request =>
-      Logger.info("AdminController:mobiles method has been called.")
-      val user: Option[User] = Cache.getAs[User](username)
-      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
-      Logger.info("Mobiles Record" + mobiles)
-      if (!mobiles.isEmpty) {
-        Ok(write(mobiles)).as("application/json")
-      } else {
-        Logger.info("AuthController mobile list: - true")
-        Ok(Json.obj("status" -> "Error"))
-      }
-
-  }
 
   val loginForm = Form(
     tuple(
@@ -90,7 +44,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AuthController.mobiles("pending")).withSession(Security.username -> user._1)
+      user => Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1)
     )
   }
 

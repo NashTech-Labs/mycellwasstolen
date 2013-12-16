@@ -7,8 +7,55 @@ import utils.Common
 import model.domains.Domain._
 import utils.TwitterTweet
 import model.users.MobileService
+import play.api.cache.Cache
+import play.api.Play.current
+import views.html
+import play.api.libs.json.Json
+import net.liftweb.json.DefaultFormats
+import net.liftweb.json.Serialization.write
+import play.api.libs.json.JsValue
+import net.liftweb.json.JObject
+import net.liftweb.json.JString
+import net.liftweb.json.JObject
+import net.liftweb.json.JString
+import net.liftweb.json.JField
+import net.liftweb.json.JsonAST._
+import net.liftweb.json.JsonDSL._
 
-class AdminController(mobileService: MobileServiceComponent) extends Controller{
+class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured{
+  
+  implicit val formats = DefaultFormats
+  
+  def mobiles(status:String): EssentialAction = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:mobiles method has been called.")
+      val user: Option[User] = Cache.getAs[User](username)
+      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
+      if(mobiles.isEmpty){
+      Logger.info("AuthController mobile list: - false")
+      Ok(html.admin.mobiles(mobiles,user))
+      }else{
+      Logger.info("AuthController mobile list: - true")
+      Ok(html.admin.mobiles(mobiles,user))
+     
+      }
+      
+  }
+
+  def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:mobiles method has been called.")
+      val user: Option[User] = Cache.getAs[User](username)
+      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
+      Logger.info("Mobiles Record" + mobiles)
+      if (!mobiles.isEmpty) {
+        Ok(write(mobiles)).as("application/json")
+      } else {
+        Logger.info("AuthController mobile list: - true")
+        Ok(Json.obj("status" -> "Error"))
+      }
+
+  }
   
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AuthController:approve - change status to approve : " + imeiId)

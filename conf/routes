@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET		/contact-us					controllers.Resources.contactUs
 
 GET		/showExampleForm			controllers.Application.showExampleForm
 POST	/handleFormExample			controllers.Application.handleFormExample
@@ -30,8 +31,8 @@ GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemand
 GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
-GET    /admin/mobiles              controllers.AuthController.mobiles(status:String)
-GET    /admin/mobile               controllers.AuthController.mobilesForAjaxCall(status:String)
+GET    /admin/mobiles              controllers.AdminController.mobiles(status:String)
+GET    /admin/mobile               controllers.AdminController.mobilesForAjaxCall(status:String)
 GET    /admin/brandForm            controllers.MobileController.brandRegisterForm
 POST   /saveMobileName             controllers.MobileController.saveMobileName
 

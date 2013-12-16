@@ -198,6 +198,7 @@
       		// console.log(data.toSource());
       		$('#mobileData').empty();
       		$.each(data, function(index, value){
+      			//if(value.mobileStatus.name=="approved") var enableOrDisable="disabled";
                 var tBody= '<tr><td>'+value.mobileName+
                 '</td><td>'+value.mobileModel+
                 '</td><td>'+value.imeiMeid+
@@ -210,11 +211,11 @@
                 $('#mobileData').append(tBody);
       		});
       	}
-      	  console.debug("Success of Ajax Call for Pending Mobile List");
+      	  console.debug("Success of Ajax Call for Mobile List By Status");
   		  console.debug(data);
         };
         var statusAjaxErrorForPendingMobileList=function(err){
-      	  console.debug("Error of ajax Call for Pending Mobile List");
+      	  console.debug("Error of ajax Call for Mobile List By Status");
   		  console.debug(err);
         };
         
@@ -224,7 +225,7 @@
       			  error: statusAjaxErrorForPendingMobileList
       	  };
       	  
-      	  jsRoutes.controllers.AuthController.mobilesForAjaxCall(status).ajax(statusAjaxCallBackForPendingList);
+      	  jsRoutes.controllers.AdminController.mobilesForAjaxCall(status).ajax(statusAjaxCallBackForPendingList);
         };
         
         function showDocumentProof(documentProofId){
