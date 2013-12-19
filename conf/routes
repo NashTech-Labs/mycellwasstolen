@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET		/contact-us					controllers.Resources.contactUs
+GET		/blog					    controllers.Resources.blog
 
 GET		/showExampleForm			controllers.Application.showExampleForm
 POST	/handleFormExample			controllers.Application.handleFormExample

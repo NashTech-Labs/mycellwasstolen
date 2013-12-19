@@ -31,10 +31,12 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
       }))
 
   def check(username: String, password: String) = {
-    (username == "admin" && password == "1234")
+    if((username == "admin" && password == "1234")){
     val user = User("admin", "1234")
     Cache.set(username, user, 60 * 60)
     true
+    }
+    else false
   }
 
   def login = Action { implicit request =>

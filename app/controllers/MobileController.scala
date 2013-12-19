@@ -16,7 +16,7 @@ import play.api.Play.current
 import java.text.SimpleDateFormat
 import utils.TwitterTweet
 
-class MobileController(mobileService: MobileServiceComponent) extends Controller {
+class MobileController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
   val mobileregistrationform = Form(
     mapping(
@@ -56,18 +56,22 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
 
-  def brandRegisterForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("Calling MobileNameform")
+  
+  def brandRegisterForm: EssentialAction = withAuth { username =>
+    implicit request =>
+      Logger.info("Calling MobileNameform")
+      val user: Option[User] = Cache.getAs[User](username)
     val email = request.session.get(Security.username).getOrElse("")
-    val user: Option[User] = Cache.getAs[User](email)
     Ok(views.html.createMobileNameForm(brandregisterform,user))
   }
 
-  def createMobileModelForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def createMobileModelForm: EssentialAction = withAuth { username =>
+    implicit request =>
+      Logger.info("Calling createMobileModelform")
+      val user: Option[User] = Cache.getAs[User](username)
     val mobilesName = mobileService.getMobilesName()
     Logger.info("createmobilemodelform call>>")
     val email = request.session.get(Security.username).getOrElse("")
-    val user: Option[User] = Cache.getAs[User](email)
     Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName,user))
   }
 
