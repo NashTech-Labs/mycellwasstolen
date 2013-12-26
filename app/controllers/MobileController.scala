@@ -29,7 +29,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       "email" -> email,
       "regType" -> nonEmptyText,
       "document" -> nonEmptyText,
-      "description" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
+      "description" -> nonEmptyText,
+      "otherMobileBrand"->text,
+      "otherMobileModel"->text)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   val mobilestatus = Form(
     mapping(
@@ -96,10 +98,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
        val length = mobileuser.document.length()
        val index = mobileuser.document.indexOf(".")
        val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
+       val otherMobileBrand=mobileuser.otherMobileBrand
+       val otherMobileModel=mobileuser.otherMobileModel
        
        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, documentName))
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, documentName,otherMobileBrand,otherMobileModel))
 
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
@@ -134,7 +138,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
      val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
-                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType)
+                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))

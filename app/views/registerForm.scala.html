@@ -17,11 +17,22 @@
 		false,'_error ->
 		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Brand Required")))
 	
+		@inputText(mobileRegistrationForm("otherMobileBrand"), 'label -> "Other Brand",'hidden->"hidden")
+		<!-- <input type="text" name="otherMobileBrand" id="otherMobileBrand" label="obc" hidden="hidden"> -->
+		<!-- <div class="form-group" id="otherBrand">
+		<label class="col-sm-4 control-label" for="Other Brand">
+			Other Brand
+			<span class="required-field">*</span>
+			</label>
+			<div class="col-sm-6">
+				<input id="otherMobileBrand" type="text" value="" name="otherMobileBrand">
+			</div>
+		</div> -->
 		@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
 		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
 		'_showConstraints -> false,'_error ->
 		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
-	
+		@inputText(mobileRegistrationForm("otherMobileModel"), '_label -> "Other Model",'hidden->"hidden")
 	
 		@inputText(mobileRegistrationForm("email"), '_label -> "Email")
 		@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
@@ -56,8 +67,27 @@
 		$(document).ready(function() {
 			$("#mobileName").change(function() {
 				var mobileNameId = $(this).val();
+				if(mobileNameId==7){
+					$('#otherMobileBrand').show();
+					$('#otherMobileBrand').addClass('required');
+					
+				}
+				else {
+				$('#otherMobileBrand').hide();
+				$('#otherMobileModel').hide();
+				$('#otherMobileModel').removeClass('required');
+				$('#otherMobileBrand').removeClass('required');}
 				mobileModels(mobileNameId);
 			});
+		});
+		
+		$("#mobileModel").change(function() {
+			var mobileModel = $(this).val();
+			if(mobileModel=="other"){
+				$('#otherMobileModel').show();
+				$('#otherMobileModel').addClass('required');
+			}
+			
 		});
 	
 		var mobileAjaxSuccess = function(data) {

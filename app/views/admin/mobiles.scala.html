@@ -198,8 +198,8 @@
       		// console.log(data.toSource());
       		$('#mobileData').empty();
       		$.each(data, function(index, value){
-                var tBody= '<tr><td>'+value.mobileName+
-                '</td><td>'+value.mobileModel+
+                var tBody= '<tr><td>'+(value.mobileName=="other" ? value.mobileName+"("+value.otherMobileBrand+")":value.mobileName)+
+                '</td><td>'+(value.mobileModel=="other" ? value.mobileModel+"("+value.otherMobileModel+")":value.mobileModel)+
                 '</td><td>'+value.imeiMeid+
                 '</td><td>'+value.purchaseDate+
                 '</td><td>'+value.email+'</td><td>'
@@ -208,7 +208,7 @@
                 +'>Get Proof</button></td><td>'
                 //condition for disable approve button
                 +(value.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value.imeiMeid+'" onclick="changeStatus('+value.imeiMeid+');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value.imeiMeid+'" onclick="changeStatus('+value.imeiMeid+');">Approve</button>')
-                +((value.mobileStatus.name=="approved"||"proofdemanded")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');">Demand Proof</button>')
+                +((value.mobileStatus.name=="proofdemanded"||value.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');">Demand Proof</button>')
                 +'</td>'
                 +'<td>'+value.regDate+'</td></tr>';
                 

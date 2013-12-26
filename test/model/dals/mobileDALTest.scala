@@ -13,8 +13,8 @@ class mobileDALTest extends FunSuite{
   val brand=Brand("nokia",date)
   val model=MobileModels("N72",1)
   val mobileUser = Mobile(
-      "gs", "nokia", "glaxacy", "12345678901234", new java.sql.Date(new java.util.Date().getTime()), "983131313",
-      "gs@gmail.com","stolen",Status.pending, "ddas  asd")
+      "gauravs", "nokia", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
+      "gs@gmail.com","stolen",Status.pending, "ddas  asd","12-17-2013","gaurav.png")
   
   /*test("mobileDAL: insert mobile record into database successfully") {
   
