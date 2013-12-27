@@ -1,4 +1,4 @@
-@(mobiles: List[model.domains.Domain.Mobile], user: Option[model.domains.Domain.User])(implicit flash: Flash)
+@(mobiles: List[(model.domains.Domain.Mobile,String,String)], user: Option[model.domains.Domain.User])(implicit flash: Flash)
 
 @import model.domains.Domain.Status
 @main("Mycellwasstolen",user) {
@@ -47,16 +47,16 @@
 					<tbody id="mobileData">
            			@for(mobile <- mobiles) {
 			    		<tr>
-			    			<td>@mobile.mobileName</td>
-			    			<td>@mobile.mobileModel</td>
-			    			<td>@mobile.imeiMeid</td>
-			    			<td>@mobile.purchaseDate</td>
-			    			<td>@mobile.email</td>
-			    			<td id="status_@mobile.imeiMeid">@mobile.mobileStatus</td>
-			    			<td>@mobile.regType</td>
+			    			<td>@mobile._2</td>
+			    			<td>@mobile._3</td>
+			    			<td>@mobile._1.imeiMeid</td>
+			    			<td>@mobile._1.purchaseDate</td>
+			    			<td>@mobile._1.email</td>
+			    			<td id="status_@mobile._1.imeiMeid">@mobile._1.mobileStatus</td>
+			    			<td>@mobile._1.regType</td>
 			    			<td>
-								<button class="btn btn-info" onclick="showDocumentProof('@mobile.document');">Get Proof</button> <!-- Modal -->
-								<div class="modal fade" id="myModal_@mobile.imeiMeid" tabindex="-1" role="dialog"
+								<button class="btn btn-info" onclick="showDocumentProof('@mobile._1.document');">Get Proof</button> <!-- Modal -->
+								<div class="modal fade" id="myModal_@mobile._1.imeiMeid" tabindex="-1" role="dialog"
 									aria-labelledby="myModalLabel" aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
@@ -65,7 +65,7 @@
 													aria-hidden="true">&times;</button>
 												<h4 class="modal-title" id="myModalLabel">Proof Document</h4>
 											</div>
-											<div class="modal-body"><img style="height: 200px;" alt="Proof Document" src="@routes.Assets.at("proofDocuments/" +mobile.document)" /></div>
+											<div class="modal-body"><img style="height: 200px;" alt="Proof Document" src="@routes.Assets.at("proofDocuments/" +mobile._1.document)" /></div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-default"
 													data-dismiss="modal">Close</button>
@@ -75,25 +75,25 @@
 								</div> 
 					    </td>
 					
-					    @if(mobile.mobileStatus==Status.approved){
+					    @if(mobile._1.mobileStatus==Status.approved){
 	    				<td>
-	    					<button title="Approve" class="btn btn-info" id="approve_@mobile.imeiMeid" disabled>Approve</button>
+	    					<button title="Approve" class="btn btn-info" id="approve_@mobile._1.imeiMeid" disabled>Approve</button>
 	    				</td>
 	    				} else{
 	    				<td>
-	    					<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile.imeiMeid);" id="approve_@mobile.imeiMeid" >Approve</button>
+	    					<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile._1.imeiMeid);" id="approve_@mobile._1.imeiMeid" >Approve</button>
 	    				</td>
 	    				}
-	    				@if(mobile.mobileStatus==Status.proofdemanded){
+	    				@if(mobile._1.mobileStatus==Status.proofdemanded){
 	    				<td>
-	    					<button title="Demand Proof" class="btn btn-info"  id="demand_@mobile.imeiMeid" disabled>Demand Proof</button>
+	    					<button title="Demand Proof" class="btn btn-info"  id="demand_@mobile._1.imeiMeid" disabled>Demand Proof</button>
 	    				</td>
 	    				}else{
 	    				<td>
-	    					<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile.imeiMeid);" id="demand_@mobile.imeiMeid" >Demand Proof</button>
+	    					<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile._1.imeiMeid);" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
 	    				</td>
 	    				}
-	    				<td>@mobile.regDate</td>
+	    				<td>@mobile._1.regDate</td>
 			    	</tr>
 			    		
                       }
@@ -196,24 +196,24 @@
         }
       	 else{
       		// console.log(data.toSource());
-      		$('#mobileData').empty();
-      		$.each(data, function(index, value){
-                var tBody= '<tr><td>'+(value.mobileName=="other" ? value.mobileName+"("+value.otherMobileBrand+")":value.mobileName)+
-                '</td><td>'+(value.mobileModel=="other" ? value.mobileModel+"("+value.otherMobileModel+")":value.mobileModel)+
-                '</td><td>'+value.imeiMeid+
-                '</td><td>'+value.purchaseDate+
-                '</td><td>'+value.email+'</td><td>'
-                +value.mobileStatus.name+'</td><td>'
-                +value.regType+'</td><td><button class="btn btn-info" data-toggle="modal" data-target="#myModal_'+value.imeiMeid+'" onclick="showDocumentProof(\''+value.document+'\');"'
+      		 $('#mobileData').empty();
+      		 $.each(data, function(index, value){
+                var tBody= '<tr><td>'+(value._2=="~Other" ? value._2+"("+value._1.otherMobileBrand+")":value._2)+
+                '</td><td>'+(value._3=="~Other" ? value._3+"("+value._1.otherMobileModel+")":value._3)+
+                '</td><td>'+value._1.imeiMeid+
+                '</td><td>'+value._1.purchaseDate+
+                '</td><td>'+value._1.email+'</td><td>'
+                +value._1.mobileStatus.name+'</td><td>'
+                +value._1.regType+'</td><td><button class="btn btn-info" data-toggle="modal" data-target="#myModal_'+value._1.imeiMeid+'" onclick="showDocumentProof(\''+value._1.document+'\');"'
                 +'>Get Proof</button></td><td>'
                 //condition for disable approve button
-                +(value.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value.imeiMeid+'" onclick="changeStatus('+value.imeiMeid+');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value.imeiMeid+'" onclick="changeStatus('+value.imeiMeid+');">Approve</button>')
-                +((value.mobileStatus.name=="proofdemanded"||value.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value.imeiMeid+'" onclick="changeStatusToDemand('+value.imeiMeid+');">Demand Proof</button>')
+                +(value._1.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');">Approve</button>')
+                +((value._1.mobileStatus.name=="proofdemanded"||value._1.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');">Demand Proof</button>')
                 +'</td>'
-                +'<td>'+value.regDate+'</td></tr>';
+                +'<td>'+value._1.regDate+'</td></tr>';
                 
                 $('#mobileData').append(tBody);
-      		});
+      		});  
       	}
       	  console.debug("Success of Ajax Call for Mobile List By Status");
   		  console.debug(data);

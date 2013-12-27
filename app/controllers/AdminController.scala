@@ -31,15 +31,24 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
       val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
+      mobileNameWithMobile(mobiles)
       if(mobiles.isEmpty){
-      Logger.info("AuthController mobile list: - false")
-      Ok(html.admin.mobiles(mobiles,user))
+    	  Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
       }else{
-      Logger.info("AuthController mobile list: - true")
-      Ok(html.admin.mobiles(mobiles,user))
+    	  	Logger.info("AuthController mobile list: - true")
+    	  	Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
      
       }
       
+  }
+  
+  def mobileNameWithMobile(mobiles: List[Mobile]) = {
+    mobiles.map{
+      mobile=>
+        (mobile,mobileService.getMobileNamesById(mobile.mobileName.toInt).get.name,mobileService.getMobileModelById(mobile.mobileModel.toInt).get.mobileModel)
+        
+    }
+    
   }
 
   def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
@@ -49,7 +58,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
       Logger.info("Mobiles Record" + mobiles)
       if (!mobiles.isEmpty) {
-        Ok(write(mobiles)).as("application/json")
+        Ok(write(mobileNameWithMobile(mobiles))).as("application/json")
       } else {
         Logger.info("AuthController mobile list: - true")
         Ok(Json.obj("status" -> "Error"))

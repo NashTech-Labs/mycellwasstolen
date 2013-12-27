@@ -18,6 +18,7 @@ trait MobileDALComponent {
     def getAllMobiles(status:String): List[Mobile]
     def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int]
     def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
+    def getMobileModelById(mid: Int): List[MobileModels]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -133,6 +134,13 @@ class MobileDAL extends MobileDALComponent {
         }
    }
 }
+   
+   override def getMobileModelById(mid: Int): List[MobileModels] = {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Calling getMobileNameById" +mid)
+       (for { model <- MobileModel if (model.id === mid) } yield model).list
+      }
+    }
 
 }
 

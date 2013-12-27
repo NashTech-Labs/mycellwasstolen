@@ -16,6 +16,7 @@ trait MobileServiceComponent{
   def getAllMobiles(status:String): List[Mobile]
   def changeStatusToApprove(mobileUser: Mobile): Boolean
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
+  def getMobileModelById(id: Int):Option[MobileModels]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -48,7 +49,8 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def getMobileNamesById(id: Int): Option[Brand] = {
     Logger.info("getMobileNamesById called")
     val mobileName = mobiledal.getMobileNamesById(id)
-    if (mobileName.length != 0) Some(mobileName.head) else None
+    //if (mobileName.length != 0) Some(mobileName.head) else None
+    mobileName.headOption
   }
 
   override def isImeiExist(imeid: String): Boolean = {
@@ -87,6 +89,12 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
       case Right(id) => true
       case Left(error) => false
     } 
+  }
+   override def getMobileModelById(id: Int): Option[MobileModels] = {
+    Logger.info("getMobileNamesById called")
+    val mobileModel = mobiledal.getMobileModelById(id)
+    //if (mobileName.length != 0) Some(mobileName.head) else None
+    mobileModel.headOption
   }
 
 }

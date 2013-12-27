@@ -18,16 +18,7 @@
 		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Brand Required")))
 	
 		@inputText(mobileRegistrationForm("otherMobileBrand"), 'label -> "Other Brand",'hidden->"hidden")
-		<!-- <input type="text" name="otherMobileBrand" id="otherMobileBrand" label="obc" hidden="hidden"> -->
-		<!-- <div class="form-group" id="otherBrand">
-		<label class="col-sm-4 control-label" for="Other Brand">
-			Other Brand
-			<span class="required-field">*</span>
-			</label>
-			<div class="col-sm-6">
-				<input id="otherMobileBrand" type="text" value="" name="otherMobileBrand">
-			</div>
-		</div> -->
+		
 		@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
 		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
 		'_showConstraints -> false,'_error ->
@@ -67,7 +58,7 @@
 		$(document).ready(function() {
 			$("#mobileName").change(function() {
 				var mobileNameId = $(this).val();
-				if(mobileNameId==7){
+				if(mobileNameId==12006){
 					$('#otherMobileBrand').show();
 					$('#otherMobileBrand').addClass('required');
 					
@@ -82,11 +73,12 @@
 		});
 		
 		$("#mobileModel").change(function() {
-			var mobileModel = $(this).val();
-			if(mobileModel=="other"){
+			var mobileModel=$("#mobileModel option:selected").text();
+			if(mobileModel.match(/~Other.*/)){
 				$('#otherMobileModel').show();
 				$('#otherMobileModel').addClass('required');
 			}
+			else {$('#otherMobileModel').hide();}
 			
 		});
 	
@@ -96,10 +88,10 @@
 				value : "-- Choose Mobile Model --",
 				text : "-- Choose Mobile Model --"
 			}));
-			
+			//console.log(data.toSource())
 			$.each(data, function(i, d) {
 				$('#mobileModel').append($('<option>', {
-					value : d.mobileModel,
+					value : d.id,
 					text : d.mobileModel
 				}));
 			});

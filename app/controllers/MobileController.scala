@@ -101,7 +101,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
        val otherMobileBrand=mobileuser.otherMobileBrand
        val otherMobileModel=mobileuser.otherMobileModel
        
-       val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileName.get.name,
+       val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, documentName,otherMobileBrand,otherMobileModel))
 
@@ -135,9 +135,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
     val mobileData = mobileService.getMobileRecordByIMEID(imeid)
+    val mobilesName=mobileService.getMobileNamesById(mobileData.get.mobileName.toInt)
+    val mobileName=mobilesName.get.name
+    val mobileModel=mobileService.getMobileModelById(mobileData.get.mobileModel.toInt).get.mobileModel
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
-     val mobileDetail = MobileDetail(mobileData.get.userName, mobileData.get.mobileName, mobileData.get.mobileModel, mobileData.get.imeiMeid,
+     val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
                              mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
