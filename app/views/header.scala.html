@@ -14,9 +14,9 @@
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/mobileStatus">Check Cell Status</a></li>
-				<li><a href="/register-stolen-phone">Register Stolen / Lost Phone</a></li>
-				<li><a href="/register-new-phone">Secure Your Phone</a></li>
+				<li><a id="mobileStatus" href="/mobileStatus">Check Cell Status</a></li>
+				<li><a id="stolenPhone" href="/register-stolen-phone">Register Stolen / Lost Phone</a></li>
+				<li><a id="securePhone" href="/register-new-phone">Secure Your Phone</a></li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
 					<ul class="dropdown-menu">
@@ -28,15 +28,15 @@
 					</ul>
 					</li>
 					@if(user == None){
-					<li><a href="/login">Admin Login</a></li>}
+					<li><a id="adminPanel" href="/login">Admin Login</a></li>}
 					@if(user != None) {
 					<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+					<a  id="menuItem" href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-					<li><a href="/admin/brandForm">Add Mobile Brand</a></li>
-					<li><a href="/admin/createMobileModelForm">Add Mobile Model</a></li>
+					<li><a id="brandForm" href="/admin/brandForm">Add Mobile Brand</a></li>
+					<li><a id="createMobileModel" href="/admin/createMobileModelForm">Add Mobile Model</a></li>
 					<li><a href="/admin/mobiles?status=pending">List of Requests</a></li>					
-					<li><a href="/logout">Logout</a></li>
+					<li><a id="logout" href="/logout">Logout</a></li>
 					</ul>
 					</li>
 					}
