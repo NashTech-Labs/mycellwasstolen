@@ -85,7 +85,7 @@ object Domain {
 
   case class BrandForm(
     name: String)
- 
+
    case class MobilesNameForm(
     mobileName:String)
 
@@ -111,18 +111,26 @@ object Domain {
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O.NotNull, O DBType ("VARCHAR(100)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O.NotNull, O DBType ("VARCHAR(100)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, String, String, String, String, Status.Value, String, String, String, String, String, Option[Int])] =
-      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand~otherMobileModel~id <> (Mobile, Mobile unapply _)
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, String, String, String,
+        String, Status.Value, String, String, String, String, String, Option[Int])] =
+      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~
+      regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand~otherMobileModel~id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
       userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
-        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document~otherMobileBrand~otherMobileModel<> (
-          { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel) =>
-            Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email, regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel)
+        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document~
+        otherMobileBrand~otherMobileModel<> (
+          { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email,
+              regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel) =>
+            Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email,
+                regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel)
           },
           { mobileregistration: Mobile =>
-            Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,mobileregistration.purchaseDate, mobileregistration.contactNo,
-              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus, mobileregistration.description, mobileregistration.regDate, mobileregistration.document,mobileregistration.otherMobileBrand,mobileregistration.otherMobileModel))
+            Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,
+                mobileregistration.purchaseDate, mobileregistration.contactNo,
+              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus,
+              mobileregistration.description, mobileregistration.regDate, mobileregistration.document,mobileregistration.otherMobileBrand,
+              mobileregistration.otherMobileModel))
           }) returning id
   }
 

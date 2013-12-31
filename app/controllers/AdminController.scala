@@ -23,9 +23,9 @@ import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
 
 class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured{
-  
+
   implicit val formats = DefaultFormats
-  
+
   def mobiles(status:String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
@@ -33,22 +33,22 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
       mobileNameWithMobile(mobiles)
       if(mobiles.isEmpty){
-    	  Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
+            Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
       }else{
-    	  	Logger.info("AuthController mobile list: - true")
-    	  	Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
-     
+            Logger.info("AuthController mobile list: - true")
+            Ok(html.admin.mobiles(mobileNameWithMobile(mobiles),user))
+
       }
-      
+
   }
-  
+
   def mobileNameWithMobile(mobiles: List[Mobile]) = {
     mobiles.map{
       mobile=>
         (mobile,mobileService.getMobileNamesById(mobile.mobileName.toInt).get.name,mobileService.getMobileModelById(mobile.mobileModel.toInt).get.mobileModel)
-        
+
     }
-    
+
   }
 
   def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
@@ -65,13 +65,17 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       }
 
   }
-  
+
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AuthController:approve - change status to approve : " + imeiId)
 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
     Logger.info("AuthController:mobileUser - change status to approve : " + mobileUser)
-    val updatedMobile = Mobile(mobileUser.userName, mobileUser.mobileName, mobileUser.mobileModel, mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email, mobileUser.regType, model.domains.Domain.Status.approved, mobileUser.description, mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand,mobileUser.otherMobileModel,mobileUser.id)
+    val updatedMobile = Mobile(mobileUser.userName, mobileUser.mobileName, mobileUser.mobileModel,
+        mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email,
+        mobileUser.regType, model.domains.Domain.Status.approved, mobileUser.description,
+        mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand,mobileUser.otherMobileModel,
+        mobileUser.id)
     val isExist = mobileService.changeStatusToApprove(updatedMobile)
     if (isExist) {
       Logger.info("AuthController: - true")
@@ -86,7 +90,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       Ok("error")
     }
   }
-  
+
   def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AuthController:proofDemanded - change status to proofDemanded : " + imeiId)
 
