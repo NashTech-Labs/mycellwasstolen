@@ -60,7 +60,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
   }
 
-  
+
   def brandRegisterForm: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("Calling MobileNameform")
@@ -80,39 +80,30 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   }
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
-    Logger.info("MobileRegistrationController:mobileRegistrationForm - Mobile registration.")
     val mobilesName = mobileService.getMobilesName()
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
       mobileuser => {
-        Logger.info("MobileRegistrationController:mobileRegistration - found valid data.")
         val status = model.domains.Domain.Status.pending
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
- 
         val df = new SimpleDateFormat("MM/dd/yyyy")
         val date= df.format(sqldate)
-        
-        //val date=mydate.toString()
-        Logger.info("date"+date)
         val mobileName = mobileService.getMobileNamesById(mobileuser.mobileName.toInt)
-       Logger.info("MobileName - found valid data." + mobileName)
-       
        val length = mobileuser.document.length()
        val index = mobileuser.document.indexOf(".")
        val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
        val otherMobileBrand=mobileuser.otherMobileBrand
        val otherMobileModel=mobileuser.otherMobileModel
-       
        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending, mobileuser.description, date, documentName,otherMobileBrand,otherMobileModel))
-
+          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
+          mobileuser.description, date, documentName,otherMobileBrand,otherMobileModel))
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
           val fileToSave= image.ref.file.asInstanceOf[File]
           val bucketName ="mcws"
-          val AWS_ACCESS_KEY = "AKIAIEVJZRX3DX6WCICQ"   
+          val AWS_ACCESS_KEY = "AKIAIEVJZRX3DX6WCICQ"
           val AWS_SECRET_KEY = "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"
           val mcwsAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
           val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
@@ -127,7 +118,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
                 if(mobileuser.regType == "stolen"){
                    TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
                  }else{
-                   TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")    
+                   TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
                       }
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())
@@ -149,7 +140,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
-                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email, mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)
+                             mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
+                             mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))

@@ -25,7 +25,9 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
          mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
-         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus, mobileuser.description, mobileuser.regDate, mobileuser.document,mobileuser.otherMobileBrand,mobileuser.otherMobileModel))
+         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus,
+         mobileuser.description, mobileuser.regDate, mobileuser.document,mobileuser.otherMobileBrand,
+         mobileuser.otherMobileModel))
       case Left(error) => Left(error)
     }
   }
@@ -72,23 +74,23 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def getAllMobiles(status:String): List[Mobile] = {
     Logger.info("getAllMobiles called")
     mobiledal.getAllMobiles(status)
-    
+
   }
-  
+
   override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
    //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
    mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
-    } 
+    }
   }
-  
+
   override def changeStatusToDemandProof(mobileUser: Mobile): Boolean = {
    //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
    mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
-    } 
+    }
   }
    override def getMobileModelById(id: Int): Option[MobileModels] = {
     Logger.info("getMobileNamesById called")

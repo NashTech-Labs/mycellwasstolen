@@ -37,7 +37,7 @@ class MobileDAL extends MobileDALComponent {
 
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileRecordByIMEID" +imeid)
+        Logger.info("Calling getMobileRecordByIMEID" + imeid)
        (for { mobile <- Mobiles if (mobile.imeiMeid === imeid) } yield mobile).list
       }
     }
@@ -51,7 +51,7 @@ class MobileDAL extends MobileDALComponent {
 
   override def getMobileModelsById(id: Int): List[MobileModels] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileRecordByIMEID" +id)
+        Logger.info("Calling getMobileRecordByIMEID" + id)
        (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
       }
     }
@@ -82,7 +82,7 @@ class MobileDAL extends MobileDALComponent {
 
   override def getMobileNamesById(mid: Int): List[Brand] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileNameById" +mid)
+        Logger.info("Calling getMobileNameById" + mid)
        (for { brand <- Brands if (brand.id === mid) } yield brand).list
       }
     }
@@ -98,15 +98,15 @@ class MobileDAL extends MobileDALComponent {
         }else (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.approved)} yield mobile).list
       }
     }
-   
+
    override def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
-    	Connection.databaseObject().withSession {
+      Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-        	val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
-        	Logger.info("updateQuery data:"+ updateQuery)
+            val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
+            Logger.info("updateQuery data:" + updateQuery)
          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
-        	Right(updateQuery.update(mobileUser))
+            Right(updateQuery.update(mobileUser))
          // Right(mobile.update(mobileUser))
     }
         catch {
@@ -116,15 +116,15 @@ class MobileDAL extends MobileDALComponent {
         }
    }
 }
-   
+
    override def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
-    	Connection.databaseObject().withSession {
+      Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-        	val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
-        	Logger.info("updateQuery data:"+ updateQuery)
+            val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
+            Logger.info("updateQuery data:" + updateQuery)
          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
-        	Right(updateQuery.update(mobileUser))
+            Right(updateQuery.update(mobileUser))
          // Right(mobile.update(mobileUser))
     }
         catch {
@@ -134,10 +134,10 @@ class MobileDAL extends MobileDALComponent {
         }
    }
 }
-   
+
    override def getMobileModelById(mid: Int): List[MobileModels] = {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Logger.info("Calling getMobileNameById" +mid)
+        Logger.info("Calling getMobileNameById" + mid)
        (for { model <- MobileModel if (model.id === mid) } yield model).list
       }
     }

@@ -17,17 +17,17 @@ import play.api.i18n.Messages
 
 object TwitterTweet {
 
-  
+
    //Tweet for a new job
    //@param tweetmsg is tweet for a new job on twitter
-   
- 
+
+
   val MAX_TWITTER_SIZE = 140
-  
+
   def signature(): String = {
     Messages("messages.link")
   }
-  
+
   def tweetAMobileRegistration(imeid: String,message: String): Unit = {
     val twitter = new TwitterFactory().getInstance()
     // Authorising with your Twitter Application credentials
@@ -38,7 +38,7 @@ object TwitterTweet {
     twitter.setOAuthConsumer(consumer_key, consumer_secret)
     twitter.setOAuthAccessToken(new AccessToken(access_key, access_token))
     val title = ""
-    twitter.updateStatus("Mobile with IMEI:"+imeid+" "+message)
+    twitter.updateStatus("Mobile with IMEI:" + imeid + " " + message)
   }
-  
+
 }
