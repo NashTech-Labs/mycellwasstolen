@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
    "junit"  %  "junit"  %  "4.11",
    "com.restfb" % "restfb" % "1.6.12",
    "org.twitter4j" % "twitter4j-core" % "3.0.5",
-   "com.amazonaws" % "aws-java-sdk" % "1.6.10")     
+   "com.amazonaws" % "aws-java-sdk" % "1.6.10",
+   "org.seleniumhq.selenium" % "selenium-java" % "2.37.1")     
 
 play.Project.playScalaSettings
 
