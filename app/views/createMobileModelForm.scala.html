@@ -32,7 +32,7 @@
 							@helper.form(action = routes.MobileController.createMobileModel, 'id ->"mobileModelForm") {
 							 <fieldset>
 								@select(field=createmobilemodelform("mobileName"),options=mobilesName.map(x=>
-									(x.name -> (x.name))).toSeq, '_label -> "Mobile Name",
+									(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Name",
 									'_default -> "-- Choose Mobile Name --", '_showConstraints ->
 									false,'_error ->
 									createmobilemodelform("mobileName").error.map(_.withMessage("Mobile	Name Required")))
