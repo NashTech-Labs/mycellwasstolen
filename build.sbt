@@ -13,7 +13,8 @@ libraryDependencies ++= Seq(
    "org.mockito" % "mockito-all" % "1.8.5",
    "junit"  %  "junit"  %  "4.11",
    "com.restfb" % "restfb" % "1.6.12",
-   "org.twitter4j" % "twitter4j-core" % "3.0.5")     
+   "org.twitter4j" % "twitter4j-core" % "3.0.5",
+   "com.amazonaws" % "aws-java-sdk" % "1.6.10")     
 
 play.Project.playScalaSettings
 

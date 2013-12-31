@@ -15,6 +15,8 @@ import play.api.cache.Cache
 import play.api.Play.current
 import java.text.SimpleDateFormat
 import utils.TwitterTweet
+import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.auth.BasicAWSCredentials
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
@@ -108,7 +110,15 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
-          image.ref.moveTo(new File("public/proofDocuments", documentName))
+          val fileToSave= image.ref.file.asInstanceOf[File]
+          val bucketName ="mcws"
+          val AWS_ACCESS_KEY = "AKIAIEVJZRX3DX6WCICQ"   
+          val AWS_SECRET_KEY = "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"
+          val mcwsAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+          val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
+          //amazonS3Client.createBucket(bucketName)
+          amazonS3Client.putObject(bucketName, documentName, fileToSave)
+         // image.ref.moveTo(new File("public/proofDocuments", documentName))
         }
 
         regMobile match {

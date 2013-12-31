@@ -14,7 +14,7 @@ class mobileDALTest extends FunSuite{
   val model=MobileModels("N72",1)
   val mobileUser = Mobile(
       "gauravs", "nokia", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
-      "gs@gmail.com","stolen",Status.pending, "ddas  asd","12-17-2013","gaurav.png")
+      "gs@gmail.com","stolen",Status.pending, "ddas  asd","12-17-2013","gaurav.png","Sigma","Sigma454")
   
   /*test("mobileDAL: insert mobile record into database successfully") {
   
