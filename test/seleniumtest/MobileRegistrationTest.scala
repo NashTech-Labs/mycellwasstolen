@@ -9,17 +9,20 @@ import play.api.test.Helpers._
 import play.api.test.Helpers.await
 import play.api.test.TestServer
 import play.api.test.WithServer
+import utils.Connection
+import model.domains.Domain._
+import java.util.concurrent.TimeUnit
 
 class MobileRegistrationTest extends Specification{
 
   val port = 19001
   val baseUrl = "http://localhost:19001"
   
-  "Testing Home Page" in {
+ /* "Testing Home Page" in {
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome")      
+      browser.title() must equalTo("Welcome to MCWS")      
     }
   }
   
@@ -27,7 +30,7 @@ class MobileRegistrationTest extends Specification{
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome")  
+      browser.title() must equalTo("Welcome to MCWS")  
       browser.$("#adminPanel").click
       browser.$("#email").text("admin")
       browser.$("#password").text("knol2013")
@@ -38,13 +41,13 @@ class MobileRegistrationTest extends Specification{
       browser.$(".btn.btn-primary").click
       browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
     }
-  }
+  }*/
   
   "Testing Add  Mobile Model" in {
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome") 
+      browser.title() must equalTo("Welcome to MCWS") 
       browser.$("#adminPanel").click
       browser.$("#email").text("admin")
       browser.$("#password").text("knol2013")
@@ -56,18 +59,20 @@ class MobileRegistrationTest extends Specification{
       browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
       browser.$("#menuItem").click
       browser.$("#createMobileModel").click
-      browser.$("#mobileName").click().find("Nokia").click()
+      browser.waitUntil(20, TimeUnit.SECONDS, browser.$("#mobileName").click())
+      browser.find("Nokia").click
+//      browser.$("#mobileName").click().find("Nokia").click
       browser.$("#mobileModel").text("5233")
       browser.$(".btn.btn-primary").click
       browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Mobile Model successfully added")
     }
   }
   
-  "Testing Stolen Mobile Registration" in {
+ /* "Testing Stolen Mobile Registration" in {
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome")
+      browser.title() must equalTo("Welcome to MCWS")
       browser.$("#adminPanel").click
       browser.$("#email").text("admin")
       browser.$("#password").text("knol2013")
@@ -103,7 +108,7 @@ class MobileRegistrationTest extends Specification{
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome")
+      browser.title() must equalTo("Welcome to MCWS")
       browser.$("#adminPanel").click
       browser.$("#email").text("admin")
       browser.$("#password").text("knol2013")
@@ -139,7 +144,7 @@ class MobileRegistrationTest extends Specification{
     running(TestServer(19001), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)      
-      browser.title() must equalTo("Welcome")
+      browser.title() must equalTo("Welcome to MCWS")
       browser.$("#adminPanel").click
       browser.$("#email").text("admin")
       browser.$("#password").text("knol2013")
@@ -172,6 +177,14 @@ class MobileRegistrationTest extends Specification{
       browser.$("#imeiMeid").text("1234567890")
       browser.$(".btn.btn-primary").click
       browser.$("#mobile-status").getText() must contain("secure")
+    }
+  }*/
+  
+  def deleteTestData() {
+    Connection.databaseObject.withSession { implicit session: Session =>
+        (for { mobile <- Mobiles } yield mobile).delete
+        (for { brand <- Brands } yield brand).delete
+      	(for { mobileModel <- MobileModel } yield mobileModel).delete
     }
   }
 }
