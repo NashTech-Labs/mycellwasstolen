@@ -116,9 +116,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val AWS_SECRET_KEY = "VrsGwzUaxQMMmN4OREHAtXQ15OXIaTpcOCcKtUc2"
           val mcwsAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
           val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
-          //amazonS3Client.createBucket(bucketName)
           amazonS3Client.putObject(bucketName, documentName, fileToSave)
-         // image.ref.moveTo(new File("public/proofDocuments", documentName))
         }
 
         regMobile match {

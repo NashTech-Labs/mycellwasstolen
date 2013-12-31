@@ -58,7 +58,8 @@
 		$(document).ready(function() {
 			$("#mobileName").change(function() {
 				var mobileNameId = $(this).val();
-				if(mobileNameId==12006){
+				var mobileName=$("#mobileName option:selected").text();
+				if(mobileName=="~Other"){
 					$('#otherMobileBrand').show();
 					$('#otherMobileBrand').addClass('required');
 					
@@ -169,6 +170,24 @@
 				}
 			}
 		});
+		 
+		 // upload file validation
+		 $('#mobileRegistrationForm').submit(function() {
+			 return validateFileExtension(this.fileUpload)
+			})
+			
+			$('#fileUpload').change(function() {
+				return validateFileExtension(this)
+			})
+		 function validateFileExtension(fld) {
+			    if(!/(\.bmp|\.gif|\.jpg|\.jpeg|\.png)$/i.test(fld.value)) {
+			        alert("Invalid image file type.");      
+			        fld.form.reset();
+			        fld.focus();        
+			        return false;   
+			    }   
+			    return true; 
+			 }
 		
 		 $("#purchaseDate").datepicker();
 	</script>

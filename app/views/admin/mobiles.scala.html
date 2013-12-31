@@ -233,8 +233,19 @@
         };
         
         function showDocumentProof(documentProofId){
-        	popupWindow = window.open('https://s3.amazonaws.com/mcws/'+documentProofId+'','popUpWindow','height=700,width=800,left=10,top=10,resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=yes');
-        	}
+        	//popupWindow = window.open('https://s3.amazonaws.com/mcws/'+documentProofId+'','popUpWindow','height=700,width=800,left=10,top=10,resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+        	 var newWindow = window.open("", "pictureViewer", 
+        		        "location=no, directories=no, resizable=yes, fullscreen=no, " + 
+        		        "menubar=no, status=yes, toolbar=no, width=" + 
+        		        800 + ", height=" + 700 + ", scrollbars=no");
+        		    newWindow.document.writeln("<html>");
+        		    newWindow.document.writeln("<body style='margin: 0 0 0 0;'>");
+        		    newWindow.document.writeln("<a href='javascript:window.close();'>");
+        		    newWindow.document.writeln('<img src=https://s3.amazonaws.com/mcws/'+documentProofId+' alt="Click to close" id="bigImage"/>');
+        		    newWindow.document.writeln("</a>");
+        		    newWindow.document.writeln("</body></html>");
+        		    newWindow.document.close();
+        }
        
 	
 	</script>

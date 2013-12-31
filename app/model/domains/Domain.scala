@@ -148,6 +148,13 @@ object Domain {
 
     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Int, Option[Int])] =
       model ~ mobilesnameid ~id <> (MobileModels, MobileModels unapply _)
+      
+    def insert: slick.driver.PostgresDriver.KeysInsertInvoker[MobileModels, Option[Int]] = mobilesnameid ~ model <> ({
+      (mobilesnameid,mobilemodel) => MobileModels(mobilesnameid.toString,mobilemodel.toInt)
+    },
+      {
+        mobilemodel: MobileModels => Some((mobilemodel.mobileName,mobilemodel.mobileModel))
+      }) returning id
 
     def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)
   }

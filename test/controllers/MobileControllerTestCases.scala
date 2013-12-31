@@ -27,7 +27,7 @@ class MobileControllerTestCases extends Specification with Mockito {
   
 
  "MobileControllerTesting: mobileRegistrationForm" in {
-      val result = MobileController.mobileRegistrationForm(FakeRequest(),new BrandForm("nokia"))
+      val result = MobileController.mobileRegistrationForm(FakeRequest())
       status(result) must equalTo(OK)
       //contentType(result) must beSome("text/html")
    }
