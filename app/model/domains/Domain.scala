@@ -105,9 +105,9 @@ object Domain {
     def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
     def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O.NotNull, O DBType ("VARCHAR(50)"))
-    def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(500)"))
+    def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(1000)"))
     def registrationDate: Column[String] = column[String]("registration_date", O.NotNull)
-    def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(500)"))
+    def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(100)"))
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O.NotNull, O DBType ("VARCHAR(100)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O.NotNull, O DBType ("VARCHAR(100)"))
 

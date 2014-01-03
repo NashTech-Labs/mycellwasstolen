@@ -30,9 +30,9 @@ object Global extends GlobalSettings{
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-     (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
+     //(Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
         //Logger.info("All tables have been created")
-      //(MobileModel.ddl)create
+      //(Mobiles.ddl)create
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())

@@ -91,11 +91,11 @@ class MobileDAL extends MobileDALComponent {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Calling getUserRecord")
         if(status.equals("pending")){
-       (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.pending)} yield mobile).list
+       (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.pending)} yield mobile).sortBy(_.id).list
       }
         else if(status.equals("proofdemanded")){
-          (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.proofdemanded)} yield mobile).list
-        }else (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.approved)} yield mobile).list
+          (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.proofdemanded)} yield mobile).sortBy(_.id).list
+        }else (for { mobile <- Mobiles if(mobile.mobileStatus===model.domains.Domain.Status.approved)} yield mobile).sortBy(_.id).list
       }
     }
 

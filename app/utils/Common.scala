@@ -6,8 +6,12 @@ import play.api.i18n.Messages
 
 object Common {
 
-  def registerMessage(imeid: String): String = {
-    Messages("messages.mobile.register", imeid, signature)
+  def stolenRegisterMessage(imeid: String): String = {
+    Messages("messages.mobile.stolenregister", imeid, signature)
+  }
+  
+  def cleanRegisterMessage(imeid: String): String = {
+    Messages("messages.mobile.cleanregister", imeid, signature)
   }
 
   def demandProofMessage(imeid: String): String = {

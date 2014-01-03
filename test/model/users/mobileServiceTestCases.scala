@@ -16,16 +16,16 @@ class MobileServiceTestCases extends FunSuite {
       "gbs", "nokia", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
       "gs@gmail.com","stolen",Status.pending, "ddas  asd","12-17-2013","gaurav.png","Sigma","Sigma454")
       
- /* test("mobileService: insert mobile record into database successfully") {
+  test("mobileService: insert mobile record into database successfully") {
   
     running(FakeApplication()) {
       val mobileId = MobileService.mobileRegistration(mobileUser)
       println("mobileId: " + mobileId)
       assert(mobileId.isRight)
     }
-}*/
+}
   
- /*test("getMobileRecordByIMEID: getMobileRecordByIMEID successfully"){
+ test("getMobileRecordByIMEID: getMobileRecordByIMEID successfully"){
   
    running(FakeApplication())
    {
@@ -33,9 +33,9 @@ class MobileServiceTestCases extends FunSuite {
      println("mobilerecordbyid:"+ mobilerecordbyid)
      assert(mobilerecordbyid.get.email==="gs@gmail.com")
    }
-}*/
+}
   
-   /*test("getMobilesName: getMobilesName successfully"){
+   test("getMobilesName: getMobilesName successfully"){
   
    running(FakeApplication())
    {
@@ -43,9 +43,9 @@ class MobileServiceTestCases extends FunSuite {
      println("mobileName:"+ mobileName)
      assert(mobileName.head.name==="nokia")
    }
-  }*/
+  }
       
-   /*test("getMobileModelsById: getMobileModelsById successfully"){
+   test("getMobileModelsById: getMobileModelsById successfully"){
   
    running(FakeApplication())
    {
@@ -53,9 +53,9 @@ class MobileServiceTestCases extends FunSuite {
      println("mobileModel:"+ mobileModel)
      assert(mobileModel.head.mobileModel==="N72")
    }
-  }*/
+  }
       
-   /*test("isImeiExist: isImeiExist successfully"){
+   test("isImeiExist: isImeiExist successfully"){
   
    running(FakeApplication())
    {
@@ -63,10 +63,10 @@ class MobileServiceTestCases extends FunSuite {
      println("isImeiExist:"+ isImeiExist)
      assert(isImeiExist.==(false))
    }
-  }  */
+  }  
       
 
-    /*test("addMobileName: addMobileName successfully"){
+    test("addMobileName: addMobileName successfully"){
   
    running(FakeApplication())
    {
@@ -74,7 +74,7 @@ class MobileServiceTestCases extends FunSuite {
      println("addMobileName:"+ addMobileName)
      assert(addMobileName.isLeft)
    }
-  }*/
+  }
       
       test("createMobileModel: createMobileModel successfully"){
   

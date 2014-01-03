@@ -189,7 +189,7 @@
         	getMobileListByStatus(status);
         }
         
-        var statusAjaxSuccessForPendingMobileList = function(data){
+        var statusAjaxSuccessForMobileList = function(data){
       	 if (data.status == "Error"){
       		$('#mobileData').empty();
       		$('#mobileData').append("Requested Data are empty");
@@ -198,8 +198,8 @@
       		// console.log(data.toSource());
       		 $('#mobileData').empty();
       		 $.each(data, function(index, value){
-                var tBody= '<tr><td>'+(value._2=="~Other" ? value._2+"("+value._1.otherMobileBrand+")":value._2)+
-                '</td><td>'+(value._3=="~Other" ? value._3+"("+value._1.otherMobileModel+")":value._3)+
+                var tBody= '<tr><td>'+(value._2.match(/~Other.*/) ? value._1.otherMobileBrand : value._2)+
+                '</td><td>'+(value._3.match(/~Other.*/) ? value._1.otherMobileModel :value._3)+
                 '</td><td>'+value._1.imeiMeid+
                 '</td><td>'+value._1.purchaseDate+
                 '</td><td>'+value._1.email+'</td><td>'
@@ -218,22 +218,21 @@
       	  console.debug("Success of Ajax Call for Mobile List By Status");
   		  console.debug(data);
         };
-        var statusAjaxErrorForPendingMobileList=function(err){
+        var statusAjaxErrorForMobileList=function(err){
       	  console.debug("Error of ajax Call for Mobile List By Status");
   		  console.debug(err);
         };
         
         var getMobileListByStatus = function(status){
       	  var statusAjaxCallBackForPendingList={
-      			  success: statusAjaxSuccessForPendingMobileList,
-      			  error: statusAjaxErrorForPendingMobileList
+      			  success: statusAjaxSuccessForMobileList,
+      			  error: statusAjaxErrorForMobileList
       	  };
       	  
       	  jsRoutes.controllers.AdminController.mobilesForAjaxCall(status).ajax(statusAjaxCallBackForPendingList);
         };
         
         function showDocumentProof(documentProofId){
-        	//popupWindow = window.open('https://s3.amazonaws.com/mcws/'+documentProofId+'','popUpWindow','height=700,width=800,left=10,top=10,resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=yes');
         	 var newWindow = window.open("", "pictureViewer", 
         		        "location=no, directories=no, resizable=yes, fullscreen=no, " + 
         		        "menubar=no, status=yes, toolbar=no, width=" + 

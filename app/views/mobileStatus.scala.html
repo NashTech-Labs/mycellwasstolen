@@ -114,15 +114,13 @@
 				else{
 					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
-				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>Username</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
-						+ mobile.userName
+				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
+						+ mobile.imeiMeid
 						+ '</td><td>'
 						
 						+(mobile.mobileName=="other" ? mobile.mobileName+"("+mobile.otherMobileBrand+")":mobile.mobileName)
 						
-						/* + mobile.mobileName+"("+mobile.otherMobileBrand+")" */
 						+ '</td><td>'
-						/* + mobile.mobileModel+"("+mobile.otherMobileModel+")" */
 						+(mobile.mobileModel=="other" ? mobile.mobileModel+"("+mobile.otherMobileModel+")":mobile.mobileModel)
 						+ '</td><td>'
 						+ mobile.contactNo

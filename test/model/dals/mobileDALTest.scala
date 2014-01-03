@@ -16,7 +16,7 @@ class mobileDALTest extends FunSuite{
       "gauravs", "nokia", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
       "gs@gmail.com","stolen",Status.pending, "ddas  asd","12-17-2013","gaurav.png","Sigma","Sigma454")
   
-  /*test("mobileDAL: insert mobile record into database successfully") {
+  test("mobileDAL: insert mobile record into database successfully") {
   
     running(FakeApplication()) {
       val mobileId = MobileDAL.insertMobileUser(mobileUser)
@@ -24,17 +24,17 @@ class mobileDALTest extends FunSuite{
       assert(mobileId.right.get.get > 0)
     }
 
-  }*/
+  }
 
-  /*test("DBLayerTesting: Get User by IMEID number successfully ") {
+  test("DBLayerTesting: Get User by IMEID number successfully ") {
     
     running(FakeApplication()) {
       val user = MobileDAL.getMobileRecordByIMEID("12345678901234")
       assert(user.head.email === "gs@gmail.com")
     }
-  }*/
+  }
   
-  /*test("mobileDAL:insert and get mobile name successfully "){
+  test("mobileDAL:insert and get mobile name successfully "){
     
     running(FakeApplication()){
       val brandname =MobileDAL.insertMobileName(brand)
@@ -42,9 +42,9 @@ class mobileDALTest extends FunSuite{
       println("mobilename:"+ mobilename)
       assert(mobilename.head.name==="nnokia")
     }
-  }*/
+  }
   
-  /*test("mobileDAL:insert mobileModel and get models by mobileId successfully"){
+  test("mobileDAL:insert mobileModel and get models by mobileId successfully"){
     
     running(FakeApplication()){
       val mobilemodel=MobileDAL.insertMobileModel(model)
@@ -52,7 +52,7 @@ class mobileDALTest extends FunSuite{
       println("mobilemodel: " + getmobilemodel)
       assert(getmobilemodel.head.mobileModel==="N72")
     }
-  }*/
+  }
   test("mobileDAL : getMobileNamesById successfully"){
     running(FakeApplication()){
       val mobilenamebyId=MobileDAL.getMobileNamesById(2)

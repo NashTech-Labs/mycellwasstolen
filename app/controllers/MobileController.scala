@@ -113,8 +113,13 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         regMobile match {
           case Right(mobileuser) => {
             try {
+               if(mobileuser.regType == "stolen"){
               Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-                "Registration Confirmed on MCWS", Common.registerMessage(mobileuser.imeiMeid))
+                "Registration Confirmed on MCWS", Common.stolenRegisterMessage(mobileuser.imeiMeid))
+                }else{
+                 Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+                "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
+                }
                 if(mobileuser.regType == "stolen"){
                    TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
                  }else{
@@ -123,7 +128,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())
             }
-            Redirect(routes.Application.index).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
+            Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
           }
           case Left(message) =>
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
@@ -139,7 +144,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     val mobileModel=mobileService.getMobileModelById(mobileData.get.mobileModel.toInt).get.mobileModel
     Logger.info("Mobile Records" + mobileData)
     if (mobileData != None && mobileData.get.id != None) {
-     val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
+    val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
                              mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
                              mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
