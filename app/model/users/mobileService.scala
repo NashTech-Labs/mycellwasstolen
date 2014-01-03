@@ -17,6 +17,7 @@ trait MobileServiceComponent{
   def changeStatusToApprove(mobileUser: Mobile): Boolean
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
   def getMobileModelById(id: Int):Option[MobileModels]
+  def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
@@ -97,6 +98,14 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     val mobileModel = mobiledal.getMobileModelById(id)
     //if (mobileName.length != 0) Some(mobileName.head) else None
     mobileModel.headOption
+  }
+   
+   override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
+   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
+   mobiledal.changeRegTypeByIMEID(mobileUser) match {
+      case Right(id) => true
+      case Left(error) => false
+    }
   }
 
 }

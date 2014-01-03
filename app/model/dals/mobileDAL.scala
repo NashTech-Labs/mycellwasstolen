@@ -19,6 +19,7 @@ trait MobileDALComponent {
     def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int]
     def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
     def getMobileModelById(mid: Int): List[MobileModels]
+    def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -141,6 +142,24 @@ class MobileDAL extends MobileDALComponent {
        (for { model <- MobileModel if (model.id === mid) } yield model).list
       }
     }
+   
+   override def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
+      Connection.databaseObject().withSession {
+      implicit session: Session =>
+        try {
+            val updateQuery=Mobiles.filter{mobile=>mobile.imeiMeid===mobileUser.imeiMeid}
+            Logger.info("updateQuery data:" + updateQuery)
+         // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
+            Right(updateQuery.update(mobileUser))
+         // Right(mobile.update(mobileUser))
+    }
+        catch {
+          case ex: Exception =>
+            Logger.info("Error in update user method: " + ex.printStackTrace())
+            Left(ex.getMessage())
+        }
+   }
+}
 
 }
 

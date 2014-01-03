@@ -26,6 +26,7 @@ GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
 GET	   /approve					    controllers.AdminController.approve(imeid: String)
 GET	   /proofDemanded			    controllers.AdminController.proofDemanded(imeid: String)
 GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
+GET	   /changeMobileRegType			controllers.AdminController.changeMobileRegType(imeid: String)
 
 
 #Admin
@@ -38,6 +39,7 @@ GET    /admin/brandForm            controllers.MobileController.brandRegisterFor
 POST   /saveMobileName             controllers.MobileController.saveMobileName
 
 GET     /admin/createMobileModelForm      controllers.MobileController.createMobileModelForm
+GET		/admin/changeMobileRegType		  controllers.AdminController.changeMobileRegTypeForm
 POST    /createMobileModel                controllers.MobileController.createMobileModel
 
 # Map static resources from the /public folder to the /assets URL path
