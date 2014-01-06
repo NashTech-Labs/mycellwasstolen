@@ -4,7 +4,7 @@ import model.dals._
 import model.domains.Domain._
 import play.api.Logger
 
-trait MobileServiceComponent{
+trait MobileServiceComponent {
   def mobileRegistration(mobileuser: Mobile): Either[String, Mobile]
   def getMobileRecordByIMEID(imeid: String): Option[Mobile]
   def getMobilesName(): List[Brand]
@@ -13,22 +13,22 @@ trait MobileServiceComponent{
   def addMobileName(brand: Brand): Either[String, Option[Int]]
   def getMobileNamesById(id: Int): Option[Brand]
   def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
-  def getAllMobiles(status:String): List[Mobile]
+  def getAllMobiles(status: String): List[Mobile]
   def changeStatusToApprove(mobileUser: Mobile): Boolean
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
-  def getMobileModelById(id: Int):Option[MobileModels]
+  def getMobileModelById(id: Int): Option[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
 }
 
-class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent{
+class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent {
 
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
     mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
-         mobileuser.mobileModel,mobileuser.imeiMeid,mobileuser.purchaseDate,mobileuser.contactNo,
-         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus,
-         mobileuser.description, mobileuser.regDate, mobileuser.document,mobileuser.otherMobileBrand,
-         mobileuser.otherMobileModel))
+        mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+        mobileuser.email, mobileuser.regType, mobileuser.mobileStatus,
+        mobileuser.description, mobileuser.regDate, mobileuser.document, mobileuser.otherMobileBrand,
+        mobileuser.otherMobileModel))
       case Left(error) => Left(error)
     }
   }
@@ -67,39 +67,39 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
 
   override def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels] = {
     mobiledal.insertMobileModel(mobilemodel) match {
-      case Right(id) => Right(MobileModels(mobilemodel.mobileModel,mobilemodel.mobileName))
+      case Right(id) => Right(MobileModels(mobilemodel.mobileModel, mobilemodel.mobileName))
       case Left(error) => Left(error)
     }
   }
 
-  override def getAllMobiles(status:String): List[Mobile] = {
+  override def getAllMobiles(status: String): List[Mobile] = {
     Logger.info("getAllMobiles called")
     mobiledal.getAllMobiles(status)
 
   }
 
   override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
-   mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
+    mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
     }
   }
 
   override def changeStatusToDemandProof(mobileUser: Mobile): Boolean = {
-   mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
+    mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
     }
   }
-   override def getMobileModelById(id: Int): Option[MobileModels] = {
+  override def getMobileModelById(id: Int): Option[MobileModels] = {
     Logger.info("getMobileModelById called")
     val mobileModel = mobiledal.getMobileModelById(id)
     //if (mobileName.length != 0) Some(mobileName.head) else None
     mobileModel.headOption
   }
-   
-   override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
-   mobiledal.changeRegTypeByIMEID(mobileUser) match {
+
+  override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
+    mobiledal.changeRegTypeByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
     }

@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyQuery
 object Domain {
 
   /**
-   *  Question  object and mapping with question table in database
+   *  
    *
    */
 

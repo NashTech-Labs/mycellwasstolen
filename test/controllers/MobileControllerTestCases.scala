@@ -14,9 +14,7 @@ import play.api.cache.Cache
 import play.api.Play.current
 import play.api.mvc.Security
 import play.api.test.FakeHeaders
-import com.ning.http.multipart.FilePart
-import play.api.mvc.FilePart
-//import org.specs2.mutable.script.Specification
+import play.api.mvc.WithHeaders
 
 class MobileControllerTestCases extends Specification with Mockito {
 
@@ -75,17 +73,14 @@ class MobileControllerTestCases extends Specification with Mockito {
      when(mockedMobileServiceObject.getMobilesName) thenReturn (mobileNames)
      when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn(mobileNamesById)
      when(mockedMobileServiceObject.mobileRegistration(any[Mobile])).thenReturn(Right(mobileUser))
-    // val document=FilePart("image", "message", Some("Content-Type:multipart/form-data"), play.api.libs.Files.TemporaryFile(new java.io.File("/home/gaurav/Desktop/12334542345578.png")))
-     val result = MobileController.mobileRegistration(FakeRequest().withFormUrlEncodedBody("username"->"test","mobileName"->"1","mobileModel"->"2","imeiMeid"->"12345678","purchaseDate"->"2013-12-23","contactNo"->"24234325","email"->"a@b.com","regType"->"stolen","mobileStatus"->"pending","description"->"fdf","regDate"->"2013-12-23","document"->"/home/gaurav/Desktop/12334542345578.png","otherMobileBrand"->"vix","otherMobileModel"->"v43").withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded"))
-     //val fakeRequest = FakeRequest(POST, "some action", FakeHeaders(),result)
-      // val result1 = MobileController.mobileRegistration(Sc)(Tc).upload(fakeRequest)
-     //val result =MobileController.mobileRegistration(FakeRequest().withSession(Security.username -> username)).run
-      status(result) must equalTo(400)
+    // val result = MobileController.mobileRegistration(FakeRequest().withFormUrlEncodedBody("username"->"test","mobileName"->"1","mobileModel"->"2","imeiMeid"->"12345678","purchaseDate"->"2013-12-23","contactNo"->"24234325","email"->"a@b.com","regType"->"stolen","mobileStatus"->"pending","description"->"fdf","regDate"->"2013-12-23","document"->"/home/gaurav/Desktop/12334542345578.png","otherMobileBrand"->"vix","otherMobileModel"->"v43").withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded"))
+     val result = MobileController.mobileRegistration(FakeRequest())
+     status(result) must equalTo(400)
       //contentType(result) must beSome("text/html")
    }
   }*/
-
-  /*"MobileControllerTesting: getImeiMeidList" in {
+  
+  "MobileControllerTesting: getImeiMeidList" in {
      running(FakeApplication()) {
      Cache.set(username, cachedUser)
      when(mockedMobileServiceObject.getMobileRecordByIMEID("12345678901234")) thenReturn (Some(mobileUser))
@@ -93,14 +88,53 @@ class MobileControllerTestCases extends Specification with Mockito {
      when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
      val result = MobileController.getImeiMeidList("12345678901234")(FakeRequest())
      status(result) must equalTo(OK)
-     contentType(result) must beSome("text/html")
+     contentType(result) must beSome("application/json")
    }
-  }*/
-  	
-
-   "MobileControllerTesting: mobileStatus" in {
+  }
+  
+  "MobileControllerTesting: getMobileModels" in {
+     running(FakeApplication()) {
+     Cache.set(username, cachedUser)
+     val result = MobileController.getImeiMeidList("12345678901234")(FakeRequest())
+     status(result) must equalTo(OK)
+     contentType(result) must beSome("application/json")
+   }
+  }
+  
+  "MobileControllerTesting: mobileStatus" in {
     val result = MobileController.mobileStatus(FakeRequest())
     status(result) must equalTo(OK)
     contentType(result) must beSome("text/html")
   }
+  	
+  "MobileControllerTesting: isImeiExist" in {
+    when(mockedMobileServiceObject.isImeiExist("12345678901234")) thenReturn (true)
+    val result = MobileController.isImeiExist("12345678901234")(FakeRequest())
+    status(result) must equalTo(OK)
+    contentType(result) must beSome("text/plain")
+  }
+  
+  
+  "MobileControllerTesting: saveMobileName" in {
+    running(FakeApplication()) {
+      Cache.set(username, cachedUser)
+      when(mockedMobileServiceObject.addMobileName(any[Brand])) thenReturn(Right(Some(5)))
+      val result = MobileController.saveMobileName(FakeRequest())
+      status(result) must equalTo(400)
+
+    }
+  }
+  
+  
+  "MobileControllerTesting: createMobileModel" in {
+    running(FakeApplication()) {
+      Cache.set(username, cachedUser)
+      when(mockedMobileServiceObject.getMobilesName) thenReturn (mobileNames)
+      when(mockedMobileServiceObject.createMobileModel(any[MobileModels])) thenReturn(Right(model))
+      val result = MobileController.createMobileModel(FakeRequest())
+      status(result) must equalTo(400)
+
+    }
+  }
+
 }
