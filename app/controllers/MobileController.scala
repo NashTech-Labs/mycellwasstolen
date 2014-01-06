@@ -94,10 +94,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
        val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
        val otherMobileBrand=mobileuser.otherMobileBrand
        val otherMobileModel=mobileuser.otherMobileModel
+       
        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
           mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
           mobileuser.description, date, documentName,otherMobileBrand,otherMobileModel))
+          
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
@@ -139,11 +141,12 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
     val mobileData = mobileService.getMobileRecordByIMEID(imeid)
+    if (mobileData != None && mobileData.get.id != None) {
+      
     val mobilesName=mobileService.getMobileNamesById(mobileData.get.mobileName.toInt)
     val mobileName=mobilesName.get.name
     val mobileModel=mobileService.getMobileModelById(mobileData.get.mobileModel.toInt).get.mobileModel
     Logger.info("Mobile Records" + mobileData)
-    if (mobileData != None && mobileData.get.id != None) {
     val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
                              mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
                              mobileData.get.regType,mobileData.get.otherMobileBrand,mobileData.get.otherMobileModel)

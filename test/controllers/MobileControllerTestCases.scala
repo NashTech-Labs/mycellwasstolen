@@ -13,6 +13,9 @@ import model.domains.Domain.BrandForm
 import play.api.cache.Cache
 import play.api.Play.current
 import play.api.mvc.Security
+import play.api.test.FakeHeaders
+import com.ning.http.multipart.FilePart
+import play.api.mvc.FilePart
 //import org.specs2.mutable.script.Specification
 
 class MobileControllerTestCases extends Specification with Mockito {
@@ -69,13 +72,16 @@ class MobileControllerTestCases extends Specification with Mockito {
   
   /*"MobileControllerTesting: mobileRegistration" in {
      running(FakeApplication()) {
-     //when(mockedMobileServiceObject.getMobilesName) thenReturn (mobileNames)
-     //when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn(mobileNames)
+     when(mockedMobileServiceObject.getMobilesName) thenReturn (mobileNames)
+     when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn(mobileNamesById)
      when(mockedMobileServiceObject.mobileRegistration(any[Mobile])).thenReturn(Right(mobileUser))
-     val result = MobileController.mobileRegistration(FakeRequest().withFormUrlEncodedBody("username"->"test","mobileName"->"nokia","mobileModel"->"n34","imeiMeid"->"12345678","purchaseDate"->"2013-12-23","contactNo"->"24234325","email"->"a@b.com","regType"->"stolen","document"->"a.png","description"->"fdf","otherMobileBrand"->"vix","otherMobileModel"->"v43").withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded"))
+    // val document=FilePart("image", "message", Some("Content-Type:multipart/form-data"), play.api.libs.Files.TemporaryFile(new java.io.File("/home/gaurav/Desktop/12334542345578.png")))
+     val result = MobileController.mobileRegistration(FakeRequest().withFormUrlEncodedBody("username"->"test","mobileName"->"1","mobileModel"->"2","imeiMeid"->"12345678","purchaseDate"->"2013-12-23","contactNo"->"24234325","email"->"a@b.com","regType"->"stolen","mobileStatus"->"pending","description"->"fdf","regDate"->"2013-12-23","document"->"/home/gaurav/Desktop/12334542345578.png","otherMobileBrand"->"vix","otherMobileModel"->"v43").withHeaders(CONTENT_TYPE -> "application/x-www-form-urlencoded"))
+     //val fakeRequest = FakeRequest(POST, "some action", FakeHeaders(),result)
+      // val result1 = MobileController.mobileRegistration(Sc)(Tc).upload(fakeRequest)
      //val result =MobileController.mobileRegistration(FakeRequest().withSession(Security.username -> username)).run
       status(result) must equalTo(400)
-      contentType(result) must beSome("text/html")
+      //contentType(result) must beSome("text/html")
    }
   }*/
 

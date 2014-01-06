@@ -108,7 +108,6 @@ class MobileDAL extends MobileDALComponent {
             Logger.info("updateQuery data:" + updateQuery)
          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
             Right(updateQuery.update(mobileUser))
-         // Right(mobile.update(mobileUser))
     }
         catch {
           case ex: Exception =>
@@ -126,7 +125,6 @@ class MobileDAL extends MobileDALComponent {
             Logger.info("updateQuery data:" + updateQuery)
          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
             Right(updateQuery.update(mobileUser))
-         // Right(mobile.update(mobileUser))
     }
         catch {
           case ex: Exception =>
@@ -151,7 +149,6 @@ class MobileDAL extends MobileDALComponent {
             Logger.info("updateQuery data:" + updateQuery)
          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
             Right(updateQuery.update(mobileUser))
-         // Right(mobile.update(mobileUser))
     }
         catch {
           case ex: Exception =>

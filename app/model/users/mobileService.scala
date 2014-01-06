@@ -79,7 +79,6 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   }
 
   override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
-   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
    mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
@@ -87,21 +86,19 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   }
 
   override def changeStatusToDemandProof(mobileUser: Mobile): Boolean = {
-   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
    mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
     }
   }
    override def getMobileModelById(id: Int): Option[MobileModels] = {
-    Logger.info("getMobileNamesById called")
+    Logger.info("getMobileModelById called")
     val mobileModel = mobiledal.getMobileModelById(id)
     //if (mobileName.length != 0) Some(mobileName.head) else None
     mobileModel.headOption
   }
    
    override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
-   //val updatedMobile = mobiledal.changeStatusToApproveByIMEID(mobileUser)
    mobiledal.changeRegTypeByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
