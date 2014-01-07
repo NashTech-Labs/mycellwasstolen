@@ -104,8 +104,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val contentType = image.contentType.get
           val fileToSave = image.ref.file.asInstanceOf[File]
           val bucketName = "mcws"
-          val AWS_ACCESS_KEY = "AKIAIEVJZRX3DX6WCICQ"
-          val AWS_SECRET_KEY = "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"
+          val AWS_ACCESS_KEY = "###"
+          val AWS_SECRET_KEY = "###"
           val mcwsAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
           val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
           amazonS3Client.putObject(bucketName, documentName, fileToSave)
