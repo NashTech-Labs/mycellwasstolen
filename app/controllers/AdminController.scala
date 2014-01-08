@@ -35,13 +35,13 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val abcd = mobileService.getAllMobilesWithBrandAndModel(status)
-      Logger.info("concept test abcd::::" + abcd)
-      if (abcd.isEmpty) {
-        Ok(html.admin.mobiles(abcd, user))
+      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
+      Logger.info("concept test mobiles::::" + mobiles)
+      if (mobiles.isEmpty) {
+        Ok(html.admin.mobiles(mobiles, user))
       } else {
         Logger.info("AdminController mobile list: - true")
-        Ok(html.admin.mobiles(abcd, user))
+        Ok(html.admin.mobiles(mobiles, user))
 
       }
 
@@ -51,10 +51,10 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val abcd = mobileService.getAllMobilesWithBrandAndModel(status)
-      Logger.info("concept test abcd::::" + abcd)
-      if (!abcd.isEmpty) {
-        Ok(write(abcd)).as("application/json")
+      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
+      Logger.info("concept test abcd::::" + mobiles)
+      if (!mobiles.isEmpty) {
+        Ok(write(mobiles)).as("application/json")
       } else {
         Logger.info("AuthController mobile list: - true")
         Ok(Json.obj("status" -> "Error"))
