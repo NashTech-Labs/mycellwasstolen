@@ -101,8 +101,8 @@ object Domain {
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O.NotNull, O DBType ("VARCHAR(100)"))
-    def brandId: Column[Int] = column[Int]("mobile_name", O.NotNull)
-    def mobileModelId: Column[Int] = column[Int]("mobile_model", O.NotNull)
+    def brandId: Column[Int] = column[Int]("mobile_brandId", O.NotNull)
+    def mobileModelId: Column[Int] = column[Int]("mobile_modelId", O.NotNull)
     def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
     def purchaseDate: Column[String] = column[String]("purchase_date", O.NotNull)
 
