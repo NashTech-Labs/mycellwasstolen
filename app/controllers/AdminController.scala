@@ -35,24 +35,15 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
-      mobileNameWithMobile(mobiles)
-      if (mobiles.isEmpty) {
-        Ok(html.admin.mobiles(mobileNameWithMobile(mobiles), user))
+      val abcd = mobileService.getAllMobilesWithBrandAndModel(status)
+      Logger.info("concept test abcd::::" + abcd)
+      if (abcd.isEmpty) {
+        Ok(html.admin.mobiles(abcd, user))
       } else {
         Logger.info("AdminController mobile list: - true")
-        Ok(html.admin.mobiles(mobileNameWithMobile(mobiles), user))
+        Ok(html.admin.mobiles(abcd, user))
 
       }
-
-  }
-
- private def mobileNameWithMobile(mobiles: List[Mobile]) = {
-    mobiles.map {
-      mobile =>
-        (mobile, mobileService.getMobileNamesById(mobile.mobileName.toInt).get.name, mobileService.getMobileModelById(mobile.mobileModel.toInt).get.mobileModel)
-
-    }
 
   }
 
@@ -60,10 +51,10 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles: List[Mobile] = mobileService.getAllMobiles(status)
-      Logger.info("Mobiles Record" + mobiles)
-      if (!mobiles.isEmpty) {
-        Ok(write(mobileNameWithMobile(mobiles))).as("application/json")
+      val abcd = mobileService.getAllMobilesWithBrandAndModel(status)
+      Logger.info("concept test abcd::::" + abcd)
+      if (!abcd.isEmpty) {
+        Ok(write(abcd)).as("application/json")
       } else {
         Logger.info("AuthController mobile list: - true")
         Ok(Json.obj("status" -> "Error"))
@@ -76,7 +67,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
     Logger.info("AdminController:mobileUser - change status to approve : " + mobileUser)
-    val updatedMobile = Mobile(mobileUser.userName, mobileUser.mobileName, mobileUser.mobileModel,
+    val updatedMobile = Mobile(mobileUser.userName, mobileUser.brandId, mobileUser.mobileModelId,
       mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email,
       mobileUser.regType, model.domains.Domain.Status.approved, mobileUser.description,
       mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand, mobileUser.otherMobileModel,
@@ -85,9 +76,9 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     if (isExist) {
       Logger.info("AdminController: - true")
       if (mobileUser.regType == "stolen") {
-        TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+        //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
       } else {
-        TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+        //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
       }
       Ok("success")
     } else {
@@ -101,7 +92,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId).get
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
-    val updatedMobile = Mobile(mobileUser.userName, mobileUser.mobileName, mobileUser.mobileModel, mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email, mobileUser.regType, model.domains.Domain.Status.proofdemanded, mobileUser.description, mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand, mobileUser.otherMobileModel, mobileUser.id)
+    val updatedMobile = Mobile(mobileUser.userName, mobileUser.brandId, mobileUser.mobileModelId, mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email, mobileUser.regType, model.domains.Domain.Status.proofdemanded, mobileUser.description, mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand, mobileUser.otherMobileModel, mobileUser.id)
     val isExist = mobileService.changeStatusToDemandProof(updatedMobile)
     if (isExist) {
       Logger.info("AdminController: - true")
@@ -147,7 +138,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
     else "stolen"
 
-    val updatedMobile = Mobile(mobileUser.userName, mobileUser.mobileName, mobileUser.mobileModel,
+    val updatedMobile = Mobile(mobileUser.userName, mobileUser.brandId, mobileUser.mobileModelId,
       mobileUser.imeiMeid, mobileUser.purchaseDate, mobileUser.contactNo, mobileUser.email,
       regType, model.domains.Domain.Status.approved, mobileUser.description,
       mobileUser.regDate, mobileUser.document, mobileUser.otherMobileBrand, mobileUser.otherMobileModel,

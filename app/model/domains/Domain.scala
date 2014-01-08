@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyQuery
 object Domain {
 
   /**
-   *  
+   *
    *
    */
 
@@ -27,10 +27,15 @@ object Domain {
         }
     })
 
+  case class MobileWithBrand(
+    mobile: List[Mobile],
+    brand: List[Brand],
+    model: List[MobileModels])
+
   case class Mobile(
     userName: String,
-    mobileName: String,
-    mobileModel: String,
+    brandId: Int,
+    mobileModelId: Int,
     imeiMeid: String,
     purchaseDate: String,
     contactNo: String,
@@ -40,8 +45,8 @@ object Domain {
     description: String,
     regDate: String,
     document: String,
-    otherMobileBrand:String,
-    otherMobileModel:String,
+    otherMobileBrand: String,
+    otherMobileModel: String,
     id: Option[Int] = None)
 
   case class MobileDetail(
@@ -53,8 +58,8 @@ object Domain {
     contactNo: String,
     email: String,
     regType: String,
-    otherMobileBrand:String,
-    otherMobileModel:String)
+    otherMobileBrand: String,
+    otherMobileModel: String)
 
   case class MobileStatus(
     imeiMeid: String)
@@ -71,8 +76,8 @@ object Domain {
 
   case class MobileRegisterForm(
     userName: String,
-    mobileName: String,
-    mobileModel: String,
+    brandId: Int,
+    mobileModelId: Int,
     imeiMeid: String,
     purchaseDate: String,
     contactNo: String,
@@ -80,24 +85,24 @@ object Domain {
     regType: String,
     document: String,
     description: String,
-    otherMobileBrand:String,
-    otherMobileModel:String)
+    otherMobileBrand: String,
+    otherMobileModel: String)
 
   case class BrandForm(
     name: String)
 
-   case class MobilesNameForm(
-    mobileName:String)
+  case class MobilesNameForm(
+    mobileName: String)
 
-   case class MobilesModelForm(
+  case class MobilesModelForm(
     mobileName: String,
     mobileModel: String)
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O.NotNull, O DBType ("VARCHAR(100)"))
-    def mobileName: Column[String] = column[String]("mobile_name", O.NotNull, O DBType ("VARCHAR(100)"))
-    def mobileModel: Column[String] = column[String]("mobile_model", O.NotNull, O DBType ("VARCHAR(100)"))
+    def brandId: Column[Int] = column[Int]("mobile_name", O.NotNull)
+    def mobileModelId: Column[Int] = column[Int]("mobile_model", O.NotNull)
     def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
     def purchaseDate: Column[String] = column[String]("purchase_date", O.NotNull)
 
@@ -111,25 +116,24 @@ object Domain {
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O.NotNull, O DBType ("VARCHAR(100)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O.NotNull, O DBType ("VARCHAR(100)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, String, String, String, String, String, String,
-        String, Status.Value, String, String, String, String, String, Option[Int])] =
-      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~
-      regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand~otherMobileModel~id <> (Mobile, Mobile unapply _)
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, Int, Int, String, String, String, String, String, Status.Value, String, String, String, String, String, Option[Int])] =
+      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~
+        regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand ~ otherMobileModel ~ id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
-      userName ~ mobileName ~ mobileModel ~ imeiMeid ~ purchaseDate ~ contactNo ~
-        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document~
-        otherMobileBrand~otherMobileModel<> (
-          { (username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email,
-              regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel) =>
-            Mobile(username, mobileName, mobileModel, imeiMeid, purchaseDate, contactNo, email,
-                regType, mobileStatus, description, registrationDate, document,otherMobileBrand,otherMobileModel)
+      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ purchaseDate ~ contactNo ~
+        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~
+        otherMobileBrand ~ otherMobileModel <> (
+          { (username, brandId, mobileModelId, imeiMeid, purchaseDate, contactNo, email,
+            regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel) =>
+            Mobile(username, brandId, mobileModelId, imeiMeid, purchaseDate, contactNo, email,
+              regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel)
           },
           { mobileregistration: Mobile =>
-            Some((mobileregistration.userName, mobileregistration.mobileName, mobileregistration.mobileModel, mobileregistration.imeiMeid,
-                mobileregistration.purchaseDate, mobileregistration.contactNo,
+            Some((mobileregistration.userName, mobileregistration.brandId, mobileregistration.mobileModelId, mobileregistration.imeiMeid,
+              mobileregistration.purchaseDate, mobileregistration.contactNo,
               mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus,
-              mobileregistration.description, mobileregistration.regDate, mobileregistration.document,mobileregistration.otherMobileBrand,
+              mobileregistration.description, mobileregistration.regDate, mobileregistration.document, mobileregistration.otherMobileBrand,
               mobileregistration.otherMobileModel))
           }) returning id
   }
@@ -155,19 +159,19 @@ object Domain {
     def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
 
     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Int, Option[Int])] =
-      model ~ mobilesnameid ~id <> (MobileModels, MobileModels unapply _)
-      
+      model ~ mobilesnameid ~ id <> (MobileModels, MobileModels unapply _)
+
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[MobileModels, Option[Int]] = mobilesnameid ~ model <> ({
-      (mobilesnameid,mobilemodel) => MobileModels(mobilesnameid.toString,mobilemodel.toInt)
+      (mobilesnameid, mobilemodel) => MobileModels(mobilesnameid.toString, mobilemodel.toInt)
     },
       {
-        mobilemodel: MobileModels => Some((mobilemodel.mobileName,mobilemodel.mobileModel))
+        mobilemodel: MobileModels => Some((mobilemodel.mobileName, mobilemodel.mobileModel))
       }) returning id
 
     def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)
   }
 
   case class User(
-    email:String,
-    password:String)
+    email: String,
+    password: String)
 }

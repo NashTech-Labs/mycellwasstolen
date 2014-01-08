@@ -13,19 +13,19 @@ trait MobileServiceComponent {
   def addMobileName(brand: Brand): Either[String, Option[Int]]
   def getMobileNamesById(id: Int): Option[Brand]
   def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels]
-  def getAllMobiles(status: String): List[Mobile]
   def changeStatusToApprove(mobileUser: Mobile): Boolean
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
   def getMobileModelById(id: Int): Option[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
+  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent {
 
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
     mobiledal.insertMobileUser(mobileuser) match {
-      case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.mobileName,
-        mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+      case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.brandId,
+        mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus,
         mobileuser.description, mobileuser.regDate, mobileuser.document, mobileuser.otherMobileBrand,
         mobileuser.otherMobileModel))
@@ -72,9 +72,9 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     }
   }
 
-  override def getAllMobiles(status: String): List[Mobile] = {
+  override def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Logger.info("getAllMobiles called")
-    mobiledal.getAllMobiles(status)
+    mobiledal.getAllMobilesWithBrandAndModel(status)
 
   }
 

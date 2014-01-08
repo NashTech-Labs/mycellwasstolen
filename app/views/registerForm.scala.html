@@ -11,18 +11,18 @@
 	
 		@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 	
-		@select(field=mobileRegistrationForm("mobileName"),options=brands.map(x=>
+		@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
 		(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
 		'_default -> "-- Choose Mobile Name --", '_showConstraints ->
 		false,'_error ->
-		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Brand Required")))
+		mobileRegistrationForm("brandId").error.map(_.withMessage("Mobile Brand Required")))
 	
 		@inputText(mobileRegistrationForm("otherMobileBrand"), 'label -> "Other Brand",'hidden->"hidden")
 		
-		@select(field=mobileRegistrationForm("mobileModel"),options=None.toSeq,
+		@select(field=mobileRegistrationForm("mobileModelId"),options=None.toSeq,
 		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
 		'_showConstraints -> false,'_error ->
-		mobileRegistrationForm("mobileName").error.map(_.withMessage("Mobile Model Required")))
+		mobileRegistrationForm("mobileModelId").error.map(_.withMessage("Mobile Model Required")))
 		@inputText(mobileRegistrationForm("otherMobileModel"), '_label -> "Other Model",'hidden->"hidden")
 	
 		@inputText(mobileRegistrationForm("email"), '_label -> "Email")
@@ -56,9 +56,9 @@
 	   $("#contactNo").intlTelInput();
 	
 		$(document).ready(function() {
-			$("#mobileName").change(function() {
-				var mobileNameId = $(this).val();
-				var mobileName=$("#mobileName option:selected").text();
+			$("#brandId").change(function() {
+				var brandId = $(this).val();
+				var mobileName=$("#brandId option:selected").text();
 				if(mobileName=="~Other"){
 					$('#otherMobileBrand').show();
 					$('#otherMobileBrand').addClass('required');
@@ -69,12 +69,13 @@
 				$('#otherMobileModel').hide();
 				$('#otherMobileModel').removeClass('required');
 				$('#otherMobileBrand').removeClass('required');}
-				mobileModels(mobileNameId);
+				mobileModels(brandId);
 			});
 		});
 		
-		$("#mobileModel").change(function() {
-			var mobileModel=$("#mobileModel option:selected").text();
+		$("#mobileModelId").change(function() {
+			var mobileModelId = $(this).val();
+			var mobileModel=$("#mobileModelId option:selected").text();
 			if(mobileModel.match(/~Other.*/)){
 				$('#otherMobileModel').show();
 				$('#otherMobileModel').addClass('required');
@@ -84,14 +85,14 @@
 		});
 	
 		var mobileAjaxSuccess = function(data) {
-			$("#mobileModel").empty();
-			$('#mobileModel').append($('<option>', {
+			$("#mobileModelId").empty();
+			$('#mobileModelId').append($('<option>', {
 				value : "-- Choose Mobile Model --",
 				text : "-- Choose Mobile Model --"
 			}));
 			//console.log(data.toSource())
 			$.each(data, function(i, d) {
-				$('#mobileModel').append($('<option>', {
+				$('#mobileModelId').append($('<option>', {
 					value : d.id,
 					text : d.mobileModel
 				}));
@@ -105,14 +106,14 @@
 			console.debug(err);
 		};
 	
-		var mobileModels = function(mobileNameId) {
+		var mobileModels = function(brandId) {
 	
 			var mobileAjaxCallBack = {
 				success : mobileAjaxSuccess,
 				error : mobileAjaxError
 			};
 	
-			jsRoutes.controllers.MobileController.getMobileModels(mobileNameId)
+			jsRoutes.controllers.MobileController.getMobileModels(brandId)
 					.ajax(mobileAjaxCallBack);
 		};
 	
@@ -139,11 +140,11 @@
 					required : true,
 					maxlength : 100
 				},
-				mobileModel : {
+				mobileModelId : {
 					required : true,
 					maxlength : 100
 				},
-				mobileName : {
+				brandId : {
 					required : true,
 					maxlength : 100
 				},

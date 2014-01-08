@@ -19,9 +19,14 @@ import play.api.mvc.WithHeaders
 class AdminControllerTestCases extends Specification with Mockito {
   
   val mobileUser = Mobile(
-    "gs", "1", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
+    "gs", 1, 5, "12345678901234", "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454")
-  val date = new java.sql.Date(new java.util.Date().getTime())
+    
+   val mobileWithBrand = ( Mobile(
+    "gs", 1, 5, "12345678901234", "12-05-2013", "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454"),"nokia","n90")
+  
+    val date = new java.sql.Date(new java.util.Date().getTime())
   val brand = Brand("nokia", date,Some(4))
   val model = MobileModels("N72", 6)
   val mobileNamesById :Option[Brand]= Some(brand)
@@ -30,25 +35,25 @@ class AdminControllerTestCases extends Specification with Mockito {
   val user=User("admin","knol2013")
   val cachedUser=User("admin","knol2013")
   val username="admin"
+  val getAllMobilesWithBrand:List[(Mobile,String,String)]=List(mobileWithBrand)
   
   val mockedMobileServiceObject = mock[MobileServiceComponent]
 
   val AdminController = new AdminController(mockedMobileServiceObject)
   
   
-/*  "AdminControllerTesting: mobiles" in {
+  "AdminControllerTesting: mobiles" in {
     
     running(FakeApplication()) {
      Cache.set(username, cachedUser)
-     when(mockedMobileServiceObject.getAllMobiles("pending")) thenReturn (mobilelist)
+     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending")) thenReturn (getAllMobilesWithBrand)
      when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn (mobileNamesById)
      when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
-     //when(AdminController.mobileNameWithMobile(mobilelist)) thenReturn(mobileUser,"nokia","c7")
      val result = AdminController.mobiles("pending")(FakeRequest().withSession(Security.username -> username)).run
      status(result) must equalTo(OK)
-     contentType(result) must beSome("text/plain")
+     contentType(result) must beSome("text/html")
   }
-  }*/
+  }
 
   "AdminControllerTesting: approve" in {
     

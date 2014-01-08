@@ -23,8 +23,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   val mobileregistrationform = Form(
     mapping(
       "userName" -> nonEmptyText,
-      "mobileName" -> nonEmptyText,
-      "mobileModel" -> nonEmptyText,
+      "brandId" -> number,
+      "mobileModelId" -> number,
       "imeiMeid" -> nonEmptyText,
       "purchaseDate" -> nonEmptyText,
       "contactNo" -> nonEmptyText,
@@ -87,15 +87,15 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
         val df = new SimpleDateFormat("MM/dd/yyyy")
         val date = df.format(sqldate)
-        val mobileName = mobileService.getMobileNamesById(mobileuser.mobileName.toInt)
+        val mobileName = mobileService.getMobileNamesById(mobileuser.brandId)
         val length = mobileuser.document.length()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val otherMobileBrand = mobileuser.otherMobileBrand
         val otherMobileModel = mobileuser.otherMobileModel
 
-        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.mobileName,
-          mobileuser.mobileModel, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.brandId,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
           mobileuser.description, date, documentName, otherMobileBrand, otherMobileModel))
 
@@ -122,9 +122,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
                   "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
               }
               if (mobileuser.regType == "stolen") {
-                TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
+                //  TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
-                TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
+                //  TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())
@@ -142,9 +142,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     val mobileData = mobileService.getMobileRecordByIMEID(imeid)
     if (mobileData != None && mobileData.get.id != None) {
 
-      val mobilesName = mobileService.getMobileNamesById(mobileData.get.mobileName.toInt)
+      val mobilesName = mobileService.getMobileNamesById(mobileData.get.brandId)
       val mobileName = mobilesName.get.name
-      val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModel.toInt).get.mobileModel
+      val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModelId).get.mobileModel
       Logger.info("Mobile Records" + mobileData)
       val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
         mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,

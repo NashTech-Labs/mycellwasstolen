@@ -2,10 +2,10 @@ package model.dals
 
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.session.Session
+
 import model.domains.Domain._
 import play.api.Logger
 import utils.Connection
-import play.libs.F.Tuple
 
 trait MobileDALComponent {
   def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
@@ -15,12 +15,11 @@ trait MobileDALComponent {
   def insertMobileName(brand: Brand): Either[String, Option[Int]]
   def getMobileNamesById(id: Int): List[Brand]
   def insertMobileModel(mobilemodel: MobileModels): Either[String, Option[Int]]
-  def getAllMobiles(status: String): List[Mobile]
   def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int]
   def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
-  //override def getAllMobilesJoinWithBrand(mobiles: List[Mobile]): List[(Mobile,Brand,MobileModels)]
+  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -89,35 +88,25 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-  override def getAllMobiles(status: String): List[Mobile] = {
-    Connection.databaseObject().withSession { implicit session: Session =>
-      Logger.info("Calling getUserRecord")
-      if (status.equals("pending")) {
-        (for { mobile <- Mobiles if (mobile.mobileStatus === model.domains.Domain.Status.pending) } yield mobile).sortBy(_.id).list
-      } else if (status.equals("proofdemanded")) {
-        (for { mobile <- Mobiles if (mobile.mobileStatus === model.domains.Domain.Status.proofdemanded) } yield mobile).sortBy(_.id).list
-      } else (for { mobile <- Mobiles if (mobile.mobileStatus === model.domains.Domain.Status.approved) } yield mobile).sortBy(_.id).list
+  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
+    Connection.databaseObject withSession { implicit session: Session =>
+
+      (for {
+        mobile <- Mobiles if (mobile.mobileStatus === Status.withName(status))
+        brand <- Brands if (brand.id === mobile.brandId)
+        mobileModel <- MobileModel if (mobileModel.id === mobile.mobileModelId)
+
+      } yield (mobile, brand.name, mobileModel.model)).sortBy(_._1.id) list
+
     }
   }
- /* // for testing a concept
-  override def getAllMobilesJoinWithBrand(mobiles: List[Mobile]): List[(Mobile,Brand,MobileModels)] = {
-    Connection.databaseObject().withSession { implicit session: Session =>
-      Logger.info("Calling getUserRecord")
-      
-        (for { mobile <- mobiles
-          brand <- Brands 
-          model <- MobileModel 
-          if(mobile.mobileName.equals(brand.id.toString()) && mobile.mobileModel.equals(model.id.toString())) } yield mobile)
-    }
-  }*/
-  
+
   override def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
           val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
-          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
           Right(updateQuery.update(mobileUser))
         } catch {
           case ex: Exception =>
@@ -133,7 +122,6 @@ class MobileDAL extends MobileDALComponent {
         try {
           val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
-          // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
           Right(updateQuery.update(mobileUser))
         } catch {
           case ex: Exception =>

@@ -25,7 +25,7 @@ class MobileControllerTestCases extends Specification with Mockito {
   val cachedUser=User("admin","knol2013")
   val username="admin"
   val mobileUser = Mobile(
-    "gs", "1", "glaxacy", "12345678901234", "12-05-2013", "+91 9839839830",
+    "gs", 1, 5, "12345678901234", "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454")
 
   val mockedMobileServiceObject = mock[MobileServiceComponent]

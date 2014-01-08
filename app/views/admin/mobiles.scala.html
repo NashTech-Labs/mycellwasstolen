@@ -56,23 +56,6 @@
 			    			<td>@mobile._1.regType</td>
 			    			<td>
 								<button class="btn btn-info" onclick="showDocumentProof('@mobile._1.document');">Get Proof</button> <!-- Modal -->
-								<div class="modal fade" id="myModal_@mobile._1.imeiMeid" tabindex="-1" role="dialog"
-									aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal"
-													aria-hidden="true">&times;</button>
-												<h4 class="modal-title" id="myModalLabel">Proof Document</h4>
-											</div>
-											<div class="modal-body"><img style="height: 200px;" alt="Proof Document" src="@routes.Assets.at("proofDocuments/" +mobile._1.document)" /></div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-default"
-													data-dismiss="modal">Close</button>
-											</div>
-										</div>
-									</div>
-								</div> 
 					    </td>
 					
 					    @if(mobile._1.mobileStatus==Status.approved){
