@@ -26,6 +26,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       "brandId" -> number,
       "mobileModelId" -> number,
       "imeiMeid" -> nonEmptyText,
+      "otherImeiMeid" -> text,
       "purchaseDate" -> nonEmptyText,
       "contactNo" -> nonEmptyText,
       "email" -> email,
@@ -95,7 +96,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         val otherMobileModel = mobileuser.otherMobileModel
 
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
           mobileuser.description, date, documentName, otherMobileBrand, otherMobileModel))
 
@@ -146,7 +147,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       val mobileName = mobilesName.get.name
       val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModelId).get.mobileModel
       Logger.info("Mobile Records" + mobileData)
-      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid,
+      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid ,
         mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]

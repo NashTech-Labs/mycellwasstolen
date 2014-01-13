@@ -114,10 +114,11 @@
 				else{
 					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
-				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
+				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
 						+ mobile.imeiMeid
 						+ '</td><td>'
-						
+						+ (mobile.otherImeiMeid == "" ? "None" : mobile.otherImeiMeid)
+						+ '</td><td>'
 						+(mobile.mobileName.match(/~Other.*/) ? mobile.otherMobileBrand : mobile.mobileName)
 						
 						+ '</td><td>'

@@ -25,7 +25,7 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def mobileRegistration(mobileuser: Mobile): Either[String, Mobile] = {
     mobiledal.insertMobileUser(mobileuser) match {
       case Right(id) => Right(Mobile(mobileuser.userName, mobileuser.brandId,
-        mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+        mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
         mobileuser.email, mobileuser.regType, mobileuser.mobileStatus,
         mobileuser.description, mobileuser.regDate, mobileuser.document, mobileuser.otherMobileBrand,
         mobileuser.otherMobileModel))

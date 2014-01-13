@@ -1,191 +1,270 @@
-@(regType: String, mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], brands: List[model.domains.Domain.Brand]) 
-
+@(regType: String, mobileRegistrationForm:Form[model.domains.Domain.MobileRegisterForm], brands:List[model.domains.Domain.Brand])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f)}
+@helper.form(action =routes.MobileController.mobileRegistration, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
-@helper.form(action =routes.MobileController.mobileRegistration, 'id ->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
+<fieldset>
+	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
 
-	<fieldset>
-	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br>
-		<input type="hidden" name="regType" id="regType" value="@regType">
-		<input type="hidden" name="document" id="document" value="">
-	
-		@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
-	
-		@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
-		(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
-		'_default -> "-- Choose Mobile Name --", '_showConstraints ->
-		false,'_error ->
-		mobileRegistrationForm("brandId").error.map(_.withMessage("Mobile Brand Required")))
-	
-		@inputText(mobileRegistrationForm("otherMobileBrand"), 'label -> "Other Brand",'hidden->"hidden")
-		
-		@select(field=mobileRegistrationForm("mobileModelId"),options=None.toSeq,
-		'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
-		'_showConstraints -> false,'_error ->
-		mobileRegistrationForm("mobileModelId").error.map(_.withMessage("Mobile Model Required")))
-		@inputText(mobileRegistrationForm("otherMobileModel"), '_label -> "Other Model",'hidden->"hidden")
-	
-		@inputText(mobileRegistrationForm("email"), '_label -> "Email")
-		@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID") 
-		@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class ->
-		"datepicker", 'style -> "datepicker")
-		@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code") 
-		@textarea(field=mobileRegistrationForm("description"), args = 'rows -> 3, 'cols -> 25, '_label->"Description")
-	
-		@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document",'_name->"fileUpload",'_type->"File")
-	</fieldset>
+	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
-	<div class="form-group">
-		<div class="col-lg-10 col-lg-offset-4">
-			<button class="btn btn-primary" type="submit" onClick="setValue();">Submit</button>
-			<button class="btn btn-default" type="reset">Cancel</button>
+	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
+	(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
+	'_default -> "-- Choose Mobile Name --", '_showConstraints ->
+	false,'_error ->
+	mobileRegistrationForm("brandId").error.map(_.withMessage("Mobile Brand Required")))
+
+	<div class="form-group" id="form-group-otherbrand" hidden="true">
+		<label class="col-sm-4 control-label" for="otherMobileBrand">Other Brand</label>
+		<div class="col-sm-6">
+			<input id="otherMobileBrand" type="text" value="" name="otherMobileBrand">
 		</div>
 	</div>
-}
-	<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
-	<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
-	<script src="@routes.Assets.at("javascripts/intlTelInput.min.js")" type="text/javascript"></script>
 
-	<script type="text/javascript">
-	
-		function setValue(){
-			var file = $("#fileUpload").val();
-			$("#document").val(file);
-		}
-	
-	   $("#contactNo").intlTelInput();
-	
-		$(document).ready(function() {
-			$("#brandId").change(function() {
-				var brandId = $(this).val();
-				var mobileName=$("#brandId option:selected").text();
-				if(mobileName=="~Other"){
-					$('#otherMobileBrand').show();
-					$('#otherMobileBrand').addClass('required');
-					
-				}
-				else {
-				$('#otherMobileBrand').hide();
-				$('#otherMobileModel').hide();
+	@select(field=mobileRegistrationForm("mobileModelId"),options=None.toSeq,
+	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",
+	'_showConstraints -> false,'_error ->
+	mobileRegistrationForm("mobileModelId").error.map(_.withMessage("Mobile Model Required")))
+
+	<div class="form-group" id="form-group-othermodel" hidden="true">
+		<label class="col-sm-4 control-label" for="otherMobileModel">Other Model</label>
+		<div class="col-sm-6">
+			<input id="otherMobileModel" type="text" value="" name="otherMobileModel">
+		</div>
+	</div>
+
+	@inputText(mobileRegistrationForm("email"), '_label -> "Email")
+
+	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID", 'maxlength -> 17)
+
+	<div class="form-group">
+		<label class="col-sm-4 control-label"><input type="checkbox"
+			name="race" id="otherimei" value="other" />Other IMEI, specify<br /></label>
+		<div class="col-sm-6">
+			<div style="visibility: hidden" id="race">
+				<input type="text" name="otherImeiMeid" maxlength="17" id="otherimeibox" />
+			</div>
+		</div>
+	</div>
+
+	@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class -> "datepicker", 'style ->
+	"datepicker",'readonly -> "readonly")
+
+	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code")
+
+	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 25, '_label->"How stolen/get ?")
+
+	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document(Image)",'_name->"fileUpload",'_type->"File")
+</fieldset>
+
+<div class="form-group">
+	<div class="col-lg-10 col-lg-offset-4">
+		<button class="btn btn-primary" type="submit" onClick="setValue();">Submit</button>
+		<button class="btn btn-default" type="reset">Cancel</button>
+	</div>
+</div>
+}
+<script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/bootstrap-datepicker.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/intlTelInput.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+	function setValue() {
+		var file = $("#fileUpload").val();
+		$("#document").val(file);
+	}
+
+	$("#contactNo").intlTelInput();
+
+	$(document).ready(function() {
+		$("#brandId").change(function() {
+			var brandId = $(this).val();
+			var mobileName = $("#brandId option:selected").text();
+			if (mobileName == "~Other") {
+				$('#form-group-otherbrand').show();
+				$('#otherMobileBrand').addClass('required');
+
+			} else {
+				$('#form-group-otherbrand').hide();
+				$('#form-group-othermodel').hide();
 				$('#otherMobileModel').removeClass('required');
-				$('#otherMobileBrand').removeClass('required');}
-				mobileModels(brandId);
-			});
-		});
-		
-		$("#mobileModelId").change(function() {
-			var mobileModelId = $(this).val();
-			var mobileModel=$("#mobileModelId option:selected").text();
-			if(mobileModel.match(/~Other.*/)){
-				$('#otherMobileModel').show();
-				$('#otherMobileModel').addClass('required');
+				$('#otherMobileBrand').removeClass('required');
 			}
-			else {$('#otherMobileModel').hide();}
-			
+			mobileModels(brandId);
 		});
-	
-		var mobileAjaxSuccess = function(data) {
-			$("#mobileModelId").empty();
+	});
+
+	$("#mobileModelId").change(function() {
+		var mobileModelId = $(this).val();
+		var mobileModel = $("#mobileModelId option:selected").text();
+		if (mobileModel.match(/~Other.*/)) {
+			$('#form-group-othermodel').show();
+			$('#otherMobileModel').addClass('required');
+		} else {
+			$('#otherMobileModel').removeClass('required');
+			$('#form-group-othermodel').hide();
+		}
+
+	});
+
+	var mobileAjaxSuccess = function(data) {
+		$("#mobileModelId").empty();
+		$('#mobileModelId').append($('<option>', {
+			value : "-- Choose Mobile Model --",
+			text : "-- Choose Mobile Model --"
+		}));
+		//console.log(data.toSource())
+		$.each(data, function(i, d) {
 			$('#mobileModelId').append($('<option>', {
-				value : "-- Choose Mobile Model --",
-				text : "-- Choose Mobile Model --"
+				value : d.id,
+				text : d.mobileModel
 			}));
-			//console.log(data.toSource())
-			$.each(data, function(i, d) {
-				$('#mobileModelId').append($('<option>', {
-					value : d.id,
-					text : d.mobileModel
-				}));
-			});
-			console.debug("Success of Ajax Call");
-			console.debug(data);
+		});
+		console.debug("Success of Ajax Call");
+		console.debug(data);
+	};
+
+	var mobileAjaxError = function(err) {
+		console.debug("Error of ajax Call");
+		console.debug(err);
+	};
+
+	var mobileModels = function(brandId) {
+
+		var mobileAjaxCallBack = {
+			success : mobileAjaxSuccess,
+			error : mobileAjaxError
 		};
-	
-		var mobileAjaxError = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-	
-		var mobileModels = function(brandId) {
-	
-			var mobileAjaxCallBack = {
-				success : mobileAjaxSuccess,
-				error : mobileAjaxError
-			};
-	
-			jsRoutes.controllers.MobileController.getMobileModels(brandId)
-					.ajax(mobileAjaxCallBack);
-		};
-	
-		 $("#mobileRegistrationForm").validate({
-			rules : {
-				imeiMeid : {
-					required : true,
-					remote : {
-						url : '/isImeiExist',
-						type : 'GET',
-						data : {
-							imeiId : function() {
-								return $("#imeiMeid").val();
-							}
+
+		jsRoutes.controllers.MobileController.getMobileModels(brandId).ajax(
+				mobileAjaxCallBack);
+	};
+
+	$("#mobileRegistrationForm").validate({
+		rules : {
+			imeiMeid : {
+				required : true,
+				remote : {
+					url : '/isImeiExist',
+					type : 'GET',
+					data : {
+						imeiId : function() {
+							return $("#imeiMeid").val();
 						}
 					}
-				},
-				email : {
-					required : true,
-					maxlength : 100,
-					email : true,
-				},
-				userName : {
-					required : true,
-					maxlength : 100
-				},
-				mobileModelId : {
-					required : true,
-					maxlength : 100
-				},
-				brandId : {
-					required : true,
-					maxlength : 100
-				},
-				contactNo : {
-					required : true,
-					maxlength : 100
-				},
-				purchaseDate : {
-					required : true,
-					maxlength : 100
-				},
-				description : {
-					required : true,
-					maxlength : 100
-				},
-				fileUpload : {
-					required : true,
-					maxlength : 100
 				}
 			},
-			messages : {
-				imeiMeid : {
-					remote : "This imeiMeid is already exist."
-				}
+			email : {
+				required : true,
+				maxlength : 100,
+				email : true,
+			},
+			userName : {
+				required : true,
+				maxlength : 100
+			},
+			mobileModelId : {
+				required : true,
+				maxlength : 100
+			},
+			brandId : {
+				required : true,
+				maxlength : 100
+			},
+			contactNo : {
+				required : true,
+				maxlength : 100
+			},
+			purchaseDate : {
+				required : true,
+				maxlength : 100
+			},
+			description : {
+				required : true,
+				maxlength : 100
+			},
+			fileUpload : {
+				required : true,
+				maxlength : 100
 			}
-		});
-		 
-		 // upload file validation
-			$('#fileUpload').change(function() {
-				return validateFileExtension(this)
-			})
-		 function validateFileExtension(fld) {
-			    if(!/(\.bmp|\.gif|\.jpg|\.jpeg|\.png)$/i.test(fld.value)) {
-			        alert("Invalid image file type.");      
-			        fld.form.reset();
-			        fld.focus();        
-			        return false;   
-			    }   
-			    return true; 
-			 }
-		
-		 $("#purchaseDate").datepicker();
-	</script>
+		},
+		messages : {
+			imeiMeid : {
+				remote : "This imeiMeid is already exist."
+			}
+		}
+	});
+
+	// upload file validation
+	$('#fileUpload').change(function() {
+		return validateFileExtension(this)
+	})
+	function validateFileExtension(fld) {
+		if (!/(\.bmp|\.gif|\.jpg|\.jpeg|\.png)$/i.test(fld.value)) {
+			alert("Invalid image file type.");
+			fld.form.reset();
+			fld.focus();
+			return false;
+		}
+		return true;
+	}
+
+	$('#otherimei').change(
+			function() {
+				$('#otherimeibox').parent().css('visibility',this.checked ? 'visible' : 'hidden');
+			});
+
+	$('#imeiMeid').change(function() {
+		return validateImeiMeid(this)
+	})
+
+	function validateImeiMeid(imei) {
+		var imeiMeid = document.getElementById("imeiMeid").value;
+		var pattern = /^[0-9]+$/;
+
+		if (imeiMeid.length > 13) {
+			if (pattern.test(imeiMeid)) {
+				return true;
+			} else {
+				alert("IMEI is not in correct format");
+				imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
+				imei.focus();
+				return false;
+			}
+		} else {
+			alert("IMEI must be of minimum 14 digits !");
+			imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
+			imei.focus();
+			return false;
+		}
+
+	}
+
+	$('#otherimeibox').change(function() {
+		return validateOtherImeiMeid(this)
+	})
+
+	function validateOtherImeiMeid(otherImei) {
+		var otherImeiMeid = document.getElementById("otherimeibox").value;
+		var pattern = /^[0-9]+$/;
+
+		if (otherImeiMeid.length > 13) {
+			if (pattern.test(otherImeiMeid)) {
+				return true;
+			} else {
+				alert("IMEI is not in correct format");
+				otherImei.form.elements['otherimeibox'].value = otherImei.form.elements['otherimeibox'].defaultValue;
+				otherImei.focus();
+				return false;
+			}
+		} else {
+			alert("IMEI must be of minimum 14 digits !");
+			otherImei.form.elements['otherimeibox'].value = otherImei.form.elements['otherimeibox'].defaultValue;
+			otherImei.focus();
+			return false;
+		}
+
+	}
+
+	$("#purchaseDate").datepicker();
+</script>

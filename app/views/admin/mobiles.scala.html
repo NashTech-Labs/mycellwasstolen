@@ -9,10 +9,11 @@
 				<div class="span6" style="padding-left: 20px;">
 					<h3>@Messages("admin.requestapproval")</h3>
 				</div>
+				<div id="loading" style="padding-left: 20px;" hidden="true"><img src="/assets/images/loading.gif" /></div>
 				<div class="span6">
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
-					<button class="btn btn-info" style="float: right; id="pending_button" onclick="getMobilesByStatus('approved');" >Approved</button>
+					<button class="btn btn-info" style="float: right;" id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
+					<button class="btn btn-info" style="float: right;" id="demanded_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
+					<button class="btn btn-info" style="float: right;" id="approved_button" onclick="getMobilesByStatus('approved');" >Approved</button>
 				</div>
 			</div>
 			@flash.get("error").map { message =>
@@ -41,7 +42,7 @@
 							<th>@Messages("mobile.proof")</th>
 							<th>@Messages("mobile.approve")</th>
 							<th>@Messages("mobile.demandProof")</th>
-							<th>@Messages("mobile.registrationTime")</th>
+							<th>@Messages("mobile.description")</th>
 						</tr>
 					</thead>
 					<tbody id="mobileData">
@@ -56,35 +57,24 @@
 			    			<td>@mobile._1.regType</td>
 			    			<td>
 								<button class="btn btn-info" onclick="showDocumentProof('@mobile._1.document');">Get Proof</button> <!-- Modal -->
-					    </td>
-					
-					    @if(mobile._1.mobileStatus==Status.approved){
-	    				<td>
-	    					<button title="Approve" class="btn btn-info" id="approve_@mobile._1.imeiMeid" disabled>Approve</button>
-	    				</td>
-	    				} else{
-	    				<td>
-	    					<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile._1.imeiMeid);" id="approve_@mobile._1.imeiMeid" >Approve</button>
-	    				</td>
-	    				}
-	    				@if(mobile._1.mobileStatus==Status.proofdemanded){
-	    				<td>
-	    					<button title="Demand Proof" class="btn btn-info"  id="demand_@mobile._1.imeiMeid" disabled>Demand Proof</button>
-	    				</td>
-	    				}else{
-	    				<td>
-	    					<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile._1.imeiMeid);" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
-	    				</td>
-	    				}
-	    				<td>@mobile._1.regDate</td>
-			    	</tr>
+					       </td>
+					       
+	    					<td>
+	    						<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile._1.imeiMeid);" id="approve_@mobile._1.imeiMeid" >Approve</button>
+	    					</td>
+	    				
+	    					<td>
+	    						<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile._1.imeiMeid);" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
+	    					</td>
+	    					<td>
+	    					<!-- <a href="#" id="pop_@mobile._1.imeiMeid" class="btn btn-primary" onmouseover="iniatializePopover(@mobile._1.imeiMeid);" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</a></td> -->
+			    		<button id="pop_@mobile._1.imeiMeid" class="btn btn-info" onmouseover="iniatializePopover(@mobile._1.imeiMeid);" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</button></td>
+			    		</tr>
 			    		
                       }
            			</tbody>
             	</table>
-            } <!-- else {
-            	<h1>@Messages("default.notShow")</h1>
-            } -->
+            }
 	</div>
 	</div>
 	</div>
@@ -168,11 +158,28 @@
       //script for getting  mobile list by status
       
         function getMobilesByStatus(status){
-
+        	if(status=="approved"){
+        		document.getElementById("approved_button").disabled = true;
+        		document.getElementById("pending_button").disabled = false;
+        		document.getElementById("demanded_button").disabled = false;
+        			
+        	}
+        	else if(status=="proofdemanded"){
+        		document.getElementById("demanded_button").disabled = true;
+        		document.getElementById("approved_button").disabled = false;
+        		document.getElementById("pending_button").disabled = false;
+        	}
+        	else{
+        		document.getElementById("pending_button").disabled = true;
+        		document.getElementById("demanded_button").disabled = false;
+        		document.getElementById("approved_button").disabled = false;
+        	}
+        	$("#loading").show();
         	getMobileListByStatus(status);
         }
         
         var statusAjaxSuccessForMobileList = function(data){
+        	
       	 if (data.status == "Error"){
       		$('#mobileData').empty();
       		$('#mobileData').append("Requested Data are empty");
@@ -193,13 +200,15 @@
                 +(value._1.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');">Approve</button>')
                 +((value._1.mobileStatus.name=="proofdemanded"||value._1.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');">Demand Proof</button>')
                 +'</td>'
-                +'<td>'+value._1.regDate+'</td></tr>';
+                +'<td><button id="pop_'+value._1.imeiMeid+'" class="btn btn-info" onmouseover="iniatializePopover('+value._1.imeiMeid+');" data-toggle="popover" title="Description" data-content="'+value._1.description+'">View</button></td>'
+                +'</tr>';
                 
                 $('#mobileData').append(tBody);
       		});  
       	}
       	  console.debug("Success of Ajax Call for Mobile List By Status");
   		  console.debug(data);
+  		  $("#loading").hide();
         };
         var statusAjaxErrorForMobileList=function(err){
       	  console.debug("Error of ajax Call for Mobile List By Status");
@@ -228,7 +237,14 @@
         		    newWindow.document.writeln("</body></html>");
         		    newWindow.document.close();
         }
-       
-	
+        
+        function iniatializePopover(imei){
+        	$(function (){
+				$("#pop_"+imei).popover({
+                placement : 'top'
+            });
+			});
+        }
+        
 	</script>
 }

@@ -39,7 +39,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
-      (for { mobile <- Mobiles if (mobile.imeiMeid === imeid) } yield mobile).list
+      (for { mobile <- Mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile).list
     }
   }
 

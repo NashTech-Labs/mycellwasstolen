@@ -27,16 +27,13 @@ object Domain {
         }
     })
 
-  case class MobileWithBrand(
-    mobile: List[Mobile],
-    brand: List[Brand],
-    model: List[MobileModels])
 
   case class Mobile(
     userName: String,
     brandId: Int,
     mobileModelId: Int,
     imeiMeid: String,
+    otherImeiMeid: String,
     purchaseDate: String,
     contactNo: String,
     email: String,
@@ -54,6 +51,7 @@ object Domain {
     mobileName: String,
     mobileModel: String,
     imeiMeid: String,
+    otherImeiMeid : String,
     purchaseDate: String,
     contactNo: String,
     email: String,
@@ -79,6 +77,7 @@ object Domain {
     brandId: Int,
     mobileModelId: Int,
     imeiMeid: String,
+    otherImeiMeid: String,
     purchaseDate: String,
     contactNo: String,
     email: String,
@@ -104,6 +103,7 @@ object Domain {
     def brandId: Column[Int] = column[Int]("mobile_brandId", O.NotNull)
     def mobileModelId: Column[Int] = column[Int]("mobile_modelId", O.NotNull)
     def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
+    def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O.Nullable, O DBType ("VARCHAR(100)"))
     def purchaseDate: Column[String] = column[String]("purchase_date", O.NotNull)
 
     def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(100)"))
@@ -116,21 +116,21 @@ object Domain {
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O.NotNull, O DBType ("VARCHAR(100)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O.NotNull, O DBType ("VARCHAR(100)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, Int, Int, String, String, String, String, String, Status.Value, String, String, String, String, String, Option[Int])] =
-      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ purchaseDate ~ contactNo ~ email ~
+    def * : scala.slick.lifted.MappedProjection[Mobile, (String, Int, Int, String, String, String, String, String, String, Status.Value, String, String, String, String, String, Option[Int])] =
+      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ otherImeiMeid ~ purchaseDate ~ contactNo ~ email ~
         regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand ~ otherMobileModel ~ id <> (Mobile, Mobile unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
-      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ purchaseDate ~ contactNo ~
+      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ otherImeiMeid ~ purchaseDate ~ contactNo ~
         email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~
         otherMobileBrand ~ otherMobileModel <> (
-          { (username, brandId, mobileModelId, imeiMeid, purchaseDate, contactNo, email,
+          { (username, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
             regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel) =>
-            Mobile(username, brandId, mobileModelId, imeiMeid, purchaseDate, contactNo, email,
+            Mobile(username, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
               regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel)
           },
           { mobileregistration: Mobile =>
-            Some((mobileregistration.userName, mobileregistration.brandId, mobileregistration.mobileModelId, mobileregistration.imeiMeid,
+            Some((mobileregistration.userName, mobileregistration.brandId, mobileregistration.mobileModelId, mobileregistration.imeiMeid, mobileregistration.otherImeiMeid,
               mobileregistration.purchaseDate, mobileregistration.contactNo,
               mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus,
               mobileregistration.description, mobileregistration.regDate, mobileregistration.document, mobileregistration.otherMobileBrand,
