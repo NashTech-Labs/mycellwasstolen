@@ -20,6 +20,7 @@ trait MobileDALComponent {
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
+  def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -145,6 +146,21 @@ class MobileDAL extends MobileDALComponent {
           val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
           // (for { mobile <- Mobiles if (mobile.imeiMeid===mobileUser.imeiMeid) } yield (mobile))
+          Right(updateQuery.update(mobileUser))
+        } catch {
+          case ex: Exception =>
+            Logger.info("Error in update user method: " + ex.printStackTrace())
+            Left(ex.getMessage())
+        }
+    }
+  }
+  
+  override def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
+    Connection.databaseObject().withSession {
+      implicit session: Session =>
+        try {
+          val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+          Logger.info("updateQuery data:" + updateQuery)
           Right(updateQuery.update(mobileUser))
         } catch {
           case ex: Exception =>

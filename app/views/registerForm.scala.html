@@ -42,12 +42,12 @@
 			name="race" id="otherimei" value="other" />Other IMEI, specify<br /></label>
 		<div class="col-sm-6">
 			<div style="visibility: hidden" id="race">
-				<input type="text" name="otherImeiMeid" maxlength="17" id="otherimeibox" />
+				<input type="text" name="otherImeiMeid" maxlength="17" id="otherImeiMeid" />
 			</div>
 		</div>
 	</div>
 
-	@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class -> "datepicker", 'style ->
+	@inputText(mobileRegistrationForm("purchaseDate"),'_label-> "Purchase Date", '_id-> "purchaseDate", 'class -> "span2", 'style ->
 	"datepicker",'readonly -> "readonly")
 
 	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code")
@@ -154,6 +154,17 @@
 					}
 				}
 			},
+			otherImeiMeid : {
+				remote : {
+					url : '/isImeiExist',
+					type : 'GET',
+					data : {
+						imeiId : function() {
+							return $("#otherImeiMeid").val();
+						}
+					}
+				}
+			},
 			email : {
 				required : true,
 				maxlength : 100,
@@ -181,7 +192,7 @@
 			},
 			description : {
 				required : true,
-				maxlength : 100
+				maxlength : 500
 			},
 			fileUpload : {
 				required : true,
@@ -190,6 +201,9 @@
 		},
 		messages : {
 			imeiMeid : {
+				remote : "This imeiMeid is already exist."
+			},
+			otherImeiMeid : {
 				remote : "This imeiMeid is already exist."
 			}
 		}
@@ -211,7 +225,7 @@
 
 	$('#otherimei').change(
 			function() {
-				$('#otherimeibox').parent().css('visibility',this.checked ? 'visible' : 'hidden');
+				$('#otherImeiMeid').parent().css('visibility',this.checked ? 'visible' : 'hidden');
 			});
 
 	$('#imeiMeid').change(function() {
@@ -240,12 +254,12 @@
 
 	}
 
-	$('#otherimeibox').change(function() {
+	$('#otherImeiMeid').change(function() {
 		return validateOtherImeiMeid(this)
 	})
 
 	function validateOtherImeiMeid(otherImei) {
-		var otherImeiMeid = document.getElementById("otherimeibox").value;
+		var otherImeiMeid = document.getElementById("otherImeiMeid").value;
 		var pattern = /^[0-9]+$/;
 
 		if (otherImeiMeid.length > 13) {
@@ -253,18 +267,19 @@
 				return true;
 			} else {
 				alert("IMEI is not in correct format");
-				otherImei.form.elements['otherimeibox'].value = otherImei.form.elements['otherimeibox'].defaultValue;
+				otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
 				otherImei.focus();
 				return false;
 			}
 		} else {
 			alert("IMEI must be of minimum 14 digits !");
-			otherImei.form.elements['otherimeibox'].value = otherImei.form.elements['otherimeibox'].defaultValue;
+			otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
 			otherImei.focus();
 			return false;
 		}
 
 	}
 
-	$("#purchaseDate").datepicker();
+	$("#purchaseDate").datepicker({ autoclose: true});
+	
 </script>

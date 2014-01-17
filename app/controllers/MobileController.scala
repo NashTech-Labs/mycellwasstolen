@@ -52,13 +52,19 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
-    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName))
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
+    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName, user))
   }
 
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
-    Ok(views.html.secureRegistration(mobileregistrationform, mobilesName))
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
+    Ok(views.html.secureRegistration(mobileregistrationform, mobilesName, user))
   }
 
   def brandRegisterForm: EssentialAction = withAuth { username =>
@@ -81,8 +87,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     val mobilesName = mobileService.getMobilesName()
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName)),
+      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName,user)),
       mobileuser => {
         val status = model.domains.Domain.Status.pending
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
@@ -147,8 +156,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       val mobileName = mobilesName.get.name
       val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModelId).get.mobileModel
       Logger.info("Mobile Records" + mobileData)
-      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid ,
-        mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
+      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid,
+        mobileData.get.mobileStatus.toString(),mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
@@ -167,7 +176,10 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   }
 
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Ok(views.html.mobileStatus(mobilestatus))
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
+    Ok(views.html.mobileStatus(mobilestatus, user))
   }
 
   def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>

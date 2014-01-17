@@ -81,6 +81,19 @@ class AdminControllerTestCases extends Specification with Mockito {
   }
   }
   
+  "AdminControllerTesting: pending" in {
+    
+    running(FakeApplication()) {
+     Cache.set(username, cachedUser)
+     when(mockedMobileServiceObject.getMobileRecordByIMEID("12345678901234")) thenReturn (Some(mobileUser))
+     when(mockedMobileServiceObject.changeStatusToDemandProof(mobileUser)) thenReturn (true)
+     
+    val result = AdminController.pending("12345678901234")(FakeRequest())
+    status(result) must equalTo(OK)
+    contentType(result) must beSome("text/plain")
+  }
+  }
+  
   "AdminControllerTesting: sendMailForDemandProof" in {
     
     running(FakeApplication()) {

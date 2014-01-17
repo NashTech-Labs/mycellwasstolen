@@ -52,6 +52,7 @@ object Domain {
     mobileModel: String,
     imeiMeid: String,
     otherImeiMeid : String,
+    mobileStatus: String,
     purchaseDate: String,
     contactNo: String,
     email: String,

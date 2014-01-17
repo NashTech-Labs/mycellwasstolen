@@ -1,6 +1,6 @@
-@(message: String) 
+@(message: String, user: Option[model.domains.Domain.User]) 
 
-@main(title = "Welcome to MCWS", user=None) {
+@main(title = "Welcome to MCWS", user) {
 
 	<div class="container margin">
 		<div id="carousel-example-generic" class="carousel slide"

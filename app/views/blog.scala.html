@@ -1,4 +1,5 @@
-@main("Blog",user=None) {
+@(user: Option[model.domains.Domain.User])
+@main("Blog",user) {
 <div class="container">
 	<title="Blog"></title>
 	<div class="page-header">

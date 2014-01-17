@@ -60,15 +60,15 @@
 					       </td>
 					       
 	    					<td>
-	    						<button title="Approve" class="btn btn-info" onClick="changeStatus(@mobile._1.imeiMeid);" id="approve_@mobile._1.imeiMeid" >Approve</button>
+	    						<button title="Approve" class="btn btn-info" onClick="changeStatus('@mobile._1.imeiMeid');" id="approve_@mobile._1.imeiMeid" >Approve</button>
 	    					</td>
 	    				
 	    					<td>
-	    						<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand(@mobile._1.imeiMeid);" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
+	    						<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand('@mobile._1.imeiMeid');" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
 	    					</td>
 	    					<td>
 	    					<!-- <a href="#" id="pop_@mobile._1.imeiMeid" class="btn btn-primary" onmouseover="iniatializePopover(@mobile._1.imeiMeid);" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</a></td> -->
-			    		<button id="pop_@mobile._1.imeiMeid" class="btn btn-info" onmouseover="iniatializePopover(@mobile._1.imeiMeid);" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</button></td>
+			    		<button id="pop_@mobile._1.imeiMeid" class="btn btn-info" onmouseover="iniatializePopover('@mobile._1.imeiMeid');" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</button></td>
 			    		</tr>
 			    		
                       }
@@ -197,10 +197,10 @@
                 +value._1.regType+'</td><td><button class="btn btn-info" data-toggle="modal" data-target="#myModal_'+value._1.imeiMeid+'" onclick="showDocumentProof(\''+value._1.document+'\');"'
                 +'>Get Proof</button></td><td>'
                 //condition for disable approve button
-                +(value._1.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus('+value._1.imeiMeid+');">Approve</button>')
-                +((value._1.mobileStatus.name=="proofdemanded"||value._1.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand('+value._1.imeiMeid+');">Demand Proof</button>')
+                +(value._1.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus(\''+value._1.imeiMeid+'\');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus(\''+value._1.imeiMeid+'\');">Approve</button>')
+                +((value._1.mobileStatus.name=="proofdemanded"||value._1.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand(\''+value._1.imeiMeid+'\');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand(\''+value._1.imeiMeid+'\');">Demand Proof</button>')
                 +'</td>'
-                +'<td><button id="pop_'+value._1.imeiMeid+'" class="btn btn-info" onmouseover="iniatializePopover('+value._1.imeiMeid+');" data-toggle="popover" title="Description" data-content="'+value._1.description+'">View</button></td>'
+                +'<td><button id="pop_'+value._1.imeiMeid+'" class="btn btn-info" onmouseover="iniatializePopover(\''+value._1.imeiMeid+'\');" data-toggle="popover" title="Description" data-content="'+value._1.description+'">View</button></td>'
                 +'</tr>';
                 
                 $('#mobileData').append(tBody);

@@ -29,6 +29,7 @@
 									<h1 class="panel-title">Check Cell Status</h1>
 								</div>
 							</div>
+							
 							<input type="text" id="imeiMeid" name="imeiMeid" placeholder="IMEI/MEID">
 							<div class="form-actions">
 							<br>
@@ -48,9 +49,16 @@
 <script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
 
 <script type="text/javascript">
+		var imeId = "";
 		function showMobileRecord() {
 			var imeid = $('#imeiMeid').val();
+			if($('#imeiMeid').val() == ''){
+				$("#mobileRecords").addClass("alert alert-danger");
+				$("#mobileRecords").html("Data Not Found");
+			}
+			else{
 			mobileRecord(imeid);
+			}
 		}
 
 		var mobileAjaxSuccess = function(data) {
@@ -62,20 +70,23 @@
 				else{
 					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
-				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Change Status</th><th>Label</th></tr><tr><td>'
+				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Approval</th><th>Change to Pending</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Change Status</th><th>Label</th></tr><tr><td>'
 						+ mobile.imeiMeid
 						+ '</td><td>'
 						+ (mobile.otherImeiMeid == "" ? "None" : mobile.otherImeiMeid)
 						+ '</td><td>'
+						+mobile.mobileStatus
+						+'</td><td>'
+						+(mobile.mobileStatus == "approved" ? '<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imeiMeid+'\');">change to Pending</button>':'<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imeiMeid+'\');" disabled>change to Pending</button>')
+						+'</td><td>'
 						+(mobile.mobileName.match(/~Other.*/) ? mobile.otherMobileBrand : mobile.mobileName)
-						
 						+ '</td><td>'
 						+(mobile.mobileModel.match(/~Other.*/) ? mobile.otherMobileModel : mobile.mobileModel)
 						+ '</td><td>'
 						+ mobile.contactNo
 						+ '</td><td>'
 						+ mobile.regType
-						+'</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType('+mobile.imeiMeid+');">change status</button></td><td>'
+						+'</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">change status</button></td><td>'
 						+ image + '</td></tr></table><p><button id="statusCheck" class="btn btn-primary" onClick="hideMobileRecord();" value="ok">OK</button></div>';
 				$("#mobileRecords").removeClass("alert alert-danger");
 				$("#mobileRecords").html(mobileData);
@@ -134,10 +145,37 @@
 	        	
 	        	jsRoutes.controllers.AdminController.changeMobileRegType(imeid).ajax(statusAjaxCallBack);
 	        };
+	        
+	        function changeStatusToPending(imeid) {
+	        	imeId = imeid;
+				changeStatusPending(imeid);
+			}
+		    
+		    var statusAjaxSuccessToPending = function(data) {
+				$("#changeApproval").prop("disabled",true);
+				$("#changeApproval").text('Changed to Pending');
+				console.debug("Success of Ajax Call for Pending");
+				console.debug(data);
+			};
+			
+			var statusAjaxErrorToPending = function(err) {
+				console.debug("Error of ajax Call for to pending change");
+				console.debug(err);
+			};
+			
+			var changeStatusPending = function(imeid) {
+	        	
+	        	var statusAjaxCallBackPending = {
+	    			success: statusAjaxSuccessToPending,
+	    			error: statusAjaxErrorToPending
+	    		};
+	        	
+	        	jsRoutes.controllers.AdminController.pending(imeid).ajax(statusAjaxCallBackPending);
+	        };
 	     
 	    $("#imeiMeid").rules("add", {
 	 			required : true
-	 		});		
+	 		});	
 </script>	           	
 	
 }

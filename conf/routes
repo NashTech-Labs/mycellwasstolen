@@ -25,6 +25,7 @@ GET    /mobileStatus                controllers.MobileController.mobileStatus
 GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
 GET	   /approve					    controllers.AdminController.approve(imeid: String)
 GET	   /proofDemanded			    controllers.AdminController.proofDemanded(imeid: String)
+GET	   /pending			    controllers.AdminController.pending(imeid: String)
 GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
 GET	   /changeMobileRegType			controllers.AdminController.changeMobileRegType(imeid: String)
 

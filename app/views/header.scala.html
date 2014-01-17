@@ -1,5 +1,4 @@
 @(selectedMenu: String, user: Option[model.domains.Domain.User])
-
 <!-- Fixed navbar -->
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
@@ -27,7 +26,7 @@
 						
 					</ul>
 					</li>
-					@if(user == None){
+				    @if(user == None){
 					<li><a id="adminPanel" href="/login">Admin Login</a></li>}
 					@if(user != None) {
 					<li class="dropdown">
@@ -35,12 +34,12 @@
 					<ul class="dropdown-menu">
 					<li><a id="brandForm" href="/admin/brandForm">Add Mobile Brand</a></li>
 					<li><a id="createMobileModel" href="/admin/createMobileModelForm">Add Mobile Model</a></li>
-					<li><a id="createMobileModel" href="/admin/changeMobileRegType">Change Registration Type</a></li>
+					<li><a id="createMobileModel" href="/admin/changeMobileRegType">Change Status</a></li>
 					<li><a href="/admin/mobiles?status=pending">List of Requests</a></li>					
 					<li><a id="logout" href="/logout">Logout</a></li>
 					</ul>
 					</li>
-					}
+					} 
 				
 			</ul>
 		</div><!--/.nav-collapse -->

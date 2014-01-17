@@ -18,6 +18,7 @@ trait MobileServiceComponent {
   def getMobileModelById(id: Int): Option[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
+  def changeStatusToPending(mobileUser: Mobile): Boolean
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent {
@@ -100,6 +101,13 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
 
   override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
     mobiledal.changeRegTypeByIMEID(mobileUser) match {
+      case Right(id) => true
+      case Left(error) => false
+    }
+  }
+  
+  override def changeStatusToPending(mobileUser: Mobile): Boolean = {
+    mobiledal.changeStatusToPendingByIMEID(mobileUser) match {
       case Right(id) => true
       case Left(error) => false
     }
