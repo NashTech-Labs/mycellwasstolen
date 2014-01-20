@@ -78,3 +78,23 @@
 	margin-top: 27px;
 	margin-right: 40px;
 }
+<!--add  Modal for check mobile status -->
+.modal-body {
+        position: relative;
+        padding: 15px;
+        min-width: 900px; /* SET THE WIDTH OF THE MODAL */
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        border: 1px solid #999;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-radius: 6px;
+        outline: 0;
+        -webkit-box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+        box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+        background-clip: padding-box;
+        width: 1100px; /* SET THE WIDTH OF THE MODAL */
+        margin: 100px 0 0 -250px; /* CHANGE MARGINS TO ACCOMMODATE THE NEW WIDTH */
+    }

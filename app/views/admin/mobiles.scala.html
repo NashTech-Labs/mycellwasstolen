@@ -11,9 +11,9 @@
 				</div>
 				<div id="loading" style="padding-left: 20px;" hidden="true"><img src="/assets/images/loading.gif" /></div>
 				<div class="span6">
-					<button class="btn btn-info" style="float: right;" id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
-					<button class="btn btn-info" style="float: right;" id="demanded_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
-					<button class="btn btn-info" style="float: right;" id="approved_button" onclick="getMobilesByStatus('approved');" >Approved</button>
+					<button class="btn btn-info" style="float: right; margin:2px;" id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
+					<button class="btn btn-info" style="float: right; margin:2px;" id="demanded_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
+					<button class="btn btn-info" style="float: right; margin:2px;" id="approved_button" onclick="getMobilesByStatus('approved');" >Approved</button>
 				</div>
 			</div>
 			@flash.get("error").map { message =>

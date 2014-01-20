@@ -97,6 +97,23 @@
 			</div>
 		</div>
     </div>
+    <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Mobile Status</h4>
+      </div>
+      <div class="modal-body" id="modalBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
 <script src="@routes.Assets.at("javascripts/jquery.validate.min.js")" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -134,9 +151,13 @@
 						+ '</td><td>'
 						+ mobile.regType
 						+'</td><td>'
-						+ image + '</td></tr></table><p><button id="statusCheck" class="btn btn-primary" onClick="hideMobileRecord();" value="ok">OK</button></div>';
+						+ image + '</td></tr></table></div>';
+				$("#mobileRecords").empty();
 				$("#mobileRecords").removeClass("alert alert-danger");
-				$("#mobileRecords").html(mobileData);
+				$('#modalBody').html(mobileData);
+				$('#myModal').modal('show');
+				
+				
 			} else {
 				$("#mobileRecords").addClass("alert alert-danger");
 				$("#mobileRecords").html("Data Not Found");
@@ -162,9 +183,6 @@
 					mobileAjaxCallBack);
 		};
 		
-	     function hideMobileRecord() {
-	        $("#mobile-status").hide();
-		}
 	     
 	    $("#imeiMeid").rules("add", {
 	 			required : true

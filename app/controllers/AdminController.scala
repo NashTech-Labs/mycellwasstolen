@@ -156,7 +156,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
       mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
-      regType, model.domains.Domain.Status.approved, mobileUser.get.description,
+      regType, mobileUser.get.mobileStatus, mobileUser.get.description,
       mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
       mobileUser.get.id)
 
