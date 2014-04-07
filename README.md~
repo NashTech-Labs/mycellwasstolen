@@ -1,11 +1,11 @@
 
-This is your new Play application
-=====================================
-
+<<<<<<< HEAD
 This file will be packaged with your application, when using `play dist`.
 
 
 
+=======
+>>>>>>> 613d1c99946b5ddb949792d69a2e2945c10e18f2
 1) Pass the Amazon S3 credentials for saving the images and 
 2) user id and password for email sending facility while executing the project.
 
