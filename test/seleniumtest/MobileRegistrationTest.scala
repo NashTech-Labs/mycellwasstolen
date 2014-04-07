@@ -66,10 +66,7 @@ class MobileRegistrationTest extends Specification{
         new Select (driver.findElementById("mobileName")).selectByVisibleText("nokia")
         driver.findElementById("mobileModel").sendKeys("Asha 200")
         driver.findElementByCssSelector(".btn.btn-primary").click
-<<<<<<< HEAD
         driver.close()
-=======
->>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
         driver.findElementByCssSelector("BODY").getText().contains("Model successfully added")
       }
   }
@@ -111,16 +108,9 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("imeiMeid").sendKeys("12345678909999")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
-<<<<<<< HEAD
-      driver.findElementById("description").sendKeys("good mobile")
-      driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
-      driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.close()
-=======
       driver.findElementById("description").sendKeys("lost mobile")
       driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
       driver.findElementByCssSelector(".btn.btn-primary").click
->>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")
     }
       
@@ -161,16 +151,9 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("imeiMeid").sendKeys("12345678909994")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
-<<<<<<< HEAD
-      driver.findElementById("description").sendKeys("good mobile")
-      driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
-      driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.close()
-=======
       driver.findElementById("description").sendKeys("lost mobile")
       driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
       driver.findElementByCssSelector(".btn.btn-primary").click
->>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")
     }
       
@@ -212,11 +195,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("imeiMeid").sendKeys("12345678909999")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
-<<<<<<< HEAD
-      driver.findElementById("description").sendKeys("good mobile")
-=======
-      driver.findElementById("description").sendKeys("lost mobile")
->>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
+     driver.findElementById("description").sendKeys("lost mobile")
       driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")
@@ -224,19 +203,11 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("imeiMeid").sendKeys("12345678909999")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-<<<<<<< HEAD
-      
-      }catch{
-        case e: NullPointerException => e
-      }
-      driver.close()
-=======
       println("------- "+driver.findElementByCssSelector(".modal-title").getText()+"-------------")
      true
       }catch{
         case e: NullPointerException => e
       }
->>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
        driver.findElementByCssSelector("BODY").getText().contains("")   
     }    
   }
