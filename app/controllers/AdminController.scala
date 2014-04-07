@@ -119,14 +119,37 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     }
   }
 
+  def sendMailForApprovedRequest(imeiId:String): Action[play.api.mvc.AnyContent]=Action { implicit request =>
+   
+    Logger.info("AdminController:The request been approved of " + imeiId)
+    
+    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
+    try {
+      
+      Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
+      "Request Approved On MCWS",Common.approvedMessage(mobileUser.get.imeiMeid))
+      
+      Logger.info("AuthController:-true")
+      Ok("success")
+    }catch{
+      case e: Exception =>
+        Logger.info("" + e.printStackTrace())
+        Logger.info("AuthController: - false")
+        Ok("error")
+      
+    }
+
+  }
+  
+ 
   def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
-
+     
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
     try {
       Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-        "Document proof request from MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+        "Document Proof Request from MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
       Logger.info("AuthController: - true")
       Ok("success")
     } catch {

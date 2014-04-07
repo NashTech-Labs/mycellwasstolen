@@ -26,8 +26,8 @@ class AdminControllerTestCases extends Specification with Mockito {
     "gs", 1, 5, "12345678901234","123456789012678" , "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454"),"nokia","n90")
   
-    val date = new java.sql.Date(new java.util.Date().getTime())
-  val brand = Brand("nokia", date,Some(4))
+  val date = new java.sql.Date(new java.util.Date().getTime())
+  val brand = Brand("nokia", "date",Some(4))
   val model = MobileModels("N72", 6)
   val mobileNamesById :Option[Brand]= Some(brand)
   val mobilelist: List[Mobile] = List(mobileUser)
@@ -51,6 +51,19 @@ class AdminControllerTestCases extends Specification with Mockito {
      when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
      val result = AdminController.mobiles("pending")(FakeRequest().withSession(Security.username -> username)).run
      status(result) must equalTo(OK)
+     contentType(result) must beSome("text/html")
+  }
+  }
+  
+   "AdminControllerTesting: mobilesmobilesForAjaxCall" in {
+    
+    running(FakeApplication()) {
+     Cache.set(username, cachedUser)
+     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending")) thenReturn (getAllMobilesWithBrand)
+     when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn (mobileNamesById)
+     when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
+     val result = AdminController.mobiles("pending")(FakeRequest().withSession(Security.username -> username)).run
+     status(result) must equalTo(200)
      contentType(result) must beSome("text/html")
   }
   }

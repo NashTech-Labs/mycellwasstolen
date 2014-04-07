@@ -19,6 +19,8 @@ trait MobileServiceComponent {
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
   def changeStatusToPending(mobileUser: Mobile): Boolean
+ 
+
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent {
@@ -95,7 +97,6 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
   override def getMobileModelById(id: Int): Option[MobileModels] = {
     Logger.info("getMobileModelById called")
     val mobileModel = mobiledal.getMobileModelById(id)
-    //if (mobileName.length != 0) Some(mobileName.head) else None
     mobileModel.headOption
   }
 

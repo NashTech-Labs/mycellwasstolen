@@ -6,6 +6,8 @@
 GET     /                           controllers.Application.index
 GET		/contact-us					controllers.Resources.contactUs
 GET		/blog					    controllers.Resources.blog
+GET     /faq                        controllers.Resources.faq
+GET		/discussionforum           controllers.Resources.discussionforum
 
 GET		/showExampleForm			controllers.Application.showExampleForm
 POST	/handleFormExample			controllers.Application.handleFormExample
@@ -25,8 +27,9 @@ GET    /mobileStatus                controllers.MobileController.mobileStatus
 GET    /mobileModel					controllers.MobileController.getMobileModels(id:Int)
 GET	   /approve					    controllers.AdminController.approve(imeid: String)
 GET	   /proofDemanded			    controllers.AdminController.proofDemanded(imeid: String)
-GET	   /pending			    controllers.AdminController.pending(imeid: String)
+GET	   /pending			            controllers.AdminController.pending(imeid: String)
 GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
+GET    /sendMailForApprovedRequest  controllers.AdminController.sendMailForApprovedRequest(imeid: String)
 GET	   /changeMobileRegType			controllers.AdminController.changeMobileRegType(imeid: String)
 
 
@@ -42,6 +45,6 @@ POST   /saveMobileName             controllers.MobileController.saveMobileName
 GET     /admin/createMobileModelForm      controllers.MobileController.createMobileModelForm
 GET		/admin/changeMobileRegType		  controllers.AdminController.changeMobileRegTypeForm
 POST    /createMobileModel                controllers.MobileController.createMobileModel
-
+                     
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file                controllers.Assets.at(path="/public", file)

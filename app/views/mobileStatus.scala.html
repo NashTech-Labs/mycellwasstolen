@@ -36,7 +36,7 @@
 									<h1 class="panel-title">Check Cell Status</h1>
 								</div>
 							</div>
-							<input type="text" id="imeiMeid" name="imeiMeid" placeholder="IMEI/MEID">
+							<input type="text" id="imeiMeid" name="imeiMeid"  maxlength="17" placeholder="IMEI/MEID">
 							<div class="form-actions">
 							<br>
 							<input type="submit" value="Check Status" class="btn btn-primary"
@@ -129,15 +129,18 @@
 		}
 
 		var mobileAjaxSuccess = function(data) {
+				
 			if (data.status == "Ok") {
-				var mobile = data.mobileData;
+				var mobile = data.mobileData
+				if (mobile.mobileStatus=="approved"){	
+			
 				if(mobile.regType=="stolen"){
 					var image='<img src="/assets/images/red.jpg"  alt="...gjkbjkhjk..."/>';
 				}
 				else{
 					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
-				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
+				var mobileData = '<div id="mobile-status"><h4>This IMEI number has been approved successfully</h4><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
 						+ mobile.imeiMeid
 						+ '</td><td>'
 						+ (mobile.otherImeiMeid == "" ? "None" : mobile.otherImeiMeid)
@@ -156,9 +159,36 @@
 				$("#mobileRecords").removeClass("alert alert-danger");
 				$('#modalBody').html(mobileData);
 				$('#myModal').modal('show');
-				
-				
-			} else {
+				}
+				else
+				{
+					var image='<img src="/assets/images/yellow.svg"  alt="...gjkbjkhjk..."/>';
+					
+					var mobileData = '<div id="mobile-status"><h4><font color="#F41616">This IMEI is registered as Stolen/Clean Phone but has not been approved yet </font></h4><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Label</th></tr><tr><td>'
+						+ mobile.imeiMeid
+						+ '</td><td>'
+						+ (mobile.otherImeiMeid == "" ? "None" : mobile.otherImeiMeid)
+						+ '</td><td>'
+						+(mobile.mobileName.match(/~Other.*/) ? mobile.otherMobileBrand : mobile.mobileName)
+						
+						+ '</td><td>'
+						+(mobile.mobileModel.match(/~Other.*/) ? mobile.otherMobileModel : mobile.mobileModel)
+						+ '</td><td>'
+						+ mobile.contactNo
+						+ '</td><td>'
+						+ ("Pending")
+						+'</td><td>'
+						+ image + '</td></tr></table></div>';
+				$("#mobileRecords").empty();
+				$("#mobileRecords").removeClass("alert alert-danger");
+				$('#modalBody').html(mobileData);
+				$('#myModal').modal('show');
+					
+					
+					}
+			} 
+
+			else {
 				$("#mobileRecords").addClass("alert alert-danger");
 				$("#mobileRecords").html("Data Not Found");
 				console.debug("Data no found");
