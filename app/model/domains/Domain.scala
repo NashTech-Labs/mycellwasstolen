@@ -5,10 +5,6 @@ import scala.slick.lifted.ForeignKeyQuery
 
 object Domain {
 
-  /**
-   *
-   *
-   */
 
   object Status extends Enumeration {
     val pending = Value("pending")
@@ -61,11 +57,12 @@ object Domain {
     otherMobileModel: String)
 
   case class MobileStatus(
-    imeiMeid: String)
+    imeiMeid: String 
+  )
 
   case class Brand(
     name: String,
-    date: java.sql.Date,
+    date: String,
     id: Option[Int] = None)
 
   case class MobileModels(
@@ -100,22 +97,22 @@ object Domain {
 
   object Mobiles extends Table[Mobile]("mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def userName: Column[String] = column[String]("username", O.NotNull, O DBType ("VARCHAR(100)"))
-    def brandId: Column[Int] = column[Int]("mobile_brandId", O.NotNull)
-    def mobileModelId: Column[Int] = column[Int]("mobile_modelId", O.NotNull)
-    def imeiMeid: Column[String] = column[String]("imei_meid", O.NotNull, O DBType ("VARCHAR(100)"))
-    def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O.Nullable, O DBType ("VARCHAR(100)"))
-    def purchaseDate: Column[String] = column[String]("purchase_date", O.NotNull)
+    def userName: Column[String] = column[String]("username",O DBType ("VARCHAR(1000)"))
+    def brandId: Column[Int] = column[Int]("mobile_brandId")
+    def mobileModelId: Column[Int] = column[Int]("mobile_modelId")
+    def imeiMeid: Column[String] = column[String]("imei_meid", O DBType ("VARCHAR(1000)"))
+    def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O DBType ("VARCHAR(1000)"))
+    def purchaseDate: Column[String] = column[String]("purchase_date")
 
-    def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(100)"))
-    def email: Column[String] = column[String]("email", O.NotNull, O DBType ("VARCHAR(100)"))
-    def regType: Column[String] = column[String]("type", O.NotNull, O DBType ("VARCHAR(20)"))
-    def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O.NotNull, O DBType ("VARCHAR(50)"))
-    def description: Column[String] = column[String]("description", O.NotNull, O DBType ("VARCHAR(1000)"))
+    def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(1000)"))
+    def email: Column[String] = column[String]("email", O DBType ("VARCHAR(1000)"))
+    def regType: Column[String] = column[String]("type", O DBType ("VARCHAR(20)"))
+    def mobileStatus: Column[Status.Value] = column[Status.Value]("status",  O DBType ("VARCHAR(50)"))
+    def description: Column[String] = column[String]("description",  O DBType ("VARCHAR(1000)"))
     def registrationDate: Column[String] = column[String]("registration_date", O.NotNull)
-    def document: Column[String] = column[String]("document", O.NotNull, O DBType ("VARCHAR(100)"))
-    def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O.NotNull, O DBType ("VARCHAR(100)"))
-    def otherMobileModel: Column[String] = column[String]("otherMobileModel", O.NotNull, O DBType ("VARCHAR(100)"))
+    def document: Column[String] = column[String]("document", O DBType ("VARCHAR(1000)"))
+    def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))
+    def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
 
     def * : scala.slick.lifted.MappedProjection[Mobile, (String, Int, Int, String, String, String, String, String, String, Status.Value, String, String, String, String, String, Option[Int])] =
       userName ~ brandId ~ mobileModelId ~ imeiMeid ~ otherImeiMeid ~ purchaseDate ~ contactNo ~ email ~
@@ -141,10 +138,10 @@ object Domain {
 
   object Brands extends Table[Brand]("brands") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def name: Column[String] = column[String]("name", O.NotNull, O DBType ("VARCHAR(30)"))
-    def date: Column[java.sql.Date] = column[java.sql.Date]("date", O.NotNull)
+    def name: Column[String] = column[String]("name",O DBType ("VARCHAR(30)"))
+    def date: Column[String] = column[String]("date", O.NotNull)
 
-    def * : scala.slick.lifted.MappedProjection[Brand, (String, java.sql.Date, Option[Int])] = name ~ date ~ id <> (Brand, Brand unapply _)
+    def * : scala.slick.lifted.MappedProjection[Brand, (String, String, Option[Int])] = name ~ date ~ id <> (Brand, Brand unapply _)
 
     def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Brand, Option[Int]] = name ~ date <> ({
       (name, brand) => Brand(name, brand)
@@ -156,8 +153,8 @@ object Domain {
 
   object MobileModel extends Table[MobileModels]("mobilesmodel") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def mobilesnameid: Column[Int] = column[Int]("mobilesnameid", O.NotNull)
-    def model: Column[String] = column[String]("model", O.NotNull, O DBType ("VARCHAR(30)"))
+    def mobilesnameid: Column[Int] = column[Int]("mobilesnameid")
+    def model: Column[String] = column[String]("model", O DBType ("VARCHAR(30)"))
 
     def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Int, Option[Int])] =
       model ~ mobilesnameid ~ id <> (MobileModels, MobileModels unapply _)

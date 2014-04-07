@@ -1,9 +1,14 @@
 package controllers
 
 import java.io.File
+import java.text.SimpleDateFormat
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.services.s3.AmazonS3Client
 import model.domains.Domain._
 import model.users._
 import play.api._
+import play.api.Play.current
+import play.api.cache.Cache
 import play.api.data._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -11,14 +16,12 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils.Common
-import play.api.cache.Cache
-import play.api.Play.current
-import java.text.SimpleDateFormat
 import utils.TwitterTweet
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.auth.BasicAWSCredentials
+import model.domains.Domain
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller with Secured {
+  
+  
 
   val mobileregistrationform = Form(
     mapping(
@@ -52,7 +55,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
-    val username=request.session.get(Security.username).getOrElse("None")
+    val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName, user))
@@ -61,7 +64,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     Logger.info("mobilesName>>" + mobilesName)
-    val username=request.session.get(Security.username).getOrElse("None")
+    val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     Ok(views.html.secureRegistration(mobileregistrationform, mobilesName, user))
@@ -87,11 +90,11 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
     val mobilesName = mobileService.getMobilesName()
-    val username=request.session.get(Security.username).getOrElse("None")
+    val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName,user)),
+      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName, user)),
       mobileuser => {
         val status = model.domains.Domain.Status.pending
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
@@ -113,9 +116,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           val imageFilename = image.filename
           val contentType = image.contentType.get
           val fileToSave = image.ref.file.asInstanceOf[File]
-          val bucketName = "mcws"
-          val AWS_ACCESS_KEY = "###"
-          val AWS_SECRET_KEY = "###"
+          val bucketName = Play.current.configuration.getString("aws_bucket_name").get
+          val AWS_ACCESS_KEY = Play.current.configuration.getString("aws_access_key").get
+          val AWS_SECRET_KEY = Play.current.configuration.getString("aws_secret_key").get
           val mcwsAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
           val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
           amazonS3Client.putObject(bucketName, documentName, fileToSave)
@@ -157,7 +160,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModelId).get.mobileModel
       Logger.info("Mobile Records" + mobileData)
       val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid,
-        mobileData.get.mobileStatus.toString(),mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
+        mobileData.get.mobileStatus.toString(), mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
@@ -176,7 +179,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
   }
 
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val username=request.session.get(Security.username).getOrElse("None")
+    val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     Ok(views.html.mobileStatus(mobilestatus, user))
@@ -203,7 +206,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
       brand => {
         Logger.info("MobileNameController: saveMobileName - found valid data.")
-        val date = new java.sql.Date(new java.util.Date().getTime())
+        val sqldate = new java.sql.Date(new java.util.Date().getTime())
+        val df = new SimpleDateFormat("MM/dd/yyyy")
+        val date = df.format(sqldate)
         val regbrand = mobileService.addMobileName(Brand(brand.name, date))
 
         regbrand match {
@@ -215,6 +220,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
+  
+  
+  
 
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")

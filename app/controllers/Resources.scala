@@ -17,5 +17,22 @@ class Resources extends Controller{
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     Ok(views.html.blog(user))}
+
+  
+  def faq= Action { implicit request =>
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
+    Ok(views.html.FAQ(user))
+    }
+  
+  def discussionforum= Action { implicit request =>
+    val username=request.session.get(Security.username).getOrElse("None")
+    val user: Option[User] = Cache.getAs[User](username)
+    Logger.info("USERNAME:::::" + user)
+    Ok(views.html.discussionforum(user))
+    }
+
+
 }
 object Resources extends Resources

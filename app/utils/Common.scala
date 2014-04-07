@@ -18,15 +18,21 @@ object Common {
     Messages("messages.mobile.demandProof", imeid, signature)
   }
 
+  def approvedMessage(imeid:String): String ={
+    Messages("messages.mobile.approved", imeid, signature)
+  }
+  
   def signature(): String = {
     Messages("messages.signature")
   }
+  
+  
 
   def sendMail(email: String, subject: String, message: String): Unit = {
     val mail = use[MailerPlugin].email
     mail.setSubject(subject)
-    mail.addRecipient(email)
-    mail.addFrom(Messages("default.email.title"))
+    mail.setRecipient(email)
+    mail.setFrom(Messages("default.email.title"))
     mail.sendHtml(message)
   }
 }
