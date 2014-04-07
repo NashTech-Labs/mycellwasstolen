@@ -57,9 +57,10 @@ object Domain {
     otherMobileModel: String)
 
   case class MobileStatus(
-    imeiMeid: String 
+    imeiMeid: String
   )
-
+  
+  
   case class Brand(
     name: String,
     date: String,
@@ -169,6 +170,9 @@ object Domain {
     def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)
   }
 
+ 
+  
+  
   case class User(
     email: String,
     password: String)
