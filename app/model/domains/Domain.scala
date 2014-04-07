@@ -5,10 +5,6 @@ import scala.slick.lifted.ForeignKeyQuery
 
 object Domain {
 
-  /**
-   *
-   *
-   */
 
   object Status extends Enumeration {
     val pending = Value("pending")

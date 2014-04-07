@@ -20,8 +20,13 @@ class mobileServiceTest extends FunSuite with Mockito {
   val date = new java.sql.Date(new java.util.Date().getTime())
   val brand = Brand("nokia", "12-17-2013")
   val model = MobileModels("N72", 6)
+<<<<<<< HEAD
   
     val mockedMobileDALObject = mock[MobileDALComponent]
+=======
+ 
+  val mockedMobileDALObject = mock[MobileDALComponent]
+>>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
 
   val mobileService = new MobileService(mockedMobileDALObject)
 
@@ -87,8 +92,19 @@ class mobileServiceTest extends FunSuite with Mockito {
     val result = mobileService.createMobileModel(model)
     assert(result.isRight === true)
   }
+<<<<<<< HEAD
 
   test("Testing: get All Mobiles With Brand And Model") {
+=======
+ /* 
+  test("Testing:does not create Mobile Model") {
+    when(mockedMobileDALObject.insertMobileModel(model)).thenReturn(Left("mobile model cannot be inserted"))
+    val result = mobileService.createMobileModel(model)
+    assert(result.isLeft === "error" )
+  }
+ */ 
+   test("Testing: get All Mobiles With Brand And Model") {
+>>>>>>> 20208b56f8ce266c03704805c79f25803e384b12
     when(mockedMobileDALObject.getAllMobilesWithBrandAndModel("pending")).thenReturn(List())
     val result = mobileService.getAllMobilesWithBrandAndModel("pending")
     assert(result != None)

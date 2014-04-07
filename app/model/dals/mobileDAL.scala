@@ -107,6 +107,11 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+
+  /**
+   * Getting Mobile Brands
+   */
+
   
   override def getMobileNamesById(mid: Int): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
@@ -114,6 +119,11 @@ class MobileDAL extends MobileDALComponent {
       (for { brand <- Brands if (brand.id === mid) } yield brand).list
     }
   }
+  
+  /**
+   * Retrieving all brands and models
+   */
+  
 
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
@@ -128,6 +138,10 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+  /**
+   * Change status to approve
+   */
+  
   override def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
 
     Connection.databaseObject().withSession {
@@ -148,6 +162,10 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+  /**
+   * Change status to proof demand
+   */
+  
   override def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
@@ -163,6 +181,10 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+  /**
+   * Getting Brand model
+   */
+  
   override def getMobileModelById(mid: Int): List[MobileModels] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileNameById" + mid)
@@ -170,6 +192,12 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+  
+  /**
+   * Change registration type (Stolen or Clean)
+   */
+  
+  
   override def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
@@ -184,6 +212,13 @@ class MobileDAL extends MobileDALComponent {
         }
     }
   }
+
+
+  /**
+   * Change status to pending
+   */
+  
+  
 
   override def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {

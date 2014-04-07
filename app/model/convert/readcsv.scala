@@ -4,7 +4,6 @@ import java.io.FileReader
 import java.util.ArrayList
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import au.com.bytecode.opencsv.CSVReader
 import model.dals.MobileDAL.insertMobileUser
 import model.domains.Domain.Mobile
@@ -12,12 +11,16 @@ import model.domains.Domain.Status
 
 
 object readcsv extends App{
-def convert = {
+
+def convert() = {
+
   var mobile1: scala.collection.mutable.Map[String, scala.collection.immutable.List[String]] = scala.collection.mutable.Map()
  
   mobile1 = scala.collection.mutable.Map()
   var array = new ArrayList[ArrayList[String]]
-  val reader = new CSVReader(new FileReader(s"/home/harshita/mobile.csv"))
+
+  val reader = new CSVReader(new FileReader(s"path to the csv file"))
+  
   var nextLine: Array[String] = Array()
   try {
     while ((nextLine = reader.readNext()) != null) {
@@ -51,9 +54,11 @@ def convert = {
   } 
   
   
- /*val res = insertMobileName(Brand(array(i)(0), array(i)(1)))*/
+
+/* val res = insertMobileName(Brand(array(i)(0), array(i)(1)))
   
- /*val res = insertMobileModel(MobileModels(array(i)(0), augmentString(array(i)(1)).toInt))*/  
+ val res = insertMobileModel(MobileModels(array(i)(0), augmentString(array(i)(1)).toInt))*/  
+
     
   
   
