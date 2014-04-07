@@ -66,6 +66,7 @@ class MobileRegistrationTest extends Specification{
         new Select (driver.findElementById("mobileName")).selectByVisibleText("nokia")
         driver.findElementById("mobileModel").sendKeys("Asha 200")
         driver.findElementByCssSelector(".btn.btn-primary").click
+        driver.close()
         driver.findElementByCssSelector("BODY").getText().contains("Model successfully added")
       }
   }
@@ -194,7 +195,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("imeiMeid").sendKeys("12345678909999")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
-      driver.findElementById("description").sendKeys("lost mobile")
+     driver.findElementById("description").sendKeys("lost mobile")
       driver.findElementById("fileUpload").sendKeys("/public/images/index.gif")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")

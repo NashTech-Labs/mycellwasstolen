@@ -107,9 +107,11 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+
   /**
    * Getting Mobile Brands
    */
+
   
   override def getMobileNamesById(mid: Int): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
@@ -211,11 +213,13 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+
   /**
    * Change status to pending
    */
   
   
+
   override def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
