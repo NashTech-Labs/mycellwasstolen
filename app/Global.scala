@@ -30,7 +30,7 @@ object Global extends GlobalSettings{
 
 	//val result = model.convert.readcsv.convert
 
-    try {
+    /*try {
       Connection.databaseObject.withSession { implicit session: Session =>
       (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
         Logger.info("All tables have been created")
@@ -38,7 +38,7 @@ object Global extends GlobalSettings{
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
-    }
+    }*/
 
 
   }
