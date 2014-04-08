@@ -27,6 +27,11 @@ object Global extends GlobalSettings{
 
   override def onStart(app: Application): Unit = {
     Logger.info("Application has started")
+    val bucketName = Play.application.configuration.getString("aws_bucket_name")
+    val accessKey = Play.application.configuration.getString("aws_access_key")
+    val secretKey = Play.application.configuration.getString("aws_secret_key")
+    val userId=  Play.application.configuration.getString("smtp.user")
+    val password= Play.application.configuration.getString("smtp.password")
 
 	//val result = model.convert.readcsv.convert
 
