@@ -1,1 +1,0 @@
- web target/universal/stage/bin/mycellwasstolen -Dhttp.port=$PORT -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=$DATABASE_URL -Daws_bucket_name="voyager-email-attachments" -Daws_access_key="AKIAJPSNYVHN3ERI7BCA" -Daws_secret_key="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" -Dsmtp.user="cellsupport@mycellwasstolen.com" -Dsmtp.password="knolcell2012" 
