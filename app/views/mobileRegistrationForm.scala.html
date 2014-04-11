@@ -1,6 +1,7 @@
 @(mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], brands: List[model.domains.Domain.Brand], user: Option[model.domains.Domain.User])(implicit flash: Flash) 
 
 @import helper._ 
+
 @main("Mycellwasstolen: Register Stolen Phone",user){ 
 	<div class="container">
 		<div class="page-header">
@@ -28,9 +29,11 @@
 					<div class="col-lg-8">
 						<div class="well form-horizontal">
 							 @registerForm("stolen", mobileRegistrationForm, brands)
+							 
 						</div>
 					</div>
-					<div class="col-lg-4">
+					<div class="col-lg-4" >
+					
 						<div class="well">
 							<div class="panel panel-warning">
 								<div class="panel-heading">
