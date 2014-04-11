@@ -4,15 +4,8 @@
 @helper.form(action =routes.MobileController.mobileRegistration, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 <fieldset>
-<style>
-
- input[type=text] { width: 200px; padding: 3px;}
-  
-
-</style>
-
-
 	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
+
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
 
 	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
@@ -47,7 +40,7 @@
 	<div class="form-group">
 		<label class="col-sm-4 control-label"><input type="checkbox"
 			name="race" id="otherimei" value="other" />Other IMEI, specify<br /></label>
-		<div class="col-sm-6" >
+		<div class="col-sm-6">
 			<div style="visibility: hidden" id="race">
 				<input type="text" name="otherImeiMeid" maxlength="17" id="otherImeiMeid" />
 			</div>
@@ -59,10 +52,9 @@
 
 	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code")
 
-	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 22, '_label->"Description")
+	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 25, '_label->"How stolen/get ?")
 
 	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document(Image)",'_name->"fileUpload",'_type->"File")
-
 </fieldset>
 
 <div class="form-group">

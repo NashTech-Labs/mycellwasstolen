@@ -4,6 +4,7 @@ import java.io.FileReader
 import java.util.ArrayList
 
 import scala.collection.JavaConversions.asScalaBuffer
+
 import au.com.bytecode.opencsv.CSVReader
 import model.dals.MobileDAL.insertMobileUser
 import model.domains.Domain.Mobile
