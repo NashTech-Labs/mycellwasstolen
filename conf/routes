@@ -9,8 +9,6 @@ GET		/blog					    controllers.Resources.blog
 GET     /faq                        controllers.Resources.faq
 GET		/discussionforum           controllers.Resources.discussionforum
 
-GET		/showExampleForm			controllers.Application.showExampleForm
-POST	/handleFormExample			controllers.Application.handleFormExample
 
 #registration
 GET     /register-stolen-phone      controllers.MobileController.mobileRegistrationForm

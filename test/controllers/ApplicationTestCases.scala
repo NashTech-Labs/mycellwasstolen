@@ -13,21 +13,7 @@ import play.api.test.Helpers._
 //@RunWith(classOf[JUnitRunner])
 class ApplicationTestCases extends Specification with Mockito {
 
-  "ApplicationController: showExampleForm" in {
-    running(FakeApplication()) {
-    val result = Application.showExampleForm(FakeRequest())
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")  
-    }
-    }
   
-  "ApplicationController: handleFormExample" in {
-    running(FakeApplication()) {
-    val result = Application.handleFormExample(FakeRequest())
-      status(result) must equalTo(400)
-      contentType(result) must beSome("text/html")  
-    }
-    }
   
   
   
