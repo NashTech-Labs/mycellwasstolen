@@ -15,25 +15,7 @@ import play.api.Play.current
 
 class Application extends Controller {
 
-  val formExample = Form(
-    tuple(
-      "name" -> nonEmptyText,
-      "email" -> email,
-      "password" -> nonEmptyText,
-      "confPassword" -> nonEmptyText))
-
-  def showExampleForm = Action { implicit request =>
-    Ok(views.html.formExample(formExample))
-  }
-
-  def handleFormExample = Action { implicit request =>
-    formExample.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.formExample(formWithErrors)),
-      {
-        case (name, email, password, confPassword) =>
-          Redirect(routes.Application.index).flashing("SUCCESS" -> "Form submited successfully")
-      })
-  }
+  
 
   def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val username=request.session.get(Security.username).getOrElse("None")
