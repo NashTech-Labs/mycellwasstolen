@@ -33,9 +33,13 @@ object Global extends GlobalSettings{
     val userId=  Play.application.configuration.getString("smtp.user")
     val password= Play.application.configuration.getString("smtp.password")
 
-	//val result = model.convert.readcsv.convert
+    val filePath = Global.getClass().getClassLoader().getResource("csv")
+       new File(filePath.toURI()).listFiles foreach { file =>
+      val result = model.convert.readcsv.convert(file)
+     
+    }
 
-    /*try {
+    try {
       Connection.databaseObject.withSession { implicit session: Session =>
       (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
         Logger.info("All tables have been created")
@@ -43,7 +47,7 @@ object Global extends GlobalSettings{
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
-    }*/
+    }
 
 
   }

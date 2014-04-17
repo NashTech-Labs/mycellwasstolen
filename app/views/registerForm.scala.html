@@ -4,6 +4,12 @@
 @helper.form(action =routes.MobileController.mobileRegistration, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 
 <fieldset>
+<style>
+
+ input[type=text] { width: 200px;}
+ 
+
+</style>
 	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
 
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
@@ -52,7 +58,7 @@
 
 	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code")
 
-	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 25, '_label->"Description")
+	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 22, '_label->"Description")
 
 	@inputFile(mobileRegistrationForm("fileUpload"),'_label->"Document(Image)",'_name->"fileUpload",'_type->"File")
 </fieldset>
