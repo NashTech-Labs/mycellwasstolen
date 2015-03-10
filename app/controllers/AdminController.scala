@@ -102,7 +102,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       Ok("error")
     }
   }
-  
+
   def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:pending - change status to pending : " + imeiId)
 
@@ -119,32 +119,31 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     }
   }
 
-  def sendMailForApprovedRequest(imeiId:String): Action[play.api.mvc.AnyContent]=Action { implicit request =>
-   
+  def sendMailForApprovedRequest(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+
     Logger.info("AdminController:The request been approved of " + imeiId)
-    
+
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     try {
-      
+
       Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-      "Request Approved On MCWS",Common.approvedMessage(mobileUser.get.imeiMeid))
-      
+        "Request Approved On MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+
       Logger.info("AuthController:-true")
       Ok("success")
-    }catch{
+    } catch {
       case e: Exception =>
         Logger.info("" + e.printStackTrace())
         Logger.info("AuthController: - false")
         Ok("error")
-      
+
     }
 
   }
-  
- 
+
   def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
-     
+
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
     try {
@@ -173,9 +172,13 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController changeMobileRegType - change Registration type: " + mobileUser)
 
-    val regType = if (mobileUser.get.regType == "stolen") "Clean"
+    val regType = if (mobileUser.get.regType == "stolen"){
+      "Clean"
+    }
 
-    else "stolen"
+    else{
+      "stolen"
+    }
 
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
       mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,

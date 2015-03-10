@@ -31,7 +31,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
       }))
 
   def check(username: String, password: String) = {
-    if((username == "admin" && password == "knol2013")){
+    if(username == "admin" && password == "knol2013"){
     val user = User("admin", "1234")
     Cache.set(username, user, 60 * 60)
     true

@@ -27,7 +27,7 @@ class MobileDAL extends MobileDALComponent {
   /**
    * insert mobile user information
    */
-  
+
   override def insertMobileUser(mobile: Mobile): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -39,11 +39,10 @@ class MobileDAL extends MobileDALComponent {
         Left(ex.getMessage())
     }
   }
-  
-/**
- * retrieve mobile record by IMEID no.
- */
-  
+
+  /**
+   * retrieve mobile record by IMEID no.
+   */
 
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
@@ -55,16 +54,16 @@ class MobileDAL extends MobileDALComponent {
   /**
    * retrieve mobile brands list
    */
-  
+
   override def getMobilesName(): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobilesName")
       (for { brand <- Brands } yield brand).list
     }
   }
-  
+
   /**
-   * retrieve mobile models 
+   * retrieve mobile models
    */
 
   override def getMobileModelsById(id: Int): List[MobileModels] = {
@@ -73,8 +72,7 @@ class MobileDAL extends MobileDALComponent {
       (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
     }
   }
-  
-  
+
   /**
    * insert mobile brand name
    */
@@ -91,10 +89,10 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-   /**
-    * insert mobile model name
-    */
-  
+  /**
+   * insert mobile model name
+   */
+
   override def insertMobileModel(mobilemodel: MobileModels): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -107,23 +105,20 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-
   /**
    * Getting Mobile Brands
    */
 
-  
   override def getMobileNamesById(mid: Int): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileNameById" + mid)
       (for { brand <- Brands if (brand.id === mid) } yield brand).list
     }
   }
-  
+
   /**
    * Retrieving all brands and models
    */
-  
 
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
@@ -141,7 +136,7 @@ class MobileDAL extends MobileDALComponent {
   /**
    * Change status to approve
    */
-  
+
   override def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
 
     Connection.databaseObject().withSession {
@@ -165,7 +160,7 @@ class MobileDAL extends MobileDALComponent {
   /**
    * Change status to proof demand
    */
-  
+
   override def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
@@ -184,7 +179,7 @@ class MobileDAL extends MobileDALComponent {
   /**
    * Getting Brand model
    */
-  
+
   override def getMobileModelById(mid: Int): List[MobileModels] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileNameById" + mid)
@@ -192,12 +187,10 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-  
   /**
    * Change registration type (Stolen or Clean)
    */
-  
-  
+
   override def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
@@ -213,12 +206,9 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-
   /**
    * Change status to pending
    */
-  
-  
 
   override def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession {

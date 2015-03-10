@@ -1,4 +1,4 @@
-package model.users
+  package model.users
 
 import model.dals._
 import model.domains.Domain._
@@ -19,7 +19,6 @@ trait MobileServiceComponent {
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
   def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
   def changeStatusToPending(mobileUser: Mobile): Boolean
- 
 
 }
 
@@ -70,7 +69,7 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
 
   override def createMobileModel(mobilemodel: MobileModels): Either[String, MobileModels] = {
     mobiledal.insertMobileModel(mobilemodel) match {
-      case Right(id) => Right(MobileModels(mobilemodel.mobileModel, mobilemodel.mobileName))
+      case Right(id)   => Right(MobileModels(mobilemodel.mobileModel, mobilemodel.mobileName))
       case Left(error) => Left(error)
     }
   }
@@ -83,14 +82,14 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
 
   override def changeStatusToApprove(mobileUser: Mobile): Boolean = {
     mobiledal.changeStatusToApproveByIMEID(mobileUser) match {
-      case Right(id) => true
+      case Right(id)   => true
       case Left(error) => false
     }
   }
 
   override def changeStatusToDemandProof(mobileUser: Mobile): Boolean = {
     mobiledal.changeStatusToDemandProofByIMEID(mobileUser) match {
-      case Right(id) => true
+      case Right(id)   => true
       case Left(error) => false
     }
   }
@@ -102,14 +101,14 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
 
   override def changeRegTypeByIMEID(mobileUser: Mobile): Boolean = {
     mobiledal.changeRegTypeByIMEID(mobileUser) match {
-      case Right(id) => true
+      case Right(id)   => true
       case Left(error) => false
     }
   }
-  
+
   override def changeStatusToPending(mobileUser: Mobile): Boolean = {
     mobiledal.changeStatusToPendingByIMEID(mobileUser) match {
-      case Right(id) => true
+      case Right(id)   => true
       case Left(error) => false
     }
   }

@@ -20,8 +20,6 @@ import utils.TwitterTweet
 import model.domains.Domain
 
 class MobileController(mobileService: MobileServiceComponent) extends Controller with Secured {
-  
-  
 
   val mobileregistrationform = Form(
     mapping(
@@ -220,9 +218,6 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         }
       })
   }
-  
-  
-  
 
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")

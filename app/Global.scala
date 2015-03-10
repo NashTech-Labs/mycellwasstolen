@@ -17,9 +17,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
 
-object Global extends GlobalSettings{
+object Global extends GlobalSettings {
 
-   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
+  override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
@@ -30,25 +30,23 @@ object Global extends GlobalSettings{
     val bucketName = Play.application.configuration.getString("aws_bucket_name")
     val accessKey = Play.application.configuration.getString("aws_access_key")
     val secretKey = Play.application.configuration.getString("aws_secret_key")
-    val userId=  Play.application.configuration.getString("smtp.user")
-    val password= Play.application.configuration.getString("smtp.password")
-
-    val filePath = Global.getClass().getClassLoader().getResource("csv")
-       new File(filePath.toURI()).listFiles foreach { file =>
-      val result = model.convert.readcsv.convert(file)
-     
-    }
+    val userId = Play.application.configuration.getString("smtp.user")
+    val password = Play.application.configuration.getString("smtp.password")
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-      (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
+        (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
         Logger.info("All tables have been created")
+        val filePath = Global.getClass().getClassLoader().getResource("csv")
+        new File(filePath.toURI()).listFiles foreach { file =>
+          val result = model.convert.readcsv.convert(file)
+
+        }
 
       }
     } catch {
       case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
-
 
   }
 
@@ -56,12 +54,10 @@ object Global extends GlobalSettings{
     Logger.info("Application shutdown.......")
   }
 
- 
 }
 
 object InitialData {
 
- 
   def insert(): Any = {
     try {
       val mobileService = new MobileService(MobileDAL)
@@ -70,8 +66,8 @@ object InitialData {
 
       if (mobileService.getMobilesName.isEmpty) {
         Logger.info("Adding new mobile name in mobile table")
-       
-      }else {
+
+      } else {
         Logger.info("Not adding new mobile name in mobile table")
       }
     }
