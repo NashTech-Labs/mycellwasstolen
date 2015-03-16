@@ -32,13 +32,13 @@ object Global extends GlobalSettings {
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
- /*    (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
+        (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
-          val result = model.convert.readcsv.convert(file) 
+          val result = model.convert.readcsv.convert(file)
 
-        }*/
+        }
 
       }
     } catch {
