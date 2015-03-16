@@ -1,4 +1,4 @@
-  package model.users
+package model.users
 
 import model.dals._
 import model.domains.Domain._
@@ -17,8 +17,9 @@ trait MobileServiceComponent {
   def changeStatusToDemandProof(mobileUser: Mobile): Boolean
   def getMobileModelById(id: Int): Option[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
-  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
+  def getAllMobilesWithBrandAndModel(status: String, page: Int): Page[(Mobile, String, String)]
   def changeStatusToPending(mobileUser: Mobile): Boolean
+  def deleteMobile(id: String)
 
 }
 
@@ -74,9 +75,9 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     }
   }
 
-  override def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
+  override def getAllMobilesWithBrandAndModel(status: String, page: Int): Page[(Mobile, String, String)] = {
     Logger.info("getAllMobiles called")
-    mobiledal.getAllMobilesWithBrandAndModel(status)
+    mobiledal.getAllMobilesWithBrandAndModel(status, page)
 
   }
 
@@ -111,6 +112,10 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
       case Right(id)   => true
       case Left(error) => false
     }
+  }
+
+  override def deleteMobile(id: String) = {
+    mobiledal.deleteMobile(id)
   }
 
 }

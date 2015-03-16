@@ -23,6 +23,8 @@ import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.mvc.Results.Redirect
+import model.domains.Domain.Status
 
 class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
@@ -31,35 +33,27 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
-  def mobiles(status: String): EssentialAction = withAuth { username =>
+  def mobiles(status: String, page: Int = 0): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
+      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status, page)
       Logger.info("mobiles Admin Controller::::" + mobiles)
-      if (mobiles.isEmpty) {
-        Ok(html.admin.mobiles(mobiles, user))
-      } else {
-        Logger.info("AdminController mobile list: - true")
-        Ok(html.admin.mobiles(mobiles, user))
-
-      }
-
+      Ok(html.admin.mobiles(mobiles, user))
   }
 
-  def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
+  def mobilesForAjaxCall(status: String, page: Int): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
+      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status, page)
       Logger.info("concept test abcd::::" + mobiles)
-      if (!mobiles.isEmpty) {
+      if (mobiles.total != 0) {
         Ok(write(mobiles)).as("application/json")
       } else {
         Logger.info("AuthController mobile list: - true")
         Ok(Json.obj("status" -> "Error"))
       }
-
   }
 
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
@@ -89,7 +83,6 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
   def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
-
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType, model.domains.Domain.Status.proofdemanded, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
@@ -105,7 +98,6 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
   def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:pending - change status to pending : " + imeiId)
-
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to pending : " + mobileUser)
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType, model.domains.Domain.Status.pending, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
@@ -120,15 +112,11 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
   }
 
   def sendMailForApprovedRequest(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-
     Logger.info("AdminController:The request been approved of " + imeiId)
-
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     try {
-
       Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
         "Request Approved On MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-
       Logger.info("AuthController:-true")
       Ok("success")
     } catch {
@@ -136,14 +124,11 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
         Logger.info("" + e.printStackTrace())
         Logger.info("AuthController: - false")
         Ok("error")
-
     }
-
   }
 
   def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
-
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
     try {
@@ -157,7 +142,6 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
         Logger.info("AuthController: - false")
         Ok("error")
     }
-
   }
 
   def changeMobileRegTypeForm: EssentialAction = withAuth { username =>
@@ -168,34 +152,33 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
   def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
-
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController changeMobileRegType - change Registration type: " + mobileUser)
-
-    val regType = if (mobileUser.get.regType == "stolen"){
+    val regType = if (mobileUser.get.regType == "stolen") {
       "Clean"
-    }
-
-    else{
+    } else {
       "stolen"
     }
-
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
       mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
       regType, mobileUser.get.mobileStatus, mobileUser.get.description,
       mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
       mobileUser.get.id)
-
     val isExist = mobileService.changeRegTypeByIMEID(updatedMobile)
     if (isExist) {
       Logger.info("AdminController changeMobileRegType : - true")
-
       Ok("success")
-
     } else {
       Logger.info("AdminController changeMobileRegType : - false")
       Ok("error")
     }
+  }
+
+  def deleteMobile(imeid: String, status: String, page: Int): EssentialAction = withAuth { username =>
+    implicit request =>
+      mobileService.deleteMobile(imeid)
+      Redirect(routes.AdminController.mobiles(status, page))
+
   }
 }
 object AdminController extends AdminController(MobileService)

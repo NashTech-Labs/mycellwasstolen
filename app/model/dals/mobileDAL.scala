@@ -1,7 +1,6 @@
 package model.dals
 
 import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.session.Session
 import model.domains.Domain._
 import play.api.Logger
 import utils.Connection
@@ -18,8 +17,9 @@ trait MobileDALComponent {
   def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
-  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
+  def getAllMobilesWithBrandAndModel(status: String, page: Int, pageSize: Int = 10): Page[(Mobile, String, String)]
   def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int]
+  def deleteMobile(id: String)
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -31,7 +31,7 @@ class MobileDAL extends MobileDALComponent {
   override def insertMobileUser(mobile: Mobile): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(Mobiles.insert.insert(mobile))
+        Right(autoKeyMobiles.insert(mobile))
       }
     } catch {
       case ex: Exception =>
@@ -47,7 +47,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
-      (for { mobile <- Mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile).list
+      mobiles.filter(_.imeiMeid === imeid).list
     }
   }
 
@@ -58,7 +58,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobilesName(): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobilesName")
-      (for { brand <- Brands } yield brand).list
+      brands.list
     }
   }
 
@@ -69,7 +69,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileModelsById(id: Int): List[MobileModels] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + id)
-      (for { mobilemodel <- MobileModel if (mobilemodel.mobilesnameid === id) } yield mobilemodel).list
+      mobileModel.filter(_.mobilesnameid === id).list
     }
   }
 
@@ -80,7 +80,7 @@ class MobileDAL extends MobileDALComponent {
   override def insertMobileName(brand: Brand): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(Brands.insert.insert(brand))
+        Right(autoKeyBrands.insert(brand))
       }
     } catch {
       case ex: Exception =>
@@ -96,7 +96,7 @@ class MobileDAL extends MobileDALComponent {
   override def insertMobileModel(mobilemodel: MobileModels): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
-        Right(MobileModel.insert.insert(mobilemodel))
+        Right(autoKeyModels.insert(mobilemodel))
       }
     } catch {
       case ex: Exception =>
@@ -112,7 +112,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileNamesById(mid: Int): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileNameById" + mid)
-      (for { brand <- Brands if (brand.id === mid) } yield brand).list
+      brands.filter(_.id === mid).list
     }
   }
 
@@ -120,16 +120,22 @@ class MobileDAL extends MobileDALComponent {
    * Retrieving all brands and models
    */
 
-  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
+  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = 10): Page[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
+      val offset = pageSize * page
+      Logger.info("Calling getAllMobilesWithBrandAndModel with " + Status.withName(status))
 
-      (for {
-        mobile <- Mobiles if (mobile.mobileStatus === Status.withName(status))
-        brand <- Brands if (brand.id === mobile.brandId)
-        mobileModel <- MobileModel if (mobileModel.id === mobile.mobileModelId)
+      val query =
+        (for {
+          mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
+          brand <- brands if (brand.id === mobile.brandId)
+          mobileModel <- mobileModel if (mobileModel.id === mobile.mobileModelId)
 
-      } yield (mobile, brand.name, mobileModel.model)).sortBy(_._1.id) list
+        } yield (mobile, brand.name, mobileModel.model)).drop(offset).take(pageSize)
 
+      val totalRows = query.list.length
+      val result = query.list
+      Page(result, page, offset, totalRows)
     }
   }
 
@@ -143,7 +149,7 @@ class MobileDAL extends MobileDALComponent {
       implicit session: Session =>
         try {
           val updateQuery = for {
-            mobile <- Mobiles if (mobile.imeiMeid === mobileUser.imeiMeid)
+            mobile <- mobiles if (mobile.imeiMeid === mobileUser.imeiMeid)
           } yield mobile.mobileStatus
 
           Logger.info("updateQuery data:" + updateQuery.updateStatement)
@@ -165,7 +171,7 @@ class MobileDAL extends MobileDALComponent {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-          val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+          val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
           Right(updateQuery.update(mobileUser))
         } catch {
@@ -183,7 +189,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileModelById(mid: Int): List[MobileModels] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileNameById" + mid)
-      (for { model <- MobileModel if (model.id === mid) } yield model).list
+      (for { model <- mobileModel if (model.id === mid) } yield model).list
     }
   }
 
@@ -195,7 +201,7 @@ class MobileDAL extends MobileDALComponent {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-          val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+          val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
           Right(updateQuery.update(mobileUser))
         } catch {
@@ -214,7 +220,7 @@ class MobileDAL extends MobileDALComponent {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-          val updateQuery = Mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+          val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
           Logger.info("updateQuery data:" + updateQuery)
           Right(updateQuery.update(mobileUser))
         } catch {
@@ -225,6 +231,18 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
+  override def deleteMobile(id: String) = {
+    Connection.databaseObject().withSession {
+      implicit session: Session =>
+        try {
+          mobiles.filter(_.imeiMeid === id).delete
+        } catch {
+          case ex: Exception =>
+            Logger.info("Error in delete mobile: " + ex.printStackTrace())
+            Left(ex.getMessage())
+        }
+    }
+  }
 }
 
 object MobileDAL extends MobileDAL

@@ -1,17 +1,24 @@
 package model.domains
 
 import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.lifted.ForeignKeyQuery
+import scala.slick.driver
+import scala.slick.lifted.ProvenShape
 
 object Domain {
-
+  /**
+   *  Provides all types of Status
+   */
   object Status extends Enumeration {
     val pending = Value("pending")
     val approved = Value("approved")
     val proofdemanded = Value("proofdemanded")
   }
 
-  implicit val mobileStatusMapper = MappedTypeMapper.base[Status.Value, String](
+  /**
+   *  implicit convert Enumerations into String and vice-versa
+   *
+   */
+  implicit val mobileStatusMapper = MappedColumnType.base[Status.Value, String](
     { enuStatus => enuStatus.toString() },
     {
       strStatus =>
@@ -21,6 +28,11 @@ object Domain {
           case "proofdemanded" => Status(2)
         }
     })
+
+  case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
+    lazy val prev = Option(page - 1).filter(_ >= 0)
+    lazy val next = Option(page + 1).filter(_ => (offset + items.size) < total)
+  }
 
   case class Mobile(
     userName: String,
@@ -92,7 +104,7 @@ object Domain {
     mobileName: String,
     mobileModel: String)
 
-  object Mobiles extends Table[Mobile]("mobiles") {
+  class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O DBType ("VARCHAR(1000)"))
     def brandId: Column[Int] = column[Int]("mobile_brandId")
@@ -111,62 +123,39 @@ object Domain {
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
 
-    def * : scala.slick.lifted.MappedProjection[Mobile, (String, Int, Int, String, String, String, String, String, 
-        String, Status.Value, String, String, String, String, String, Option[Int])] =
-      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ otherImeiMeid ~ purchaseDate ~ contactNo ~ email ~
-        regType ~ mobileStatus ~ description ~ registrationDate ~ document ~ otherMobileBrand ~ otherMobileModel ~ id <> (Mobile, Mobile unapply _)
+    def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
+      regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
+    def mobileIndex: scala.slick.lifted.Index = index("idx_email", (imeiMeid, email), unique = true)
 
-    def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Mobile, Option[Int]] =
-      userName ~ brandId ~ mobileModelId ~ imeiMeid ~ otherImeiMeid ~ purchaseDate ~ contactNo ~
-        email ~ regType ~ mobileStatus ~ description ~ registrationDate ~ document ~
-        otherMobileBrand ~ otherMobileModel <> (
-          { (username, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
-            regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel) =>
-            Mobile(username, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
-              regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel)
-          },
-          { mobileregistration: Mobile =>
-            Some((mobileregistration.userName, mobileregistration.brandId, mobileregistration.mobileModelId,
-              mobileregistration.imeiMeid, mobileregistration.otherImeiMeid,
-              mobileregistration.purchaseDate, mobileregistration.contactNo,
-              mobileregistration.email, mobileregistration.regType, mobileregistration.mobileStatus,
-              mobileregistration.description, mobileregistration.regDate, mobileregistration.document, mobileregistration.otherMobileBrand,
-              mobileregistration.otherMobileModel))
-          }) returning id
+    def mobilebrand = foreignKey("SUP_FK", brandId, brands)(_.id.get)
+    def mobilemodel = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
   }
+  val mobiles = TableQuery[Mobiles]
+  val autoKeyMobiles = mobiles returning mobiles.map(_.id)
 
-  object Brands extends Table[Brand]("brands") {
+  class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
     def date: Column[String] = column[String]("date", O.NotNull)
 
-    def * : scala.slick.lifted.MappedProjection[Brand, (String, String, Option[Int])] = name ~ date ~ id <> (Brand, Brand unapply _)
-
-    def insert: slick.driver.PostgresDriver.KeysInsertInvoker[Brand, Option[Int]] = name ~ date <> ({
-      (name, brand) => Brand(name, brand)
-    },
-      {
-        brand: Brand => Some(brand.name, brand.date)
-      }) returning id
+    def * : scala.slick.lifted.ProvenShape[Brand] = (name, date, id) <> (Brand.tupled, Brand.unapply)
   }
+  val brands = TableQuery[Brands]
+  val autoKeyBrands = brands returning brands.map(_.id)
 
-  object MobileModel extends Table[MobileModels]("mobilesmodel") {
+  class MobileModel(tag: Tag) extends Table[MobileModels](tag, "mobilesmodel") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def mobilesnameid: Column[Int] = column[Int]("mobilesnameid")
     def model: Column[String] = column[String]("model", O DBType ("VARCHAR(30)"))
 
-    def * : scala.slick.lifted.MappedProjection[MobileModels, (String, Int, Option[Int])] =
-      model ~ mobilesnameid ~ id <> (MobileModels, MobileModels unapply _)
+    def * : scala.slick.lifted.ProvenShape[MobileModels] = (
+      model, mobilesnameid, id) <> (MobileModels.tupled, MobileModels.unapply)
 
-    def insert: slick.driver.PostgresDriver.KeysInsertInvoker[MobileModels, Option[Int]] = mobilesnameid ~ model <> ({
-      (mobilesnameid, mobilemodel) => MobileModels(mobilesnameid.toString, mobilemodel.toInt)
-    },
-      {
-        mobilemodel: MobileModels => Some((mobilemodel.mobileName, mobilemodel.mobileModel))
-      }) returning id
-
-    def brandFkey: ForeignKeyQuery[Brands.type, Brand] = foreignKey("mobilemodal_brand_fkey", mobilesnameid, Brands)(_.id.get)
+    def mobilebrand = foreignKey("SUP_FK", mobilesnameid, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+      onDelete = ForeignKeyAction.Cascade)
   }
+  val mobileModel = TableQuery[MobileModel]
+  val autoKeyModels = mobileModel returning mobileModel.map(_.id)
 
   case class User(
     email: String,

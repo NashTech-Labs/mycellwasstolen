@@ -29,14 +29,15 @@ GET	   /pending			            controllers.AdminController.pending(imeid: String)
 GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
 GET    /sendMailForApprovedRequest  controllers.AdminController.sendMailForApprovedRequest(imeid: String)
 GET	   /changeMobileRegType			controllers.AdminController.changeMobileRegType(imeid: String)
+GET    /delete                      controllers.AdminController.deleteMobile(imeid: String,statuss:String,page:Int)
 
 
 #Admin
 GET    /login                      controllers.AuthController.login
 POST   /authenticate               controllers.AuthController.authenticate
 GET    /logout                     controllers.AuthController.logout
-GET    /admin/mobiles              controllers.AdminController.mobiles(status:String)
-GET    /admin/mobile               controllers.AdminController.mobilesForAjaxCall(status:String)
+GET    /admin/mobiles              controllers.AdminController.mobiles(status:String,page:Int)
+GET    /admin/mobile               controllers.AdminController.mobilesForAjaxCall(status:String,page:Int)
 GET    /admin/brandForm            controllers.MobileController.brandRegisterForm
 POST   /saveMobileName             controllers.MobileController.saveMobileName
 

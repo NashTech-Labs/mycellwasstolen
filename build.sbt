@@ -9,8 +9,8 @@ ScctPlugin.instrumentSettings
 libraryDependencies ++= Seq(
    jdbc,
    cache,
-   "com.typesafe.slick" %% "slick" % "1.0.1",
-   "postgresql" % "postgresql" % "9.1-901.jdbc4",
+    "org.postgresql" % "postgresql" % "9.4-1200-jdbc4",
+ 	"com.typesafe.slick" %% "slick" % "2.1.0",
     "net.liftweb" %% "lift-json" % "2.5-M4",
    "org.scalatest" %   "scalatest_2.10" %  "2.0.M5b" %  "test",
    "com.typesafe" %% "play-plugins-mailer" % "2.2.0",
