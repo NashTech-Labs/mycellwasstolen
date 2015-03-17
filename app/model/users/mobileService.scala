@@ -19,8 +19,7 @@ trait MobileServiceComponent {
   def changeRegTypeByIMEID(mobileUser: Mobile): Boolean
   def getAllMobilesWithBrandAndModel(status: String, page: Int): Page[(Mobile, String, String)]
   def changeStatusToPending(mobileUser: Mobile): Boolean
-  def deleteMobile(id: String)
-
+  def deleteMobile(id: String):Either[String, Int]
 }
 
 class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponent {
@@ -114,8 +113,13 @@ class MobileService(mobiledal: MobileDALComponent) extends MobileServiceComponen
     }
   }
 
-  override def deleteMobile(id: String) = {
-    mobiledal.deleteMobile(id)
+  override def deleteMobile(id: String): Either[String, Int] = {
+    try{
+          Right(mobiledal.deleteMobile(id).right.get)
+    }
+    catch{
+      case ex:Exception => Left(ex.toString())
+    }
   }
 
 }

@@ -2,7 +2,6 @@ package model.domains
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
-
 object Domain {
   /**
    *  Provides all types of Status
@@ -126,9 +125,8 @@ object Domain {
     def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_email", (imeiMeid, email), unique = true)
-
-    def mobilebrand = foreignKey("SUP_FK", brandId, brands)(_.id.get)
-    def mobilemodel = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
+    def mobilebrand:Object = foreignKey("SUP_FK", brandId, brands)(_.id.get)
+    def mobilemodel:Object = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
   }
   val mobiles = TableQuery[Mobiles]
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
@@ -137,7 +135,6 @@ object Domain {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
     def date: Column[String] = column[String]("date", O.NotNull)
-
     def * : scala.slick.lifted.ProvenShape[Brand] = (name, date, id) <> (Brand.tupled, Brand.unapply)
   }
   val brands = TableQuery[Brands]
@@ -151,7 +148,7 @@ object Domain {
     def * : scala.slick.lifted.ProvenShape[MobileModels] = (
       model, mobilesnameid, id) <> (MobileModels.tupled, MobileModels.unapply)
 
-    def mobilebrand = foreignKey("SUP_FK", mobilesnameid, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def mobilebrand:Object = foreignKey("SUP_FK", mobilesnameid, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobileModel = TableQuery[MobileModel]
