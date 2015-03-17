@@ -36,7 +36,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
       val user = User("admin", "1234")
       Cache.set(username, user, 60 * 60)
       true
-    } else {false}
+    } else { false }
   }
 
   def login: Action[AnyContent] = Action { implicit request =>

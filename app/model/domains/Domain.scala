@@ -142,13 +142,13 @@ object Domain {
 
   class MobileModel(tag: Tag) extends Table[MobileModels](tag, "mobilesmodel") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
-    def mobilesnameid: Column[Int] = column[Int]("mobilesnameid")
-    def model: Column[String] = column[String]("model", O DBType ("VARCHAR(30)"))
+    def brandId: Column[Int] = column[Int]("brandId")
+    def modelName: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
 
     def * : scala.slick.lifted.ProvenShape[MobileModels] = (
-      model, mobilesnameid, id) <> (MobileModels.tupled, MobileModels.unapply)
+      modelName, brandId, id) <> (MobileModels.tupled, MobileModels.unapply)
 
-    def mobilebrand:Object = foreignKey("SUP_FK", mobilesnameid, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def mobilebrand:Object = foreignKey("SUP_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobileModel = TableQuery[MobileModel]
