@@ -70,7 +70,7 @@ class MobileDAL extends MobileDALComponent {
   override def getMobileModelsById(id: Int): List[MobileModels] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + id)
-      mobileModel.filter(_.mobilesnameid === id).list
+      mobileModel.filter(_.brandId === id).list
     }
   }
 
@@ -132,7 +132,7 @@ class MobileDAL extends MobileDALComponent {
           brand <- brands if (brand.id === mobile.brandId)
           mobileModel <- mobileModel if (mobileModel.id === mobile.mobileModelId)
 
-        } yield (mobile, brand.name, mobileModel.model)).drop(offset).take(pageSize)
+        } yield (mobile, brand.name, mobileModel.modelName)).drop(offset).take(pageSize)
 
       val totalRows = query.list.length
       val result = query.list
