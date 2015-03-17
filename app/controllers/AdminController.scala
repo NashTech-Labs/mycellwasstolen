@@ -174,10 +174,10 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     }
   }
 
-  def deleteMobile(imeid: String, status: String, page: Int): EssentialAction = withAuth { username =>
+  def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
       mobileService.deleteMobile(imeid)
-      Redirect(routes.AdminController.mobiles(status, page))
+      Ok("Delete ajax call")
 
   }
 }

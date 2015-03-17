@@ -29,7 +29,7 @@ GET	   /pending			            controllers.AdminController.pending(imeid: String)
 GET	   /sendMailForDemandProof	    controllers.AdminController.sendMailForDemandProof(imeid: String)
 GET    /sendMailForApprovedRequest  controllers.AdminController.sendMailForApprovedRequest(imeid: String)
 GET	   /changeMobileRegType			controllers.AdminController.changeMobileRegType(imeid: String)
-GET    /delete                      controllers.AdminController.deleteMobile(imeid: String,statuss:String,page:Int)
+GET    /delete                      controllers.AdminController.deleteMobile(imeid: String)
 
 
 #Admin
