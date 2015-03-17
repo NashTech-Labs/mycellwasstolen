@@ -18,9 +18,9 @@ trait MobileDALComponent {
   def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
-  def getAllMobilesWithBrandAndModel(status: String, page: Int, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)]
+  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)]
   def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int]
-  def deleteMobile(id: String):Either[String,Int]
+  def deleteMobile(imeid: String): Either[String, Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -131,11 +131,11 @@ class MobileDAL extends MobileDALComponent {
           mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
           brand <- brands if (brand.id === mobile.brandId)
           mobileModel <- mobileModel if (mobileModel.id === mobile.mobileModelId)
-
         } yield (mobile, brand.name, mobileModel.model)).drop(offset).take(pageSize)
 
-      val totalRows = query.list.length
+      val totalRows = mobiles.filter(_.mobileStatus === Status.withName(status)).list.size
       val result = query.list
+      println(totalRows)
       Page(result, page, offset, totalRows)
     }
   }
@@ -232,11 +232,12 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-  override def deleteMobile(id: String):Either[String,Int] = {
+  override def deleteMobile(imeid: String): Either[String, Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-          Right(mobiles.filter(_.imeiMeid === id).delete)
+          Logger.info("Delet mobile user:" + imeid)
+          Right(mobiles.filter(_.imeiMeid === imeid).delete)
         } catch {
           case ex: Exception =>
             Logger.info("Error in delete mobile: " + ex.printStackTrace())

@@ -6,7 +6,7 @@
 * Helper generating navigation links    *
 ****************************************@
 @link(newPage: Int) = @{
-    routes.AdminController.mobiles("approved",newPage)
+    routes.AdminController.mobiles("pending",newPage)
 }
 @main("Mycellwasstolen",user) {
 
@@ -79,7 +79,7 @@
 						    
 						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')">View</button></td>
 						
-						    <td><button class="btn btn-danger btn-sm" onclick="confirmd(@mobile._1.imeiMeid)">Delete</button></td>
+						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)">Delete</button></td>
 			    		
 			    		</tr>
                       }
@@ -143,7 +143,7 @@
 	<div class="modal fade" id="myModall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-body" id="descr">j
+      <div class="modal-body" id="descr">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
@@ -272,15 +272,15 @@
 			$('#descr').html(desc);
 			}
 
-			function confirmd(imeid) {
+			function deleteMobileUser(imeid) {
 				$('#myModal').modal('show');
 				$("#deleteOk").bind('click', function(){
-					var statusAjaxCallBackForPendingList = {
+					var statusAjaxCallBackForDeleteMobileUser = {
 							success : ajaxSuccess,
 							error : ajaxError
 						};
 						jsRoutes.controllers.AdminController.deleteMobile(imeid)
-								.ajax(statusAjaxCallBackForPendingList);
+								.ajax(statusAjaxCallBackForDeleteMobileUser);
 						$('#myModal').modal('hide');
 				});
 			}

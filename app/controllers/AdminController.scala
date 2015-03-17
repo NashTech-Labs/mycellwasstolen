@@ -72,9 +72,9 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid,
-        mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType,
-        model.domains.Domain.Status.proofdemanded, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document,
-        mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
+      mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType,
+      model.domains.Domain.Status.proofdemanded, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document,
+      mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
     val isExist = mobileService.changeStatusToDemandProof(updatedMobile)
     if (isExist) {
       Logger.info("AdminController: - true")
@@ -90,9 +90,9 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to pending : " + mobileUser)
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid,
-        mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType,
-        model.domains.Domain.Status.pending, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand,
-        mobileUser.get.otherMobileModel, mobileUser.get.id)
+      mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType,
+      model.domains.Domain.Status.pending, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand,
+      mobileUser.get.otherMobileModel, mobileUser.get.id)
     val isExist = mobileService.changeStatusToPending(updatedMobile)
     if (isExist) {
       Logger.info("AdminController: - true")
@@ -168,19 +168,19 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
   def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
-      try{
-      Logger.info("AdminController:deleteMobile: " + imeid)
-      val mobileUser = mobileService.getMobileRecordByIMEID(imeid)
-      Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-        "Delete mobile registration from MCWS", Common.deleteUserMessage(mobileUser.get.imeiMeid))
+      try {
+        Logger.info("AdminController:deleteMobile: " + imeid)
+        val mobileUser = mobileService.getMobileRecordByIMEID(imeid)
+        Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
+          "Delete mobile registration from MCWS", Common.deleteUserMessage(mobileUser.get.imeiMeid))
         mobileService.deleteMobile(imeid)
-      Ok("Delete ajax call")
+        Ok("Delete ajax call")
       } catch {
-      case e: Exception =>
-        Logger.info("" + e.printStackTrace())
-        Logger.info("AuthController: - false")
-        Ok("error")
-    }
+        case e: Exception =>
+          Logger.info("" + e.printStackTrace())
+          Logger.info("AuthController: - false")
+          Ok("error")
+      }
   }
 }
 object AdminController extends AdminController(MobileService)
