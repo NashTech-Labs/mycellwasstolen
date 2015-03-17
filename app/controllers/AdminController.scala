@@ -42,20 +42,6 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
       Ok(html.admin.mobiles(mobiles, user))
   }
 
-  def mobilesForAjaxCall(status: String, page: Int): EssentialAction = withAuth { username =>
-    implicit request =>
-      Logger.info("AdminController:mobiles method has been called.")
-      val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status, page)
-      Logger.info("concept test abcd::::" + mobiles)
-      if (mobiles.total != 0) {
-        Ok(write(mobiles)).as("application/json")
-      } else {
-        Logger.info("AuthController mobile list: - true")
-        Ok(Json.obj("status" -> "Error"))
-      }
-  }
-
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
 
@@ -153,7 +139,7 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
   def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
     val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController changeMobileRegType - change Registration type: " + mobileUser)
+    Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
     val regType = if (mobileUser.get.regType == "stolen") {
       "Clean"
     } else {
@@ -176,9 +162,19 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
 
   def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
-      mobileService.deleteMobile(imeid)
+      try{
+      Logger.info("AdminController:deleteMobile: " + imeid)
+      val mobileUser = mobileService.getMobileRecordByIMEID(imeid)
+      Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
+        "Delete mobile registration from MCWS", Common.deleteUserMessage(mobileUser.get.imeiMeid))
+        mobileService.deleteMobile(imeid)
       Ok("Delete ajax call")
-
+      } catch {
+      case e: Exception =>
+        Logger.info("" + e.printStackTrace())
+        Logger.info("AuthController: - false")
+        Ok("error")
+    }
   }
 }
 object AdminController extends AdminController(MobileService)
