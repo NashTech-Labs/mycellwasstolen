@@ -20,6 +20,7 @@ import play.api.mvc.Result
 import play.api.mvc.Results
 import play.api.mvc.Security
 import views.html
+import play.api.mvc.AnyContent
 
 class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
@@ -30,27 +31,25 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
         case (email, password) => check(email, password)
       }))
 
-  def check(username: String, password: String) = {
-    if(username == "admin" && password == "knol2013"){
-    val user = User("admin", "1234")
-    Cache.set(username, user, 60 * 60)
-    true
-    }
-    else false
+  def check(username: String, password: String): Boolean = {
+    if (username == "admin" && password == "knol2013") {
+      val user = User("admin", "1234")
+      Cache.set(username, user, 60 * 60)
+      true
+    } else {false}
   }
 
-  def login = Action { implicit request =>
+  def login: Action[AnyContent] = Action { implicit request =>
     Ok(html.admin.login(loginForm))
   }
 
-  def authenticate = Action { implicit request =>
+  def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AdminController.mobiles("approved",0)).withSession(Security.username -> user._1)
-    )
+      user => Redirect(routes.AdminController.mobiles("approved", 0)).withSession(Security.username -> user._1))
   }
 
-  def logout = Action {
+  def logout: Action[AnyContent] = Action {
     Redirect(routes.AuthController.login).withNewSession.flashing(
       "success" -> "You are now logged out.")
   }
@@ -71,7 +70,7 @@ trait Secured {
         val cachedUser: Option[User] = Cache.getAs[User](username)
         cachedUser match {
           case Some(user) => { Cache.set(username, user, 60 * 60); Action(request => f(username)(request)) }
-          case None => Action(request => onUnauthorized(request))
+          case None       => Action(request => onUnauthorized(request))
         }
       }
     }

@@ -6,6 +6,7 @@ import play.api.Logger
 import utils.Connection
 
 trait MobileDALComponent {
+  val PAGINATION_SIZE = 10
   def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
   def getMobileRecordByIMEID(imeid: String): List[Mobile]
   def getMobilesName: List[Brand]
@@ -17,9 +18,9 @@ trait MobileDALComponent {
   def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
-  def getAllMobilesWithBrandAndModel(status: String, page: Int, pageSize: Int = 10): Page[(Mobile, String, String)]
+  def getAllMobilesWithBrandAndModel(status: String, page: Int, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)]
   def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int]
-  def deleteMobile(id: String)
+  def deleteMobile(id: String):Either[String,Int]
 }
 
 class MobileDAL extends MobileDALComponent {
@@ -120,7 +121,7 @@ class MobileDAL extends MobileDALComponent {
    * Retrieving all brands and models
    */
 
-  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = 10): Page[(Mobile, String, String)] = {
+  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
       val offset = pageSize * page
       Logger.info("Calling getAllMobilesWithBrandAndModel with " + Status.withName(status))
@@ -231,11 +232,11 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 
-  override def deleteMobile(id: String) = {
+  override def deleteMobile(id: String):Either[String,Int] = {
     Connection.databaseObject().withSession {
       implicit session: Session =>
         try {
-          mobiles.filter(_.imeiMeid === id).delete
+          Right(mobiles.filter(_.imeiMeid === id).delete)
         } catch {
           case ex: Exception =>
             Logger.info("Error in delete mobile: " + ex.printStackTrace())

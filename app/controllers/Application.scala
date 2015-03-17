@@ -15,7 +15,6 @@ import play.api.Play.current
 
 class Application extends Controller {
 
-  
 
   def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val username=request.session.get(Security.username).getOrElse("None")

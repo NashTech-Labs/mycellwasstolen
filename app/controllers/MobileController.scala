@@ -86,7 +86,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
       Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName, user))
   }
 
-  def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
+  def mobileRegistration:Action[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val mobilesName = mobileService.getMobilesName()
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
@@ -104,12 +104,10 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val otherMobileBrand = mobileuser.otherMobileBrand
         val otherMobileModel = mobileuser.otherMobileModel
-
         val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.brandId,
           mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
           mobileuser.description, date, documentName, otherMobileBrand, otherMobileModel))
-
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
           val contentType = image.contentType.get
