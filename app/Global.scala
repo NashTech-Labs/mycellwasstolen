@@ -7,9 +7,7 @@ import model.domains.Domain._
 import model.users._
 import model.users.MobileService
 import play.api._
-import play.api.Logger
 import play.api.Play.current
-import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
 

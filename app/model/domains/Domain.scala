@@ -1,5 +1,4 @@
 package model.domains
-
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
@@ -19,6 +18,7 @@ object Domain {
    *
    */
   implicit val mobileStatusMapper = MappedColumnType.base[Status.Value, String](
+
     { enuStatus => enuStatus.toString() },
     {
       strStatus =>
@@ -117,7 +117,7 @@ object Domain {
     def email: Column[String] = column[String]("email", O DBType ("VARCHAR(1000)"))
     def regType: Column[String] = column[String]("type", O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O DBType ("VARCHAR(50)"))
-    def description: Column[String] = column[String]("description", O DBType ("VARCHAR(1000)"))
+    def description: Column[String] = column[String]("description", O DBType ("VARCHAR(3000)"))
     def registrationDate: Column[String] = column[String]("registration_date", O.NotNull)
     def document: Column[String] = column[String]("document", O DBType ("VARCHAR(1000)"))
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))

@@ -10,5 +10,4 @@ object Connection {
    def databaseObject(): Database = {
    Database.forDataSource(DB.getDataSource())
   }
-
 }
