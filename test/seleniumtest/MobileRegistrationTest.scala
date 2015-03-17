@@ -17,7 +17,6 @@ import play.api.test.FakeApplication
 import org.openqa.selenium.firefox.FirefoxDriver
 
 class MobileRegistrationTest extends Specification{
-
   val port = 19001
   val baseUrl = "http://localhost:19001"
 
@@ -118,7 +117,6 @@ class MobileRegistrationTest extends Specification{
   
   "Testing Secure Mobile Registration" in {
       running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
-
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
       driver.get(baseUrl)
@@ -161,7 +159,6 @@ class MobileRegistrationTest extends Specification{
   
   "Testing Mobile Status" in {
       running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
-
       val driver = new FirefoxDriver
      try {
       driver.manage().window().maximize()
@@ -212,10 +209,9 @@ class MobileRegistrationTest extends Specification{
     }    
   }
   
-  
   def deleteTestData() {
     Connection.databaseObject.withSession { implicit session: Session =>
-        (for { mobile <- Mobiles } yield mobile).delete
+        (for { mobile <- model.domains.Domain.mobiles } yield mobile).delete
         (for { brand <- Brands } yield brand).delete
       	(for { mobileModel <- MobileModel } yield mobileModel).delete
     }

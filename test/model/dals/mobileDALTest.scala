@@ -1,6 +1,6 @@
 package model.dals
 
-import scala.slick.driver.PostgresDriver._
+ import scala.slick.driver.PostgresDriver._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 import scala.slick.session.Session
@@ -12,9 +12,7 @@ import utils.Connection
 import model.domains._
 
 class mobileDALTest extends FunSuite with BeforeAndAfterEach {
- 
 
-      
   val brand = Brand("nokia", "12-17-2013")
   val model = MobileModels("N72",1)
   val mobileUser = Mobile(

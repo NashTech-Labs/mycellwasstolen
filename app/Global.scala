@@ -29,7 +29,7 @@ object Global extends GlobalSettings {
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        (Mobiles.ddl ++ Brands.ddl ++ MobileModel.ddl).create
+        (mobiles.ddl ++ brands.ddl ++ mobileModel.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>

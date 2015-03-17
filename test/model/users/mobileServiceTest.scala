@@ -3,20 +3,22 @@ package model.users
 import org.mockito.Mockito.when
 import org.scalatest.FunSuite
 import org.specs2.mock.Mockito
-
 import model.dals.MobileDALComponent
 import model.domains.Domain.Brand
 import model.domains.Domain.Mobile
 import model.domains.Domain.MobileModels
 import model.domains.Domain.Status
 import model.users.MobileService.mobileRegistration
+import model.domains.Domain
 
 class mobileServiceTest extends FunSuite with Mockito {
 
   val mobileUser = Mobile(
     "gs", 1, 5, "12345678901234", "123456789012678", "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "harshita.png", "Sigma", "Sigma454")
-
+val mobileWithBrand = ( Mobile(
+    "gs", 1, 5, "12345678901234","123456789012678" , "12-05-2013", "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454"),"nokia","n90")
   val date = new java.sql.Date(new java.util.Date().getTime())
   val brand = Brand("nokia", "12-17-2013")
   val model = MobileModels("N72", 6)
@@ -87,8 +89,8 @@ class mobileServiceTest extends FunSuite with Mockito {
   }
   
    test("Testing: get All Mobiles With Brand And Model") {
-    when(mockedMobileDALObject.getAllMobilesWithBrandAndModel("pending")).thenReturn(List())
-    val result = mobileService.getAllMobilesWithBrandAndModel("pending")
+    when(mockedMobileDALObject.getAllMobilesWithBrandAndModel("pending",1)).thenReturn(Domain.Page(Seq(mobileWithBrand), 2,  0, 9))
+    val result = mobileService.getAllMobilesWithBrandAndModel("pending",1)
     assert(result != None)
   }
    
