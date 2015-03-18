@@ -42,7 +42,6 @@ class MobileDAL extends MobileDALComponent {
   /**
    * retrieve mobile record by IMEID no.
    */
-
   override def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
@@ -53,7 +52,6 @@ class MobileDAL extends MobileDALComponent {
   /**
    * retrieve mobile brands list
    */
-
   override def getMobilesName(): List[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobilesName")
@@ -238,4 +236,7 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 }
+
+
 object MobileDAL extends MobileDAL
+
