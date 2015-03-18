@@ -19,7 +19,6 @@ import net.liftweb.json.JsonDSL._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.mvc.Results.Redirect
-import model.domains.Domain.Status
 
 class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured {
 
