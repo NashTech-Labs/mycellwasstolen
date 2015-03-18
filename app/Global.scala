@@ -10,6 +10,7 @@ import play.api._
 import play.api.Play.current
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
+import model.dals.MobileDAL
 
 object Global extends GlobalSettings {
 
@@ -29,8 +30,8 @@ object Global extends GlobalSettings {
 
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        // (mobiles.ddl ++ brands.ddl ++ mobileModel.ddl).create
-        //brands.ddl.create
+
+        (mobiles.ddl ++ brands.ddl ++ mobileModel.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>

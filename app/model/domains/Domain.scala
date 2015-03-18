@@ -11,7 +11,6 @@ object Domain {
     val approved = Value("approved")
     val proofdemanded = Value("proofdemanded")
   }
-
   /**
    *  implicit convert Enumerations into String and vice-versa
    *
@@ -111,7 +110,6 @@ object Domain {
     def imeiMeid: Column[String] = column[String]("imei_meid", O DBType ("VARCHAR(1000)"))
     def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O DBType ("VARCHAR(1000)"))
     def purchaseDate: Column[String] = column[String]("purchase_date")
-
     def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(1000)"))
     def email: Column[String] = column[String]("email", O DBType ("VARCHAR(1000)"))
     def regType: Column[String] = column[String]("type", O DBType ("VARCHAR(20)"))
@@ -121,12 +119,11 @@ object Domain {
     def document: Column[String] = column[String]("document", O DBType ("VARCHAR(1000)"))
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
-
     def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_email", (imeiMeid, email), unique = true)
-    def mobilebrand:Object = foreignKey("SUP_FK", brandId, brands)(_.id.get)
-    def mobilemodel:Object = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
+    def mobilebrand: Object = foreignKey("SUP_FK", brandId, brands)(_.id.get)
+    def mobilemodel: Object = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
   }
   val mobiles = TableQuery[Mobiles]
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
@@ -144,11 +141,9 @@ object Domain {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def brandId: Column[Int] = column[Int]("brandId")
     def modelName: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
-
     def * : scala.slick.lifted.ProvenShape[MobileModels] = (
       modelName, brandId, id) <> (MobileModels.tupled, MobileModels.unapply)
-
-    def mobilebrand:Object = foreignKey("SUP_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def mobilebrand: Object = foreignKey("SUP_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobileModel = TableQuery[MobileModel]

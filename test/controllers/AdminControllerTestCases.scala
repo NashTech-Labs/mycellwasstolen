@@ -15,13 +15,13 @@ import play.api.Play.current
 import play.api.mvc.Security
 import play.api.test.FakeHeaders
 import play.api.mvc.WithHeaders
+import model.domains.Domain
 
 class AdminControllerTestCases extends Specification with Mockito {
   
   val mobileUser = Mobile(
     "gs", 1, 5, "12345678901234", "123456789012678" ,"12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454")
-    
    val mobileWithBrand = ( Mobile(
     "gs", 1, 5, "12345678901234","123456789012678" , "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454"),"nokia","n90")
@@ -36,17 +36,13 @@ class AdminControllerTestCases extends Specification with Mockito {
   val cachedUser=User("admin","knol2013")
   val username="admin"
   val getAllMobilesWithBrand:List[(Mobile,String,String)]=List(mobileWithBrand)
-  
   val mockedMobileServiceObject = mock[MobileServiceComponent]
 
   val AdminController = new AdminController(mockedMobileServiceObject)
-  
-  
   "AdminControllerTesting: mobiles" in {
-    
     running(FakeApplication()) {
      Cache.set(username, cachedUser)
-     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending")) thenReturn (getAllMobilesWithBrand)
+     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending",1)) thenReturn(Domain.Page(Seq(mobileWithBrand), 2,  0, 9))
      when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn (mobileNamesById)
      when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
      val result = AdminController.mobiles("pending")(FakeRequest().withSession(Security.username -> username)).run
@@ -59,7 +55,7 @@ class AdminControllerTestCases extends Specification with Mockito {
     
     running(FakeApplication()) {
      Cache.set(username, cachedUser)
-     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending")) thenReturn (getAllMobilesWithBrand)
+     when(mockedMobileServiceObject.getAllMobilesWithBrandAndModel("pending",1)) thenReturn(Domain.Page(Seq(mobileWithBrand), 2,  0, 9))
      when(mockedMobileServiceObject.getMobileNamesById(4)) thenReturn (mobileNamesById)
      when(mockedMobileServiceObject.getMobileModelById(6)) thenReturn (Some(model))
      val result = AdminController.mobiles("pending")(FakeRequest().withSession(Security.username -> username)).run

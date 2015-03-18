@@ -23,7 +23,6 @@ trait MobileDALComponent {
 }
 
 class MobileDAL extends MobileDALComponent {
-
   /**
    * insert mobile user information
    */
@@ -239,5 +238,4 @@ class MobileDAL extends MobileDALComponent {
     }
   }
 }
-
 object MobileDAL extends MobileDAL
