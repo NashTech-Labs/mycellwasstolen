@@ -15,8 +15,10 @@ object DBUtils {
   val approved = Value("approved")
   val proofdemanded = Value("proofdemanded")
 }
-
-  
+ 
+  /**
+   * Maps the status to a slick Column Type
+   */
   implicit val mobileStatusMapper = MappedColumnType.base[Status.Value, String](
     { enuStatus => enuStatus.toString() },
     {
