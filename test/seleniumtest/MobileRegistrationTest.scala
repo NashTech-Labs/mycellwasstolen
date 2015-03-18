@@ -211,7 +211,7 @@ class MobileRegistrationTest extends Specification{
   
   def deleteTestData() {
     Connection.databaseObject.withSession { implicit session: Session =>
-        (for { mobile <- model.domains.Domain.mobiles } yield mobile).delete
+        (for { mobile <- Mobile} yield mobile).delete
         (for { brand <- Brands } yield brand).delete
       	(for { mobileModel <- MobileModel } yield mobileModel).delete
     }

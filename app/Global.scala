@@ -1,4 +1,4 @@
-import java.io.File
+ import java.io.File
 import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
@@ -10,6 +10,7 @@ import play.api._
 import play.api.Play.current
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
+import model.dals.MobileDAL
 
 object Global extends GlobalSettings {
 
