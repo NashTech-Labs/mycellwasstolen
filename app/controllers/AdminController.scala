@@ -33,11 +33,11 @@ class AdminController(mobileService: MobileServiceComponent) extends Controller 
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
-  def mobiles(status: String, page: Int = 0): EssentialAction = withAuth { username =>
+  def mobiles(status: String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status, page)
+      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
       Logger.info("mobiles Admin Controller::::" + mobiles)
       Ok(html.admin.mobiles(mobiles, user))
   }

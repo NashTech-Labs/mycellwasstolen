@@ -3,7 +3,6 @@ package model.convert
 import java.io.FileReader
 import java.util.ArrayList
 import scala.collection.JavaConversions.asScalaBuffer
-
 import au.com.bytecode.opencsv.CSVReader
 import model.dals.MobileDAL.insertMobileUser
 import model.domains.Domain.Mobile
@@ -13,6 +12,10 @@ import controllers.Application
 import controllers.Assets
 import java.io.File
 import play.api.Play._
+import model.dals.MobileDAL._
+import model.domains.Domain.MobileModels
+import model.domains.Domain.Brand
+import model.domains.Domain.Brand
 
 object readcsv {
 
@@ -28,7 +31,7 @@ object readcsv {
       while ((nextLine = reader.readNext()) != null) {
 
         var list = new ArrayList[String]
-        for (i <- 0 until 15) {
+        for (i <- 0 until 3) {
           list.add(nextLine(i))
         }
         array.add(list);
@@ -44,13 +47,8 @@ object readcsv {
     println(array.length + "---------------------")
     var newmobile1: List[String] = Nil
     for (i <- 1 until array.length) {
-      println(i)
-      val status = array(i)(9).toLowerCase() match {
-        case "approved"      => Status(1)
-        case "proofdemanded" => Status(2)
-        case "pending"       => Status(0)
-      }
-      val res = insertMobileUser(Mobile(array(i)(0), augmentString(array(i)(1)).toInt, augmentString(array(i)(2)).toInt, array(i)(3), array(i)(4), array(i)(5), array(i)(6), array(i)(7), array(i)(8), status, array(i)(10), array(i)(11), array(i)(12), array(i)(13), array(i)(14)))
+
+      val res = insertMobileName(Brand(array(i)(0), array(i)(1), Some(augmentString(array(i)(2)).toInt)))
     }
 
   }

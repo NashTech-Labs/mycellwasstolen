@@ -6,7 +6,6 @@ import play.api.Logger
 import utils.Connection
 
 trait MobileDALComponent {
-  val PAGINATION_SIZE = 10
   def insertMobileUser(mobileuser: Mobile): Either[String, Option[Int]]
   def getMobileRecordByIMEID(imeid: String): List[Mobile]
   def getMobilesName: List[Brand]
@@ -18,7 +17,7 @@ trait MobileDALComponent {
   def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int]
   def getMobileModelById(mid: Int): List[MobileModels]
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int]
-  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)]
+  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)]
   def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int]
   def deleteMobile(imeid: String): Either[String, Int]
 }
@@ -121,23 +120,16 @@ class MobileDAL extends MobileDALComponent {
    * Retrieving all brands and models
    */
 
-  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)] = {
+  def getAllMobilesWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
-      val offset = pageSize * page
+      
       Logger.info("Calling getAllMobilesWithBrandAndModel with " + Status.withName(status))
-
-      val query =
         (for {
           mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
           brand <- brands if (brand.id === mobile.brandId)
           mobileModel <- mobileModel if (mobileModel.id === mobile.mobileModelId)
 
-        } yield (mobile, brand.name, mobileModel.modelName)).drop(offset).take(pageSize)
-
-      val totalRows = mobiles.filter(_.mobileStatus === Status.withName(status)).list.size
-      val result = query.list
-      println(totalRows)
-      Page(result, page, offset, totalRows)
+        } yield (mobile, brand.name, mobileModel.modelName)).list
     }
   }
 

@@ -46,7 +46,7 @@ class AuthController(mobileService: MobileServiceComponent) extends Controller w
   def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AdminController.mobiles("approved", 0)).withSession(Security.username -> user._1))
+      user => Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1))
   }
 
   def logout: Action[AnyContent] = Action {
