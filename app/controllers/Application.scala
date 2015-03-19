@@ -15,15 +15,20 @@ import model.repository.User
 
 class Application extends Controller {
 
-
-  def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  /**
+ * Display the home page
+ */
+def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val username=request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     Ok(views.html.index("Welcome",user))
   }
 
-  def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  /**
+ * Handle the calling of controllers methods from javascript ajax call 
+ */
+def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
       routes.javascript.MobileController.getImeiMeidList,

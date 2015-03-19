@@ -6,6 +6,8 @@ org.scalastyle.sbt.ScalastylePlugin.Settings
 
 ScctPlugin.instrumentSettings
 
+scalaVersion := "2.11.1"
+
 libraryDependencies ++= Seq(
    jdbc,
    cache,
