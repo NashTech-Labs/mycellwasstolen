@@ -1,6 +1,5 @@
 package model.dals
-
- import scala.slick.driver.PostgresDriver._
+import scala.slick.driver.PostgresDriver._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 import scala.slick.session.Session
@@ -12,14 +11,11 @@ import utils.Connection
 import model.domains._
 
 class mobileDALTest extends FunSuite with BeforeAndAfterEach {
-
   val brand = Brand("nokia", "12-17-2013")
   val model = MobileModels("N72",1)
   val mobileUser = Mobile(
     "gauravs", 1, 2, "12345678901234", "12345678902134", "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454", Some(1))
-
-    
     test("mobileDAL:insert and get mobile name successfully ") {
 
     running(FakeApplication()) {
@@ -28,7 +24,6 @@ class mobileDALTest extends FunSuite with BeforeAndAfterEach {
       assert(mobilename.head.name === "nokia")
     }
   }
-  
   
   test("mobileDAL:insert mobileModel and get models by mobileId successfully") {
 
@@ -125,9 +120,7 @@ class mobileDALTest extends FunSuite with BeforeAndAfterEach {
 
   }
 
-
-   
-   test("mobileDAL:change registration type"){
+  test("mobileDAL:change registration type"){
       
       running(FakeApplication()){
          val mobileUser = Mobile(
@@ -140,8 +133,4 @@ class mobileDALTest extends FunSuite with BeforeAndAfterEach {
        Mobiles.ddl.dropStatements 
       }
     }
-   
-   
-  
-  
 }
