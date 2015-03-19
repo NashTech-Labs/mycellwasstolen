@@ -1,3 +1,4 @@
+/*
 package controllers
 
 import org.mockito.Mockito._
@@ -144,4 +145,4 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 
-}
+}*/
