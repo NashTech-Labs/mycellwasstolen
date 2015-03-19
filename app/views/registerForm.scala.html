@@ -1,4 +1,4 @@
-@(regType: String, mobileRegistrationForm:Form[model.domains.Domain.MobileRegisterForm], brands:List[model.domains.Domain.Brand])
+@(regType: String, mobileRegistrationForm:Form[model.repository.MobileRegisterForm], brands:List[model.repository.Brand])
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f)}
 @helper.form(action =routes.MobileController.mobileRegistration, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
@@ -127,7 +127,7 @@
 		$.each(data, function(i, d) {
 			$('#mobileModelId').append($('<option>', {
 				value : d.id,
-				text : d.mobileModel
+				text : d.name
 			}));
 		});
 		console.debug("Success of Ajax Call");

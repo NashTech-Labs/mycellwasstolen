@@ -1,4 +1,4 @@
-@(selectedMenu: String, user: Option[model.domains.Domain.User])
+@(selectedMenu: String, user: Option[model.repository.User])
 <!-- Fixed navbar -->
 
 @getActive(menuName: String, title: String) = {
@@ -45,7 +45,7 @@
 					<a  id="menuItem" href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu active">
 					<li><a id="brandForm" href="/admin/brandForm">Add Mobile Brand</a></li>
-					<li><a id="createMobileModel" href="/admin/createMobileModelForm">Add Mobile Model</a></li>
+					<li><a id="createMobileModel" href="/admin/modelRegistrationForm">Add Mobile Model</a></li>
 					<li><a id="createMobileModel" href="/admin/changeMobileRegType">Change Status</a></li>
 					<li><a href="/admin/mobiles?status=pending">List of Requests</a></li>					
 					<li><a id="logout" href="/logout">Logout</a></li>

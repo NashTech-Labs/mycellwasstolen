@@ -9,7 +9,6 @@ import twitter4j.Query
 import twitter4j.Paging
 import twitter4j.auth.RequestToken
 import play.api.Play
-import model.domains.Domain._
 import twitter4j.Status
 import play.api.Logger
 import twitter4j.TwitterException

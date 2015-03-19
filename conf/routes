@@ -40,7 +40,7 @@ GET    /admin/mobiles                 controllers.AdminController.mobiles(status
 GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
 POST   /saveMobileName                controllers.MobileController.saveMobileName
 
-GET    /admin/createMobileModelForm   controllers.MobileController.createMobileModelForm
+GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
 GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
 POST   /createMobileModel             controllers.MobileController.createMobileModel
                      

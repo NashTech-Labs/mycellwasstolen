@@ -4,8 +4,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3.AmazonS3Client
-import model.domains.Domain._
-import model.users._
 import play.api._
 import play.api.Play.current
 import play.api.cache.Cache
@@ -17,9 +15,21 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import utils.Common
 import utils.TwitterTweet
-import model.domains.Domain
+import model.repository.MobileRegisterForm
+import model.repository.MobileStatus
+import model.repository.BrandForm
+import model.repository.ModelForm
+import model.repository.BrandRepository
+import model.repository.User
+import utils.StatusUtil
+import model.repository.MobileRepository
+import model.repository.Mobile
+import model.repository.ModelRepository
+import model.repository.Brand
+import model.repository.Model
+import model.repository.MobileDetail
 
-class MobileController(mobileService: MobileServiceComponent) extends Controller with Secured {
+class MobileController extends Controller with Secured {
 
   val mobileregistrationform = Form(
     mapping(
@@ -41,72 +51,68 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
-  val brandregisterform = Form(
+  val brandform = Form(
     mapping(
       "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
 
-  val createmobilemodelform = Form(
+  val modelform = Form(
     mapping(
       "mobileName" -> nonEmptyText,
-      "mobileModel" -> nonEmptyText)(MobilesModelForm.apply)(MobilesModelForm.unapply))
+      "mobileModel" -> nonEmptyText)(ModelForm.apply)(ModelForm.unapply))
 
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val mobilesName = mobileService.getMobilesName()
-    Logger.info("mobilesName>>" + mobilesName)
+    val mobileBrands = BrandRepository.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
-    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobilesName, user))
+    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobileBrands, user))
   }
 
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val mobilesName = mobileService.getMobilesName()
-    Logger.info("mobilesName>>" + mobilesName)
+    val mobileBrands = BrandRepository.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
-    Ok(views.html.secureRegistration(mobileregistrationform, mobilesName, user))
+    Ok(views.html.secureRegistration(mobileregistrationform, mobileBrands, user))
   }
 
   def brandRegisterForm: EssentialAction = withAuth { username =>
     implicit request =>
-      Logger.info("Calling MobileNameform")
+      Logger.info("Calling brandRegisterForm")
       val user: Option[User] = Cache.getAs[User](username)
-      val email = request.session.get(Security.username).getOrElse("")
-      Ok(views.html.createMobileNameForm(brandregisterform, user))
+      Ok(views.html.createMobileNameForm(brandform, user))
   }
 
-  def createMobileModelForm: EssentialAction = withAuth { username =>
+  def modelRegistrationForm: EssentialAction = withAuth { username =>
     implicit request =>
-      Logger.info("Calling createMobileModelform")
+      Logger.info("Calling modelRegistrationForm")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobilesName = mobileService.getMobilesName()
-      Logger.info("createmobilemodelform call>>")
+      val mobileBrands = BrandRepository.getAllBrands
       val email = request.session.get(Security.username).getOrElse("")
-      Ok(views.html.createMobileModelForm(createmobilemodelform, mobilesName, user))
+      Ok(views.html.createMobileModelForm(modelform, mobileBrands, user))
   }
 
-  def mobileRegistration:Action[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
-    val mobilesName = mobileService.getMobilesName()
+  def mobileRegistration: Action[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
+    val mobileBrands = BrandRepository.getAllBrands
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobilesName, user)),
+      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
-        val status = model.domains.Domain.Status.pending
+        val status = StatusUtil.Status.pending
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
         val df = new SimpleDateFormat("MM/dd/yyyy")
         val date = df.format(sqldate)
-        val mobileName = mobileService.getMobileNamesById(mobileuser.brandId)
+        val mobileName = BrandRepository.getBrandById(mobileuser.brandId)
         val length = mobileuser.document.length()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val otherMobileBrand = mobileuser.otherMobileBrand
         val otherMobileModel = mobileuser.otherMobileModel
-        val regMobile = mobileService.mobileRegistration(Mobile(mobileuser.userName, mobileuser.brandId,
+        val result = MobileRepository.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
           mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, model.domains.Domain.Status.pending,
+          mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
           mobileuser.description, date, documentName, otherMobileBrand, otherMobileModel))
         request.body.file("fileUpload").map { image =>
           val imageFilename = image.filename
@@ -120,8 +126,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
           amazonS3Client.putObject(bucketName, documentName, fileToSave)
         }
 
-        regMobile match {
-          case Right(mobileuser) => {
+        result match {
+          case Right(Some(id)) => {
             try {
               if (mobileuser.regType == "stolen") {
                 Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
@@ -131,7 +137,7 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
                   "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
               }
               if (mobileuser.regType == "stolen") {
-                //  TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
+                //TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
                 //  TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
@@ -148,17 +154,15 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
-    val mobileData = mobileService.getMobileRecordByIMEID(imeid)
+    val mobileData = MobileRepository.getMobileUserByIMEID(imeid)
     if (mobileData != None && mobileData.get.id != None) {
-
-      val mobilesName = mobileService.getMobileNamesById(mobileData.get.brandId)
-      val mobileName = mobilesName.get.name
-      val mobileModel = mobileService.getMobileModelById(mobileData.get.mobileModelId).get.mobileModel
+      val mobileBrand = BrandRepository.getBrandById(mobileData.get.brandId).get.name
+      val mobileModel = ModelRepository.getModelById(mobileData.get.mobileModelId).get.name
       Logger.info("Mobile Records" + mobileData)
-      val mobileDetail = MobileDetail(mobileData.get.userName, mobileName, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid,
+      val mobileDetail = MobileDetail(mobileData.get.userName, mobileBrand, mobileModel, mobileData.get.imeiMeid, mobileData.get.otherImeiMeid,
         mobileData.get.mobileStatus.toString(), mobileData.get.purchaseDate, mobileData.get.contactNo, mobileData.get.email,
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
-      implicit val resultWrites = Json.writes[model.domains.Domain.MobileDetail]
+      implicit val resultWrites = Json.writes[MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
@@ -168,9 +172,9 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileModels method has been called.")
-    val mobileModel = mobileService.getMobileModelsById(id)
+    val mobileModel = ModelRepository.getAllModelByBrandId(id)
     Logger.info("Mobile Models" + mobileModel)
-    implicit val resultWrites = Json.writes[model.domains.Domain.MobileModels]
+    implicit val resultWrites = Json.writes[Model]
     Ok(Json.toJson(mobileModel))
   }
 
@@ -183,8 +187,8 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist - Checking mobile is exist or not with : " + imeiId)
-    val isExist = mobileService.isImeiExist(imeiId)
-    if (isExist) {
+    val isExist = MobileRepository.getMobileUserByIMEID(imeiId)
+    if (!(isExist.isEmpty)) {
       Logger.info("MobileController:isImeiExist - true")
       Ok("false")
     } else {
@@ -195,17 +199,17 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def saveMobileName: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: brandRegisterForm")
-    Logger.info("brandregisterform" + brandregisterform)
+    Logger.info("brandregisterform" + brandform)
     val email = request.session.get(Security.username).getOrElse("")
     val user: Option[User] = Cache.getAs[User](email)
-    brandregisterform.bindFromRequest.fold(
+    brandform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
       brand => {
         Logger.info("MobileNameController: saveMobileName - found valid data.")
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
         val df = new SimpleDateFormat("MM/dd/yyyy")
         val date = df.format(sqldate)
-        val regbrand = mobileService.addMobileName(Brand(brand.name, date))
+        val regbrand = BrandRepository.insertBrand(Brand(brand.name, date))
 
         regbrand match {
           case Right(id) => {
@@ -219,26 +223,25 @@ class MobileController(mobileService: MobileServiceComponent) extends Controller
 
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
-    Logger.info("createmobilemodelform" + createmobilemodelform)
-    val mobilesName = mobileService.getMobilesName()
+    Logger.info("createmobilemodelform" + modelform)
+    val mobileBrands = BrandRepository.getAllBrands
     val email = request.session.get(Security.username).getOrElse("")
     val user: Option[User] = Cache.getAs[User](email)
-    createmobilemodelform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, mobilesName, user)),
-      mobilemodel => {
+    modelform.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, mobileBrands, user)),
+      model => {
         Logger.info("createmobilemodelController:createmobilemodel - found valid data.")
-        val createMobileModel = mobileService.createMobileModel(MobileModels(mobilemodel.mobileModel, mobilemodel.mobileName.toInt))
+        val createMobileModel = ModelRepository.insertModel(Model(model.mobileModel, model.mobileName.toInt))
 
         createMobileModel match {
-          case Right(mobilename) => {
-            Redirect(routes.MobileController.createMobileModelForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
+          case Right(id) => {
+            Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
           }
           case Left(message) =>
-            Redirect(routes.MobileController.createMobileModelForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
         }
       })
   }
-
 }
 
-object MobileController extends MobileController(MobileService)
+object MobileController extends MobileController

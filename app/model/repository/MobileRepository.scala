@@ -9,20 +9,22 @@ import play.api.Logger
 import utils.Connection
 
 /**
- * Trait: MobileRepository provides all concrete implementation of 
- * Mobile repository   
+ * MobileRepository provides all concrete implementation of
+ * user mobile services
  */
 
 trait MobileRepository extends MobileTable {
-  import utils.DBUtils.Status
-  val PAGINATION_SIZE = 10
+  import utils.StatusUtil.Status
+
   /**
-   * Inserts a Mobile Registration Record
-   * @param: Mobile: Object of Case class Mobile
+   * Inserts new Mobile Registration Record
+   * @param: Mobile: Object of Mobile case class
+   * @return, id of new inserted mobile
    */
   def insertMobileUser(mobile: Mobile): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
+        Logger.info("Called insetMobileUser")
         Right(autoKeyMobiles.insert(mobile))
       }
     } catch {
@@ -33,191 +35,133 @@ trait MobileRepository extends MobileTable {
   }
 
   /**
-   * Returns Mobile Record Id by IMEID
-   * @param: IMEID: IMEID of registered mobile
+   * Returns Mobile object
+   * @param: IMEID, IMEID of registered mobile
    */
-  def getMobileRecordByIMEID(imeid: String): List[Mobile] = {
+  def getMobileUserByIMEID(imeid: String): Option[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
-      mobiles.filter(_.imeiMeid === imeid).list
+      (for { mobile <- mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile).firstOption
     }
   }
 
   /**
-   * Returns List of mobile Brands
-   *
+   * Changes the status of registered mobile to "approved"
+   * @param: mobileUser, Object of Mobile
+   * @return id of updated record
    */
-
-  def getMobilesName: List[Brand] = {
+  def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
-      Logger.info("Calling getMobilesName")
-      brands.list
-    }
-  }
-
-  /**
-   * Inserts a Brand record
-   * @param: Brand: Object of Case class Mobile
-   */
-  def insertMobileName(brand: Brand): Either[String, Option[Int]] = {
-    try {
-      Connection.databaseObject().withSession { implicit session: Session =>
-        Right(autoKeyBrands.insert(brand))
+      try {
+        val updateQuery = for {
+          mobile <- mobiles if (mobile.imeiMeid === mobileUser.imeiMeid)
+        } yield mobile.mobileStatus
+        Logger.info("updateQuery data:" + updateQuery.updateStatement)
+        updateQuery.update(mobileUser.mobileStatus)
+        Right(updateQuery.update(mobileUser.mobileStatus))
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Left(ex.getMessage())
       }
-    } catch {
-      case ex: Exception =>
-        Logger.info("Error in insert mobile name" + ex.printStackTrace())
-        Left(ex.getMessage())
     }
   }
 
   /**
-   *  Returns List of mobile Brands
-   *  @param: BrandId: Brand Id of the Mobile
+   * Changes the status of registered mobile to "profDemanded"
+   * @param: mobileUser, Object of Mobile
+   * @return id of updated record
    */
-
-  def getMobileNamesById(id: Int): List[Brand] = {
+  def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
-      Logger.info("Calling getMobileNameById" + id)
-      brands.filter(_.id === id).list
+      try {
+        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+        Logger.info("updateQuery data:" + updateQuery)
+        Right(updateQuery.update(mobileUser))
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Left(ex.getMessage())
+      }
     }
   }
-
-  /**
-   * Changes the status of Mobile registration to "approved"
-   * @param: Mobile: Object of Case class Mobile
-   */
-  def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] =
-    {
-
-      Connection.databaseObject().withSession {
-        implicit session: Session =>
-          try {
-            val updateQuery = for {
-              mobile <- mobiles if (mobile.imeiMeid === mobileUser.imeiMeid)
-            } yield mobile.mobileStatus
-
-            Logger.info("updateQuery data:" + updateQuery.updateStatement)
-            updateQuery.update(mobileUser.mobileStatus)
-            Right(updateQuery.update(mobileUser.mobileStatus))
-          } catch {
-            case ex: Exception =>
-              Logger.info("Error in update user method: " + ex.printStackTrace())
-              Left(ex.getMessage())
-          }
-      }
-    }
-
-  /**
-   * Changes the status of Mobile registration to "profDemanded"
-   * @param: Mobile: Object of Case class Mobile
-   */
-  def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] =
-    {
-      Connection.databaseObject().withSession {
-        implicit session: Session =>
-          try {
-            val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
-            Logger.info("updateQuery data:" + updateQuery)
-            Right(updateQuery.update(mobileUser))
-          } catch {
-            case ex: Exception =>
-              Logger.info("Error in update user method: " + ex.printStackTrace())
-              Left(ex.getMessage())
-          }
-      }
-    }
 
   /**
    * Change registration type (Stolen or Clean)
-   * @param: Mobile: Object of Case class Mobile
+   * @param: mobileUser, Object of Mobile
+   * @return id of updated record
    */
-
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
-    Connection.databaseObject().withSession {
-      implicit session: Session =>
-        try {
-          val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
-          Logger.info("updateQuery data:" + updateQuery)
-          Right(updateQuery.update(mobileUser))
-        } catch {
-          case ex: Exception =>
-            Logger.info("Error in update user method: " + ex.printStackTrace())
-            Left(ex.getMessage())
-        }
+    Connection.databaseObject().withSession { implicit session: Session =>
+      try {
+        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+        Logger.info("updateQuery data:" + updateQuery)
+        Right(updateQuery.update(mobileUser))
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Left(ex.getMessage())
+      }
     }
   }
 
   /**
-   *  Retrieving all brands and models 
-   *  @returns: Mobile Registration Page 
-   *  
+   *  Retrieving all mobile user with brand and model based on status
+   *  @param: status, (approved,pending and demandedProof)
+   *  @returns: list of mobile brand and model name
    */
-
-  def getAllMobilesWithBrandAndModel(status: String, page: Int = 0, pageSize: Int = PAGINATION_SIZE): Page[(Mobile, String, String)] = {
+  def getAllMobilesUserWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
-      val offset = pageSize * page
       Logger.info("Calling getAllMobilesWithBrandAndModel with " + Status.withName(status))
-
-      val query =
-        (for {
-          mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
-          brand <- brands if (brand.id === mobile.brandId)
-          mobileModel <- mobileModel if (mobileModel.id === mobile.mobileModelId)
-
-        } yield (mobile, brand.name, mobileModel.modelName)).drop(offset).take(pageSize)
-
-      val totalRows = mobiles.filter(_.mobileStatus === Status.withName(status)).list.size
-      val result = query.list
-      println(totalRows)
-      Page(result, page, offset, totalRows)
+      (for {
+        mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
+        brand <- brands if (brand.id === mobile.brandId)
+        model <- models if (model.id === mobile.mobileModelId)
+      } yield (mobile, brand.name, model.name)).list
     }
   }
 
   /**
-   * Changes Mobile registration status to pending
-   * @param: Mobile: Object of Case class Mobile
+   * Change new registered mobile to status to pending
+   * @param: mobileUser, Object of Mobile
+   * @return id of updated record
    */
   def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
-    Connection.databaseObject().withSession {
-      implicit session: Session =>
-        try {
-          val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
-          Logger.info("updateQuery data:" + updateQuery)
-          Right(updateQuery.update(mobileUser))
-        } catch {
-          case ex: Exception =>
-            Logger.info("Error in update user method: " + ex.printStackTrace())
-            Left(ex.getMessage())
-        }
+    Connection.databaseObject().withSession { implicit session: Session =>
+      try {
+        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+        Logger.info("updateQuery data:" + updateQuery)
+        Right(updateQuery.update(mobileUser))
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Left(ex.getMessage())
+      }
     }
   }
+
   /**
    * Deletes a mobile Record
    * @param: IMEID, IMEID of registered mobile
+   * @return id of deleted record
    */
-
-  def deleteMobile(imeid: String): Either[String, Int] = {
-    Connection.databaseObject().withSession {
-      implicit session: Session =>
-        try {
-          Logger.info("Delet mobile user:" + imeid)
-          Right(mobiles.filter(_.imeiMeid === imeid).delete)
-        } catch {
-          case ex: Exception =>
-            Logger.info("Error in delete mobile: " + ex.printStackTrace())
-            Left(ex.getMessage())
-        }
+  def deleteMobileUser(imeid: String): Either[String, Int] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      try {
+        Logger.info("Delet mobile user:" + imeid)
+        Right(mobiles.filter(_.imeiMeid === imeid).delete)
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in delete mobile: " + ex.printStackTrace())
+          Left(ex.getMessage())
+      }
     }
   }
 }
 
-/**
- * Provides Table Query Value for Trait: MobileRepository
- */
-
+// Mapping of mobile Table
 trait MobileTable extends BrandTable with ModelTable {
-  import utils.DBUtils.Status
+  import utils.StatusUtil.Status
   private[MobileTable] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O DBType ("VARCHAR(1000)"))
@@ -238,16 +182,13 @@ trait MobileTable extends BrandTable with ModelTable {
     def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_email", (imeiMeid, email), unique = true)
-    def mobilebrand: Object = foreignKey("SUP_FK", brandId, brands)(_.id.get)
-    def mobilemodel: Object = foreignKey("SUP_FK", mobileModelId, mobileModel)(_.id.get)
   }
   val mobiles = TableQuery[Mobiles]
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
 
 }
-import utils.DBUtils.Status
-
-//Reperents the Mobile registration Record
+import utils.StatusUtil.Status
+//Represents the Mobile registration Record
 case class Mobile(
   userName: String,
   brandId: Int,
@@ -266,7 +207,7 @@ case class Mobile(
   otherMobileModel: String,
   id: Option[Int] = None)
 
-//Reperents the Mobile Details Record
+//Represents the Mobile Details Record
 case class MobileDetail(
   userName: String,
   mobileName: String,
@@ -281,11 +222,10 @@ case class MobileDetail(
   otherMobileBrand: String,
   otherMobileModel: String)
 
-//Reperents Registered Mobile Status in the database
-case class MobileStatus(
-  imeiMeid: String)
-  
-//Reperents Mobile registration Form  
+//Represents Registered Mobile Status in the database
+case class MobileStatus(imeiMeid: String)
+
+//Represents Mobile registration Form  
 case class MobileRegisterForm(
   userName: String,
   brandId: Int,
@@ -301,25 +241,10 @@ case class MobileRegisterForm(
   otherMobileBrand: String,
   otherMobileModel: String)
 
-  
-//Represents a brand name  
-case class BrandForm(
-  name: String)
-
-case class MobilesNameForm(
-  mobileName: String)
-
-case class MobilesModelForm(
-  mobileName: String,
-  mobileModel: String)
-case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
-  lazy val prev = Option(page - 1).filter(_ >= 0)
-  lazy val next = Option(page + 1).filter(_ => (offset + items.size) < total)
-}
+case class MobilesNameForm(mobileName: String)
+case class User(email: String, password: String)
 
 /**
- * Companion Object extending the Same trait: 
- * 
+ * Companion Object extending the Same trait:
  */
-
 object MobileRepository extends MobileRepository

@@ -1,9 +1,5 @@
 package controllers
 
-import model.domains.Domain._
-import model.domains.Domain.User
-import model.users.MobileService
-import model.users.MobileServiceComponent
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
@@ -21,8 +17,9 @@ import play.api.mvc.Results
 import play.api.mvc.Security
 import views.html
 import play.api.mvc.AnyContent
+import model.repository.User
 
-class AuthController(mobileService: MobileServiceComponent) extends Controller with Secured {
+class AuthController extends Controller with Secured {
 
   val loginForm = Form(
     tuple(
@@ -77,4 +74,4 @@ trait Secured {
   }
 }
 
-object AuthController extends AuthController(MobileService)
+object AuthController extends AuthController

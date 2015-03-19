@@ -1,6 +1,6 @@
-@(users: List[(model.domains.Domain.Mobile,String,String)], user: Option[model.domains.Domain.User])(implicit flash: Flash)
+@(users: List[(model.repository.Mobile,String,String)], user: Option[model.repository.User])(implicit flash: Flash)
 
-@import model.domains.Domain.Status
+@import utils.StatusUtil.Status
 
 @main("Mycellwasstolen",user) {
 	        <br>

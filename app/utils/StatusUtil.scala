@@ -1,11 +1,15 @@
 package utils
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
+import play.api.libs.json.Json
+import model.repository.MobileDetail
+import model.repository.Model
+import model.repository.Model
 
 /**
  * Provides commonly used database utilities 
  */
-object DBUtils {
+object StatusUtil {
 
   /**
  *  Provides all types of Status
@@ -14,7 +18,8 @@ object DBUtils {
   val pending = Value("pending")
   val approved = Value("approved")
   val proofdemanded = Value("proofdemanded")
-}
+  
+ }
  
   /**
    * Maps the status to a slick Column Type
@@ -29,5 +34,5 @@ object DBUtils {
           case "proofdemanded" => Status(2)
         }
     })
-
 }
+

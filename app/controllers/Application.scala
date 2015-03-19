@@ -9,9 +9,9 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.mvc._
 import play.api._
-import model.domains.Domain._
 import play.api.cache.Cache
 import play.api.Play.current
+import model.repository.User
 
 class Application extends Controller {
 

@@ -4,18 +4,11 @@ import java.io.FileReader
 import java.util.ArrayList
 import scala.collection.JavaConversions.asScalaBuffer
 import au.com.bytecode.opencsv.CSVReader
-import model.dals.MobileDAL.insertMobileUser
-import model.domains.Domain.Mobile
-import model.domains.Domain.Status
 import play.api.Application
 import controllers.Application
 import controllers.Assets
 import java.io.File
 import play.api.Play._
-import model.dals.MobileDAL._
-import model.domains.Domain.MobileModels
-import model.domains.Domain.Brand
-import model.domains.Domain.Brand
 
 object readcsv {
 
@@ -48,7 +41,7 @@ object readcsv {
     var newmobile1: List[String] = Nil
     for (i <- 1 until array.length) {
 
-      val res = insertMobileName(Brand(array(i)(0), array(i)(1), Some(augmentString(array(i)(2)).toInt)))
+     // val res = (Brand(array(i)(0), array(i)(1), Some(augmentString(array(i)(2)).toInt)))
     }
 
   }

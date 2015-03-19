@@ -2,16 +2,13 @@ import java.io.File
 import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
-import model.dals.MobileDAL
-import model.domains.Domain._
-import model.users._
-import model.users.MobileService
 import play.api._
 import play.api.Play.current
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
-import model.dals.MobileDAL
-
+import model.repository.ModelRepository._
+import model.repository.BrandRepository
+import model.repository.MobileRepository.mobiles
 object Global extends GlobalSettings {
 
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
@@ -31,7 +28,7 @@ object Global extends GlobalSettings {
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
 
-        (mobiles.ddl ++ brands.ddl ++ mobileModel.ddl).create
+        (mobiles.ddl ++ brands.ddl ++ models.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
@@ -51,11 +48,9 @@ object Global extends GlobalSettings {
 object InitialData {
   def insert(): Any = {
     try {
-      val mobileService = new MobileService(MobileDAL)
-
       val date = new java.sql.Date(new java.util.Date().getTime())
 
-      if (mobileService.getMobilesName.isEmpty) {
+      if (BrandRepository.getAllBrands.isEmpty) {
         Logger.info("Adding new mobile name in mobile table")
 
       } else {
