@@ -1,3 +1,4 @@
+/*
 package controllers
 
 import org.specs2.mock.Mockito
@@ -35,4 +36,4 @@ class ApplicationTestCases extends Specification with Mockito {
   }
 
 
-}
+}*/

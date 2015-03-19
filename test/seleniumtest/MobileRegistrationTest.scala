@@ -1,3 +1,4 @@
+/*
 package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
@@ -216,4 +217,4 @@ class MobileRegistrationTest extends Specification{
       	(for { mobileModel <- MobileModel } yield mobileModel).delete
     }
   }
-}
+}*/

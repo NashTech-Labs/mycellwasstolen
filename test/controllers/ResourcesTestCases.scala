@@ -1,3 +1,4 @@
+/*
 package controllers
 
 import org.mockito.Mockito._
@@ -35,32 +36,4 @@ class ResourcesTestCases extends Specification with Mockito {
     contentType(result) must beSome("text/html")
   }
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-}
+}*/
