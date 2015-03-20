@@ -3,7 +3,7 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @main("Mycellwasstolen: Check Cell Status",user){
-<div class="container">
+<div class="container" style="padding-top: 20px;">
 		<div class="page-header">
 			<h2>Check Mobile Status</h2>
 		</div>
@@ -68,25 +68,21 @@
 								<div class="panel-heading">
 									<h1 class="panel-title">Register and be safe</h1>
 								</div>
-								<div class="panel panel-info title-margin">
-									<div class="panel-heading">
-										
-									</div>
-									<div class="panel-body">
-									
-									
-										<div ><h5>How To Read The Report ?</h5>
-											<div>
+								<div class="panel-body">
+										<h5>How To Read The Report ?</h5><hr>
+									<div>
 												<img src="@routes.Assets.at("images/Green.jpg")" alt="...">
 													<div>Indicates that this Phone is registered with us as a clean phone.
 													</div>
 											</div>
+											<hr>
 											<div>
 												<img src="@routes.Assets.at("images/yellow.svg")" alt="...">
 													<div>Indicates that the cell's IMEI is found in records but
 													is yet to be approved. We will provide the reports soon.
 													</div>
 											</div>
+											<hr>
 											<div>
 												<img src="@routes.Assets.at("images/red.jpg")" alt="...">
 													<div>Indicates that this Phone is registered as stolen/lost. 
@@ -97,13 +93,11 @@
 										
 									</div>
 								
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-    </div>
     <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
