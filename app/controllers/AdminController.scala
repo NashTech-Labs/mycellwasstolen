@@ -1,5 +1,4 @@
 package controllers
-
 import play.api.mvc._
 import play.api.Logger
 import utils.Common

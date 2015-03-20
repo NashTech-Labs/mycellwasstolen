@@ -1,8 +1,9 @@
 package utils
 
-import com.typesafe.plugin._
 import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.libs.mailer.MailerPlugin
+import play.api.libs.mailer.Email
 
 object Common {
 
@@ -31,10 +32,15 @@ object Common {
   }
 
   def sendMail(email: String, subject: String, message: String): Unit = {
-    val mail = use[MailerPlugin].email
-    mail.setSubject(subject)
+    val emailBuilder = Email(
+      subject,
+      Messages("default.email.title"),
+      Seq(email), Option(message))
+    MailerPlugin.send(emailBuilder)
+    //    val mail = use[MailerPlugin].email
+    /*   mail.setSubject(subject)
     mail.setRecipient(email)
     mail.setFrom(Messages("default.email.title"))
-    mail.sendHtml(message)
+    mail.sendHtml(message)*/
   }
 }

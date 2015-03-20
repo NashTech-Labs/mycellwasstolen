@@ -24,10 +24,8 @@ object Global extends GlobalSettings {
     val secretKey = Play.application.configuration.getString("aws_secret_key")
     val userId = Play.application.configuration.getString("smtp.user")
     val password = Play.application.configuration.getString("smtp.password")
-
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-
         (mobiles.ddl ++ brands.ddl ++ models.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
