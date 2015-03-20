@@ -185,8 +185,8 @@ trait MobileTable extends BrandTable with ModelTable {
   }
   val mobiles = TableQuery[Mobiles]
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
-
 }
+
 import utils.StatusUtil.Status
 //Represents the Mobile registration Record
 case class Mobile(
@@ -222,7 +222,7 @@ case class MobileDetail(
   otherMobileBrand: String,
   otherMobileModel: String)
 
-//Represents Registered Mobile Status in the database
+//Represents Registered Mobile Status 
 case class MobileStatus(imeiMeid: String)
 
 //Represents Mobile registration Form  
@@ -241,7 +241,9 @@ case class MobileRegisterForm(
   otherMobileBrand: String,
   otherMobileModel: String)
 
+//Represents mobile brand Form
 case class MobilesNameForm(mobileName: String)
+//Represents the admin user
 case class User(email: String, password: String)
 
 /**

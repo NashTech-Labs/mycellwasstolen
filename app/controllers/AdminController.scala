@@ -19,13 +19,22 @@ import model.repository.MobileStatus
 import model.repository.User
 import model.repository.MobileRepository
 import model.repository.Mobile
+
 class AdminController extends Controller with Secured {
 
   implicit val formats = DefaultFormats
-  val mobilestatus = Form(
+  
+  /**
+ * Describes the mobile status form
+ */
+val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
+  /**
+   * @param status, mobile status(pending, approved and proofdemanded)
+   * @return mobiles page with mobile user according to status
+   */
   def mobiles(status: String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
@@ -35,6 +44,10 @@ class AdminController extends Controller with Secured {
       Ok(html.admin.mobiles(mobiles, user))
   }
 
+  /**
+   * changes mobile status to approved
+   * @param imeiId of mobile
+   */
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
 
@@ -61,6 +74,10 @@ class AdminController extends Controller with Secured {
     }
   }
 
+  /**
+   * Changes mobile status to proofdemanded
+   * @param imeiId of mobile
+   */
   def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
@@ -80,6 +97,10 @@ class AdminController extends Controller with Secured {
     }
   }
 
+  /**
+   * Changes mobile status to pending
+   * @param imeiId of mobile
+   */
   def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:pending - change status to pending : " + imeiId)
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
@@ -99,6 +120,10 @@ class AdminController extends Controller with Secured {
     }
   }
 
+  /**
+   * Sends approved message mail to user
+   * @param imeiId of mobile
+   */
   def sendMailForApprovedRequest(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:The request been approved of " + imeiId)
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
@@ -115,7 +140,11 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  /**
+   * Sends mail to user for submitting the valid documents
+ * @param imeiId of mobile
+ */
+def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
@@ -132,13 +161,20 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  def changeMobileRegTypeForm: EssentialAction = withAuth { username =>
+  /**
+   * Render change mobile status(clean or stolen) page
+ */
+def changeMobileRegTypeForm: EssentialAction = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       Ok(html.admin.changeMobileRegType(mobilestatus, user))
   }
 
-  def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  /**
+   * Changes mobile status to clean or stolen
+ * @param imeiId of mobile
+ */
+def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
     Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
@@ -163,7 +199,11 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
+  /**
+   * Deletes existed mobile
+ * @param imeid of mobile
+ */
+def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
       try {
         Logger.info("AdminController:deleteMobile: " + imeid)

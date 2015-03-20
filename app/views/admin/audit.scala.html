@@ -1,0 +1,55 @@
+
+@(user: Option[model.repository.User])(implicit flash: Flash)
+@main("Mycellwasstolen",user){
+	<br>
+	<div class="container-fluid" style="margin: 10px;">
+	<div class="row">
+	<div class="col-md-12"
+					@flash.get("ERROR").map { message =>
+						<div class="alert alert-dismissable alert-danger">
+							<strong>@message</strong>
+						</div>
+					}
+					
+					@flash.get("SUCCESS").map { message =>
+						<div class="alert alert-dismissable alert-success">
+							<strong>@message</strong>
+						</div>
+					}
+				</div>
+				</div>
+	<div class="row">
+         <div class="col-md-2">
+            <ul class="nav nav-sidebar">
+              <br><br>
+              <li class="active"><a href="#">Overview</a></li>
+              <li><a href="#">Reports</a></li>
+              <li><a href="#">Analytics</a></li>
+              </ul>
+        </div><!--/span-->
+	<div class="col-md-10">
+	<div class="panel">
+	<div class="panel-heading"><h3>@Messages("admin.audit")</h3></div>
+  <div class="panel-body">
+  <table class="table">
+  <thead>
+    <tr>
+							<th>Timestamp</th>
+							<th>IMEI ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td>sushil</td>
+                    <td>singh</td>
+                    </tr>
+                    </tbody>
+</table>
+   
+  </div>
+</div>
+	</div>
+	</div>
+	</div>
+	
+}

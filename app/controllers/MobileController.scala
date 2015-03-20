@@ -30,6 +30,9 @@ import model.repository.MobileDetail
 
 class MobileController extends Controller with Secured {
 
+  /**
+   * Describes the new mobile registration form (used in both stolen and secure mobile registration form)
+   */
   val mobileregistrationform = Form(
     mapping(
       "userName" -> nonEmptyText,
@@ -46,19 +49,31 @@ class MobileController extends Controller with Secured {
       "otherMobileBrand" -> text,
       "otherMobileModel" -> text)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
+  /**
+   * Describes the mobile status form
+   */
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
+  /**
+   * Describes the new mobile brand form
+   */
   val brandform = Form(
     mapping(
       "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
 
+  /**
+   * Describe the new mobile model form
+   */
   val modelform = Form(
     mapping(
       "mobileName" -> nonEmptyText,
       "mobileModel" -> nonEmptyText)(ModelForm.apply)(ModelForm.unapply))
 
+  /**
+   * Display the new mobile registration form for stolen mobile
+   */
   def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobileBrands = BrandRepository.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
@@ -67,6 +82,9 @@ class MobileController extends Controller with Secured {
     Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobileBrands, user))
   }
 
+  /**
+   * Display the new secure mobile registration form
+   */
   def mobileRegistrationSecureForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val mobileBrands = BrandRepository.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
@@ -75,6 +93,9 @@ class MobileController extends Controller with Secured {
     Ok(views.html.secureRegistration(mobileregistrationform, mobileBrands, user))
   }
 
+  /**
+   * Display the new mobile brand registration form
+   */
   def brandRegisterForm: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("Calling brandRegisterForm")
@@ -82,6 +103,9 @@ class MobileController extends Controller with Secured {
       Ok(views.html.createMobileNameForm(brandform, user))
   }
 
+  /**
+   * Display the new mobile brand model registration form
+   */
   def modelRegistrationForm: EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("Calling modelRegistrationForm")
@@ -91,6 +115,9 @@ class MobileController extends Controller with Secured {
       Ok(views.html.createMobileModelForm(modelform, mobileBrands, user))
   }
 
+  /**
+   * Handle the new mobile registration form submission and add new mobile
+   */
   def mobileRegistration: Action[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
     val mobileBrands = BrandRepository.getAllBrands
@@ -151,6 +178,10 @@ class MobileController extends Controller with Secured {
       })
   }
 
+  /**
+   * Getting mobile details by imei id
+   * @param imeid of mobile
+   */
   def getImeiMeidList(imeid: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getImeiMeidList method has been called.")
     val mobileData = MobileRepository.getMobileUserByIMEID(imeid)
@@ -169,6 +200,10 @@ class MobileController extends Controller with Secured {
     }
   }
 
+  /**
+   * Getting all mobile model by brand id
+   * @param id, brand id
+   */
   def getMobileModels(id: Int): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileModels method has been called.")
     val mobileModel = ModelRepository.getAllModelByBrandId(id)
@@ -177,6 +212,9 @@ class MobileController extends Controller with Secured {
     Ok(Json.toJson(mobileModel))
   }
 
+  /**
+   * Display mobile status form
+   */
   def mobileStatus: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
@@ -184,6 +222,10 @@ class MobileController extends Controller with Secured {
     Ok(views.html.mobileStatus(mobilestatus, user))
   }
 
+  /**
+   * Checking mobile is exist or not with imeiId
+   * @param imeiId of mobile
+   */
   def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist - Checking mobile is exist or not with : " + imeiId)
     val isExist = MobileRepository.getMobileUserByIMEID(imeiId)
@@ -196,6 +238,9 @@ class MobileController extends Controller with Secured {
     }
   }
 
+  /**
+   * Handle new mobile brand form submission and add new mobile brand
+   */
   def saveMobileName: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController: brandRegisterForm")
     Logger.info("brandregisterform" + brandform)
@@ -220,6 +265,9 @@ class MobileController extends Controller with Secured {
       })
   }
 
+  /**
+   * Handle new mobile brand model form submission and add new model
+   */
   def createMobileModel: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("createMobileModelController:createMobileModel - Mobile Model.")
     Logger.info("createmobilemodelform" + modelform)

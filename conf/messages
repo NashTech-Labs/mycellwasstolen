@@ -69,6 +69,7 @@ messages.mobile.delete=Dear Mobile Owner, <br><br>We have reviewed the document 
 #admin
 
 admin.requestapproval=Request Approval page
+admin.audit=Mobile Audit page
 mobile.name=Name
 mobile.model=Model
 mobile.imei=IMEI/MEID
@@ -80,5 +81,5 @@ mobile.proof=Get Proof
 mobile.approve=Approve
 mobile.demandProof=Demand Proof
 mobile.registrationTime=Registration Time
-mobile.description=Description
+mobile.description=Details
 mobile.delete=Delete

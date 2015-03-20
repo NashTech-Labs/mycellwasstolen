@@ -21,6 +21,9 @@ import model.repository.User
 
 class AuthController extends Controller with Secured {
 
+  /**
+   * Describes the admin login form
+   */
   val loginForm = Form(
     tuple(
       "email" -> text,
@@ -28,6 +31,11 @@ class AuthController extends Controller with Secured {
         case (email, password) => check(email, password)
       }))
 
+  /**
+   * Checking of admin login credentials
+   * @param username of admin
+   * @param password of admin
+   */
   def check(username: String, password: String): Boolean = {
     if (username == "admin" && password == "knol2013") {
       val user = User("admin", "1234")
@@ -36,27 +44,45 @@ class AuthController extends Controller with Secured {
     } else { false }
   }
 
+  /**
+   * Display the admin login form
+   */
   def login: Action[AnyContent] = Action { implicit request =>
     Ok(html.admin.login(loginForm))
   }
 
+  /**
+   * Handle the admin login form submission
+   */
   def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.admin.login(formWithErrors)),
-      user => Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1))
+      user =>
+        Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1))
   }
 
+  /**
+   * Handle admin logout
+   */
   def logout: Action[AnyContent] = Action {
     Redirect(routes.AuthController.login).withNewSession.flashing(
       "success" -> "You are now logged out.")
   }
-
 }
 
+/**
+ * Handle login security
+ */
 trait Secured {
 
+  /**
+   * Gets user from request
+   */
   def username(request: RequestHeader): Option[String] = request.session.get(Security.username)
 
+  /**
+   * Handle unauthorized user
+   */
   def onUnauthorized(request: RequestHeader): play.api.mvc.SimpleResult = {
     Results.Redirect(routes.AuthController.login).withNewSession.flashing("success" -> Messages("messages.user.expired"))
   }

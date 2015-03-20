@@ -7,7 +7,10 @@ import play.api.Play.current
 
 object Connection {
 
-   def databaseObject(): Database = {
-   Database.forDataSource(DB.getDataSource())
+  /**
+   * Getting database object
+   */
+  def databaseObject(): Database = {
+    Database.forDataSource(DB.getDataSource())
   }
 }
