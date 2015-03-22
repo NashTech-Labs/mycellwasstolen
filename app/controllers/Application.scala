@@ -34,11 +34,7 @@ def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit reques
       routes.javascript.MobileController.getImeiMeidList,
       routes.javascript.MobileController.getMobileModels,
       routes.javascript.MobileController.isImeiExist,
-      routes.javascript.AdminController.approve,
-      routes.javascript.AdminController.proofDemanded,
       routes.javascript.AdminController.pending,
-      routes.javascript.AdminController.sendMailForDemandProof,
-      routes.javascript.AdminController.sendMailForApprovedRequest,
       routes.javascript.AdminController.deleteMobile,
       routes.javascript.AdminController.mobiles,
       routes.javascript.AdminController.changeMobileRegType)).as("text/javascript")

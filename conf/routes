@@ -23,11 +23,7 @@ GET    /javascriptRoutes              controllers.Application.javascriptRoutes
 GET    /mobile                        controllers.MobileController.getImeiMeidList(imeid: String)
 GET    /mobileStatus                  controllers.MobileController.mobileStatus
 GET    /mobileModel                   controllers.MobileController.getMobileModels(id:Int)
-GET    /approve                       controllers.AdminController.approve(imeid: String)
-GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String)
 GET    /pending                       controllers.AdminController.pending(imeid: String)
-GET    /sendMailForDemandProof        controllers.AdminController.sendMailForDemandProof(imeid: String)
-GET    /sendMailForApprovedRequest    controllers.AdminController.sendMailForApprovedRequest(imeid: String)
 GET    /changeMobileRegType           controllers.AdminController.changeMobileRegType(imeid: String)
 GET    /delete                        controllers.AdminController.deleteMobile(imeid: String)
 
@@ -37,9 +33,13 @@ GET    /login                         controllers.AuthController.login
 POST   /authenticate                  controllers.AuthController.authenticate
 GET    /logout                        controllers.AuthController.logout
 GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
+GET    /admin/auditpage               controllers.AdminController.auditPage
+POST    /admin/auditIMEID              controllers.AdminController.audit
+GET   /admin/auditAllRecords         controllers.AdminController.auditAllRecords
 GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
 POST   /saveMobileName                controllers.MobileController.saveMobileName
-
+GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)
+GET    /approve                       controllers.AdminController.approve(imeid: String,page:String)
 GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
 GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
 POST   /createMobileModel             controllers.MobileController.createMobileModel

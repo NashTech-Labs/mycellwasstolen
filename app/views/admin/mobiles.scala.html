@@ -1,15 +1,15 @@
-@(users: List[(model.repository.Mobile,String,String)], user: Option[model.repository.User])(implicit flash: Flash)
+@(typ:String,users: List[(model.repository.Mobile,String,String)], user: Option[model.repository.User])(implicit flash: Flash)
 
 @import utils.StatusUtil.Status
 
 @main("Mycellwasstolen",user) {
-	        <br>
+	        <br><br><br>
 	        <div class="" style="margin: 10px;">
 			<div class="row">
 				<div class="col-md-5">
 					<h3 style="">@Messages("admin.requestapproval")</h3>
 				</div>
-				<div id="loading col-md-4" style="padding-left: 20px;" hidden="true"><img src="/assets/images/loading.gif"/></div>
+				<div id="loading col-md-4" style="padding-left: 20px;" hidden="true"><img src="@routes.Assets.at("images/loading.gif")"/></div>
 				<div class="col-md-3"  style="float: right; padding-top: 17px;">
 					<a id="pending_button" href="@routes.AdminController.mobiles("pending")" class="btn btn-success btn-sm">Pending</a>
 					<a id="demanded_button" href="@routes.AdminController.mobiles("proofdemanded")" class="btn btn-success btn-sm">Proof Demanded</a>
@@ -19,13 +19,12 @@
 			<hr>
 			<div class="row">
 			@flash.get("error").map { message =>
-                <div class="alert alert-error col-md-12">
+                <div class="alert alert-error alert-dismissable col-md-12">
         			<strong>@message</strong>
       			</div>
             }
-            
             @flash.get("success").map { message =>
-                <div class="alert alert-success col-md-12">
+                <div class="alert alert-success alert-dismissable col-md-12">
         			<strong>@message</strong>
       			</div>
 		}
@@ -35,7 +34,7 @@
 			@if(users.size > 0) {
             	<table id="userTable" class="table table-striped table-bordered" style="font-size: 16px;">
                     <thead>
-                        <tr>
+                        <tr style="color: rgba(11, 81, 134, 1);">
                             <th>@Messages("mobile.name")</th>
 							<th>@Messages("mobile.model")</th>
 							<th>@Messages("mobile.imei")</th>
@@ -43,8 +42,13 @@
 							<th>@Messages("mobile.email")</th>
 							<th>@Messages("mobile.status")</th>
 							<th>@Messages("mobile.proof")</th>
-							<th>@Messages("mobile.approve")</th>
+							@if(typ=="pending"){
 							<th>@Messages("mobile.demandProof")</th>
+							<th>@Messages("mobile.approve")</th>
+							}
+							@if(typ=="proofdemanded"){
+							<th>@Messages("mobile.approve")</th>
+							}
 							<th>@Messages("mobile.description")</th>
 							<th>@Messages("mobile.delete")</th>
                         </tr>
@@ -59,23 +63,16 @@
 						    <td>@mobile._1.email</td>
 							<td>@mobile._1.regType</td>
 							<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
-							@if(mobile._1.mobileStatus == Status(1)){
-							<td><button id="approve" class="btn btn-primary btn-sm" onclick="changeStatus(@mobile._1.imeiMeid)" disabled>Approved</button></td>
-						    }else{
-						    <td><button id="approve" class="btn btn-primary btn-sm" onclick="changeStatus(@mobile._1.imeiMeid)">Approve</button></td>
-						    }
-						    @if(mobile._1.mobileStatus == Status(1) || mobile._1.mobileStatus == Status(2)){
-							<td><button id="approve" class="btn btn-primary btn-sm" onclick="changeStatusToDemand(@mobile._1.imeiMeid)" disabled>Demand Proof</button></td>
-						    }else{
-						    <td><button id="approve" class="btn btn-primary btn-sm" onclick="changeStatusToDemand(@mobile._1.imeiMeid)">Demand Proof</button></td>
-						    }
-						    
+							@if(typ=="pending"){
+							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Demand Proof</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Approve</a></td>}
+							@if(typ=="proofdemanded"){
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Approve</a></td>
+							}
+													   
 						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')">View</button></td>
-						
 						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)">Delete</button></td>
-			    		
 			    		</tr>
-                 
                        }
                        </tbody>
                 </table>
@@ -128,110 +125,14 @@
     
     <script type="text/javascript">    
         $(document).ready(function() {
+        	$("#loading").show();
             $('#userTable').dataTable( {
                 "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
                 "sPaginationType": "bootstrap"    
             } );    
-        } );
-    </script>
-
-	<script type="text/javascript">
-		var imeId = "";
-		function changeStatusToDemand(imeid) {
-			imeId = imeid;
-			changeStatusToDemandProof(imeid);
-			sendMailForDemandProof(imeid); // for mail 
-		}
-
-		var statusAjaxSuccessDemandProof = function(data) {
-			$("#demand_" + imeId).prop("disabled", true);
-			$("#demand_" + imeId).text('Proof Demanded');
-			console.debug("Success of Ajax Call for demand proof");
-			console.debug(data);
-		};
-
-		var statusAjaxErrorDemandProof = function(err) {
-			console.debug("Error of ajax Call for demand proof");
-			console.debug(err);
-		};
-
-		var changeStatusToDemandProof = function(imeid) {
-
-			var statusAjaxCallBackDemandProof = {
-				success : statusAjaxSuccessDemandProof,
-				error : statusAjaxErrorDemandProof
-			};
-
-			jsRoutes.controllers.AdminController.proofDemanded(imeid).ajax(
-					statusAjaxCallBackDemandProof);
-		};
-
-		var sendMailForDemandProof = function(imeid) {
-			var statusAjaxCallBackForSendMail = {
-				success : statusAjaxSuccessForSendmail,
-				error : statusAjaxErrorForSendmail
-			};
-			jsRoutes.controllers.AdminController.sendMailForDemandProof(imeid)
-					.ajax(statusAjaxCallBackForSendMail)
-		};
-
-		var statusAjaxSuccessForSendmail = function(data) {
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-
-		var statusAjaxErrorForSendmail = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-
-		function changeStatus(imeid) {
-			imeId = imeid;
-			changeStatusToApprove(imeid);
-			sendMailForApprovedRequest(imeid);
-		}
-
-		var statusAjaxSuccess = function(data) {
-			$("#approve_" + imeId).prop("disabled", true);
-			$("#approve_" + imeId).text('approved');
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-
-		var statusAjaxError = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-
-		var changeStatusToApprove = function(imeid) {
-
-			var statusAjaxCallBack = {
-				success : statusAjaxSuccess,
-				error : statusAjaxError
-			};
-
-			jsRoutes.controllers.AdminController.approve(imeid).ajax(
-					statusAjaxCallBack);
-		};
-
-		var sendMailForApprovedRequest = function(imeid) {
-			var statusAjaxCallBackForSendMail = {
-				success : statusAjaxSuccessForSendmail,
-				error : statusAjaxErrorForSendmail
-			};
-			jsRoutes.controllers.AdminController.sendMailForApprovedRequest(
-					imeid).ajax(statusAjaxCallBackForSendMail);
-		};
-
-		var statusAjaxSuccessForSendmail = function(data) {
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-
-		var statusAjaxErrorForSendmail = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
+        } );  
+</script>		
+<script type="text/javascript">
 
 		function showDocumentProof(documentProofId) {
 			var newWindow = window.open("", "pictureViewer",
@@ -269,12 +170,12 @@
 			}
 
 		var ajaxSuccess = function(data) {
-		  location.reload();
 		  console.debug("Success of delete mobile Ajax Call");
+		  window.location.reload(true);
 		};
 		 
 		var ajaxError = function(error) {
-		    alert(error);
+			console.debug("Error in delete mobile Ajax Call");
 		};
-	</script>		
-}
+	</script>
+	}

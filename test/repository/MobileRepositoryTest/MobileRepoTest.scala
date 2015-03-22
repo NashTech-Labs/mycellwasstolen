@@ -52,7 +52,5 @@ class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileReposit
       val mobileUserToCompareWith = MobileRepository.getMobileUserByIMEID(imeiInserted)
       assert(mobileUser=== mobileUserToCompareWith.get)
     }
-
   }
-
 }

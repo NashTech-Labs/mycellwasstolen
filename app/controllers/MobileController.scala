@@ -27,6 +27,9 @@ import model.repository.ModelRepository
 import model.repository.Brand
 import model.repository.Model
 import model.repository.MobileDetail
+import model.repository.AuditRepository
+import java.util.Date
+import model.repository.Audit
 
 class MobileController extends Controller with Secured {
 
@@ -194,6 +197,7 @@ class MobileController extends Controller with Secured {
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
+      AuditRepository.insertTimestamp(Audit(imeid,(new Date()).toString()))
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
       Ok(Json.obj("status" -> "Error"))
