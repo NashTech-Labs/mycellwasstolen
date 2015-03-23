@@ -10,6 +10,7 @@ import model.repository.ModelRepository._
 import model.repository.BrandRepository
 import model.repository.MobileRepository.mobiles
 import model.repository.AuditRepository.audits
+import scala.slick.jdbc.meta.MTable
 object Global extends GlobalSettings {
 
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
@@ -27,12 +28,18 @@ object Global extends GlobalSettings {
     val password = Play.application.configuration.getString("smtp.password")
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        (audits.ddl).create
-        (mobiles.ddl ++ brands.ddl ++ models.ddl).create
+        if (MTable.getTables("audits").list.isEmpty)
+          (audits.ddl).create
+        if (MTable.getTables("mobiles").list.isEmpty)
+          (mobiles.ddl).create
+        if (MTable.getTables("mobilesmodel").list.isEmpty)
+          models.ddl.create
+        if (MTable.getTables("brands").list.isEmpty)
+           brands.ddl.create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
-        val result = model.convert.readcsv.convert(file)
+          val result = model.convert.readcsv.convert(file)
         }
       }
     } catch {
