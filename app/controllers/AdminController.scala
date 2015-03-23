@@ -85,7 +85,7 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  /**
+  /** 
    * Changes mobile status to proofdemanded
    * @param imeiId of mobile
    */
@@ -107,11 +107,11 @@ class AdminController extends Controller with Secured {
               //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
             }
             Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
+              "success" -> "A Proof has been demanded from this user!")
           case None =>
             Logger.info("AdminController:approve - error in fetching record after proof demanded")
             Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
+              "success" -> "A Proof has been demanded from this user!")
         }
       case Left(message) =>
         Logger.info("AdminController: - false")
