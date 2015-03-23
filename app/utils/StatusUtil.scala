@@ -28,7 +28,7 @@ object StatusUtil {
     { enuStatus => enuStatus.toString() },
     {
       strStatus =>
-        strStatus match {
+        strStatus.toLowerCase() match {
           case "pending"       => Status(0)
           case "approved"      => Status(1)
           case "proofdemanded" => Status(2)

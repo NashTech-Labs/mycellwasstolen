@@ -69,7 +69,7 @@ trait MobileRepository extends MobileTable {
    * @param: mobileUser, Object of Mobile
    * @return id of updated record
    */
-  def changeStatusToDemandProofByIMEID(imeid:String): Either[String, Int] = {
+  def changeStatusToDemandProofByIMEID(imeid: String): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Calling getMobileRecordByIMEID" + imeid)
@@ -122,7 +122,7 @@ trait MobileRepository extends MobileTable {
    * @param: mobileUser, Object of Mobile
    * @return id of updated record
    */
-  def changeStatusToPendingByIMEID(imeid:String): Either[String, Int] = {
+  def changeStatusToPendingByIMEID(imeid: String): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Calling getMobileRecordByIMEID" + imeid)
@@ -176,7 +176,11 @@ trait MobileTable extends BrandTable with ModelTable {
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
     def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
-    def mobileIndex: scala.slick.lifted.Index = index("idx_email", (imeiMeid, email), unique = true)
+    def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
+    def fkeyBrand = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+      onDelete = ForeignKeyAction.Cascade)
+    def fkeyModel = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+      onDelete = ForeignKeyAction.Cascade)
   }
   val mobiles = TableQuery[Mobiles]
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
