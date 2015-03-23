@@ -75,7 +75,7 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  /**
+  /** 
    * Changes mobile status to proofdemanded
    * @param imeiId of mobile
    */
@@ -86,7 +86,7 @@ class AdminController extends Controller with Secured {
       case Right(id) =>
         Logger.info("AdminController: - true")
         Redirect(routes.AdminController.mobiles(page)).flashing(
-          "success" -> "Mobile has been approved successfully!")
+          "success" -> "A Proof has been demanded from this user!")
       case Left(message) =>
         Logger.info("AdminController: - false")
         Redirect(routes.AdminController.mobiles(page)).flashing(

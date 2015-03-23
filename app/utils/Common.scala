@@ -34,12 +34,8 @@ object Common {
     val emailBuilder = Email(
       subject,
       Messages("default.email.title"),
-      Seq(email), Option(message))
+      Seq(email), bodyHtml = Some(message))
     MailerPlugin.send(emailBuilder)
-    //    val mail = use[MailerPlugin].email
-    /*   mail.setSubject(subject)
-    mail.setRecipient(email)
-    mail.setFrom(Messages("default.email.title"))
-    mail.sendHtml(message)*/
+    
   }
 }
