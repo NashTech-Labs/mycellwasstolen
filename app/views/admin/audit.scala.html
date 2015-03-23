@@ -5,7 +5,7 @@
 	
 	<div class="container">
 	<div class="row">
-	<div class="col-md-12"
+	<div class="col-md-12">
 					@flash.get("ERROR").map { message =>
 						<div class="alert alert-dismissable alert-danger">
 							<strong>@message</strong>
@@ -30,12 +30,19 @@
         </div><!--/span-->
 	<div class="col-md-10">
 	<div class="panel">
-	<br>
-	<div class="panel-heading"><h3>@Messages("admin.audit")</h3></div>
+	<div class="panel-heading row" style="border-bottom: 0.5px solid rgba(231, 227, 227, 1);">
+	<div class="col-md-6">
+	<h3>@Messages("admin.audit")</h3>
+	</div>
+	<div class="col-md-6" style="text-align: right;padding-top: 18px;">
+	<a href="@routes.AdminController.auditPage()" class="btn btn-success btn-sm">IMEI records</a>
+	<a href="@routes.AdminController.auditAllRecords()" class="btn btn-success btn-sm">All records</a>
+	</div>
+	</div>
   <div class="panel-body">
   <div class="row">
   @if(check=="imeid"){
-  <div class="col-md-6">
+  <div class="col-md-12">
   @form(action=routes.AdminController.audit()) {
 					<div class="actions">
 					    Enter IMEI ID: <input type="text" placeholder="IMEID" name="imeiMeid">
@@ -43,21 +50,15 @@
 					</div>			
 				}
 				</div>
-				<div class="col-md-6" style="text-align: right;">
-				}else{
-				<div class="col-md-12" style="text-align: right;">
-				}
-				<a href="@routes.AdminController.auditPage()" class="btn btn-success btn-sm">IMEI records</a>
-				<a href="@routes.AdminController.auditAllRecords()" class="btn btn-success btn-sm">All records</a>
 				</div>
-				</div>
-				
 				<hr>
+				}
   @if(audits.size>0){
   	@if(check=="imeid"){
   	<h5 style="color:#A52A2A;">Timestamp records for IMEI ID: @audits.head.mobileIMEID</h5>
-  	<hr>}else{
-  	<h5 style="color:#A52A2A;">@audits.size records found</h5>
+  	<hr>
+  	}else{
+  	<h4 style="color:#A52A2A;">@audits.size records found</h4>
   	<hr>}
   <table id="auditTable" class="table table-striped table-bordered" style="width:400px;">
   <thead>
@@ -99,8 +100,7 @@
         $(document).ready(function() {
         	$("#loading").show();
             $('#auditTable').dataTable( {
-                "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-                "sPaginationType": "bootstrap"    
+            	"pagingType": "simple_numbers"
             } );    
         } );  
 </script>		
