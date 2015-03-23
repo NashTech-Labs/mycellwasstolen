@@ -1,5 +1,4 @@
 package utils
-
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.libs.mailer.MailerPlugin

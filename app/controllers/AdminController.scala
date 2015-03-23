@@ -50,7 +50,6 @@ val mobilestatus = Form(
    */
   def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
-
     val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
     Logger.info("AdminController:mobileUser - change status to approve : " + mobileUser.get)
     val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
