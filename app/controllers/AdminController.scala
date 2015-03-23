@@ -33,7 +33,10 @@ class AdminController extends Controller with Secured {
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
-  val auditform = Form(
+  /**
+ * Describe mobile audit form
+ */
+val auditform = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(AuditForm.apply)(AuditForm.unapply))
 
@@ -85,7 +88,7 @@ class AdminController extends Controller with Secured {
     }
   }
 
-  /** 
+  /**
    * Changes mobile status to proofdemanded
    * @param imeiId of mobile
    */
@@ -201,6 +204,9 @@ class AdminController extends Controller with Secured {
       }
   }
 
+  /**
+   * Display audit page
+   */
   def auditPage: EssentialAction = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -208,6 +214,9 @@ class AdminController extends Controller with Secured {
       Ok(html.admin.audit("imeid", list, user))
   }
 
+  /**
+   * Display timestamp records of particular imei number
+   */
   def audit: EssentialAction = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -223,6 +232,9 @@ class AdminController extends Controller with Secured {
         })
   }
 
+  /**
+   * Display all timestamp records for all mobiles
+   */
   def auditAllRecords: EssentialAction = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)

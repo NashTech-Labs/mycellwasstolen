@@ -166,9 +166,9 @@ class MobileController extends Controller with Secured {
                   "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
               }
               if (mobileuser.regType == "stolen") {
-               // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
+                // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
-                 // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
+                // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())
@@ -197,7 +197,7 @@ class MobileController extends Controller with Secured {
         mobileData.get.regType, mobileData.get.otherMobileBrand, mobileData.get.otherMobileModel)
       implicit val resultWrites = Json.writes[MobileDetail]
       val obj = Json.toJson(mobileDetail)(resultWrites)
-      AuditRepository.insertTimestamp(Audit(imeid,(new Date()).toString()))
+      AuditRepository.insertTimestamp(Audit(imeid, (new Date()).toString()))
       Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
     } else {
       Ok(Json.obj("status" -> "Error"))
@@ -227,18 +227,56 @@ class MobileController extends Controller with Secured {
   }
 
   /**
+   * Check valid imei number or not
+ * @param imei number of mobile
+ * @return true on valid, otherwise false
+ */
+def validateImei(imei: String): Boolean = {
+    val arr = imei.map(f => f.toString().toInt).toArray
+    val len = arr.length
+    val checksum = arr(len - 1)
+    if (len != 15)
+      false
+    var mul = 2
+    var sum = 0
+    var i = len - 2
+    while (i >= 0) {
+      if ((arr(i) * mul) >= 10) {
+        sum += ((arr(i) * mul) / 10) + ((arr(i) * mul) % 10)
+        i = i - 1
+      } else {
+        sum += arr(i) * mul
+        i = i - 1
+      }
+      if (mul == 2) mul = 1 else mul = 2
+    }
+    var m10 = sum % 10
+    if (m10 > 0) m10 = 10 - m10
+    if (m10 == checksum) true
+    else
+      false
+  }
+
+  /**
    * Checking mobile is exist or not with imeiId
    * @param imeiId of mobile
    */
   def isImeiExist(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist - Checking mobile is exist or not with : " + imeiId)
-    val isExist = MobileRepository.getMobileUserByIMEID(imeiId)
-    if (!(isExist.isEmpty)) {
-      Logger.info("MobileController:isImeiExist - true")
-      Ok("false")
-    } else {
-      Logger.info("MobileController:isImeiExist - false")
-      Ok("true")
+    val result = validateImei(imeiId)
+    if (result) {
+      val isExist = MobileRepository.getMobileUserByIMEID(imeiId)
+      if (!(isExist.isEmpty)) {
+        Logger.info("MobileController:isImeiExist - true")
+        Ok("false")
+      } else {
+        Logger.info("MobileController:isImeiExist - false")
+        Ok("true")
+      }
+    }
+    else{
+      Logger.info("MobileController:isImeiExist - invalid IMEI number")
+        Ok("false")
     }
   }
 
