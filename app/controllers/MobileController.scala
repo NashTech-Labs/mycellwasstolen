@@ -166,9 +166,9 @@ class MobileController extends Controller with Secured {
                   "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
               }
               if (mobileuser.regType == "stolen") {
-                //TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
+               // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
-                //  TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
+                 // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
             } catch {
               case e: Exception => Logger.info("" + e.printStackTrace())

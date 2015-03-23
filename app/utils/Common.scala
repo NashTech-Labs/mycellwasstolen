@@ -22,7 +22,7 @@ object Common {
     Messages("messages.mobile.approved", imeid, signature)
   }
 
-  def deleteUserMessage(imeid: String): String = {
+  def deleteMessage(imeid: String): String = {
     Messages("messages.mobile.delete", imeid, signature)
   }
 

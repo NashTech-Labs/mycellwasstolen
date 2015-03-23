@@ -17,9 +17,6 @@ import play.api.i18n.Messages
 object TwitterTweet {
 
 
-   //Tweet for a new job
-   //@param tweetmsg is tweet for a new job on twitter
-
 
   val MAX_TWITTER_SIZE = 140
 

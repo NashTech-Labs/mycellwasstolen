@@ -57,17 +57,27 @@ class AdminController extends Controller with Secured {
   def approve(imeiId: String, page: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
     val result = MobileRepository.changeStatusToApproveByIMEID(imeiId)
-    val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
     result match {
-      case Right(id) =>
-        Logger.info("AdminController: - true")
-        if (mobileUser.get.regType == "stolen") {
-          //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-        } else {
-          //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+      case Right(1) =>
+        val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
+        mobileUser match {
+          case Some(mobile) =>
+            if (mobileUser.get.regType == "stolen") {
+              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+            } else {
+              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+            }
+            Redirect(routes.AdminController.mobiles(page)).flashing(
+              "success" -> "Mobile has been approved successfully!")
+          case None =>
+            Logger.info("AdminController:approve - error in fetching record after approved")
+            Redirect(routes.AdminController.mobiles(page)).flashing(
+              "success" -> "Mobile has been approved successfully!")
         }
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "success" -> "Mobile has been approved successfully!")
       case Left(message) =>
         Logger.info("AdminController: - false")
         Redirect(routes.AdminController.mobiles(page)).flashing(
@@ -84,9 +94,25 @@ class AdminController extends Controller with Secured {
     val result = MobileRepository.changeStatusToDemandProofByIMEID(imeiId)
     result match {
       case Right(id) =>
-        Logger.info("AdminController: - true")
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "success" -> "Mobile has been approved successfully!")
+        val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
+        mobileUser match {
+          case Some(mobile) =>
+            if (mobileUser.get.regType == "stolen") {
+              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+            } else {
+              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+            }
+            Redirect(routes.AdminController.mobiles(page)).flashing(
+              "success" -> "Mobile has been approved successfully!")
+          case None =>
+            Logger.info("AdminController:approve - error in fetching record after proof demanded")
+            Redirect(routes.AdminController.mobiles(page)).flashing(
+              "success" -> "Mobile has been approved successfully!")
+        }
       case Left(message) =>
         Logger.info("AdminController: - false")
         Redirect(routes.AdminController.mobiles(page)).flashing(
@@ -107,47 +133,6 @@ class AdminController extends Controller with Secured {
         Ok("success")
       case Left(message) =>
         Logger.info("AdminController: - false")
-        Ok("error")
-    }
-  }
-
-  /**
-   * Sends approved message mail to user
-   * @param imeiId of mobile
-   */
-  def sendMailForApprovedRequest(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:The request been approved of " + imeiId)
-    val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
-    try {
-      Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-        "Request Approved On MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-      Logger.info("AuthController:-true")
-      Ok("success")
-    } catch {
-      case e: Exception =>
-        Logger.info("" + e.printStackTrace())
-        Logger.info("AuthController: - false")
-        Ok("error")
-    }
-  }
-
-  /**
-   * Sends mail to user for submitting the valid documents
-   * @param imeiId of mobile
-   */
-  def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
-    val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
-    Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
-    try {
-      Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-        "Document Proof Request from MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-      Logger.info("AuthController: - true")
-      Ok("success")
-    } catch {
-      case e: Exception =>
-        Logger.info("" + e.printStackTrace())
-        Logger.info("AuthController: - false")
         Ok("error")
     }
   }
@@ -196,18 +181,23 @@ class AdminController extends Controller with Secured {
    */
   def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
-      try {
-        Logger.info("AdminController:deleteMobile: " + imeid)
-        val mobileUser = MobileRepository.getMobileUserByIMEID(imeid)
-        MobileRepository.deleteMobileUser(imeid)
-        Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-          "Delete mobile registration from MCWS", Common.deleteUserMessage(mobileUser.get.imeiMeid))
-        Ok("Delete ajax call")
-      } catch {
-        case e: Exception =>
-          Logger.info("" + e.printStackTrace())
-          Logger.info("AuthController: - false")
-          Ok("error")
+      Logger.info("AdminController:deleteMobile: " + imeid)
+      val mobileUser = MobileRepository.getMobileUserByIMEID(imeid)
+      val result = MobileRepository.deleteMobileUser(imeid)
+      result match {
+        case Right(1) =>
+          mobileUser match {
+            case Some(mobile) =>
+              Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
+                "Delete mobile registration from MCWS", Common.deleteMessage(mobileUser.get.imeiMeid))
+              Ok("Success of Delete ajax call")
+            case None =>
+              Logger.info("AdminController:deleteMobile - error in fetching record")
+              Ok("Success of Delete ajax call")
+          }
+        case Left(message) =>
+          Logger.info("AdminController:deleteMobile" + message)
+          Ok("error in Delete ajax call")
       }
   }
 
@@ -215,7 +205,7 @@ class AdminController extends Controller with Secured {
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val list = List()
-      Ok(html.admin.audit("imeid",list, user))
+      Ok(html.admin.audit("imeid", list, user))
   }
 
   def audit: EssentialAction = withAuth { username =>
