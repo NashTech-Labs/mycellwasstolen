@@ -32,7 +32,7 @@ object Global extends GlobalSettings {
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
-          //val result = model.convert.readcsv.convert(file)
+        val result = model.convert.readcsv.convert(file)
         }
       }
     } catch {
