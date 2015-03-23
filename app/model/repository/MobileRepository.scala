@@ -4,7 +4,6 @@ import scala.slick.lifted.ProvenShape
 import scala.slick.driver.PostgresDriver.simple._
 import play.api.Logger
 import model.repository._
-import scala.slick.driver.PostgresDriver.simple._
 import play.api.Logger
 import utils.Connection
 
@@ -41,6 +40,8 @@ trait MobileRepository extends MobileTable {
   def getMobileUserByIMEID(imeid: String): Option[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
+      val query = (for { mobile <- mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile)
+      Logger.warn("Query generated is - " + query.selectStatement)
       (for { mobile <- mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile).firstOption
     }
   }
@@ -50,18 +51,14 @@ trait MobileRepository extends MobileTable {
    * @param: mobileUser, Object of Mobile
    * @return id of updated record
    */
-  def changeStatusToApproveByIMEID(mobileUser: Mobile): Either[String, Int] = {
+  def changeStatusToApproveByIMEID(imeid: String): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
-        val updateQuery = for {
-          mobile <- mobiles if (mobile.imeiMeid === mobileUser.imeiMeid)
-        } yield mobile.mobileStatus
-        Logger.info("updateQuery data:" + updateQuery.updateStatement)
-        updateQuery.update(mobileUser.mobileStatus)
-        Right(updateQuery.update(mobileUser.mobileStatus))
+        Logger.info("Calling getMobileRecordByIMEID" + imeid)
+        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.approved))
       } catch {
         case ex: Exception =>
-          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Logger.info("Error in changeStatusToApprovedByIMEID: " + ex.printStackTrace())
           Left(ex.getMessage())
       }
     }
@@ -72,15 +69,14 @@ trait MobileRepository extends MobileTable {
    * @param: mobileUser, Object of Mobile
    * @return id of updated record
    */
-  def changeStatusToDemandProofByIMEID(mobileUser: Mobile): Either[String, Int] = {
+  def changeStatusToDemandProofByIMEID(imeid:String): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
-        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
-        Logger.info("updateQuery data:" + updateQuery)
-        Right(updateQuery.update(mobileUser))
+        Logger.info("Calling getMobileRecordByIMEID" + imeid)
+        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.proofdemanded))
       } catch {
         case ex: Exception =>
-          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Logger.info("Error in changeStatusToDemandProofByIMEID: " + ex.printStackTrace())
           Left(ex.getMessage())
       }
     }
@@ -126,15 +122,14 @@ trait MobileRepository extends MobileTable {
    * @param: mobileUser, Object of Mobile
    * @return id of updated record
    */
-  def changeStatusToPendingByIMEID(mobileUser: Mobile): Either[String, Int] = {
+  def changeStatusToPendingByIMEID(imeid:String): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
-        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
-        Logger.info("updateQuery data:" + updateQuery)
-        Right(updateQuery.update(mobileUser))
+        Logger.info("Calling getMobileRecordByIMEID" + imeid)
+        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.pending))
       } catch {
         case ex: Exception =>
-          Logger.info("Error in update user method: " + ex.printStackTrace())
+          Logger.info("Error in changeStatusToPendingByIMEID: " + ex.printStackTrace())
           Left(ex.getMessage())
       }
     }

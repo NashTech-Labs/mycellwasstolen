@@ -66,6 +66,6 @@ case class Brand(
 
 //Represents a brand name  
 case class BrandForm(name: String)
-  
-  //Trait companion object
+
+//Trait companion object
 object BrandRepository extends BrandRepository

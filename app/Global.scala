@@ -9,6 +9,7 @@ import utils.Connection
 import model.repository.ModelRepository._
 import model.repository.BrandRepository
 import model.repository.MobileRepository.mobiles
+import model.repository.AuditRepository.audits
 object Global extends GlobalSettings {
 
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
@@ -26,6 +27,7 @@ object Global extends GlobalSettings {
     val password = Play.application.configuration.getString("smtp.password")
     try {
       Connection.databaseObject.withSession { implicit session: Session =>
+        (audits.ddl).create
         (mobiles.ddl ++ brands.ddl ++ models.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")

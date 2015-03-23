@@ -4,6 +4,7 @@ import scala.slick.driver
 import scala.slick.lifted.ProvenShape
 import utils.Connection
 import play.api.Logger
+
 trait ModelRepository extends ModelTable {
 
   /**
@@ -57,7 +58,7 @@ trait ModelTable extends BrandTable {
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Model] = (
       name, brandId, id) <> (Model.tupled, Model.unapply)
-    def mobilebrand: Object = foreignKey("SUP_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkey = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
 
