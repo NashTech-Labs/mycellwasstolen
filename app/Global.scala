@@ -43,7 +43,7 @@ object Global extends GlobalSettings {
         }
       }
     } catch {
-      case ex: Exception => Logger.info("caught expception while creating a file")
+      case ex: Exception => Logger.info("please provide csvs in conf" )
     }
   }
 
