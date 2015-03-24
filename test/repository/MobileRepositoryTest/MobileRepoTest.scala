@@ -118,6 +118,4 @@ class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileReposit
     }
   }
   
-  
-
 }

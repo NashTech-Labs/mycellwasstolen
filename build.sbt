@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
  "org.mockito" % "mockito-all" % "1.8.5" %  "test",
  "junit"  %  "junit"  %  "4.11" %  "test",
  "com.restfb" % "restfb" % "1.6.12",
- "org.twitter4j" % "twitter4j-core" % "3.0.5",
+ "org.twitter4j" % "twitter4j-core" % "4.0.2",
  "com.amazonaws" % "aws-java-sdk" % "1.6.10",
  "net.sf.opencsv" % "opencsv" % "2.1",
  "org.seleniumhq.selenium" % "selenium-java" % "2.40.0"%  "test",

@@ -28,7 +28,7 @@ object readcsv {
 
     var nextLine: Array[String] = Array()
     try {
-      while ((nextLine = reader.readNext()) != null) {
+      while (!(nextLine = reader.readNext()).equals(null)) {
 
         var list = new ArrayList[String]
         println("--------------")

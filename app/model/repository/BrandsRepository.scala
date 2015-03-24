@@ -53,6 +53,7 @@ trait BrandTable {
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
     def date: Column[String] = column[String]("date", O.NotNull)
     def * : scala.slick.lifted.ProvenShape[Brand] = (name, date, id) <> (Brand.tupled, Brand.unapply)
+    def brandNameIndex: scala.slick.lifted.Index = index("idx_brandName", (name), unique = true)
   }
 
   val brands = TableQuery[Brands]

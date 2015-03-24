@@ -43,7 +43,7 @@ object Global extends GlobalSettings {
         }
       }
     } catch {
-      case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
+      case ex: Exception => Logger.info("caught expception while creating a file")
     }
   }
 
@@ -64,5 +64,9 @@ object InitialData {
         Logger.info("Not adding new mobile name in mobile table")
       }
     }
+    catch {
+      case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
+    }
+    
   }
 }

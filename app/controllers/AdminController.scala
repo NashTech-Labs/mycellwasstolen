@@ -58,34 +58,40 @@ class AdminController extends Controller with Secured {
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
     val result = MobileRepository.changeStatusToApproveByIMEID(imeiId)
     result match {
-      case Right(1) =>
+      case Right(x: Int) =>
         val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
-        mobileUser match {
-          case Some(mobile) =>
-            if (mobileUser.get.regType == "stolen") {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-            } else {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
-            }
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
-          case None =>
-            Logger.info("AdminController:approve - error in fetching record after approved")
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
+        if (x == 1) {
+          mobileUser match {
+            case Some(mobile) =>
+              if (mobileUser.get.regType == "stolen") {
+                Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+              } else {
+                Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+              }
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "Mobile has been approved successfully!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after approved")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "Mobile has been approved successfully!")
+          }
+        } else {
+          Logger.info("AdminController:approve - error in fetching record after approved")
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "success" -> "Mobile has been approved successfully!")
+
         }
-      case Left(message) =>
-        Logger.info("AdminController: - false")
+      case Left(messege) =>
         Redirect(routes.AdminController.mobiles(page)).flashing(
           "error" -> "Something wrong!!")
     }
   }
 
-  /** 
+  /**
    * Changes mobile status to proofdemanded
    * @param imeiId of mobile
    */
@@ -93,30 +99,37 @@ class AdminController extends Controller with Secured {
     Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
     val result = MobileRepository.changeStatusToDemandProofByIMEID(imeiId)
     result match {
-      case Right(id) =>
+      case Right(id: Int) =>
         val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
-        mobileUser match {
-          case Some(mobile) =>
-            if (mobileUser.get.regType == "stolen") {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-            } else {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
-            }
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "A Proof has been demanded from this user!")
-          case None =>
-            Logger.info("AdminController:approve - error in fetching record after proof demanded")
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "A Proof has been demanded from this user!")
+        if (id == 1) {
+          mobileUser match {
+            case Some(mobile) =>
+              if (mobileUser.get.regType == "stolen") {
+                Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+              } else {
+                Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+              }
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "A Proof has been demanded from this user!")
+            case None =>
+              Logger.info("AdminController: - false")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "error" -> "Could not change status. Something Went Wrong!!")
+          }
+        } else {
+          Logger.info("AdminController: - false")
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "error" -> "Could not change status. Something Went Wrong!!")
         }
       case Left(message) =>
         Logger.info("AdminController: - false")
+        Logger.error(message)
         Redirect(routes.AdminController.mobiles(page)).flashing(
-          "error" -> "Something wrong!!")
+          "error" -> "Could not change status. Something Went Wrong!!")
     }
   }
 
@@ -185,7 +198,7 @@ class AdminController extends Controller with Secured {
       val mobileUser = MobileRepository.getMobileUserByIMEID(imeid)
       val result = MobileRepository.deleteMobileUser(imeid)
       result match {
-        case Right(1) =>
+        case Right(id: Int) =>
           mobileUser match {
             case Some(mobile) =>
               Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",

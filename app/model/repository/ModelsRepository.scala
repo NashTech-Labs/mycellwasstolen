@@ -58,10 +58,10 @@ trait ModelTable extends BrandTable {
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Model] = (
       name, brandId, id) <> (Model.tupled, Model.unapply)
+    def modelNameIndex: scala.slick.lifted.Index = index("idx_ModelName", (name), unique = true)
     def fkey = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
-
   val models = TableQuery[Models]
   val autoKeyModels = models returning models.map(_.id)
 }
