@@ -210,10 +210,10 @@
 		},
 		messages : {
 			imeiMeid : {
-				remote : "This imeiMeid is already exist."
+				remote : "Invalid imei Id or may be already exist."
 			},
 			otherImeiMeid : {
-				remote : "This imeiMeid is already exist."
+				remote : "Invalid imei Id or may be already exist."
 			}
 		}
 	});
@@ -246,7 +246,7 @@
 		var imeiMeid = document.getElementById("imeiMeid").value;
 		var pattern = /^[0-9]+$/;
 
-		if (imeiMeid.length > 13) {
+		if (imeiMeid.length == 15) {
 			if (pattern.test(imeiMeid)) {
 				return true;
 			} else {
@@ -256,7 +256,7 @@
 				return false;
 			}
 		} else {
-			alert("IMEI must be of minimum 14 digits !");
+			alert("IMEI must be 15 digits !");
 			imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
 			imei.focus();
 			return false;
@@ -272,7 +272,7 @@
 		var otherImeiMeid = document.getElementById("otherImeiMeid").value;
 		var pattern = /^[0-9]+$/;
 
-		if (otherImeiMeid.length > 13) {
+		if (otherImeiMeid.length == 15) {
 			if (pattern.test(otherImeiMeid)) {
 				return true;
 			} else {
@@ -282,7 +282,7 @@
 				return false;
 			}
 		} else {
-			alert("IMEI must be of minimum 14 digits !");
+			alert("IMEI must be of 15 digits !");
 			otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
 			otherImei.focus();
 			return false;
