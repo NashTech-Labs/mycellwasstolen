@@ -4,7 +4,7 @@ import play.api.i18n.Messages
 import play.api.libs.mailer.MailerPlugin
 import play.api.libs.mailer.Email
 
-object Common {
+trait Common {
 
   def stolenRegisterMessage(imeid: String): String = {
     Messages("messages.mobile.stolenregister", imeid, signature)
@@ -39,3 +39,4 @@ object Common {
     
   }
 }
+object Common extends Common

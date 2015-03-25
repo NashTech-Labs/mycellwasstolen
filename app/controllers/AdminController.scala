@@ -19,7 +19,7 @@ import model.repository.{ Mobile, Brand, Model, Audit, User, MobileStatus, Audit
 import model.repository.{ AuditRepository, MobileRepository }
 import utils.Constants
 
-class AdminController(mobileRepo: MobileRepository) extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -53,7 +53,8 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
    * changes mobile status to approved
    * @param imeiId of mobile
    */
-  def approve(imeiId: String, page: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def approve(imeiId: String, page: String): EssentialAction = withAuth { username => 
+    implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
     val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
     result match {
@@ -62,11 +63,11 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
         mobileUser match {
           case Some(mobile) =>
             if (mobileUser.get.regType == "stolen") {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                 "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
               //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
             } else {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                 "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
               //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
             }
@@ -91,7 +92,8 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
    * Changes mobile status to proofdemanded
    * @param imeiId of mobile
    */
-  def proofDemanded(imeiId: String, page: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def proofDemanded(imeiId: String, page: String): EssentialAction = withAuth { username =>
+    implicit request =>
     Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
     val result = mobileRepo.changeStatusToDemandProofByIMEID(imeiId)
     result match {
@@ -100,11 +102,11 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
         mobileUser match {
           case Some(mobile) =>
             if (mobileUser.get.regType == "stolen") {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                 "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
               //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
             } else {
-              Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                 "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
               //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
             }
@@ -131,7 +133,8 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
    * Changes mobile status to pending
    * @param imeiId of mobile
    */
-  def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def pending(imeiId: String): EssentialAction = withAuth { username =>
+    implicit request =>
     Logger.info("AdminController:pending - change status to pending : " + imeiId)
     val result = mobileRepo.changeStatusToPendingByIMEID(imeiId)
     result match {
@@ -159,7 +162,8 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
    * Changes mobile status to clean or stolen
    * @param imeiId of mobile
    */
-  def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def changeMobileRegType(imeiId: String): EssentialAction = withAuth { username => 
+    implicit request =>
     Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
     val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
     Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
@@ -197,7 +201,7 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
         case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
           mobileUser match {
             case Some(mobile) =>
-              Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
+              mail.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
                 "Delete mobile registration from MCWS", Common.deleteMessage(mobileUser.get.imeiMeid))
               Ok("Success of Delete ajax call")
             case None =>
@@ -252,4 +256,4 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
 
   }
 }
-object AdminController extends AdminController(MobileRepository)
+object AdminController extends AdminController(MobileRepository,Common)
