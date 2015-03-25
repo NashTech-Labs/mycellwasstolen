@@ -6,11 +6,12 @@ import play.api._
 import play.api.Play.current
 import play.api.mvc.Results.InternalServerError
 import utils.Connection
-import model.repository.ModelRepository._
-import model.repository.BrandRepository
+import model.repository._
+import model.repository.ModelRepository.models
+import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
 import model.repository.AuditRepository.audits
-import scala.slick.jdbc.meta.MTable
+
 object Global extends GlobalSettings {
 
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
@@ -26,20 +27,13 @@ object Global extends GlobalSettings {
     val secretKey = Play.application.configuration.getString("aws_secret_key")
     val userId = Play.application.configuration.getString("smtp.user")
     val password = Play.application.configuration.getString("smtp.password")
-    try {
+  try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        if (MTable.getTables("audits").list.isEmpty)
-          (audits.ddl).create
-        if (MTable.getTables("mobiles").list.isEmpty)
-          (mobiles.ddl).create
-        if (MTable.getTables("mobilesmodel").list.isEmpty)
-          models.ddl.create
-        if (MTable.getTables("brands").list.isEmpty)
-           brands.ddl.create
+        (mobiles.ddl ++ brands.ddl ++ models.ddl ++ audits.ddl).create
         Logger.info("All tables have been created")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
-          val result = model.convert.readcsv.convert(file)
+          //val result = model.convert.readcsv.convert(file)
         }
       }
     } catch {
@@ -63,6 +57,8 @@ object InitialData {
       } else {
         Logger.info("Not adding new mobile name in mobile table")
       }
+    } catch {
+      case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
     }
   }
 }
