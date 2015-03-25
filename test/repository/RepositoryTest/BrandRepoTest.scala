@@ -1,4 +1,4 @@
-package repository.MobileRepositoryTest
+package repository.RepositoryTest
 
 import play.api.test.FakeApplication
 import play.api.test.Helpers._

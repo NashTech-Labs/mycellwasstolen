@@ -1,4 +1,4 @@
-package repository.MobileRepositoryTest
+package repository.RepositoryTest
 
 import org.scalatest.FunSuite
 import model.repository.{Brand,Mobile,Model}

@@ -1,4 +1,4 @@
-
+/*
 package controllers
 
 import org.mockito.Mockito._
@@ -18,3 +18,4 @@ class MobileControllerTestCases extends Specification{
   val cachedUser=User("admin","knol2013")
 
   }
+*/
