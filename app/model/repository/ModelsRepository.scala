@@ -1,9 +1,12 @@
 package model.repository
+
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
 import utils.Connection
+import model.repository._
 import play.api.Logger
+import java.util.Date
 
 trait ModelRepository extends ModelTable {
 
@@ -51,15 +54,15 @@ trait ModelRepository extends ModelTable {
 }
 
 trait ModelTable extends BrandTable {
-
-  private[ModelTable] class Models(tag: Tag) extends Table[Model](tag, "mobilesmodel") {
+  private[ModelTable] class Models(tag: Tag) extends Table[Model](tag, "models") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def brandId: Column[Int] = column[Int]("brandId")
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Model] = (
       name, brandId, id) <> (Model.tupled, Model.unapply)
-    def fkey = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkey = foreignKey("brand_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
+    def modelIndex: scala.slick.lifted.Index = index("idx_model", (name), unique = true)
   }
 
   val models = TableQuery[Models]

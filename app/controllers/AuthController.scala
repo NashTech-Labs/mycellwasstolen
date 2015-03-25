@@ -2,22 +2,13 @@ package controllers
 
 import play.api.Logger
 import play.api.Play.current
+import model.repository.User
 import play.api.cache.Cache
 import play.api.data.Form
-import play.api.data.Forms.text
-import play.api.data.Forms.tuple
+import play.api.data.Forms.{ text, tuple }
 import play.api.i18n.Messages
-import play.api.mvc.Action
-import play.api.mvc.Controller
-import play.api.mvc.EssentialAction
-import play.api.mvc.Request
-import play.api.mvc.RequestHeader
-import play.api.mvc.Result
-import play.api.mvc.Results
-import play.api.mvc.Security
+import play.api.mvc._
 import views.html
-import play.api.mvc.AnyContent
-import model.repository.User
 
 class AuthController extends Controller with Secured {
 
@@ -83,7 +74,7 @@ trait Secured {
   /**
    * Handle unauthorized user
    */
-  def onUnauthorized(request: RequestHeader): play.api.mvc.SimpleResult = {
+  def onUnauthorized(request: RequestHeader): Result = {
     Results.Redirect(routes.AuthController.login).withNewSession.flashing("success" -> Messages("messages.user.expired"))
   }
 

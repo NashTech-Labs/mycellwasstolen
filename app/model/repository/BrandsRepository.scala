@@ -2,12 +2,13 @@ package model.repository
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
-import scala.slick.driver.PostgresDriver.simple._
 import utils.Connection
+import model.repository._
 import play.api.Logger
+import java.util.Date
 
 trait BrandRepository extends BrandTable {
-
+ 
   /**
    * Returns List of mobile Brands
    */
@@ -53,6 +54,7 @@ trait BrandTable {
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
     def date: Column[String] = column[String]("date", O.NotNull)
     def * : scala.slick.lifted.ProvenShape[Brand] = (name, date, id) <> (Brand.tupled, Brand.unapply)
+    def brandIndex: scala.slick.lifted.Index = index("idx_brand", (name), unique = true)
   }
 
   val brands = TableQuery[Brands]

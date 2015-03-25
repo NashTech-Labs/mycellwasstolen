@@ -20,9 +20,9 @@ GET    /isImeiExist                   controllers.MobileController.isImeiExist(i
 #Javascript Routes
 
 GET    /javascriptRoutes              controllers.Application.javascriptRoutes 
-GET    /mobile                        controllers.MobileController.getImeiMeidList(imeid: String)
+GET    /mobileUser                        controllers.MobileController.getMobileUser(imeid: String)
 GET    /mobileStatus                  controllers.MobileController.mobileStatus
-GET    /mobileModel                   controllers.MobileController.getMobileModels(id:Int)
+GET    /mobileModel                   controllers.MobileController.getModels(id:Int)
 GET    /pending                       controllers.AdminController.pending(imeid: String)
 GET    /changeMobileRegType           controllers.AdminController.changeMobileRegType(imeid: String)
 GET    /delete                        controllers.AdminController.deleteMobile(imeid: String)
@@ -34,15 +34,15 @@ POST   /authenticate                  controllers.AuthController.authenticate
 GET    /logout                        controllers.AuthController.logout
 GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
 GET    /admin/auditpage               controllers.AdminController.auditPage
-POST    /admin/auditIMEID              controllers.AdminController.audit
-GET   /admin/auditAllRecords         controllers.AdminController.auditAllRecords
+POST   /admin/auditIMEID              controllers.AdminController.audit
+GET    /admin/auditAllRecords         controllers.AdminController.auditAllRecords
 GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
-POST   /saveMobileName                controllers.MobileController.saveMobileName
+POST   /saveMobileName                controllers.MobileController.saveBrand
 GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)
 GET    /approve                       controllers.AdminController.approve(imeid: String,page:String)
 GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
 GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
-POST   /createMobileModel             controllers.MobileController.createMobileModel
+POST   /createMobileModel             controllers.MobileController.saveModel
                      
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                  controllers.Assets.at(path="/public", file)

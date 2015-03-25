@@ -9,13 +9,12 @@ import play.api.Logger
 import java.util.Date
 
 trait AuditRepository extends AuditTable {
-
-  /**
+  /*
    * Inserts new timestamp when an imei number check
- * @param timestamp, object of Audit
- * @return auto generated id
- */
-def insertTimestamp(timestamp: Audit): Either[String, Option[Int]] = {
+   * @param timestamp, object of Audit
+   * @return auto generated id
+   */
+  def insertTimestamp(timestamp: Audit): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Called insertTimestamp")
@@ -30,21 +29,21 @@ def insertTimestamp(timestamp: Audit): Either[String, Option[Int]] = {
 
   /**
    * Gets timestamp of a particular imei number
- * @param imeid of mobile
- * @return list of Audit object
- */
-def getAllTimestampsByIMEID(imeid: String): List[Audit] = {
+   * @param imeid of mobile
+   * @return list of Audit object
+   */
+  def getAllTimestampsByIMEID(imeid: String): List[Audit] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getAllTimestampsByIMEID" + imeid)
       audits.filter(_.mobileIMEID === imeid).list
     }
   }
-  
+
   /**
    * Get all timestamps records
- * @return list of object of Audit instances
- */
-def getAllTimestamps: List[Audit] = {
+   * @return list of object of Audit instances
+   */
+  def getAllTimestamps: List[Audit] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getAllTimestamps")
       audits.list
@@ -53,8 +52,8 @@ def getAllTimestamps: List[Audit] = {
 
 }
 
-trait AuditTable extends MobileTable {
-  private[AuditTable] class Audits(tag: Tag) extends Table[Audit](tag,"audits") {
+trait AuditTable {
+  private[AuditTable] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def mobileIMEID: Column[String] = column[String]("mobile_imeid", O.NotNull)
     def timestamp: Column[String] = column[String]("timestamp", O.NotNull)
@@ -71,10 +70,10 @@ case class Audit(
   mobileIMEID: String,
   timestamp: String,
   id: Option[Int] = None)
-  
+
 /**
  * Represents audit form
  */
-case class AuditForm(imeiMeid:String)
+case class AuditForm(imeiMeid: String)
 
 object AuditRepository extends AuditRepository

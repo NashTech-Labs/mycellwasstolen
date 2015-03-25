@@ -1,5 +1,4 @@
 package repository.MobileRepositoryTest
-
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 import model.repository.Brand
@@ -17,7 +16,7 @@ import model.repository.Model
 
 /**
  * Class MobileRepoTest: Unit tests the methods in MobileRepository.
- */
+ 
 
 class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileRepository with BrandRepository with ModelRepository {
 
@@ -63,7 +62,7 @@ class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileReposit
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       //Changes its status
-      val returnValueOnChange = MobileRepository.changeStatusToApproveByIMEID(mobileUser)
+      val returnValueOnChange = MobileRepository.changeStatusToApproveByIMEID("12345678901234")
       assert(returnValueOnChange === Right(1))
     }
   }
@@ -74,7 +73,7 @@ class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileReposit
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       //Changes its status
-      val returnValueOnChange = MobileRepository.changeStatusToDemandProofByIMEID(mobileUser)
+      val returnValueOnChange = MobileRepository.changeStatusToDemandProofByIMEID("12345678901234")
       assert(returnValueOnChange === Right(1))
     }
   }
@@ -117,7 +116,4 @@ class MobileRepoTest extends FunSuite with BeforeAndAfterEach with MobileReposit
       assert(returnValueOnChange === valueToComapre)
     }
   }
-  
-  
-
-}
+}*/ 

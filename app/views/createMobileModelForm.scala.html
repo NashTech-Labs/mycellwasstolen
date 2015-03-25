@@ -29,7 +29,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="well form-horizontal">
-							@helper.form(action = routes.MobileController.createMobileModel, 'id ->"mobileModelForm") {
+							@helper.form(action = routes.MobileController.saveModel, 'id ->"mobileModelForm") {
 							 <fieldset>
 								@select(field=createmobilemodelform("mobileName"),options=mobilesName.map(x=>
 									(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Name",

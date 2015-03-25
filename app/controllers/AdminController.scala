@@ -15,15 +15,11 @@ import net.liftweb.json.JsonDSL._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.mvc.Results.Redirect
-import model.repository.MobileStatus
-import model.repository.User
-import model.repository.MobileRepository
-import model.repository.Mobile
-import model.repository.AuditForm
-import model.repository.Audit
-import model.repository.AuditRepository
+import model.repository.{ Mobile, Brand, Model, Audit, User, MobileStatus, AuditForm }
+import model.repository.{ AuditRepository, MobileRepository }
+import utils.Constants
 
-class AdminController extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -34,9 +30,9 @@ class AdminController extends Controller with Secured {
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
   /**
- * Describe mobile audit form
- */
-val auditform = Form(
+   * Describe mobile audit form
+   */
+  val auditform = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(AuditForm.apply)(AuditForm.unapply))
 
@@ -48,7 +44,7 @@ val auditform = Form(
     implicit request =>
       Logger.info("AdminController:mobiles method has been called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = MobileRepository.getAllMobilesUserWithBrandAndModel(status)
+      val mobiles = mobileRepo.getAllMobilesUserWithBrandAndModel(status)
       Logger.info("mobiles Admin Controller::::" + mobiles)
       Ok(html.admin.mobiles(status, mobiles, user))
   }
@@ -59,10 +55,10 @@ val auditform = Form(
    */
   def approve(imeiId: String, page: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:approve - change status to approve : " + imeiId)
-    val result = MobileRepository.changeStatusToApproveByIMEID(imeiId)
+    val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
     result match {
-      case Right(1) =>
-        val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
+      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+        val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
         mobileUser match {
           case Some(mobile) =>
             if (mobileUser.get.regType == "stolen") {
@@ -85,6 +81,10 @@ val auditform = Form(
         Logger.info("AdminController: - false")
         Redirect(routes.AdminController.mobiles(page)).flashing(
           "error" -> "Something wrong!!")
+      case _ =>
+        Logger.info("AdminController: - false")
+        Redirect(routes.AdminController.mobiles(page)).flashing(
+          "error" -> "Something wrong!!")
     }
   }
 
@@ -94,10 +94,10 @@ val auditform = Form(
    */
   def proofDemanded(imeiId: String, page: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
-    val result = MobileRepository.changeStatusToDemandProofByIMEID(imeiId)
+    val result = mobileRepo.changeStatusToDemandProofByIMEID(imeiId)
     result match {
-      case Right(id) =>
-        val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
+      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+        val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
         mobileUser match {
           case Some(mobile) =>
             if (mobileUser.get.regType == "stolen") {
@@ -120,6 +120,10 @@ val auditform = Form(
         Logger.info("AdminController: - false")
         Redirect(routes.AdminController.mobiles(page)).flashing(
           "error" -> "Something wrong!!")
+      case _ =>
+        Logger.info("AdminController: - false")
+        Redirect(routes.AdminController.mobiles(page)).flashing(
+          "error" -> "Something wrong!!")
     }
   }
 
@@ -129,13 +133,15 @@ val auditform = Form(
    */
   def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:pending - change status to pending : " + imeiId)
-    val result = MobileRepository.changeStatusToPendingByIMEID(imeiId)
+    val result = mobileRepo.changeStatusToPendingByIMEID(imeiId)
     result match {
-      case Right(id) =>
+      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
         Logger.info("AdminController: - true")
         Ok("success")
       case Left(message) =>
         Logger.info("AdminController: - false")
+        Ok("error")
+      case _ => Logger.info("AdminController: - false")
         Ok("error")
     }
   }
@@ -155,7 +161,7 @@ val auditform = Form(
    */
   def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
-    val mobileUser = MobileRepository.getMobileUserByIMEID(imeiId)
+    val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
     Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
     val regType = if (mobileUser.get.regType == "stolen") {
       "Clean"
@@ -167,7 +173,7 @@ val auditform = Form(
       regType, mobileUser.get.mobileStatus, mobileUser.get.description,
       mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
       mobileUser.get.id)
-    val result = MobileRepository.changeRegTypeByIMEID(updatedMobile)
+    val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
     result match {
       case Right(id) =>
         Logger.info("AdminController changeMobileRegType : - true")
@@ -185,10 +191,10 @@ val auditform = Form(
   def deleteMobile(imeid: String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:deleteMobile: " + imeid)
-      val mobileUser = MobileRepository.getMobileUserByIMEID(imeid)
-      val result = MobileRepository.deleteMobileUser(imeid)
+      val mobileUser = mobileRepo.getMobileUserByIMEID(imeid)
+      val result = mobileRepo.deleteMobileUser(imeid)
       result match {
-        case Right(1) =>
+        case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
           mobileUser match {
             case Some(mobile) =>
               Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
@@ -198,8 +204,11 @@ val auditform = Form(
               Logger.info("AdminController:deleteMobile - error in fetching record")
               Ok("Success of Delete ajax call")
           }
-        case Left(message) =>
+        case Left(message: String) =>
           Logger.info("AdminController:deleteMobile" + message)
+          Ok("error in Delete ajax call")
+        case _ =>
+          Logger.info("AdminController:deleteMobile")
           Ok("error in Delete ajax call")
       }
   }
@@ -243,5 +252,4 @@ val auditform = Form(
 
   }
 }
-
-object AdminController extends AdminController
+object AdminController extends AdminController(MobileRepository)

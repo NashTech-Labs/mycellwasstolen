@@ -2,7 +2,6 @@
 package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.session.Session
 import org.specs2.mutable.Specification
 import play.api.test.WithServer
 import play.api.libs.ws.WS
@@ -11,7 +10,6 @@ import play.api.test.Helpers.await
 import play.api.test.TestServer
 import play.api.test.WithServer
 import utils.Connection
-import model.domains.Domain._
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.support.ui.Select
 import play.api.test.FakeApplication
@@ -208,13 +206,5 @@ class MobileRegistrationTest extends Specification{
       }
        driver.findElementByCssSelector("BODY").getText().contains("")   
     }    
-  }
-  
-  def deleteTestData() {
-    Connection.databaseObject.withSession { implicit session: Session =>
-        (for { mobile <- Mobile} yield mobile).delete
-        (for { brand <- Brands } yield brand).delete
-      	(for { mobileModel <- MobileModel } yield mobileModel).delete
-    }
   }
 }*/

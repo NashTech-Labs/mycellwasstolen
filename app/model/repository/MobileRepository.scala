@@ -1,11 +1,12 @@
 package model.repository
-import scala.slick.driver
-import scala.slick.lifted.ProvenShape
+
 import scala.slick.driver.PostgresDriver.simple._
-import play.api.Logger
+import scala.slick.lifted.ProvenShape
+import utils.Connection
 import model.repository._
 import play.api.Logger
-import utils.Connection
+import java.util.Date
+import utils.StatusUtil._
 
 /**
  * MobileRepository provides all concrete implementation of
@@ -13,7 +14,6 @@ import utils.Connection
  */
 
 trait MobileRepository extends MobileTable {
-  import utils.StatusUtil.Status
 
   /**
    * Inserts new Mobile Registration Record
@@ -177,8 +177,10 @@ trait MobileTable extends BrandTable with ModelTable {
     def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
+
     def fkeyBrand = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
+
     def fkeyModel = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
