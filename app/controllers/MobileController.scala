@@ -14,25 +14,14 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import utils.Common
 import utils.TwitterTweet
-import model.repository.MobileRegisterForm
-import model.repository.MobileStatus
-import model.repository.BrandForm
-import model.repository.ModelForm
-import model.repository.BrandRepository
-import model.repository.User
+import model.repository._
 import utils.StatusUtil
-import model.repository.MobileRepository
-import model.repository.Mobile
-import model.repository.ModelRepository
-import model.repository.Brand
-import model.repository.Model
-import model.repository.MobileDetail
-import model.repository.AuditRepository
 import java.util.Date
-import model.repository.Audit
 import utils.Constants
 
-class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository, modelRepo: ModelRepository) extends Controller with Secured {
+class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
+                       modelRepo: ModelRepository, auditRepo: AuditRepository, mail: Common)
+  extends Controller with Secured {
   /**
    * Describes the new mobile registration form (used in both stolen and secure mobile registration form)
    */
@@ -158,12 +147,12 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
           case Right(Some(insertRecord: Int)) if insertRecord != Constants.ZERO =>
             try {
               if (mobileuser.regType == "stolen") {
-                Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-                  "Registration Confirmed on MCWS", Common.stolenRegisterMessage(mobileuser.imeiMeid))
+                mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+                  "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
                 // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
-                Common.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-                  "Registration Confirmed on MCWS", Common.cleanRegisterMessage(mobileuser.imeiMeid))
+                mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+                  "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
                 // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
               Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
@@ -332,4 +321,4 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   }
 }
 
-object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository)
+object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, Common)

@@ -19,7 +19,7 @@ import model.repository.{ Mobile, Brand, Model, Audit, User, MobileStatus, Audit
 import model.repository.{ AuditRepository, MobileRepository }
 import utils.Constants
 
-class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: Common) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -53,39 +53,39 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
    * changes mobile status to approved
    * @param imeiId of mobile
    */
-  def approve(imeiId: String, page: String): EssentialAction = withAuth { username => 
+  def approve(imeiId: String, page: String): EssentialAction = withAuth { username =>
     implicit request =>
-    Logger.info("AdminController:approve - change status to approve : " + imeiId)
-    val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
-    result match {
-      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-        val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
-        mobileUser match {
-          case Some(mobile) =>
-            if (mobileUser.get.regType == "stolen") {
-              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-            } else {
-              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
-            }
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
-          case None =>
-            Logger.info("AdminController:approve - error in fetching record after approved")
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "Mobile has been approved successfully!")
-        }
-      case Left(messege) =>
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "error" -> "Something wrong!!")
-      case _ =>
-        Logger.info("AdminController: - false")
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "error" -> "Something wrong!!")
-    }
+      Logger.info("AdminController:approve - change status to approve : " + imeiId)
+      val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+          mobileUser match {
+            case Some(mobile) =>
+              if (mobileUser.get.regType == "stolen") {
+                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+              } else {
+                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+              }
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "Mobile has been approved successfully!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after approved")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "Mobile has been approved successfully!")
+          }
+        case Left(messege) =>
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "error" -> "Something wrong!!")
+        case _ =>
+          Logger.info("AdminController: - false")
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "error" -> "Something wrong!!")
+      }
   }
 
   /**
@@ -94,39 +94,39 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
    */
   def proofDemanded(imeiId: String, page: String): EssentialAction = withAuth { username =>
     implicit request =>
-    Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
-    val result = mobileRepo.changeStatusToDemandProofByIMEID(imeiId)
-    result match {
-      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-        val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
-        mobileUser match {
-          case Some(mobile) =>
-            if (mobileUser.get.regType == "stolen") {
-              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-            } else {
-              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-              //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
-            }
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "A Proof has been demanded from this user!")
-          case None =>
-            Logger.info("AdminController:approve - error in fetching record after proof demanded")
-            Redirect(routes.AdminController.mobiles(page)).flashing(
-              "success" -> "A Proof has been demanded from this user!")
-        }
-      case Left(message) =>
-        Logger.info("AdminController: - false")
-        Logger.error(message)
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "error" -> "Something wrong!!")
-      case _ =>
-        Logger.info("AdminController: - false")
-        Redirect(routes.AdminController.mobiles(page)).flashing(
-          "error" -> "Something wrong!!")
-    }
+      Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
+      val result = mobileRepo.changeStatusToDemandProofByIMEID(imeiId)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+          mobileUser match {
+            case Some(mobile) =>
+              if (mobileUser.get.regType == "stolen") {
+                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+              } else {
+                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+              }
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "A Proof has been demanded from this user!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after proof demanded")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "A Proof has been demanded from this user!")
+          }
+        case Left(message) =>
+          Logger.info("AdminController: - false")
+          Logger.error(message)
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "error" -> "Something wrong!!")
+        case _ =>
+          Logger.info("AdminController: - false")
+          Redirect(routes.AdminController.mobiles(page)).flashing(
+            "error" -> "Something wrong!!")
+      }
   }
 
   /**
@@ -135,18 +135,19 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
    */
   def pending(imeiId: String): EssentialAction = withAuth { username =>
     implicit request =>
-    Logger.info("AdminController:pending - change status to pending : " + imeiId)
-    val result = mobileRepo.changeStatusToPendingByIMEID(imeiId)
-    result match {
-      case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-        Logger.info("AdminController: - true")
-        Ok("success")
-      case Left(message) =>
-        Logger.info("AdminController: - false")
-        Ok("error")
-      case _ => Logger.info("AdminController: - false")
-        Ok("error")
-    }
+      Logger.info("AdminController:pending - change status to pending : " + imeiId)
+      val result = mobileRepo.changeStatusToPendingByIMEID(imeiId)
+      result match {
+        case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+          Logger.info("AdminController: - true")
+          Ok("success")
+        case Left(message) =>
+          Logger.info("AdminController: - false")
+          Ok("error")
+        case _ =>
+          Logger.info("AdminController: - false")
+          Ok("error")
+      }
   }
 
   /**
@@ -162,30 +163,33 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
    * Changes mobile status to clean or stolen
    * @param imeiId of mobile
    */
-  def changeMobileRegType(imeiId: String): EssentialAction = withAuth { username => 
+  def changeMobileRegType(imeiId: String): EssentialAction = withAuth { username =>
     implicit request =>
-    Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
-    val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
-    Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
-    val regType = if (mobileUser.get.regType == "stolen") {
-      "Clean"
-    } else {
-      "stolen"
-    }
-    val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
-      mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
-      regType, mobileUser.get.mobileStatus, mobileUser.get.description,
-      mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
-      mobileUser.get.id)
-    val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
-    result match {
-      case Right(id) =>
-        Logger.info("AdminController changeMobileRegType : - true")
-        Ok("success")
-      case Left(message) =>
-        Logger.info("AdminController changeMobileRegType : - false")
-        Ok("error")
-    }
+      Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
+      val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+      Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
+      val regType = if (mobileUser.get.regType == "stolen") {
+        "Clean"
+      } else {
+        "stolen"
+      }
+      val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
+        mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
+        regType, mobileUser.get.mobileStatus, mobileUser.get.description,
+        mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
+        mobileUser.get.id)
+      val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          Logger.info("AdminController changeMobileRegType : - true")
+          Ok("success")
+        case Left(message) =>
+          Logger.info("AdminController changeMobileRegType : - false")
+          Ok("error")
+        case _ =>
+          Logger.info("AdminController changeMobileRegType : - false")
+          Ok("error")
+      }
   }
 
   /**
@@ -240,7 +244,7 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
           Ok(html.admin.audit("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
         },
         success = { audit =>
-          val list = AuditRepository.getAllTimestampsByIMEID(audit.imeiMeid)
+          val list = auditRepo.getAllTimestampsByIMEID(audit.imeiMeid)
           Ok(html.admin.audit("imeid", list, user))
         })
   }
@@ -251,9 +255,9 @@ class AdminController(mobileRepo: MobileRepository,mail:Common) extends Controll
   def auditAllRecords: EssentialAction = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-      val list = AuditRepository.getAllTimestamps
+      val list = auditRepo.getAllTimestamps
       Ok(html.admin.audit("all", list, user))
 
   }
 }
-object AdminController extends AdminController(MobileRepository,Common)
+object AdminController extends AdminController(MobileRepository, AuditRepository, Common)
