@@ -74,11 +74,7 @@ trait Secured {
   /**
    * Handle unauthorized user
    */
-<<<<<<< HEAD
   def onUnauthorized(request: RequestHeader): Result = {
-=======
-  def onUnauthorized(request: RequestHeader): play.api.mvc.Result = {
->>>>>>> d6c346eb6bc5960f6faf8baf3b89a64c6be95997
     Results.Redirect(routes.AuthController.login).withNewSession.flashing("success" -> Messages("messages.user.expired"))
   }
 

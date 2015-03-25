@@ -1,4 +1,5 @@
 package repository.MobileRepositoryTest
+
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 import model.repository.Brand
@@ -16,7 +17,7 @@ import model.repository.Model
 
 /**
  * Class MobileRepoTest: Unit tests the methods in MobileRepository.
- 
+ */
 
 class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository with ModelRepository {
 
@@ -24,18 +25,22 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
   val brand = Brand("nokia", "12-17-2013")
   val model = Model("N72", 1)
   val mobileUser = Mobile(
-    "gauravs", 1, 2, "12345678901234", "12345678902134", "12-05-2013", "+91 9839839830",
+    "gauravs", 1, 1, "12345678901234", "12345678902134", "12-05-2013", "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454", Some(1))
+    
+    
 
   //Mobile Insertion Test 
   test("MobileRepository:insert and get mobile name successfully ") {
     running(FakeApplication()) {
+      BrandRepository.insertBrand(brand)
+      ModelRepository.insertModel(model)
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       assert(insertedMobile === Right(Some(1)))
     }
   }
 
-  //Tests the insertion of a MobileUser with Duplicate Email
+/*  //Tests the insertion of a MobileUser with Duplicate Email
   test("MobileRepository:insert fails since email is duplicate ") {
     running(FakeApplication()) {
       //Insert a Mobile Record first
@@ -63,11 +68,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       //Changes its status
-<<<<<<< HEAD
-      val returnValueOnChange = MobileRepository.changeStatusToApproveByIMEID("12345678901234")
-=======
       val returnValueOnChange = MobileRepository.changeStatusToApproveByIMEID(imeiInserted)
->>>>>>> d6c346eb6bc5960f6faf8baf3b89a64c6be95997
       assert(returnValueOnChange === Right(1))
     }
   }
@@ -78,11 +79,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       //Changes its status
-<<<<<<< HEAD
-      val returnValueOnChange = MobileRepository.changeStatusToDemandProofByIMEID("12345678901234")
-=======
       val returnValueOnChange = MobileRepository.changeStatusToDemandProofByIMEID(imeiInserted)
->>>>>>> d6c346eb6bc5960f6faf8baf3b89a64c6be95997
       assert(returnValueOnChange === Right(1))
     }
   }
@@ -122,6 +119,6 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       val returnValueOnChange = MobileRepository.deleteMobileUser(imeiInserted)
       assert(returnValueOnChange === Right(1))
     }
-  }
-<<<<<<< HEAD
-}*/ 
+  }*/
+  
+}
