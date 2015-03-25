@@ -37,7 +37,7 @@ object Global extends GlobalSettings {
         }
       }
     } catch {
-      case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
+      case ex: Exception => Logger.info("please provide csvs in conf" )
     }
   }
 

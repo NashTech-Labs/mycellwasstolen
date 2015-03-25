@@ -1,4 +1,4 @@
-package repository.MobileRepositoryTest
+/*package repository.MobileRepositoryTest
 
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
@@ -22,4 +22,4 @@ class BrandRepoTest extends FunSuite with BeforeAndAfterAll {
     }
   }*/
 
-}
+}*/

@@ -77,8 +77,7 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
             Redirect(routes.AdminController.mobiles(page)).flashing(
               "success" -> "Mobile has been approved successfully!")
         }
-      case Left(message) =>
-        Logger.info("AdminController: - false")
+      case Left(messege) =>
         Redirect(routes.AdminController.mobiles(page)).flashing(
           "error" -> "Something wrong!!")
       case _ =>
@@ -118,6 +117,7 @@ class AdminController(mobileRepo: MobileRepository) extends Controller with Secu
         }
       case Left(message) =>
         Logger.info("AdminController: - false")
+        Logger.error(message)
         Redirect(routes.AdminController.mobiles(page)).flashing(
           "error" -> "Something wrong!!")
       case _ =>

@@ -64,7 +64,6 @@ trait ModelTable extends BrandTable {
       onDelete = ForeignKeyAction.Cascade)
     def modelIndex: scala.slick.lifted.Index = index("idx_model", (name), unique = true)
   }
-
   val models = TableQuery[Models]
   val autoKeyModels = models returning models.map(_.id)
 }

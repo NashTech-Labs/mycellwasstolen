@@ -29,7 +29,6 @@ object readcsv {
     var nextLine: Array[String] = Array()
     try {
       while (Option(nextLine = reader.readNext()).isDefined) {
-
         var list = new ArrayList[String]
         println("--------------")
         for (i <- 0 until 15) {

@@ -172,6 +172,11 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
                 Logger.info("" + e.printStackTrace())
                 Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
             }
+<<<<<<< HEAD
+=======
+            Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
+          }
+>>>>>>> d6c346eb6bc5960f6faf8baf3b89a64c6be95997
           case Right(None) =>
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
           case Left(message) =>
