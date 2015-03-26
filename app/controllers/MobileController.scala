@@ -149,11 +149,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
               if (mobileuser.regType == "stolen") {
                 mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
                   "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
-                // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Stolen at mycellwasstolen.com")
               } else {
                 mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
                   "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
-                // TwitterTweet.tweetAMobileRegistration(mobileuser.imeiMeid, "is requested to be marked as Secure at mycellwasstolen.com")
               }
               Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
             } catch {
@@ -285,7 +283,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
         val df = new SimpleDateFormat("MM/dd/yyyy")
         val date = df.format(sqldate)
         val regbrand = BrandRepository.insertBrand(Brand(brand.name, date))
-
         regbrand match {
           case Right(id) => {
             Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))

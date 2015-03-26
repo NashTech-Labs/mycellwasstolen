@@ -17,14 +17,24 @@ import utils.Common
 
 class AdminControllerTestCases extends Specification with Mockito {
 
-  val mobileUser = Mobile(
+  val stolenMobileUser = Mobile(
+    "sushil", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    
+    val stolenMobileUser1 = Mobile(
+    "sushil", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
+    "gs@gmail.com", "Clean", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    
+  val cleanMobileUser = Mobile(
     "sushil", 1, 1, "12345678901234", "123456789012678", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "nokia", "E5")
+    "gs@gmail.com", "Clean", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    
   val mobileWithBrand = (Mobile(
-    "gs", 1, 1, "12345678901234", "123456789012678", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "ddas  asd", "12-17-2013", "gaurav.png", "nokia", "E5"), "nokia", "E5")
+    "gs", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5"), "nokia", "E5")
+    
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
-  val audit = List(Audit("12345678901234", "12-05-2013",Some(1)))
+  val audit = List(Audit("864465028854206", "12-05-2013", Some(1)))
   val user = User("admin", "knol2013")
 
   val mockedMail = mock[Common]
@@ -35,7 +45,7 @@ class AdminControllerTestCases extends Specification with Mockito {
   "AdminControllerTesting: mobiles" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedMobilRepo.insertMobileUser(mobileUser)).thenReturn(Right(Some(1)))
+      when(mockedMobilRepo.insertMobileUser(stolenMobileUser)).thenReturn(Right(Some(1)))
       when(mockedMobilRepo.getAllMobilesUserWithBrandAndModel(Status.pending.toString())).thenReturn(getAllMobilesWithBrand)
       val result = adminController.mobiles(Status.pending.toString())(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(200)
@@ -43,26 +53,77 @@ class AdminControllerTestCases extends Specification with Mockito {
     }
   }
 
-  "AdminControllerTesting: approve" in {
+  "AdminControllerTesting: approve-> of stolen mobile" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToApproveByIMEID("864465028854206")).thenReturn(Right(1))
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      mockedMail.sendMail(stolenMobileUser.imeiMeid + " <" + stolenMobileUser.email + ">",
+        "Registration Confirmed on MCWS", mockedMail.approvedMessage(stolenMobileUser.imeiMeid))
+      val result = adminController.approve("864465028854206", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(303)
+    }
+  }
+  
+  "AdminControllerTesting: approve-> of clean mobile" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.changeStatusToApproveByIMEID("12345678901234")).thenReturn(Right(1))
-      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(mobileUser))
-      mockedMail.sendMail(mobileUser.imeiMeid + " <" + mobileUser.email + ">",
-        "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.imeiMeid))
+      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(cleanMobileUser))
+      mockedMail.sendMail(cleanMobileUser.imeiMeid + " <" + cleanMobileUser.email + ">",
+        "Registration Confirmed on MCWS", mockedMail.approvedMessage(cleanMobileUser.imeiMeid))
       val result = adminController.approve("12345678901234", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(303)
     }
   }
 
-  "AdminControllerTesting: proofDemanded" in {
+
+  "AdminControllerTesting: approve -> with invalid imeid id" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToApproveByIMEID("12345678901234")).thenReturn(Left("error"))
+      val result = adminController.approve("12345678901234", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(303)
+    }
+  }
+
+  "AdminControllerTesting: approve -> with vaid imeid data but data not find after approved" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.changeStatusToApproveByIMEID("12345678901234")).thenReturn(Right(1))
-      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(mobileUser))
-      mockedMail.sendMail(mobileUser.imeiMeid + " <" + mobileUser.email + ">",
-        "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.imeiMeid))
-      val result = adminController.proofDemanded("12345678901234", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(None)
+      val result = adminController.approve("12345678901234", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(303)
+    }
+  }
+  
+  "AdminControllerTesting: proofDemanded" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToDemandProofByIMEID("864465028854206")).thenReturn(Right(1))
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      mockedMail.sendMail(stolenMobileUser.imeiMeid + " <" + stolenMobileUser.email + ">",
+        "Registration Confirmed on MCWS", mockedMail.demandProofMessage(stolenMobileUser.imeiMeid))
+      val result = adminController.proofDemanded("864465028854206", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(303)
+    }
+  }
+
+  "AdminControllerTesting: proofDemanded-> with invalid imei id" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToDemandProofByIMEID("864465028854206")).thenReturn(Left("error"))
+      val result = adminController.proofDemanded("864465028854206", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(303)
+    }
+  }
+
+  "AdminControllerTesting: proofDemanded-> with valid imei id but data not find after proofDemanded" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToDemandProofByIMEID("864465028854206")).thenReturn(Right(1))
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(None)
+      val result = adminController.proofDemanded("864465028854206", Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(303)
     }
   }
@@ -70,8 +131,8 @@ class AdminControllerTestCases extends Specification with Mockito {
   "AdminControllerTesting: pending" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedMobilRepo.changeStatusToPendingByIMEID("12345678901234")).thenReturn(Right(1))
-      val result = adminController.pending("12345678901234")(FakeRequest().withSession(Security.username -> "admin")).run
+      when(mockedMobilRepo.changeStatusToPendingByIMEID("864465028854206")).thenReturn(Right(1))
+      val result = adminController.pending("864465028854206")(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
@@ -89,8 +150,20 @@ class AdminControllerTestCases extends Specification with Mockito {
   "AdminControllerTesting: changeMobileRegType" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(mobileUser))
-      val result = adminController.changeMobileRegType("12345678901234")(FakeRequest().withSession(Security.username -> "admin")).run
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      when(mockedMobilRepo.changeRegTypeByIMEID(stolenMobileUser1)).thenReturn(Right(1))
+      val result = adminController.changeMobileRegType("864465028854206")(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/plain")
+    }
+  }
+  
+  "AdminControllerTesting: changeMobileRegType -> with invalid mobile data" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      when(mockedMobilRepo.changeRegTypeByIMEID(stolenMobileUser1)).thenReturn(Left("error"))
+      val result = adminController.changeMobileRegType("864465028854206")(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
@@ -99,9 +172,30 @@ class AdminControllerTestCases extends Specification with Mockito {
   "AdminControllerTesting: deleteMobile" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(mobileUser))
-      when(mockedMobilRepo.deleteMobileUser("12345678901234")).thenReturn(Right(1))
-      val result = adminController.deleteMobile("12345678901234")(FakeRequest().withSession(Security.username -> "admin")).run
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      when(mockedMobilRepo.deleteMobileUser("864465028854206")).thenReturn(Right(1))
+      val result = adminController.deleteMobile("864465028854206")(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/plain")
+    }
+  }
+  
+  "AdminControllerTesting: deleteMobile -> of invalid record" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854207")).thenReturn(None)
+      val result = adminController.deleteMobile("864465028854207")(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/plain")
+    }
+  }
+  
+  "AdminControllerTesting: deleteMobile -> error in delete record" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
+      when(mockedMobilRepo.deleteMobileUser("864465028854206")).thenReturn(Left("error"))
+      val result = adminController.deleteMobile("864465028854206")(FakeRequest().withSession(Security.username -> "admin")).run
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
@@ -116,11 +210,21 @@ class AdminControllerTestCases extends Specification with Mockito {
     }
   }
 
-  "AdminControllerTesting: audit" in {
+  "AdminControllerTesting: audit -> with invalid form data" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedAuditRepo.getAllTimestampsByIMEID("12345678901234")).thenReturn(audit)
+      when(mockedAuditRepo.getAllTimestampsByIMEID("864465028854206")).thenReturn(audit)
       val result = adminController.audit(FakeRequest().withSession(Security.username -> "admin")).run
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/html")
+    }
+  }
+  
+  "AdminControllerTesting: audit -> with valid form data" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedAuditRepo.getAllTimestampsByIMEID("864465028854206")).thenReturn(audit)
+      val result = adminController.audit(FakeRequest().withFormUrlEncodedBody("imeiMeid"->"864465028854206").withSession(Security.username -> "admin")).run
       status(result) must equalTo(200)
       contentType(result) must beSome("text/html")
     }

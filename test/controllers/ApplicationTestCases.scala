@@ -1,22 +1,15 @@
-/*
 package controllers
 
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-
-import model.domains.Domain.User
 import play.api.test
 import play.api.test.FakeApplication
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import model.repository.User
 //import com.amazonaws.services.identitymanagement.model.User
 
-//@RunWith(classOf[JUnitRunner])
 class ApplicationTestCases extends Specification with Mockito {
-
-  
-  
-  
   
   "ApplicationController: index" in {
     running(FakeApplication()) {
@@ -34,6 +27,4 @@ class ApplicationTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/javascript")
     }
   }
-
-
-}*/
+}

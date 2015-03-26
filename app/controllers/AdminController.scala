@@ -83,8 +83,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
             "error" -> "Something wrong!!")
         case _ =>
           Logger.info("AdminController: - false")
-          Redirect(routes.AdminController.mobiles(page)).flashing(
-            "error" -> "Something wrong!!")
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
       }
   }
 
@@ -101,15 +100,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
           mobileUser match {
             case Some(mobile) =>
-              if (mobileUser.get.regType == "stolen") {
-                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-              } else {
-                mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                  "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
-              }
+              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
             case None =>
@@ -118,14 +110,12 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
                 "success" -> "A Proof has been demanded from this user!")
           }
         case Left(message) =>
-          Logger.info("AdminController: - false")
-          Logger.error(message)
-          Redirect(routes.AdminController.mobiles(page)).flashing(
-            "error" -> "Something wrong!!")
+          Logger.info("AdminController: - false" + message)
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
         case _ =>
           Logger.info("AdminController: - false")
-          Redirect(routes.AdminController.mobiles(page)).flashing(
-            "error" -> "Something wrong!!")
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
+
       }
   }
 
@@ -142,9 +132,6 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           Logger.info("AdminController: - true")
           Ok("success")
         case Left(message) =>
-          Logger.info("AdminController: - false")
-          Ok("error")
-        case _ =>
           Logger.info("AdminController: - false")
           Ok("error")
       }
@@ -200,23 +187,20 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
     implicit request =>
       Logger.info("AdminController:deleteMobile: " + imeid)
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeid)
-      val result = mobileRepo.deleteMobileUser(imeid)
-      result match {
-        case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-          mobileUser match {
-            case Some(mobile) =>
-              mail.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-                "Delete mobile registration from MCWS", Common.deleteMessage(mobileUser.get.imeiMeid))
+      mobileUser match {
+        case Some(mobile) =>
+          val result = mobileRepo.deleteMobileUser(imeid)
+          result match {
+            case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+              mail.sendMail(mobile.imeiMeid + "<" + mobile.email + ">",
+                "Delete mobile registration from MCWS", Common.deleteMessage(mobile.imeiMeid))
               Ok("Success of Delete ajax call")
-            case None =>
-              Logger.info("AdminController:deleteMobile - error in fetching record")
-              Ok("Success of Delete ajax call")
+            case Left(msg) =>
+              Logger.info("AdminController:deleteMobile - error in deleting record" + msg)
+              Ok("Error of Delete ajax call")
           }
-        case Left(message: String) =>
-          Logger.info("AdminController:deleteMobile" + message)
-          Ok("error in Delete ajax call")
-        case _ =>
-          Logger.info("AdminController:deleteMobile")
+        case None =>
+          Logger.info("AdminController:deleteMobile - error in fetching record")
           Ok("error in Delete ajax call")
       }
   }
