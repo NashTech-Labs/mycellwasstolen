@@ -1,3 +1,4 @@
+
 package utils
 
 import scala.slick.driver.PostgresDriver.simple._
