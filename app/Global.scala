@@ -1,4 +1,4 @@
-import java.io.File
+import java.io.File 
 import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
@@ -29,15 +29,15 @@ object Global extends GlobalSettings {
     val password = Play.application.configuration.getString("smtp.password")
   try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        (mobiles.ddl ++ brands.ddl ++ models.ddl ++ audits.ddl).create
+        (brands.ddl ++ models.ddl ++ mobiles.ddl ++  audits.ddl).create
         Logger.info("All tables have been created")
-        val filePath = Global.getClass().getClassLoader().getResource("csv")
+      /*  val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
-          //val result = model.convert.readcsv.convert(file)
-        }
+          val result = model.convert.readcsv.convert(file)
+        }*/
       }
     } catch {
-      case ex: Exception => Logger.info("please provide csvs in conf" )
+      case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace() )
     }
   }
 

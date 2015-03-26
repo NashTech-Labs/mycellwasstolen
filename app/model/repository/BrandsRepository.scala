@@ -1,5 +1,5 @@
 package model.repository
-import scala.slick.driver.PostgresDriver.simple._
+ import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
 import utils.Connection

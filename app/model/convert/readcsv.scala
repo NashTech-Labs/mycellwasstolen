@@ -28,7 +28,8 @@ object readcsv {
 
     var nextLine: Array[String] = Array()
     try {
-      while (Option(nextLine = reader.readNext()).isDefined) {
+      while ((nextLine = reader.readNext()) != null) {
+
         var list = new ArrayList[String]
         println("--------------")
         for (i <- 0 until 15) {
@@ -57,5 +58,4 @@ object readcsv {
       val res = MobileRepository.insertMobileUser((Mobile(array(i)(0), augmentString(array(i)(1)).toInt, augmentString(array(i)(2)).toInt, array(i)(3), array(i)(4), array(i)(5), array(i)(6), array(i)(7), array(i)(8), status, array(i)(10), array(i)(11), array(i)(12), array(i)(13), array(i)(14))))
     }
   }
-
 }

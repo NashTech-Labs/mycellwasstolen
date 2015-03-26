@@ -1,4 +1,3 @@
-
 package controllers
 
 import org.mockito.Mockito._
@@ -41,36 +40,6 @@ class MobileControllerTestCases extends Specification with Mockito {
   val mockedAuditRepo = mock[AuditRepository]
 
   val mobileController = new MobileController(mockedMobileRepo, mockedBrandRepo, mockedModelRepo, mockedAuditRepo, mockedMail)
-
-  "MobileControllerTesting: mobileRegistrationForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.mobileRegistrationForm(FakeRequest())
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "MobileControllerTesting: mobileRegistrationSecureForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.mobileRegistrationSecureForm(FakeRequest())
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "MobileControllerTesting: brandRegisterForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      val result = mobileController.brandRegisterForm(FakeRequest().withSession(Security.username -> username)).run
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
   "MobileControllerTesting: modelRegistrationForm" in {
     running(FakeApplication()) {
       Cache.set(username, user)
