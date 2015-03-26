@@ -65,11 +65,11 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
               if (mobileUser.get.regType == "stolen") {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                   "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
               } else {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                   "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-                //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
               }
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "Mobile has been approved successfully!")
