@@ -23,5 +23,6 @@ libraryDependencies ++= Seq(
  "com.amazonaws" % "aws-java-sdk" % "1.6.10",
  "net.sf.opencsv" % "opencsv" % "2.1",
  "org.seleniumhq.selenium" % "selenium-java" % "2.45.0"%  "test",
-  "com.h2database" % "h2" % "1.3.166" % "test"
+  "com.h2database" % "h2" % "1.3.166" % "test",
+   "org.scalastyle" %% "scalastyle" % "0.6.0"
 )
