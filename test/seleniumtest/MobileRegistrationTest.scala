@@ -204,6 +204,7 @@ class MobileRegistrationTest extends Specification{
       }catch{
         case e: NullPointerException => e
       }
+      
        driver.findElementByCssSelector("BODY").getText().contains("")   
     }    
   }
