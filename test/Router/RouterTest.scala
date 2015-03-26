@@ -1,4 +1,4 @@
-/*
+
 package Router
 import org.specs2.mutable.Specification
 import play.api.test.FakeApplication
@@ -84,9 +84,7 @@ class RouterTest extends Specification {
     }
   }
 
-  *//**
-   * Java script routes
-   *//*
+   // Java script routes
   "JavascriptRoutes Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/javascriptRoutes"))
@@ -104,10 +102,7 @@ class RouterTest extends Specification {
   }
 
 
-  *//**
-   * Admin Pages
-   *//*
-
+   // Admin Pages
   "redirect to login" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/login"))
@@ -156,4 +151,3 @@ class RouterTest extends Specification {
   }
 
 }
-*/
