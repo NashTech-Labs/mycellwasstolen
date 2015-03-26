@@ -12,9 +12,8 @@ import play.api.test.Helpers.status
 import model.repository.MobileRepository
 
 class AuthControllerTestCases extends Specification with Mockito {
-  val mockedMobileRepo = mock[MobileRepository]
   val authController = new AuthController
-  
+
   "login" in {
     val result = authController.login(FakeRequest())
     status(result) must equalTo(OK)

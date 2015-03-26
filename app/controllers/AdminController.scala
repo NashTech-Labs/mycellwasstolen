@@ -222,6 +222,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val audit = auditform.bindFromRequest()
+      Logger.info(":::::::::::::::::::::::" + audit)
       audit.fold(
         hasErrors = { form =>
           val list = List()

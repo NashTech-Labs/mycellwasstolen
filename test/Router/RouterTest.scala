@@ -1,4 +1,4 @@
-/*
+
 package Router
 import org.specs2.mutable.Specification
 import play.api.test.FakeApplication
@@ -37,7 +37,6 @@ class RouterTest extends Specification {
   }
 
   "redirect to contact us" in {
-
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/contact-us"))
       status(result) must equalTo(OK)
@@ -47,7 +46,6 @@ class RouterTest extends Specification {
   }
 
   "redirect to blog" in {
-
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/blog"))
       status(result) must equalTo(OK)
@@ -77,16 +75,27 @@ class RouterTest extends Specification {
 
   "posting mobile registration " in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(POST, "/mobileRegistration"))
+      val result = route(FakeRequest(POST, "/mobileRegistration").withFormUrlEncodedBody(
+        "username"->"test",
+       "mobileName"->"1",
+       "mobileModel"->"2",
+       "imeiMeid"->"12345678",
+       "purchaseDate"->"2013-12-23",
+       "contactNo"->"24234325",
+       "email"->"a@gmail.com",
+       "regType"->"stolen",
+       "description"->"test",
+       "regDate"->"2013-12-23",
+       "document"->"/home/gaurav/Desktop/12334542345578.png",
+       "otherMobileBrand"->"lava",
+       "otherMobileModel"->"l5")).get
       status(result) must equalTo(400)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
     }
   }
 
-  *//**
-   * Java script routes
-   *//*
+   //Java script routes test
   "JavascriptRoutes Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/javascriptRoutes"))
@@ -103,18 +112,12 @@ class RouterTest extends Specification {
     }
   }
 
-
-  *//**
-   * Admin Pages
-   *//*
-
   "redirect to login" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/login"))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
-
     }
   }
 
@@ -123,7 +126,6 @@ class RouterTest extends Specification {
       val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "admin", "password" -> "knol2013").withHeaders(CONTENT_TYPE ->
         "application/x-www-form-urlencoded"))
       status(result) must equalTo(303)
-
     }
   }
 
@@ -132,13 +134,11 @@ class RouterTest extends Specification {
       val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "test", "password" -> "pass").withHeaders(CONTENT_TYPE ->
         "application/x-www-form-urlencoded"))
       status(result) must equalTo(400)
-
     }
   }
 
   // Admin page
   "logout Action" in {
-
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
       status(result) must equalTo(303)
@@ -151,9 +151,6 @@ class RouterTest extends Specification {
       val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
       status(result) must equalTo(303)
       contentType(result) must be(None)
-
     }
   }
-
 }
-*/

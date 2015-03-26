@@ -33,4 +33,22 @@ class ResourcesTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/html")
     }
   }
+  
+  "ResourcesTesting: FAQs" in {
+    running(FakeApplication()) {
+      Cache.set(username, user)
+      val result = Resources.faq(FakeRequest())
+      status(result) must equalTo(OK)
+      contentType(result) must beSome("text/html")
+    }
+  }
+  
+  "ResourcesTesting: discussionforum" in {
+    running(FakeApplication()) {
+      Cache.set(username, user)
+      val result = Resources.discussionforum(FakeRequest())
+      status(result) must equalTo(OK)
+      contentType(result) must beSome("text/html")
+    }
+  }
 }
