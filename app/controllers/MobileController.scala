@@ -41,7 +41,22 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "otherMobileModel" -> text)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   /**
-   * Describes the mobile status form
+   * Describes the mobile status form/*  "mobile registrationform template" in new WithApplication { request=>
+    val registrationForm = MobileRegisterForm("userManish",1,1,
+        "123456789012347","1234","20-02-2015","9988776678",
+        "reseamanish@gmail.com","pending",
+        "no document","hello desc","Nokia","Nonokia")
+        
+    val brands  = List(Brand("nokia", "12-17-2013",Some(1)))
+    val user  = User("manish@knoldus.com","secret hai")
+    implicit val request: RequestHeader = FakeRequest().withSession()
+    
+    views.html.mobileRegistrationForm.render(registrationForm,brands,user)
+    views.html.mobileRegistrationForm.ref(registrationForm,brands,user)
+    views.html.mobileRegistrationForm.f(registrationForm,brands,user)
+  }
+*/  
+   * 
    */
   val mobilestatus = Form(
     mapping(
