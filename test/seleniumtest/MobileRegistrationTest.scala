@@ -1,4 +1,4 @@
-/*
+
 package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
@@ -103,7 +103,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("email").sendKeys("harshita@knoldus.com")
       new Select(driver.findElementById("mobileModelId")).selectByVisibleText("Asha 200")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("imeiMeid").sendKeys("12345678909999")
+      driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
       driver.findElementById("description").sendKeys("lost mobile")
@@ -145,7 +145,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("email").sendKeys("harshita@knoldus.com")
       new Select(driver.findElementById("mobileModelId")).selectByVisibleText("Asha 200")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("imeiMeid").sendKeys("12345678909994")
+      driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
       driver.findElementById("description").sendKeys("lost mobile")
@@ -188,7 +188,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementById("email").sendKeys("harshita@knoldus.com")
       new Select(driver.findElementById("mobileModelId")).selectByVisibleText("Asha 200")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("imeiMeid").sendKeys("12345678909999")
+      driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.executeScript("""document.getElementById("purchaseDate").value="03/03/2014";""")
       driver.findElementById("contactNo").sendKeys("1234567890")
      driver.findElementById("description").sendKeys("lost mobile")
@@ -196,7 +196,7 @@ class MobileRegistrationTest extends Specification{
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")
       driver.findElementById("mobileStatus").click
-      driver.findElementById("imeiMeid").sendKeys("12345678909999")
+      driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       println("------- "+driver.findElementByCssSelector(".modal-title").getText()+"-------------")
@@ -204,7 +204,8 @@ class MobileRegistrationTest extends Specification{
       }catch{
         case e: NullPointerException => e
       }
+      
        driver.findElementByCssSelector("BODY").getText().contains("")   
     }    
   }
-}*/
+}

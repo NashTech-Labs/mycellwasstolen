@@ -95,7 +95,6 @@ class RouterTest extends Specification {
     }
   }
 
-
    // Java script routes
   "JavascriptRoutes Action" in {
     running(FakeApplication()) {
