@@ -74,8 +74,8 @@ case class Model(
   id: Option[Int] = None)
 
 case class ModelForm(
-  mobileName: String,
-  mobileModel: String)
+  brandName: String,
+  modelName: String)
 
 //Trait companion object
 object ModelRepository extends ModelRepository

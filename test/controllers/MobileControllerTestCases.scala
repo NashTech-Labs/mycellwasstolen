@@ -74,7 +74,7 @@ class MobileControllerTestCases extends Specification with Mockito {
   "MobileControllerTesting: brandRegisterForm" in {
     running(FakeApplication()) {
       Cache.set(username, user)
-      val result = mobileController.brandRegisterForm(FakeRequest().withSession(Security.username -> username)).run
+      val result = mobileController.brandRegisterForm(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
     }
@@ -84,7 +84,7 @@ class MobileControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.modelRegistrationForm(FakeRequest().withSession(Security.username -> username)).run
+      val result = mobileController.modelRegistrationForm(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
     }
@@ -93,17 +93,17 @@ class MobileControllerTestCases extends Specification with Mockito {
   "MobileControllerTesting: mobileRegistration" in {
     running(FakeApplication()) {
       Cache.set(username, user)
-       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
+      val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val multipartBody = MultipartFormData(Map[String, Seq[String]](), files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/", FakeHeaders(), multipartBody)
-     when(mockedBrandRepo.getAllBrands) thenReturn (brand)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedBrandRepo.getBrandById(1)) thenReturn (brandById)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
-      val result = mobileController.mobileRegistration(fakeRequest.withSession(Security.username -> username))
-      status(result) must equalTo(400)
+      val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
+    status(result) must equalTo(400)
     }
   }
-  
+
   "MobileControllerTesting: getMobileUser" in {
     running(FakeApplication()) {
       Cache.set(username, user)
@@ -191,7 +191,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       status(result) must equalTo(303)
     }
   }
-  
+
   "MobileControllerTesting: saveBrand -> error in insert" in {
     running(FakeApplication()) {
       Cache.set(username, user)
@@ -214,7 +214,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedModelRepo.insertModel(newmodel)) thenReturn (Right(Some(1)))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("mobileName" -> "1", "mobileModel" -> "N72"))
+      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "N72"))
       status(result) must equalTo(303)
     }
   }
@@ -224,17 +224,17 @@ class MobileControllerTestCases extends Specification with Mockito {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedModelRepo.insertModel(any[Model])) thenReturn (Left("error"))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("mobileName" -> "1", "mobileModel" -> "E5"))
+      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "E5"))
       status(result) must equalTo(303)
     }
   }
-  
+
   "MobileControllerTesting: saveModel-> error in inserting model" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedModelRepo.insertModel(any[Model])) thenReturn (Right(None))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("mobileName" -> "1", "mobileModel" -> "E5"))
+      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "E5"))
       status(result) must equalTo(303)
     }
   }

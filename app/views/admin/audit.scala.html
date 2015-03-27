@@ -36,14 +36,14 @@
 	</div>
 	<div class="col-md-6" style="text-align: right;padding-top: 18px;">
 	<a href="@routes.AdminController.auditPage()" class="btn btn-success btn-sm">IMEI records</a>
-	<a href="@routes.AdminController.auditAllRecords()" class="btn btn-success btn-sm">All records</a>
+	<a href="@routes.AdminController.getAllTimestamp()" class="btn btn-success btn-sm">All records</a>
 	</div>
 	</div>
   <div class="panel-body">
   <div class="row">
   @if(check=="imeid"){
   <div class="col-md-12">
-  @form(action=routes.AdminController.audit()) {
+  @form(action=routes.AdminController.getTimestampByIMEI()) {
 					<div class="actions">
 					    Enter IMEI ID: <input type="text" placeholder="IMEID" name="imeiMeid">
 						<input type="submit" value="Search" class="btn btn-primary btn-xs">

@@ -34,8 +34,8 @@ POST   /authenticate                  controllers.AuthController.authenticate
 GET    /logout                        controllers.AuthController.logout
 GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
 GET    /admin/auditpage               controllers.AdminController.auditPage
-POST   /admin/auditIMEID              controllers.AdminController.audit
-GET    /admin/auditAllRecords         controllers.AdminController.auditAllRecords
+POST   /admin/auditIMEID              controllers.AdminController.getTimestampByIMEI
+GET    /admin/auditAllRecords         controllers.AdminController.getAllTimestamp
 GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
 POST   /saveMobileName                controllers.MobileController.saveBrand
 GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)

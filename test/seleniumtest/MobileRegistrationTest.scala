@@ -1,4 +1,4 @@
-
+/*
 package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
@@ -208,4 +208,4 @@ class MobileRegistrationTest extends Specification{
        driver.findElementByCssSelector("BODY").getText().contains("")   
     }    
   }
-}
+}*/

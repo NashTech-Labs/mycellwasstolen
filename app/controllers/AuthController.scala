@@ -47,7 +47,7 @@ class AuthController extends Controller with Secured {
    */
   def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.admin.login(formWithErrors)),
+      formWithErrors => BadRequest(views.html.admin.login(formWithErrors)),
       user =>
         Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1))
   }
@@ -70,7 +70,7 @@ trait Secured {
    * Gets user from request
    */
   def username(request: RequestHeader): Option[String] = request.session.get(Security.username)
-
+  def unauthorizedSimpleRequest(request: RequestHeader): Result = Results.Redirect(routes.AuthController.login)
   /**
    * Handle unauthorized user
    */
@@ -78,17 +78,16 @@ trait Secured {
     Results.Redirect(routes.AuthController.login).withNewSession.flashing("success" -> Messages("messages.user.expired"))
   }
 
-  def withAuth(f: => String => Request[play.api.mvc.AnyContent] => Result): play.api.mvc.EssentialAction = {
-    Security.Authenticated(username, onUnauthorized) { username =>
-      {
-        val cachedUser: Option[User] = Cache.getAs[User](username)
+  def withAuth(f: => String => Request[AnyContent] => Result): Action[AnyContent] = {
+    Action { implicit request =>
+      username(request).map { id =>
+        val cachedUser: Option[User] = Cache.getAs[User](id)
         cachedUser match {
-          case Some(user) => { Cache.set(username, user, 60 * 60); Action(request => f(username)(request)) }
-          case None       => Action(request => onUnauthorized(request))
+          case Some(user: User) => f(id)(request)
+          case None             => onUnauthorized(request)
         }
-      }
+      }.getOrElse(unauthorizedSimpleRequest(request))
     }
   }
 }
-
 object AuthController extends AuthController
