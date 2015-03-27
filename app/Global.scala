@@ -31,10 +31,6 @@ object Global extends GlobalSettings {
       Connection.databaseObject.withSession { implicit session: Session =>
         (brands.ddl ++ models.ddl ++ mobiles.ddl ++  audits.ddl).create
         Logger.info("All tables have been created")
-      /*  val filePath = Global.getClass().getClassLoader().getResource("csv")
-        new File(filePath.toURI()).listFiles foreach { file =>
-          val result = model.convert.readcsv.convert(file)
-        }*/
       }
     } catch {
       case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace() )
@@ -43,22 +39,5 @@ object Global extends GlobalSettings {
 
   override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
-  }
-}
-
-object InitialData {
-  def insert(): Any = {
-    try {
-      val date = new java.sql.Date(new java.util.Date().getTime())
-
-      if (BrandRepository.getAllBrands.isEmpty) {
-        Logger.info("Adding new mobile name in mobile table")
-
-      } else {
-        Logger.info("Not adding new mobile name in mobile table")
-      }
-    } catch {
-      case ex: Exception => Logger.info(ex.getMessage() + ex.printStackTrace())
-    }
   }
 }

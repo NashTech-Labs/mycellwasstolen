@@ -117,8 +117,8 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, allBrands, user)),
       mobileuser => {
         val sqldate = new java.sql.Date(new java.util.Date().getTime())
-        val df = new SimpleDateFormat("MM/dd/yyyy")
-        val date = df.format(sqldate)
+        val dateFormat = new SimpleDateFormat("MM/dd/yyyy")
+        val date = dateFormat.format(sqldate)
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,

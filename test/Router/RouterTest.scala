@@ -73,22 +73,22 @@ class RouterTest extends Specification {
     }
   }
 
-  "posting mobile registration " in {
+  "submit mobile registration " in {
     running(FakeApplication()) {
       val result = route(FakeRequest(POST, "/mobileRegistration").withFormUrlEncodedBody(
-        "username"->"test",
-       "mobileName"->"1",
-       "mobileModel"->"2",
-       "imeiMeid"->"12345678",
-       "purchaseDate"->"2013-12-23",
-       "contactNo"->"24234325",
-       "email"->"a@gmail.com",
-       "regType"->"stolen",
-       "description"->"test",
-       "regDate"->"2013-12-23",
-       "document"->"/home/gaurav/Desktop/12334542345578.png",
-       "otherMobileBrand"->"lava",
-       "otherMobileModel"->"l5")).get
+       "userName" -> "sushil",
+      "brandId" -> "1",
+      "mobileModelId" -> "1",
+      "imeiMeid" -> "864465028854206",
+      "otherImeiMeid" -> "864465028854206",
+      "purchaseDate" -> "12-03-2013",
+      "contactNo" -> "8375919908",
+      "email" -> "s@gmail.com",
+      "regType" -> "stolen",
+      "document" -> "s.jpg",
+      "description" -> "test",
+      "otherMobileBrand" -> "nokia",
+      "otherMobileModel" -> "assha")).get
       status(result) must equalTo(400)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
@@ -128,6 +128,7 @@ class RouterTest extends Specification {
       val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "admin", "password" -> "knol2013").withHeaders(CONTENT_TYPE ->
         "application/x-www-form-urlencoded"))
       status(result) must equalTo(303)
+redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")      
     }
   }
 
@@ -144,7 +145,7 @@ class RouterTest extends Specification {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
       status(result) must equalTo(303)
-      contentType(result) must be(None)
+      redirectLocation(result) must beSome.which(_ == "/login")
     }
   }
   
@@ -152,7 +153,6 @@ class RouterTest extends Specification {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
       status(result) must equalTo(303)
-      contentType(result) must be(None)
     }
   }
 }
