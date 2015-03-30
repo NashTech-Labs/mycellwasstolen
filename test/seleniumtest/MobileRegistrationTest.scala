@@ -48,24 +48,22 @@ class MobileRegistrationTest extends Specification {
 
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      val d = driver.get(baseUrl)
-      println("#############################################################################" +d)
+      driver.get(baseUrl)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
-      driver.findElementById("name").sendKeys("nokia")
+      driver.findElementById("name").sendKeys("nokia")  
       driver.findElementByCssSelector(".btn.btn-primary").click
-      
-      driver.findElementByCssSelector(".alert.alert-dismissable.alert-success").getText.contains("Brand successfully added")
+      driver.findElementByCssSelector(".panel-title").getText.contains("Brand successfully added")
       driver.findElementById("menuItem").click
       driver.findElementById("createMobileModel").click
-      new Select(driver.findElementById("mobileName")).selectByVisibleText("nokia")
-      driver.findElementById("mobileModel").sendKeys("Asha 200")
+      new Select(driver.findElementById("brandName")).selectByVisibleText("nokia")
+      driver.findElementById("modelName").sendKeys("Asha 200")
       driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.findElementByCssSelector("BODY").getText().contains("Model successfully added")
+      driver.findElementByCssSelector("BODY").getText().contains("Mobile Model successfully added")
     
     }
   }
