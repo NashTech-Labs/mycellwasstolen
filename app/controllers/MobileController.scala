@@ -280,9 +280,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     val user: Option[User] = Cache.getAs[User](email)
     modelform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, brands, user)),
-      model => {
+      modell => {
         Logger.info("createmobilemodelController:createmobilemodel - found valid data.")
-        val insertedModel = modelRepo.insertModel(Model(model.modelName, model.brandName.toInt))
+        val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
         insertedModel match {
           case Right(Some(id)) =>
             Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
