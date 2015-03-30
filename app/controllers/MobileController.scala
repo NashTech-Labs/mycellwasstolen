@@ -40,24 +40,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "otherMobileBrand" -> text,
       "otherMobileModel" -> text)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
-  /**
-   * Describes the mobile status form/*  "mobile registrationform template" in new WithApplication { request=>
-    val registrationForm = MobileRegisterForm("userManish",1,1,
-        "123456789012347","1234","20-02-2015","9988776678",
-        "reseamanish@gmail.com","pending",
-        "no document","hello desc","Nokia","Nonokia")
-        
-    val brands  = List(Brand("nokia", "12-17-2013",Some(1)))
-    val user  = User("manish@knoldus.com","secret hai")
-    implicit val request: RequestHeader = FakeRequest().withSession()
-    
-    views.html.mobileRegistrationForm.render(registrationForm,brands,user)
-    views.html.mobileRegistrationForm.ref(registrationForm,brands,user)
-    views.html.mobileRegistrationForm.f(registrationForm,brands,user)
-  }
-*/  
-   * 
-   */
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
@@ -155,8 +137,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
             }
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
           case Right(None) =>
-            Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
-          case Left(message) =>
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
           case _ =>
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
@@ -283,8 +263,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
             Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
           case Right(None) =>
             Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
-          case Left(message) =>
-            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
           case _ =>
             Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
         }
@@ -310,8 +288,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
             Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
           case Right(None) =>
             Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.error"))
-          case Left(message) =>
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
           case _ =>
             Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
         }

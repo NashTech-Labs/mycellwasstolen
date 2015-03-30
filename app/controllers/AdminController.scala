@@ -67,12 +67,22 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
               if (mobileUser.get.regType == "stolen") {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                   "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+                try {
+                  TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
+                }
+                catch{
+                  case ex:Exception => Logger.info("Some how messege was not tweeted")
+                }
               } else {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
                   "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-                TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+                try {
+                  TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
+                } catch {
+                  case ex: Exception => Logger.info("Somehow coudn't tweet the messege")
+                }
               }
+
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "Mobile has been approved successfully!")
             case None =>
@@ -80,9 +90,6 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "Mobile has been approved successfully!")
           }
-        case Left(messege) =>
-          Redirect(routes.AdminController.mobiles(page)).flashing(
-            "error" -> "Something wrong!!")
         case _ =>
           Logger.info("AdminController: - false")
           Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
@@ -111,16 +118,13 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
           }
-        case Left(message) =>
-          Logger.info("AdminController: - false" + message)
-          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
         case _ =>
-          Logger.info("AdminController: - false")
+          Logger.info("AdminController: - No Record were inserted: method returned with left")
           Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
 
       }
   }
-
+ 
   /**
    * Changes mobile status to pending
    * @param imeiId of mobile
@@ -172,12 +176,9 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
         case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
           Logger.info("AdminController changeMobileRegType : - true")
           Ok("success")
-        case Left(message) =>
-          Logger.info("AdminController changeMobileRegType : - false")
-          Ok("error")
         case _ =>
           Logger.info("AdminController changeMobileRegType : - false")
-          Ok("error")
+          Ok("error in change status")
       }
   }
 
@@ -220,11 +221,11 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   /**
    * Display timestamp records of particular imei number
    */
-  def getTimestampByIMEI: Action[AnyContent] = Action { 
+  def getTimestampByIMEI: Action[AnyContent] = Action {
     implicit request =>
-         Logger.info("AdminController:audit -> called")
-    val email = request.session.get(Security.username).getOrElse("")
-    val user: Option[User] = Cache.getAs[User](email)
+      Logger.info("AdminController:audit -> called")
+      val email = request.session.get(Security.username).getOrElse("")
+      val user: Option[User] = Cache.getAs[User](email)
       val audit = timestampform.bindFromRequest()
       audit.fold(
         hasErrors = { form =>

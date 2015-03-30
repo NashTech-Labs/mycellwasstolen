@@ -136,6 +136,16 @@ class AdminControllerTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/plain")
     }
   }
+  
+  "AdminControllerTesting: pending -> failed" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.changeStatusToPendingByIMEID("864465028854206")).thenReturn(Left("error"))
+      val result = adminController.pending("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/plain")
+    }
+  }
 
   "AdminControllerTesting: changeMobileRegTypeForm" in {
     running(FakeApplication()) {
