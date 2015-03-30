@@ -11,7 +11,6 @@
 							<strong>@message</strong>
 						</div>
 					}
-					
 					@flash.get("SUCCESS").map { message =>
 						<div class="alert alert-dismissable alert-success">
 							<strong>@message</strong>
@@ -25,7 +24,7 @@
               <br><br>
               <li class="active"><a href="#">Overview</a></li>
               <li><a href="#">Reports</a></li>
-              <li><a href="#">Analytics</a></li>
+              <li><a href="@routes.AdminController.analytics("2014")">Analytics</a></li>
               </ul>
         </div><!--/span-->
 	<div class="col-md-10">
@@ -74,7 +73,7 @@
                     <tr>
                     <td>@audit.id</td>
                     @if(check=="all"){
-                            	<th>@audit.mobileIMEID</th>}
+                            	<td>@audit.mobileIMEID</td>}
                     <td>@audit.timestamp</td>
                     </tr>
                     }

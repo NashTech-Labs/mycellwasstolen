@@ -1,0 +1,59 @@
+@* analytics Template File *@
+@(user: Option[model.repository.User],audits:List[Int])(implicit flash: Flash)
+@main("Mycellwasstolen",user){
+	<br><br><br>
+	<div class="container-fluid">
+	<div class="row">
+	<div class="col-md-2">
+	 <ul class="nav nav-sidebar">
+              <br><br>
+              <li class="active"><a href="#">Overview</a></li>
+              <li><a href="#">Reports</a></li>
+              <li><a href="#">Analytics</a></li>
+              </ul>
+	</div>
+	<div class="col-md-8">
+	     <select>
+    <option><a href="@routes.AdminController.analytics("2014")">2014</a></option>
+    <option><a href="@routes.AdminController.analytics("2015")">2015</a></option>
+    <option>March</option>
+    </select>
+	
+ @if(audits.size>0){
+  <table class="highchart" data-graph-container-before="1" data-graph-type="column" style="display:none;" >
+  <thead>
+    <tr>
+    
+                            	<th>Month</th>
+							<th>Registration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(audit <- audits) {
+                    <tr>
+                    <td>jan</td>
+                    <td>@audit</td>
+                    </tr>
+                    }
+                    </tbody>
+</table>	
+  }else{
+  <div class="panel panel-default">
+			  <div class="panel-body" style="background: #FFCCCC">
+			    <em>No records!</em>
+			  </div>
+			</div>	
+  }
+</div>
+</div>
+</div>
+    <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/highcharts.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/jquery.highchartTable.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	  $('table.highchart').highchartTable();
+});
+</script>
+}

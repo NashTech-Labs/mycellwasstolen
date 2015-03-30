@@ -246,7 +246,13 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       val user: Option[User] = Cache.getAs[User](username)
       val list = auditRepo.getAllTimestamps
       Ok(views.html.admin.audit("all", list, user))
-
+  }
+  
+  def analytics(date:String): Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      val user: Option[User] = Cache.getAs[User](username)
+    val list = mobileRepo.getRecordByDate(date)
+      Ok(views.html.admin.analytics(user,list))
   }
 }
 object AdminController extends AdminController(MobileRepository, AuditRepository, Common)
