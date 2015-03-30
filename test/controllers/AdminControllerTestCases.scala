@@ -14,6 +14,7 @@ import utils.StatusUtil.Status
 import play.api.test.FakeRequest
 import play.api.mvc.Security
 import java.util.Date
+import utils.S3UtilComponent
 
 class AdminControllerTestCases extends Specification with Mockito {
 
@@ -38,9 +39,10 @@ class AdminControllerTestCases extends Specification with Mockito {
   val user = User("admin", "knol2013")
 
   val mockedMail = mock[Common]
+  val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]
   val mockedAuditRepo = mock[AuditRepository]
-  val adminController = new AdminController(mockedMobilRepo, mockedAuditRepo, mockedMail)
+  val adminController = new AdminController(mockedMobilRepo, mockedAuditRepo, mockedMail,mockedS3Util)
 
   "AdminControllerTesting: mobiles" in {
     running(FakeApplication()) {

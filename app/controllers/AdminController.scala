@@ -15,13 +15,12 @@ import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
-import utils.Common
-import utils.Constants
-import utils.TwitterTweet
+import utils._
 import play.api.cache.Cache
 import play.twirl.api.Html
 
-class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: Common) extends Controller with Secured {
+
+class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: Common,s3Util:S3UtilComponent) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -192,6 +191,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeid)
       mobileUser match {
         case Some(mobile) =>
+          s3Util.delete(mobile.document)
           val result = mobileRepo.deleteMobileUser(imeid)
           result match {
             case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
@@ -255,4 +255,4 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Ok(views.html.admin.analytics(user,list))
   }
 }
-object AdminController extends AdminController(MobileRepository, AuditRepository, Common)
+object AdminController extends AdminController(MobileRepository, AuditRepository, Common,S3Util)
