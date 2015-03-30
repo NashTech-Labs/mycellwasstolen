@@ -31,13 +31,13 @@
 						<div class="well form-horizontal">
 							@helper.form(action = routes.MobileController.saveModel, 'id ->"mobileModelForm") {
 							 <fieldset>
-								@select(field=createmobilemodelform("mobileName"),options=mobilesName.map(x=>
+								@select(field=createmobilemodelform("brandName"),options=mobilesName.map(x=>
 									(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Name",
 									'_default -> "-- Choose Mobile Name --", '_showConstraints ->
 									false,'_error ->
-									createmobilemodelform("mobileName").error.map(_.withMessage("Mobile	Name Required")))
+									createmobilemodelform("brandName").error.map(_.withMessage("Mobile	Name Required")))
 	
-								@inputText(createmobilemodelform("mobileModel"), '_label -> "Mobile Model")
+								@inputText(createmobilemodelform("modelName"), '_label -> "Mobile Model")
 							 </fieldset>
 							 <div class="form-group">
 								<div class="col-lg-10 col-lg-offset-4">
