@@ -1,4 +1,4 @@
-/*package seleniumtest
+package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -18,15 +18,15 @@ class MobileRegistrationTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
 
-  "Testing Home Page" in {
+  /*"Testing Home Page" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
       browser.title() must equalTo("Welcome to MCWS")
     }
-  }
+  }*/
 
-  "Testing Add Mobile Brand" in {
+  /*"Testing Add Mobile Brand" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
@@ -41,14 +41,15 @@ class MobileRegistrationTest extends Specification {
       browser.$(".btn.btn-primary").click
       browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
     }
-  }
+  }*/
 
   "Testing Add  Mobile Model" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
 
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
+      val d = driver.get(baseUrl)
+      println("#############################################################################" +d)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
@@ -57,18 +58,19 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("brandForm").click
       driver.findElementById("name").sendKeys("nokia")
       driver.findElementByCssSelector(".btn.btn-primary").click
+      
       driver.findElementByCssSelector(".alert.alert-dismissable.alert-success").getText.contains("Brand successfully added")
       driver.findElementById("menuItem").click
       driver.findElementById("createMobileModel").click
       new Select(driver.findElementById("mobileName")).selectByVisibleText("nokia")
       driver.findElementById("mobileModel").sendKeys("Asha 200")
       driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.close()
       driver.findElementByCssSelector("BODY").getText().contains("Model successfully added")
+    
     }
   }
 
-  "Testing Stolen Mobile Registration" in {
+ /* "Testing Stolen Mobile Registration" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
 
       val driver = new FirefoxDriver
@@ -205,5 +207,5 @@ class MobileRegistrationTest extends Specification {
 
       driver.findElementByCssSelector("BODY").getText().contains("")
     }
-  }
-}*/
+  }*/
+}
