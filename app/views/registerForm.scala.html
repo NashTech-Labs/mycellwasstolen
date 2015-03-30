@@ -40,14 +40,14 @@
 
 	@inputText(mobileRegistrationForm("email"), '_label -> "Email")
 
-	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID", 'maxlength -> 17)
+	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID", 'maxlength -> 15)
 
 	<div class="form-group">
 		<label class="col-sm-4 control-label"><input type="checkbox"
 			name="race" id="otherimei" value="other" />Other IMEI, specify<br /></label>
 		<div class="col-sm-6" >
 			<div style="visibility: hidden" id="race">
-				<input type="text" name="otherImeiMeid" maxlength="17" id="otherImeiMeid" />
+				<input type="text" name="otherImeiMeid" maxlength="15" id="otherImeiMeid" />
 			</div>
 		</div>
 	</div>
