@@ -7,6 +7,7 @@ import model.repository._
 import play.api.Logger
 import java.util.Date
 import utils.StatusUtil._
+import scala.collection.mutable.ListBuffer
 
 /**
  * MobileRepository provides all concrete implementation of
@@ -150,6 +151,22 @@ trait MobileRepository extends MobileTable {
           Logger.info("Error in delete mobile: " + ex.printStackTrace())
           Left(ex.getMessage())
       }
+    }
+  }
+
+  def getRecordByDate(date: String): List[Int] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      val empty: ListBuffer[Int] = ListBuffer()
+      for (i <- 1 to 12) {
+        if (i < 10) {
+          val s = mobiles.filter { mobile => mobile.registrationDate >= ("0" + i.toString() + "/01/" + date) && mobile.registrationDate <= ("0" + i.toString() + "/31/" + date) }
+          empty += s.list.length
+        } else {
+          val s = mobiles.filter { mobile => mobile.registrationDate >= (i.toString() + "/01/" + date) && mobile.registrationDate <= (i.toString() + "/31/" + date) }
+          empty += s.list.length
+        }
+      }
+      empty.toList
     }
   }
 }

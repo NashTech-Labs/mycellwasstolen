@@ -1,4 +1,4 @@
- /*package model.convert
+/*package model.convert
 import java.io.FileReader
 import java.util.ArrayList
 import scala.collection.JavaConversions.asScalaBuffer
@@ -53,4 +53,5 @@ object readcsv {
       val res = MobileRepository.insertMobileUser((Mobile(array(i)(0), augmentString(array(i)(1)).toInt, augmentString(array(i)(2)).toInt, array(i)(3), array(i)(4), array(i)(5), array(i)(6), array(i)(7), array(i)(8), status, array(i)(10), array(i)(11), array(i)(12), array(i)(13), array(i)(14))))
     }
   }
-}*/
+}
+*/

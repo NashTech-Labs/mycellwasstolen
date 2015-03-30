@@ -20,7 +20,7 @@ GET    /isImeiExist                   controllers.MobileController.isImeiExist(i
 #Javascript Routes
 
 GET    /javascriptRoutes              controllers.Application.javascriptRoutes 
-GET    /mobileUser                        controllers.MobileController.getMobileUser(imeid: String)
+GET    /mobileUser                    controllers.MobileController.getMobileUser(imeid: String)
 GET    /mobileStatus                  controllers.MobileController.mobileStatus
 GET    /mobileModel                   controllers.MobileController.getModels(id:Int)
 GET    /pending                       controllers.AdminController.pending(imeid: String)
@@ -43,6 +43,7 @@ GET    /approve                       controllers.AdminController.approve(imeid:
 GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
 GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
 POST   /createMobileModel             controllers.MobileController.saveModel
+GET    /analytics                     controllers.AdminController.analytics(date:String)
                      
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                  controllers.Assets.at(path="/public", file)
