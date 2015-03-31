@@ -11,7 +11,7 @@ import play.api.test.FakeApplication
   * @author knoldus
  */
 class ModelRepoTest extends FunSuite {
-  val brand = Brand("nokia", "12-17-2013")
+  val brand = Brand("nokia", Some(1))
   val model = Model("N72", 1, Some(1))
   
   //Test model insertion

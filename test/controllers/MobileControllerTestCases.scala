@@ -12,7 +12,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import model.repository._
 import utils.StatusUtil.Status
-import utils.Common
 import utils.S3UtilComponent
 import play.api.mvc.Request
 import play.api.mvc.MultipartFormData
@@ -23,11 +22,14 @@ import play.api.mvc.MultipartFormData.BadPart
 import play.api.mvc.MultipartFormData.MissingFilePart
 import play.api.test.FakeHeaders
 import play.mvc.Result
+import utils.MailUtil
+import java.util.Calendar
+import utils.CommonUtils
 
 class MobileControllerTestCases extends Specification with Mockito {
 
   val date = new java.sql.Date(new java.util.Date().getTime())
-  val newbrand = Brand("nokia", "12-17-2013", Some(1))
+  val newbrand = Brand("nokia", Some(1))
   val brand = List(newbrand)
   val brandById: Option[Brand] = Some(newbrand)
   val newmodel = Model("N72", 1)
@@ -37,18 +39,22 @@ class MobileControllerTestCases extends Specification with Mockito {
   val username = "admin"
 
   val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "864465028854206", "12-03-2013", "+91 8375919908",
-    "sushil@gmail.com", "stolen", Status.pending, "test", "12-17-2015", "ss.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "864465028854206", new java.sql.Date(new java.util.Date().getTime()), "+91 8375919908",
+    "sushil@gmail.com", "stolen", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "ss.png", "nokia", "E5")
 
-  val timestamp = new Audit("864465028854206", "12-17-2015", Some(1))
+  val calender = Calendar.getInstance
+  val now: java.util.Date = calender.getTime
+  val timeStamp = new java.sql.Timestamp(now.getTime())
+  val timestamp = new Audit("864465028854206", timeStamp, Some(1))
 
-  val mockedMail = mock[Common]
+  val mockedMail = mock[MailUtil]
   val s3util = mock[S3UtilComponent]
   val mockedMobileRepo = mock[MobileRepository]
   val mockedBrandRepo = mock[BrandRepository]
   val mockedModelRepo = mock[ModelRepository]
   val mockedAuditRepo = mock[AuditRepository]
-  val mobileController = new MobileController(mockedMobileRepo, mockedBrandRepo, mockedModelRepo, mockedAuditRepo, mockedMail, s3util)
+  val mockedCommonUtils = mock[CommonUtils]
+  val mobileController = new MobileController(mockedMobileRepo, mockedBrandRepo, mockedModelRepo, mockedAuditRepo, mockedMail, s3util,mockedCommonUtils)
 
   "MobileControllerTesting: mobileRegistrationForm" in {
     running(FakeApplication()) {
@@ -98,7 +104,7 @@ class MobileControllerTestCases extends Specification with Mockito {
         "mobileModelId" -> Seq("1"),
         "imeiMeid" -> Seq("123456789012347"),
         "otherImeiMeid" -> Seq("1234"),
-        "purchaseDate" -> Seq("12-12-2012"),
+        "purchaseDate" -> Seq("2012-12-12"),
         "contactNo" -> Seq("9958324567"),
         "email" -> Seq("reseamanish@gmail.com"),
         "regType" -> Seq("pending"),

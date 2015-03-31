@@ -9,36 +9,39 @@ import play.api.Play.current
 import play.api.cache.Cache
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
-import utils.Common
 import utils.StatusUtil.Status
 import play.api.test.FakeRequest
 import play.api.mvc.Security
 import java.util.Date
 import utils.S3UtilComponent
+import utils.MailUtil
+import java.util.Calendar
 
 class AdminControllerTestCases extends Specification with Mockito {
 
   val stolenMobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677", new java.sql.Date(new java.util.Date().getTime()), "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "gaurav.png", "nokia", "E5")
 
   val stolenMobileUser1 = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "Clean", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677", new java.sql.Date(new java.util.Date().getTime()), "+91 9839839830",
+    "gs@gmail.com", "Clean", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "gaurav.png", "nokia", "E5")
 
   val cleanMobileUser = Mobile(
-    "sushil", 1, 1, "12345678901234", "123456789012678", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "Clean", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "12345678901234", "123456789012678", new java.sql.Date(new java.util.Date().getTime()), "+91 9839839830",
+    "gs@gmail.com", "Clean", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "gaurav.png", "nokia", "E5")
 
   val mobileWithBrand = (Mobile(
-    "gs", 1, 1, "864465028854206", "123456789012677", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "test", "12-17-2013", "gaurav.png", "nokia", "E5"), "nokia", "E5")
+    "gs", 1, 1, "864465028854206", "123456789012677", new java.sql.Date(new java.util.Date().getTime()), "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "gaurav.png", "nokia", "E5"), "nokia", "E5")
 
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
-  val audit = List(Audit("864465028854206", "12-05-2013", Some(1)))
+  val calender = Calendar.getInstance
+  val now:java.util.Date = calender.getTime
+  val timeStamp = new java.sql.Timestamp(now.getTime())
+  val audit = List(Audit("864465028854206", timeStamp , Some(1)))
   val user = User("admin", "knol2013")
-
-  val mockedMail = mock[Common]
+  val mockedMail = mock[MailUtil]
   val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]
   val mockedAuditRepo = mock[AuditRepository]
