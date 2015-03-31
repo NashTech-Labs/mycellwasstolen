@@ -1,12 +1,10 @@
-import java.io.File 
-import java.sql.Date
-import scala.slick.driver.PostgresDriver.simple._
-import com.typesafe.config.ConfigFactory
 import play.api._
-import play.api.Play.current
-import play.api.mvc.Results.InternalServerError
+import java.io.File
 import utils.Connection
-import model.repository._
+import play.api.Play.current
+import scala.slick.jdbc.meta.MTable
+import com.typesafe.config.ConfigFactory
+import scala.slick.driver.PostgresDriver.simple._
 import model.repository.ModelRepository.models
 import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
@@ -27,13 +25,29 @@ object Global extends GlobalSettings {
     val secretKey = Play.application.configuration.getString("aws_secret_key")
     val userId = Play.application.configuration.getString("smtp.user")
     val password = Play.application.configuration.getString("smtp.password")
-  try {
-      Connection.databaseObject.withSession { implicit session: Session =>
-        (brands.ddl ++ models.ddl ++ mobiles.ddl ++  audits.ddl).create
-        Logger.info("All tables have been created")
+
+    Connection.databaseObject.withSession { implicit session: Session =>
+      if (MTable.getTables("brands").list.isEmpty) {
+        brands.ddl.create
+        Logger.info("Table brand created in database")
       }
-    } catch {
-      case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace() )
+
+      if (MTable.getTables("models").list.isEmpty) {
+        models.ddl.create
+        Logger.info("Table brand created in database")
+      }
+
+      if (MTable.getTables("mobiles").list.isEmpty) {
+        mobiles.ddl.create
+        Logger.info("Table brand created in database")
+      }
+      if (MTable.getTables("audits").list.isEmpty) {
+        audits.ddl.create
+        Logger.info("Table brand created in database")
+      } else
+
+        Logger.info("Table already exists in database")
+
     }
   }
 

@@ -11,10 +11,12 @@ import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.Serialization.write
 import play.api.Logger
+import play.api._
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.Play.current
 import utils._
 import play.api.cache.Cache
 import play.twirl.api.Html
@@ -50,15 +52,16 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Ok(views.html.admin.mobiles(status, mobiles, user))
   }
 
+  val Messages = Map("success" -> "Mobile has been approved successfully!", "error" -> "Something wrong!!")
   /**
    * changes mobile status to approved
    * @param imeiId of mobile
    */
-  def approve(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
+  def approve(imeiId: String, page: String): EssentialAction = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:approve - change status to approve : " + imeiId)
       val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
-      result match {
+      val successMessage = result match {
         case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
           val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
           mobileUser match {
@@ -89,10 +92,40 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "Mobile has been approved successfully!")
           }
+          tweetWithEmail(imeiId)
         case _ =>
           Logger.info("AdminController: - false")
-          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
+          Messages.get("error")
       }
+      Redirect(routes.AdminController.mobiles(page)).flashing(
+        "success" -> successMessage.getOrElse(""))
+  }
+
+  /**
+   * Enable email, Tweeter posts and Success Messages
+   * @param imeiId:String
+   * @return Option[String]
+   */
+
+  private def tweetWithEmail(imeiId: String): Option[String] = {
+    val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+    val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
+    mobileUser match {
+      case Some(mobile) =>
+        val message = if (mobileUser.get.regType == "stolen") { "has been marked as Secure at mycellwasstolen.com" }
+        else "has been marked as Secure at mycellwasstolen.com"
+        post match {
+          case Some(true) =>
+            mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
+              "Registration Confirmed on MCWS", mail.approvedMessage(mobileUser.get.imeiMeid))
+            TwitterTweet.tweetAMobileRegistration(imeiId, message)
+          case _ => Logger.info("Email and Twitter posts have been disabled for this environment")
+        }
+        Messages.get("success")
+      case None =>
+        Logger.info("AdminController:approve - error in fetching record after approved")
+        Messages.get("error")
+    }
   }
 
   /**
