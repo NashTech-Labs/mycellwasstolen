@@ -52,8 +52,7 @@ trait BrandTable {
   private[BrandTable] class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
-    def date: Column[Date] = column[Date]("date", O.NotNull)
-    def * : scala.slick.lifted.ProvenShape[Brand] = (name, date, id) <> (Brand.tupled, Brand.unapply)
+    def * : scala.slick.lifted.ProvenShape[Brand] = (name, id) <> (Brand.tupled, Brand.unapply)
     def brandIndex: scala.slick.lifted.Index = index("idx_brand", (name), unique = true)
   }
 
@@ -63,7 +62,6 @@ trait BrandTable {
 
 case class Brand(
   name: String,
-  date: Date,
   id: Option[Int] = None)
 
 //Represents a brand name  

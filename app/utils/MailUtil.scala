@@ -3,6 +3,7 @@ import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.libs.mailer.MailerPlugin
 import play.api.libs.mailer.Email
+import model.repository.Mobile
 
 trait MailUtil {
 
@@ -25,7 +26,15 @@ trait MailUtil {
   def deleteMessage(imeid: String): String = {
     Messages("messages.mobile.delete", imeid, signature)
   }
-
+  
+  def changeMobileRegTypeStolen(imeid: String): String = {
+    Messages("messages.mobile.changeMobileRegTypeStolen", imeid, signature)
+  }
+  
+  def changeMobileRegTypeClean(imeid: String): String = {
+    Messages("messages.mobile.changeMobileRegTypeClean", imeid, signature)
+  }
+  
   def signature(): String = {
     Messages("messages.signature")
   }
@@ -36,7 +45,6 @@ trait MailUtil {
       Messages("default.email.title"),
       Seq(email), bodyHtml = Some(message))
     MailerPlugin.send(emailBuilder)
-    
   }
 }
 object MailUtil extends MailUtil
