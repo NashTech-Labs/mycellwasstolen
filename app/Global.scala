@@ -1,4 +1,4 @@
-import java.io.File 
+import java.io.File
 import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
@@ -11,6 +11,13 @@ import model.repository.ModelRepository.models
 import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
 import model.repository.AuditRepository.audits
+import play.api.mvc.RequestHeader
+import play.mvc._
+import org.omg.CosNaming.NamingContextPackage.NotFound
+import views.html.defaultpages.notFound
+import play.api.mvc.Action
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Global extends GlobalSettings {
 
@@ -27,17 +34,24 @@ object Global extends GlobalSettings {
     val secretKey = Play.application.configuration.getString("aws_secret_key")
     val userId = Play.application.configuration.getString("smtp.user")
     val password = Play.application.configuration.getString("smtp.password")
-  try {
+    try {
       Connection.databaseObject.withSession { implicit session: Session =>
-        (brands.ddl ++ models.ddl ++ mobiles.ddl ++  audits.ddl).create
+        (brands.ddl ++ models.ddl ++ mobiles.ddl ++ audits.ddl).create
         Logger.info("All tables have been created")
       }
     } catch {
-      case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace() )
+      case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace())
     }
   }
 
   override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
+
   }
+  override def onHandlerNotFound(request: RequestHeader) = {
+    Future{
+      play.api.mvc.Results.Ok(views.html.errorPage("page not found"))
+    }
+  }
+
 }
