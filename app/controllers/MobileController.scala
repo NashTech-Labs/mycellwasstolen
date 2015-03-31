@@ -264,7 +264,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
           case Right(Some(id)) =>
             Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
           case Right(None) =>
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.error"))
+            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
           case _ =>
             Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
         }

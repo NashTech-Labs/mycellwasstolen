@@ -1,7 +1,7 @@
 /*package repository.RepositoryTest
 
 import org.scalatest.FunSuite
-import model.repository.{Brand,Mobile,Model}
+import model.repository.{ Brand, Mobile, Model }
 import model.repository.{ BrandRepository, MobileRepository, ModelRepository }
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
@@ -14,19 +14,19 @@ import utils.StatusUtil.Status
 class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository with ModelRepository {
 
   val imeiInserted = "12345678901234"
-  val brand = Brand("nokia", "12-17-2013")
+  val brand = Brand("nokia", Some(1))
   val model = Model("N72", 1)
+
   val mobileUser = Mobile(
-    "gauravs", 1, 1, "12345678901234", "12345678902134", "12-05-2013", "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "ddas asd", "12-17-2013", "gaurav.png", "Sigma", "Sigma454", Some(1))
-    
+    "gauravs", 1, 1, "12345678901234", "12345678902134", new java.sql.Date(121230), "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, "ddas asd", new java.sql.Date(121230), "gaurav.png", "Sigma", "Sigma454", Some(1))
 
   //Mobile Insertion Test 
   test("MobileRepository:insert and get mobile name successfully ") {
     running(FakeApplication()) {
-     //Insert a brand to avoid FK violation while inserting mobile record
+      //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
       assert(insertedMobile === Right(Some(1)))
@@ -38,7 +38,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -54,7 +54,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       MobileRepository.insertMobileUser(mobileUser)
       val insertedMobile = mobileUser
@@ -68,7 +68,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -83,7 +83,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -98,7 +98,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -110,15 +110,15 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
 
   //Test the Retrieval all mobile user with brand and model based on status 
   test("MobileRepository: Retrieval all mobile user with brand and model") {
-    running( FakeApplication()) {
+    running(FakeApplication()) {
       //insert a brand record
-      BrandRepository.insertBrand(Brand("Sigma","02-02-2015"))      
+      BrandRepository.insertBrand(Brand("Sigma", Some(1)))
       //Insert a Model Record
-      ModelRepository.insertModel((Model("Sigma454",1)))
+      ModelRepository.insertModel((Model("Sigma454", 1)))
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser((mobileUser))
       //Insert a Brand Record
-       val valueToComapre = List((mobileUser,"Sigma","Sigma454"))
+      val valueToComapre = List((mobileUser, "Sigma", "Sigma454"))
       val returnValueOnChange = MobileRepository.getAllMobilesUserWithBrandAndModel("pending")
       assert(returnValueOnChange === valueToComapre)
     }
@@ -129,7 +129,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -137,13 +137,13 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       assert(returnValueOnChange === Right(1))
     }
   }
-  
+
   //Tests change status to Pending by IMEID
-   test("MobileRepository: change of Mobile from pending to pending: must return Right(1)") {
+  test("MobileRepository: change of Mobile from pending to pending: must return Right(1)") {
     running(FakeApplication()) {
       //Insert a brand to avoid FK violation while inserting mobile record
       BrandRepository.insertBrand(brand)
-     //Insert a model to avoid FK violation while inserting mobile record
+      //Insert a model to avoid FK violation while inserting mobile record
       ModelRepository.insertModel(model)
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
@@ -151,6 +151,5 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       val returnValueOnChange = MobileRepository.changeStatusToPendingByIMEID(imeiInserted)
       assert(returnValueOnChange === Right(1))
     }
-  }
-  
+  }  
 }*/

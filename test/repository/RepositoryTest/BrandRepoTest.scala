@@ -13,7 +13,7 @@ import org.scalatest.BeforeAndAfterAll
 
 class BrandRepoTest extends FunSuite  {
 
-  val brand = Brand("nokia", "12-17-2013",Some(1))
+  val brand = Brand("nokia",Some(1))
 
   //Tests Brand Insertion
   test("BrandRepository: insert a brand successfully") {

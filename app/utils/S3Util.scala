@@ -18,23 +18,24 @@ trait S3UtilComponent {
    * Store file to standard bucket on S3
    */
   def store(documentName: String, fileToSave: File) = {
-    try {
-      amazonS3Client.putObject(bucketName, documentName, fileToSave)
-    } catch {
-      case ex: Exception => Logger.error(ex.getMessage(), ex); false
-    }
+        try {
+          amazonS3Client.putObject(bucketName, documentName, fileToSave)
+        } catch {
+          case ex: Exception => Logger.error(ex.getMessage(), ex); false
+        }
   }
 
   /**
    * Delete file from standard bucket on S3
    */
-  def delete(fileKeyName: String):Boolean = {
+  def delete(fileKeyName: String): Boolean = {
     try {
       amazonS3Client.deleteObject(bucketName, fileKeyName)
       true
     } catch {
-      case ex: Exception => Logger.error(ex.getMessage(), ex)
-      false
+      case ex: Exception =>
+        Logger.error(ex.getMessage(), ex)
+        false
     }
   }
 }

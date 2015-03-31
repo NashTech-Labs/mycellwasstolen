@@ -12,6 +12,9 @@ import play.api.test.Helpers._
 import play.api.test.FakeRequest
 import play.api.mvc.Security
 import utils._
+import play.api.mvc.Security
+import java.util.Date
+import java.util.Calendar
 
 class AdminControllerTestCases extends Specification with Mockito {
 
@@ -34,7 +37,6 @@ class AdminControllerTestCases extends Specification with Mockito {
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
   val audit = List(Audit("864465028854206", new java.sql.Timestamp(new java.util.Date().getTime), Some(1)))
   val user = User("admin", "knol2013")
-
   val mockedMail = mock[MailUtil]
   val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]
@@ -206,45 +208,6 @@ class AdminControllerTestCases extends Specification with Mockito {
       val result = adminController.deleteMobile("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
-    }
-  }
-
-  "AdminControllerTesting: auditPage" in {
-    running(FakeApplication()) {
-      Cache.set("admin", user)
-      val result = adminController.auditPage(FakeRequest().withSession(Security.username -> "admin"))
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "AdminControllerTesting: getTimestampByIMEI -> with invalid form data" in {
-    running(FakeApplication()) {
-      Cache.set("admin", user)
-      when(mockedAuditRepo.getAllTimestampsByIMEID("864465028854206")).thenReturn(audit)
-      val result = adminController.getTimestampByIMEI(FakeRequest())
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "AdminControllerTesting: getTimestampByIMEI -> with valid form data" in {
-    running(FakeApplication()) {
-      Cache.set("admin", user)
-      when(mockedAuditRepo.getAllTimestampsByIMEID("864465028854206")).thenReturn(List())
-      val result = adminController.getTimestampByIMEI(FakeRequest().withFormUrlEncodedBody("imeiMeid" -> "864465028854206").withSession(Security.username -> "admin"))
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "AdminControllerTesting: getAllTimestamp" in {
-    running(FakeApplication()) {
-      Cache.set("admin", user)
-      when(mockedAuditRepo.getAllTimestamps).thenReturn(audit)
-      val result = adminController.getAllTimestamp(FakeRequest().withSession(Security.username -> "admin"))
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
     }
   }
 }
