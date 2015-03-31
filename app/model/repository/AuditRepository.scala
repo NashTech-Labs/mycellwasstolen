@@ -1,14 +1,16 @@
- package model.repository
-import scala.slick.driver.PostgresDriver.simple._
- import scala.slick.driver
- import scala.slick.lifted.ProvenShape
- import utils.Connection
- import model.repository._
- import play.api.Logger
- import java.util.Date
- import java.sql.Timestamp
+package model.repository
 
-trait AuditRepository extends AuditTable {
+import scala.slick.driver.PostgresDriver.simple._
+import scala.slick.driver
+import scala.slick.lifted.ProvenShape
+import utils._
+import model.repository._
+import play.api.Logger
+import java.util.Date
+import java.sql.Timestamp
+import scala.collection.mutable.ListBuffer
+
+trait AuditRepository extends AuditTable with MobileRepository {
   /*
    * Inserts new timestamp when an imei number check
    * @param timestamp, object of Audit
@@ -50,6 +52,25 @@ trait AuditRepository extends AuditTable {
     }
   }
 
+  def getRecordByDate(year: String): List[Int] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      val empty: ListBuffer[Int] = ListBuffer()
+      for (i <- 1 to 12) {
+        if (i < 10) {
+          val to = CommonUtils.getUtilDate(("0" + i.toString() + "/01/" + year))
+          val from = CommonUtils.getUtilDate(("0" + i.toString() + "/31/" + year))
+          val s = mobiles.filter { mobile => mobile.registrationDate >= to && mobile.registrationDate <= from }
+          empty += s.list.length
+        } else {
+          val to = CommonUtils.getUtilDate((i.toString() + "/01/" + year))
+          val from = CommonUtils.getUtilDate((i.toString() + "/31/" + year))
+          val s = mobiles.filter { mobile => mobile.registrationDate >= to && mobile.registrationDate <= from }
+          empty += s.list.length
+        }
+      }
+      empty.toList
+    }
+  }
 }
 
 trait AuditTable {

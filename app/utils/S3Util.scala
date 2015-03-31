@@ -37,21 +37,5 @@ trait S3UtilComponent {
       false
     }
   }
-
-  /**
-   * Checks if the file exists on the standard bucket of S3
-   */
-
-  /*def doesFileExist(fileKeyName: String): Boolean = {
-    try {
-      amazonS3Client.getObjectMetadata(bucketName, fileKeyName)
-      true
-    } catch {
-      case ex: Exception => Logger.error(ex.getMessage(), ex)
-      false
-    }
-  }*/
-
 }
-
 object S3Util extends S3UtilComponent

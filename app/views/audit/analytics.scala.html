@@ -1,23 +1,31 @@
 @* analytics Template File *@
-@(user: Option[model.repository.User],audits:List[Int])(implicit flash: Flash)
+@(user: Option[model.repository.User],audits:List[(String,Int)],years:List[Int])(implicit flash: Flash)
 @main("Mycellwasstolen",user){
-	<br><br><br>
-	<div class="container-fluid">
+	<br>
+	<div class="container">
 	<div class="row">
 	<div class="col-md-2">
 	 <ul class="nav nav-sidebar">
-              <br><br>
-              <li class="active"><a href="#">Overview</a></li>
+              <li><a href="#">Overview</a></li>
               <li><a href="#">Reports</a></li>
               <li><a href="#">Analytics</a></li>
               </ul>
 	</div>
-	<div class="col-md-8">
-	     <select>
-    <option><a href="@routes.AdminController.analytics("2014")">2014</a></option>
-    <option><a href="@routes.AdminController.analytics("2015")">2015</a></option>
-    <option>March</option>
-    </select>
+	<div class="col-md-10" style="padding: 10px;">
+	    <br><h3>Registration Chart</h3>
+	  <hr>
+	    <div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Year
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+  @for(year<-years){
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@routes.AuditController.getRegistrationRecordsByYear(year.toString())">@year</a></li>
+  }
+  </ul>
+</div>
+    <br><br>
 	
  @if(audits.size>0){
   <table class="highchart" data-graph-container-before="1" data-graph-type="column" style="display:none;" >
@@ -29,10 +37,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @for(audit <- audits) {
+                    @for(record <- audits) {
                     <tr>
-                    <td>jan</td>
-                    <td>@audit</td>
+                    <td>@record._1</td>
+                    <td>@record._2</td>
                     </tr>
                     }
                     </tbody>
@@ -57,3 +65,4 @@ $(document).ready(function() {
 });
 </script>
 }
+

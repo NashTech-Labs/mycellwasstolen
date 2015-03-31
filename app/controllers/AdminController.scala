@@ -1,11 +1,6 @@
 package controllers
 
-import model.repository.AuditForm
-import model.repository.AuditRepository
-import model.repository.Mobile
-import model.repository.MobileRepository
-import model.repository.MobileStatus
-import model.repository.User
+import model.repository._
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
@@ -23,20 +18,12 @@ import play.twirl.api.Html
 
 class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent) extends Controller with Secured {
 
-  implicit val formats = DefaultFormats
   /**
    * Describes the mobile status form
    */
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
-
-  /**
-   * Describe mobile audit form
-   */
-  val timestampform = Form(
-    mapping(
-      "imeiMeid" -> nonEmptyText)(AuditForm.apply)(AuditForm.unapply))
 
   /**
    * @param status, mobile status(pending, approved and proofdemanded)
@@ -183,27 +170,27 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
     }
   }
 
-  private def tweet(mobileuser: Mobile, msg: String)={
+  private def tweet(mobileuser: Mobile, msg: String) = {
     val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
-    if(post.get){
+    if (post.get) {
       Logger.info("AdminController:tweet -> disabled")
-    }else{
-    msg match {
-      case "approve" =>
-        if (mobileuser.regType == "stolen") {
-          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
-        } else {
-          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
-        }
-      case "changeMobileRegType" =>
-        if (mobileuser.regType == "stolen") {
-          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
-        } else {
-          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
-        }
+    } else {
+      msg match {
+        case "approve" =>
+          if (mobileuser.regType == "stolen") {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+          } else {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+          }
+        case "changeMobileRegType" =>
+          if (mobileuser.regType == "stolen") {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+          } else {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+          }
+      }
     }
   }
-}
 
   /**
    * Deletes existed mobile
@@ -229,53 +216,6 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           Logger.info("AdminController:deleteMobile - error in fetching record")
           Ok("error in Delete ajax call")
       }
-  }
-
-  /**
-   * Display audit page
-   */
-  def auditPage: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      val user: Option[User] = Cache.getAs[User](username)
-      val list = List()
-      Ok(views.html.admin.audit("imeid", list, user))
-  }
-
-  /**
-   * Display timestamp records of particular imei number
-   */
-  def getTimestampByIMEI: Action[AnyContent] = Action {
-    implicit request =>
-      Logger.info("AdminController:audit -> called")
-      val email = request.session.get(Security.username).getOrElse("")
-      val user: Option[User] = Cache.getAs[User](email)
-      val audit = timestampform.bindFromRequest()
-      audit.fold(
-        hasErrors = { form =>
-          val list = List()
-          Ok(views.html.admin.audit("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
-        },
-        success = { timestamp =>
-          val list = auditRepo.getAllTimestampsByIMEID(timestamp.imeiMeid)
-          Ok(views.html.admin.audit("imeid", list, user))
-        })
-  }
-
-  /**
-   * Display all timestamp records for all mobiles
-   */
-  def getAllTimestamp: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      val user: Option[User] = Cache.getAs[User](username)
-      val list = auditRepo.getAllTimestamps
-      Ok(views.html.admin.audit("all", list, user))
-  }
-
-  def analytics(date: String): Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      val user: Option[User] = Cache.getAs[User](username)
-      val list = mobileRepo.getRecordByDate(date)
-      Ok(views.html.admin.analytics(user, list))
   }
 }
 object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)

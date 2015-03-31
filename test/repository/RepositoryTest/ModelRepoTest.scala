@@ -1,4 +1,4 @@
-package repository.RepositoryTest
+/*package repository.RepositoryTest
 
 import org.scalatest.FunSuite
 import model.repository.{Brand,Model}
@@ -7,9 +7,9 @@ import play.api.test.Helpers._
 import utils.StatusUtil.Status
 import play.api.test.FakeApplication
 
-/**
+*//**
   * @author knoldus
- */
+ *//*
 class ModelRepoTest extends FunSuite {
   val brand = Brand("nokia", "12-17-2013")
   val model = Model("N72", 1, Some(1))
@@ -67,3 +67,4 @@ class ModelRepoTest extends FunSuite {
   }
 }
 
+*/

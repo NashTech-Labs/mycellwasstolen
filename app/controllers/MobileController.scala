@@ -13,7 +13,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils._
-import utils.UtilDate._
 import model.repository._
 import java.util.Date
 import java.sql.Timestamp
@@ -112,11 +111,11 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
-        val date = UtilDate.getDate()
+        val date = commonUtils.getUtilDate()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, UtilDate.getDate(mobileuser.purchaseDate), mobileuser.contactNo,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, commonUtils.getUtilDate(mobileuser.purchaseDate), mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
           mobileuser.description, date, documentName, mobileuser.otherMobileBrand, mobileuser.otherMobileModel))
         request.body.file("fileUpload").map { image =>

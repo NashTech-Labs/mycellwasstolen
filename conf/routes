@@ -27,15 +27,11 @@ GET    /pending                       controllers.AdminController.pending(imeid:
 GET    /changeMobileRegType           controllers.AdminController.changeMobileRegType(imeid: String)
 GET    /delete                        controllers.AdminController.deleteMobile(imeid: String)
 
-
 #Admin
 GET    /login                         controllers.AuthController.login
 POST   /authenticate                  controllers.AuthController.authenticate
 GET    /logout                        controllers.AuthController.logout
 GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
-GET    /admin/auditpage               controllers.AdminController.auditPage
-POST   /admin/auditIMEID              controllers.AdminController.getTimestampByIMEI
-GET    /admin/auditAllRecords         controllers.AdminController.getAllTimestamp
 GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
 POST   /saveMobileName                controllers.MobileController.saveBrand
 GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)
@@ -43,7 +39,11 @@ GET    /approve                       controllers.AdminController.approve(imeid:
 GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
 GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
 POST   /createMobileModel             controllers.MobileController.saveModel
-GET    /analytics                     controllers.AdminController.analytics(date:String)
-                     
+
+#audit
+GET    /registrationRecord            controllers.AuditController.getRegistrationRecordsByYear(date:String)
+GET    /auditpage               controllers.AuditController.auditPage
+POST   /admin/auditIMEID              controllers.AuditController.getTimestampByIMEI
+GET    /admin/auditAllRecords         controllers.AuditController.getAllTimestamp
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                  controllers.Assets.at(path="/public", file)

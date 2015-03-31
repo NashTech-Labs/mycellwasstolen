@@ -5,26 +5,12 @@
 	
 	<div class="container">
 	<div class="row">
-	<div class="col-md-12">
-					@flash.get("ERROR").map { message =>
-						<div class="alert alert-dismissable alert-danger">
-							<strong>@message</strong>
-						</div>
-					}
-					@flash.get("SUCCESS").map { message =>
-						<div class="alert alert-dismissable alert-success">
-							<strong>@message</strong>
-						</div>
-					}
-				</div>
-				</div>
-	<div class="row">
          <div class="col-md-2">
             <ul class="nav nav-sidebar">
               <br><br>
               <li class="active"><a href="#">Overview</a></li>
+              <li><a href="@routes.AuditController.getRegistrationRecordsByYear("2015")">Analytics</a></li>
               <li><a href="#">Reports</a></li>
-              <li><a href="@routes.AdminController.analytics("2014")">Analytics</a></li>
               </ul>
         </div><!--/span-->
 	<div class="col-md-10">
@@ -34,15 +20,15 @@
 	<h3>@Messages("admin.audit")</h3>
 	</div>
 	<div class="col-md-6" style="text-align: right;padding-top: 18px;">
-	<a href="@routes.AdminController.auditPage()" class="btn btn-success btn-sm">IMEI records</a>
-	<a href="@routes.AdminController.getAllTimestamp()" class="btn btn-success btn-sm">All records</a>
+	<a href="@routes.AuditController.auditPage()" class="btn btn-success btn-sm">IMEI records</a>
+	<a href="@routes.AuditController.getAllTimestamp()" class="btn btn-success btn-sm">All records</a>
 	</div>
 	</div>
   <div class="panel-body">
   <div class="row">
   @if(check=="imeid"){
   <div class="col-md-12">
-  @form(action=routes.AdminController.getTimestampByIMEI()) {
+  @form(action=routes.AuditController.getTimestampByIMEI()) {
 					<div class="actions">
 					    Enter IMEI ID: <input type="text" placeholder="IMEID" name="imeiMeid">
 						<input type="submit" value="Search" class="btn btn-primary btn-xs">

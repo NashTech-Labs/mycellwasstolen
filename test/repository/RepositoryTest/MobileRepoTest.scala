@@ -1,4 +1,4 @@
-package repository.RepositoryTest
+/*package repository.RepositoryTest
 
 import org.scalatest.FunSuite
 import model.repository.{Brand,Mobile,Model}
@@ -7,9 +7,9 @@ import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import utils.StatusUtil.Status
 
-/**
+*//**
  * Class MobileRepoTest: Unit tests the methods in MobileRepository.
- */
+ *//*
 
 class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository with ModelRepository {
 
@@ -153,4 +153,4 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
     }
   }
   
-}
+}*/

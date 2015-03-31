@@ -20,13 +20,6 @@ import model.repository.AuditRepository
 
 class RouterTest extends Specification {
 
-  val date = new java.sql.Date(new java.util.Date().getTime())
-  val brand = Brand("nokia", "12-17-2013")
-  val model = Model("E5", 1)
-  val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "864465028854206", "12-05-2013", "+91 8375919908",
-    "ss@gmail.com", "stolen", Status.pending, "test", "12-17-2013", "sushil.png", "nokia", "E5")
-
   "respond to the index Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/"))
