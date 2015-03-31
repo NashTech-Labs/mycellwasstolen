@@ -13,13 +13,13 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils._
+import utils.UtilDate._
 import model.repository._
-import utils.StatusUtil
 import java.util.Date
-import utils.Constants
+import java.sql.Timestamp
 
 class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
-                       modelRepo: ModelRepository, auditRepo: AuditRepository, mail: Common, s3Util: S3UtilComponent)
+                       modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent,commonUtils:CommonUtils)
   extends Controller with Secured {
   /**
    * Describes the new mobile registration form (used in both stolen and secure mobile registration form)
@@ -113,13 +113,11 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
-        val sqldate = new java.sql.Date(new java.util.Date().getTime())
-        val dateFormat = new SimpleDateFormat("MM/dd/yyyy")
-        val date = dateFormat.format(sqldate)
+        val date=UtilDate.getDate()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, mobileuser.purchaseDate, mobileuser.contactNo,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, UtilDate.getDate(mobileuser.purchaseDate), mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
           mobileuser.description, date, documentName, mobileuser.otherMobileBrand, mobileuser.otherMobileModel))
         request.body.file("fileUpload").map { image =>
@@ -153,14 +151,17 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     val data = mobileRepo.getMobileUserByIMEID(imeid)
     data match {
       case Some(mobileData) =>
+        
         val brand = brandRepo.getBrandById(mobileData.brandId).get.name
+        println("????????????????????????????????????????????????????????????????????????????????????????")
         val model = modelRepo.getModelById(mobileData.mobileModelId).get.name
+        
         val mobileDetail = MobileDetail(mobileData.userName, brand, model, mobileData.imeiMeid, mobileData.otherImeiMeid,
-          mobileData.mobileStatus.toString(), mobileData.purchaseDate, mobileData.contactNo, mobileData.email,
+          mobileData.mobileStatus.toString(), mobileData.purchaseDate.toString(), mobileData.contactNo, mobileData.email,
           mobileData.regType, mobileData.otherMobileBrand, mobileData.otherMobileModel)
         implicit val resultWrites = Json.writes[MobileDetail]
         val obj = Json.toJson(mobileDetail)(resultWrites)
-        auditRepo.insertTimestamp(Audit(imeid, (new Date()).toString()))
+        auditRepo.insertTimestamp(Audit(imeid, new Timestamp(new java.util.Date().getTime)))
         Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
       case None =>
         Ok(Json.obj("status" -> "Error"))
@@ -190,43 +191,12 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   }
 
   /**
-   * Check valid imei number or not
-   * @param imei number of mobile
-   * @return true on valid, otherwise false
-   */
-  def validateImei(imei: String): Boolean = {
-    val arr = imei.map(f => f.toString().toInt).toArray
-    val len = arr.length
-    val checksum = arr(len - 1)
-    if (len != 15)
-      false
-    var mul = 2
-    var sum = 0
-    var i = len - 2
-    while (i >= 0) {
-      if ((arr(i) * mul) >= 10) {
-        sum += ((arr(i) * mul) / 10) + ((arr(i) * mul) % 10)
-        i = i - 1
-      } else {
-        sum += arr(i) * mul
-        i = i - 1
-      }
-      if (mul == 2) mul = 1 else mul = 2
-    }
-    var m10 = sum % 10
-    if (m10 > 0) m10 = 10 - m10
-    if (m10 == checksum) true
-    else
-      false
-  }
-
-  /**
    * Checking mobile is exist or not with imeiId
    * @param imeiId of mobile
    */
   def isImeiExist(imeiId: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist -> called " + imeiId)
-    val result = validateImei(imeiId)
+    val result = CommonUtils.validateImei(imeiId)
     if (result) {
       val isExist = mobileRepo.getMobileUserByIMEID(imeiId)
       if (!(isExist.isEmpty)) {
@@ -254,9 +224,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
       brand => {
         Logger.info("MobileNameController: saveBrand -> called")
-        val sqldate = new java.sql.Date(new java.util.Date().getTime())
-        val dateFormat = new SimpleDateFormat("MM/dd/yyyy")
-        val date = dateFormat.format(sqldate)
+        val date=UtilDate.getDate()
         val insertedBrand = brandRepo.insertBrand(Brand(brand.name, date))
         insertedBrand match {
           case Right(Some(id)) =>
@@ -295,4 +263,4 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   }
 }
 
-object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, Common, S3Util)
+object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, MailUtil, S3Util,CommonUtils)

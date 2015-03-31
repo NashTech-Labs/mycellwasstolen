@@ -20,7 +20,7 @@ import play.api.cache.Cache
 import play.twirl.api.Html
 
 
-class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: Common,s3Util:S3UtilComponent) extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil,s3Util:S3UtilComponent) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -65,7 +65,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
             case Some(mobile) =>
               if (mobileUser.get.regType == "stolen") {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                  "Registration Confirmed on MCWS", mail.approvedMessage(mobileUser.get.imeiMeid))
                 try {
                   TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
                 }
@@ -74,7 +74,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
                 }
               } else {
                 mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                  "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
+                  "Registration Confirmed on MCWS", mail.approvedMessage(mobileUser.get.imeiMeid))
                 try {
                   TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
                 } catch {
@@ -109,7 +109,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           mobileUser match {
             case Some(mobile) =>
               mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+                "Registration Confirmed on MCWS", mail.demandProofMessage(mobileUser.get.imeiMeid))
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
             case None =>
@@ -196,7 +196,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           result match {
             case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
               mail.sendMail(mobile.imeiMeid + "<" + mobile.email + ">",
-                "Delete mobile registration from MCWS", Common.deleteMessage(mobile.imeiMeid))
+                "Delete mobile registration from MCWS", mail.deleteMessage(mobile.imeiMeid))
               Ok("Success of Delete ajax call")
             case Left(msg) =>
               Logger.info("AdminController:deleteMobile - error in deleting record" + msg)
@@ -255,4 +255,4 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Ok(views.html.admin.analytics(user,list))
   }
 }
-object AdminController extends AdminController(MobileRepository, AuditRepository, Common,S3Util)
+object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil,S3Util)
