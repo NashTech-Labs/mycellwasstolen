@@ -40,5 +40,4 @@ def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit reques
       routes.javascript.AdminController.changeMobileRegType)).as("text/javascript")
   }
 }
-
 object Application extends Application

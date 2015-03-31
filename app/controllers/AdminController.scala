@@ -21,8 +21,7 @@ import utils._
 import play.api.cache.Cache
 import play.twirl.api.Html
 
-
-class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: Common,s3Util:S3UtilComponent) extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent) extends Controller with Secured {
 
   implicit val formats = DefaultFormats
   /**
@@ -52,52 +51,30 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Ok(views.html.admin.mobiles(status, mobiles, user))
   }
 
-  val Messages = Map("success" -> "Mobile has been approved successfully!", "error" -> "Something wrong!!")
   /**
    * changes mobile status to approved
    * @param imeiId of mobile
    */
-  def approve(imeiId: String, page: String): EssentialAction = withAuth { username =>
+  def approve(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:approve - change status to approve : " + imeiId)
       val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
-      val successMessage = result match {
+      result match {
         case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
-          tweetWithEmail(imeiId)
-        case Left(message) => Some(message)
+          val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+          mobileUser match {
+            case Some(mobile) =>
+              sendEmail(mobileUser.get, "approve")
+              tweet(mobileUser.get, "approve")
+              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after approved")
+              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+          }
         case _ =>
           Logger.info("AdminController: - false")
-          Messages.get("error")
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!")
       }
-      Redirect(routes.AdminController.mobiles(page)).flashing(
-        "success" -> successMessage.getOrElse(""))
-  }
-
-  /**
-   * Enable email, Tweeter posts and Success Messages
-   * @param imeiId:String
-   * @return Option[String]
-   */
-
-  private def tweetWithEmail(imeiId: String): Option[String] = {
-    val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
-    val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
-    mobileUser match {
-      case Some(mobile) =>
-        val message = if (mobileUser.get.regType == "stolen") { "has been marked as Secure at mycellwasstolen.com" }
-        else "has been marked as Secure at mycellwasstolen.com"
-        post match {
-          case Some(true) =>
-            mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-              "Registration Confirmed on MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-            TwitterTweet.tweetAMobileRegistration(imeiId, message)
-          case _ => Logger.info("Email and Twitter posts have been disabled for this environment")
-        }
-        Messages.get("success")
-      case None =>
-        Logger.info("AdminController:approve - error in fetching record after approved")
-        Messages.get("error")
-    }
   }
 
   /**
@@ -113,8 +90,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
           mobileUser match {
             case Some(mobile) =>
-              mail.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-                "Registration Confirmed on MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
+              sendEmail(mobileUser.get, "proofDemanded")
               Redirect(routes.AdminController.mobiles(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
             case None =>
@@ -128,7 +104,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
 
       }
   }
- 
+
   /**
    * Changes mobile status to pending
    * @param imeiId of mobile
@@ -165,11 +141,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
       Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
-      val regType = if (mobileUser.get.regType == "stolen") {
-        "Clean"
-      } else {
-        "stolen"
-      }
+      val regType = if (mobileUser.get.regType == "stolen") "Clean" else "stolen"
       val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
         mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
         regType, mobileUser.get.mobileStatus, mobileUser.get.description,
@@ -178,6 +150,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
       result match {
         case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          sendEmail(mobileUser.get, "changeMobileRegType")
+          tweet(mobileUser.get, "changeMobileRegType")
           Logger.info("AdminController changeMobileRegType : - true")
           Ok("success")
         case _ =>
@@ -185,6 +159,51 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           Ok("error in change status")
       }
   }
+
+  /**
+   * This function sends mail to the mobile user
+   * @param mobileuser object of Mobile
+   * @param msg type of mail
+   */
+  private def sendEmail(mobileuser: Mobile, msg: String) = {
+    msg match {
+      case "approved" =>
+        mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
+      case "proofDemanded" =>
+        mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
+      case "delete" =>
+        mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imeiMeid))
+      case "changeMobileRegType" =>
+        if (mobileuser.regType == "stolen")
+          mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS", mail.changeMobileRegTypeStolen(mobileuser.imeiMeid))
+        else
+          mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS", mail.changeMobileRegTypeClean(mobileuser.imeiMeid))
+      case _ =>
+        Logger.info("AdminController:sendEmail -> failed")
+    }
+  }
+
+  private def tweet(mobileuser: Mobile, msg: String)={
+    val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
+    if(post.get){
+      Logger.info("AdminController:tweet -> disabled")
+    }else{
+    msg match {
+      case "approve" =>
+        if (mobileuser.regType == "stolen") {
+          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+        } else {
+          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+        }
+      case "changeMobileRegType" =>
+        if (mobileuser.regType == "stolen") {
+          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+        } else {
+          TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+        }
+    }
+  }
+}
 
   /**
    * Deletes existed mobile
@@ -200,8 +219,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           val result = mobileRepo.deleteMobileUser(imeid)
           result match {
             case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-              mail.sendMail(mobile.imeiMeid + "<" + mobile.email + ">",
-                "Delete mobile registration from MCWS", Common.deleteMessage(mobile.imeiMeid))
+              sendEmail(mobileUser.get, "delete")
               Ok("Success of Delete ajax call")
             case Left(msg) =>
               Logger.info("AdminController:deleteMobile - error in deleting record" + msg)
@@ -252,12 +270,12 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       val list = auditRepo.getAllTimestamps
       Ok(views.html.admin.audit("all", list, user))
   }
-  
-  def analytics(date:String): Action[AnyContent] = withAuth { username =>
+
+  def analytics(date: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-    val list = mobileRepo.getRecordByDate(date)
-      Ok(views.html.admin.analytics(user,list))
+      val list = mobileRepo.getRecordByDate(date)
+      Ok(views.html.admin.analytics(user, list))
   }
 }
-object AdminController extends AdminController(MobileRepository, AuditRepository, Common,S3Util)
+object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)

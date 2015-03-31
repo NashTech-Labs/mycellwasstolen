@@ -1,11 +1,12 @@
  package model.repository
 import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.driver
-import scala.slick.lifted.ProvenShape
-import utils.Connection
-import model.repository._
-import play.api.Logger
-import java.util.Date
+ import scala.slick.driver
+ import scala.slick.lifted.ProvenShape
+ import utils.Connection
+ import model.repository._
+ import play.api.Logger
+ import java.util.Date
+ import java.sql.Timestamp
 
 trait AuditRepository extends AuditTable {
   /*
@@ -55,7 +56,7 @@ trait AuditTable {
   private[AuditTable] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def mobileIMEID: Column[String] = column[String]("mobile_imeid", O.NotNull)
-    def timestamp: Column[String] = column[String]("timestamp", O.NotNull)
+    def timestamp: Column[Timestamp] = column[Timestamp]("timestamp", O.NotNull)
     def * : scala.slick.lifted.ProvenShape[Audit] = (mobileIMEID, timestamp, id) <> (Audit.tupled, Audit.unapply)
   }
   val audits = TableQuery[Audits]
@@ -67,7 +68,7 @@ trait AuditTable {
  */
 case class Audit(
   mobileIMEID: String,
-  timestamp: String,
+  timestamp: Timestamp,
   id: Option[Int] = None)
 
 /**

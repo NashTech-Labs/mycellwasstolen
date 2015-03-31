@@ -5,9 +5,10 @@ import scala.slick.lifted.ProvenShape
 import utils.Connection
 import model.repository._
 import play.api.Logger
-import java.util.Date
 import utils.StatusUtil._
 import scala.collection.mutable.ListBuffer
+import utils.StatusUtil.Status
+import java.sql.Date
 
 /**
  * MobileRepository provides all concrete implementation of
@@ -157,15 +158,6 @@ trait MobileRepository extends MobileTable {
   def getRecordByDate(date: String): List[Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       val empty: ListBuffer[Int] = ListBuffer()
-      for (i <- 1 to 12) {
-        if (i < 10) {
-          val s = mobiles.filter { mobile => mobile.registrationDate >= ("0" + i.toString() + "/01/" + date) && mobile.registrationDate <= ("0" + i.toString() + "/31/" + date) }
-          empty += s.list.length
-        } else {
-          val s = mobiles.filter { mobile => mobile.registrationDate >= (i.toString() + "/01/" + date) && mobile.registrationDate <= (i.toString() + "/31/" + date) }
-          empty += s.list.length
-        }
-      }
       empty.toList
     }
   }
@@ -181,13 +173,13 @@ trait MobileTable extends BrandTable with ModelTable {
     def mobileModelId: Column[Int] = column[Int]("mobile_modelId")
     def imeiMeid: Column[String] = column[String]("imei_meid", O DBType ("VARCHAR(1000)"))
     def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O DBType ("VARCHAR(1000)"))
-    def purchaseDate: Column[String] = column[String]("purchase_date")
+    def purchaseDate: Column[Date] = column[Date]("purchase_date")
     def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(1000)"))
     def email: Column[String] = column[String]("email", O DBType ("VARCHAR(1000)"))
     def regType: Column[String] = column[String]("type", O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O DBType ("VARCHAR(50)"))
     def description: Column[String] = column[String]("description", O DBType ("VARCHAR(3000)"))
-    def registrationDate: Column[String] = column[String]("registration_date", O.NotNull)
+    def registrationDate: Column[Date] = column[Date]("registration_date", O.NotNull)
     def document: Column[String] = column[String]("document", O DBType ("VARCHAR(1000)"))
     def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))
     def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
@@ -205,7 +197,6 @@ trait MobileTable extends BrandTable with ModelTable {
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
 
 }
-import utils.StatusUtil.Status
 //Represents the Mobile registration Record
 case class Mobile(
   userName: String,
@@ -213,13 +204,13 @@ case class Mobile(
   mobileModelId: Int,
   imeiMeid: String,
   otherImeiMeid: String,
-  purchaseDate: String,
+  purchaseDate: Date,
   contactNo: String,
   email: String,
   regType: String,
   mobileStatus: Status.Value,
   description: String,
-  regDate: String,
+  regDate: Date,
   document: String,
   otherMobileBrand: String,
   otherMobileModel: String,

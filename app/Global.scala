@@ -3,10 +3,12 @@ import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
 import play.api._
-import play.api.Play.current
-import play.api.mvc.Results.InternalServerError
+import java.io.File
 import utils.Connection
-import model.repository._
+import play.api.Play.current
+import scala.slick.jdbc.meta.MTable
+import com.typesafe.config.ConfigFactory
+import scala.slick.driver.PostgresDriver.simple._
 import model.repository.ModelRepository.models
 import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
@@ -41,6 +43,8 @@ object Global extends GlobalSettings {
       }
     } catch {
       case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace())
+
+        Logger.info("Table already exists in database")
     }
   }
 
@@ -53,5 +57,4 @@ object Global extends GlobalSettings {
       play.api.mvc.Results.Ok(views.html.errorPage("page not found"))
     }
   }
-
 }
