@@ -1,4 +1,4 @@
-/*package repository.RepositoryTest
+package repository.RepositoryTest
 
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
@@ -60,4 +60,4 @@ class BrandRepoTest extends FunSuite  {
   }
 
 }
-*/
+

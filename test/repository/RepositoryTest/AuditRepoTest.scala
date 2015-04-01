@@ -1,4 +1,4 @@
-/*package repository.RepositoryTest
+package repository.RepositoryTest
 
 import org.scalatest.FunSuite
 import model.repository.Audit
@@ -42,4 +42,4 @@ class AuditRepoTest extends FunSuite {
     }
   }
 
-}*/
+}
