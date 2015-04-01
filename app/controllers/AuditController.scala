@@ -38,7 +38,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
   /**
    * Display timestamp records of particular imei number
    */
-  def timestampsByIMEI: Action[AnyContent] = Action {
+  def timestampsByIMEI: Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:audit -> called")
       val email = request.session.get(Security.username).getOrElse("")

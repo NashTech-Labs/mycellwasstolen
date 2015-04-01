@@ -106,9 +106,19 @@ class RouterTest extends Specification {
   }
 
    // Admin Pages
-  "redirect to login" in {
+  "redirect to login page with error flash" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/login"))
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("error"->"message"))
+      status(result) must equalTo(OK)
+      contentType(result) must beSome("text/html")
+      charset(result) must beSome("utf-8")
+    }
+  }
+  
+  // Admin Pages
+  "redirect to login page with success flash" in {
+    running(FakeApplication()) {
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("success"->"message"))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")

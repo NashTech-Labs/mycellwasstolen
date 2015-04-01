@@ -51,8 +51,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
           mobileUser match {
             case Some(mobile) =>
-              sendEmail(mobileUser.get, "approve")
-              tweet(mobileUser.get, "approve")
+              sendEmail(mobileUser.get, "approved")
+              tweet(mobileUser.get, "approved")
               Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
             case None =>
               Logger.info("AdminController:approve - error in fetching record after approved")
@@ -181,7 +181,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       Logger.info("AdminController:tweet -> disabled")
     } else {
       msg match {
-        case "approve" =>
+        case "approved" =>
           if (mobileuser.regType == "stolen") {
             TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
           } else {
