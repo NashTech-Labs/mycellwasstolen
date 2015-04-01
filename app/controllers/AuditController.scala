@@ -32,13 +32,13 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val list = List()
-      Ok(views.html.audit.audit("imeid", list, user))
+      Ok(views.html.audit.overviews("imeid", list, user))
   }
 
   /**
    * Display timestamp records of particular imei number
    */
-  def getTimestampByIMEI: Action[AnyContent] = Action {
+  def timestampsByIMEI: Action[AnyContent] = Action {
     implicit request =>
       Logger.info("AdminController:audit -> called")
       val email = request.session.get(Security.username).getOrElse("")
@@ -46,25 +46,25 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       timestampform.bindFromRequest().fold(
         hasErrors = { form =>
           val list = List()
-          Ok(views.html.audit.audit("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
+          Ok(views.html.audit.overviews("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
         },
         success = { timestamp =>
           val list = auditRepo.getAllTimestampsByIMEID(timestamp.imeiMeid)
-          Ok(views.html.audit.audit("imeid", list, user))
+          Ok(views.html.audit.overviews("imeid", list, user))
         })
   }
 
   /**
    * Display all timestamp records for all mobiles
    */
-  def getAllTimestamp: Action[AnyContent] = withAuth { username =>
+  def allTimestamps: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val list = auditRepo.getAllTimestamps
-      Ok(views.html.audit.audit("all", list, user))
+      Ok(views.html.audit.overviews("all", list, user))
   }
 
-  def getRegistrationRecordsByYear(year: String): Action[AnyContent] = withAuth { username =>
+  def registrationRecordsByYear(year: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val years = (2012 to Calendar.getInstance().get(Calendar.YEAR)).toList

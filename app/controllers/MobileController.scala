@@ -141,17 +141,22 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * @param msg type of mail
    */
   private def sendEmail(mobileuser: Mobile, msg: String) = {
-    msg match {
-      case "mobileRegistration" =>
-        if (mobileuser.regType == "stolen") {
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-            "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
-        } else {
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-            "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
-        }
-      case _ =>
-        Logger.info("MobileController:sendEmail -> failed")
+    val post = Play.current.configuration.getBoolean("Email.send")
+    if (!post.get) {
+      Logger.info("AdminController:tweet -> disabled")
+    } else {
+      msg match {
+        case "mobileRegistration" =>
+          if (mobileuser.regType == "stolen") {
+            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
+          } else {
+            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
+          }
+        case _ =>
+          Logger.info("MobileController:sendEmail -> failed")
+      }
     }
   }
 

@@ -153,6 +153,10 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * @param msg type of mail
    */
   private def sendEmail(mobileuser: Mobile, msg: String) = {
+    val post = Play.current.configuration.getBoolean("Email.send")
+    if (!post.get) {
+      Logger.info("AdminController:tweet -> disabled")
+    } else {
     msg match {
       case "approved" =>
         mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
@@ -168,11 +172,12 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       case _ =>
         Logger.info("AdminController:sendEmail -> failed")
     }
+    }
   }
 
   private def tweet(mobileuser: Mobile, msg: String) = {
-    val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
-    if (post.get) {
+    val post = Play.current.configuration.getBoolean("Tweet.post")
+    if (!post.get) {
       Logger.info("AdminController:tweet -> disabled")
     } else {
       msg match {
