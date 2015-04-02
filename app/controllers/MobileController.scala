@@ -18,6 +18,10 @@ import java.util.Date
 import java.sql.Timestamp
 import play.api.libs.Files
 
+/**
+ * Contains controllers to handle user tasks such as rendering RegistrationForms, handling submits, 
+ * sending Email Notification on type of registrations etc 
+ */
 class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
                        modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent, commonUtils: CommonUtils)
   extends Controller with Secured {
@@ -281,5 +285,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
         })
   }
 }
+
+/**
+ * Lets other classes, packages, traits access all the behaviors defined in the class MobileController   
+ */
 
 object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, MailUtil, S3Util, CommonUtils)

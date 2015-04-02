@@ -19,8 +19,8 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Inserts new Mobile Registration Record
-   * @param: Mobile: Object of Mobile case class
-   * @return, id of new inserted mobile
+   * @param Mobile: Object of Mobile case class
+   * @return id of new inserted mobile
    */
   def insertMobileUser(mobile: Mobile): Either[String, Option[Int]] = {
     try {
@@ -37,7 +37,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Returns Mobile object
-   * @param: IMEID, IMEID of registered mobile
+   * @param IMEID, IMEID of registered mobile
    */
   def getMobileUserByIMEID(imeid: String): Option[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
@@ -50,7 +50,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Changes the status of registered mobile to "approved"
-   * @param: mobileUser, Object of Mobile
+   * @param mobileUser, Object of Mobile
    * @return id of updated record
    */
   def changeStatusToApproveByIMEID(imeid: String): Either[String, Int] = {
@@ -68,7 +68,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Changes the status of registered mobile to "profDemanded"
-   * @param: mobileUser, Object of Mobile
+   * @param mobileUser, Object of Mobile
    * @return id of updated record
    */
   def changeStatusToDemandProofByIMEID(imeid: String): Either[String, Int] = {
@@ -86,7 +86,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Change registration type (Stolen or Clean)
-   * @param: mobileUser, Object of Mobile
+   * @param mobileUser, Object of Mobile
    * @return id of updated record
    */
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
@@ -105,8 +105,8 @@ trait MobileRepository extends MobileTable {
 
   /**
    *  Retrieving all mobile user with brand and model based on status
-   *  @param: status, (approved,pending and demandedProof)
-   *  @returns: list of mobile brand and model name
+   *  @param status, (approved,pending and demandedProof)
+   *  @return list of mobile brand and model name
    */
   def getAllMobilesUserWithBrandAndModel(status: String): List[(Mobile, String, String)] = {
     Connection.databaseObject withSession { implicit session: Session =>
@@ -121,7 +121,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Change new registered mobile to status to pending
-   * @param: mobileUser, Object of Mobile
+   * @param mobileUser, Object of Mobile
    * @return id of updated record
    */
   def changeStatusToPendingByIMEID(imeid: String): Either[String, Int] = {
@@ -139,7 +139,7 @@ trait MobileRepository extends MobileTable {
 
   /**
    * Deletes a mobile Record
-   * @param: IMEID, IMEID of registered mobile
+   * @param IMEID, IMEID of registered mobile
    * @return id of deleted record
    */
   def deleteMobileUser(imeid: String): Either[String, Int] = {
