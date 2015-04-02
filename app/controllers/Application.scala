@@ -26,12 +26,12 @@ def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
   }
 
   /**
- * Handle the calling of controllers methods from javascript ajax call 
+ * Handle the calling of controllers methods from javascript ajax call
  */
 def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
-      routes.javascript.MobileController.getMobileUser,
+      routes.javascript.MobileController.checkMobileStatus,
       routes.javascript.MobileController.getModels,
       routes.javascript.MobileController.isImeiExist,
       routes.javascript.AdminController.pending,

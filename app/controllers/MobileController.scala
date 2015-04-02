@@ -16,6 +16,7 @@ import utils._
 import model.repository._
 import java.util.Date
 import java.sql.Timestamp
+import play.api.libs.Files
 
 class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
                        modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent, commonUtils: CommonUtils)
@@ -104,18 +105,18 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   /**
    * Handle the new mobile registration form submission and add new mobile
    */
-  def mobileRegistration = Action(parse.multipartFormData) { implicit request =>
+  def mobileRegistration: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
     val mobileBrands = brandRepo.getAllBrands
     val user: Option[User] = Cache.getAs[User](username)
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
-        val date = commonUtils.getUtilDate()
+        val date = commonUtils.getSqlDate()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, commonUtils.getUtilDate(mobileuser.purchaseDate), mobileuser.contactNo,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, commonUtils.getSqlDate(mobileuser.purchaseDate), mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
           mobileuser.description, date, documentName, mobileuser.otherMobileBrand, mobileuser.otherMobileModel))
         result match {
@@ -144,7 +145,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       Logger.info("MobileController:sendEmail -> disabled")
     } else {
       msg match {
-        case "mobileRegistration" =>
+        case "registration" =>
           if (mobileuser.regType == "stolen") {
             mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
               "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
@@ -162,7 +163,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * Getting mobile details by imei id
    * @param imeid of mobile
    */
-  def getMobileUser(imeid: String, user: String): Action[AnyContent] = Action { implicit request =>
+  def checkMobileStatus(imeid: String, user: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileUser -> called")
     val data = mobileRepo.getMobileUserByIMEID(imeid)
     data match {
@@ -239,13 +240,18 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       brandform.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
         brand => {
-          val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
-          insertedBrand match {
-            case Right(Some(id)) =>
-              Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
-            case _ =>
-              Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
+          if (brandRepo.getAllBrands.filter { x => x.name.equalsIgnoreCase(brand.name) }.isEmpty) {
+            val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
+            insertedBrand match {
+              case Right(Some(id)) =>
+                Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
+              case _ =>
+                Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
+            }
+          } else {
+            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> "Brand allready exist")
           }
+
         })
   }
 
@@ -261,12 +267,16 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       modelform.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, brands, user)),
         modell => {
-          val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
-          insertedModel match {
-            case Right(Some(id)) =>
-              Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
-            case _ =>
-              Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+          if (modelRepo.getAllModelByBrandId(modell.brandName.toInt).filter { x => x.name.equalsIgnoreCase(modell.modelName) }.isEmpty) {
+            val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
+            insertedModel match {
+              case Right(Some(id)) =>
+                Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
+              case _ =>
+                Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+            }
+          } else {
+            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> "Model Allready exist")
           }
         })
   }

@@ -18,20 +18,20 @@ import java.util.Calendar
 class AdminControllerTestCases extends Specification with Mockito {
 
   val stolenMobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
   val stolenMobileUser1 = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
   val cleanMobileUser = Mobile(
-    "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
   val mobileWithBrand = (Mobile(
-    "gs", 1, 1, "864465028854206", "123456789012677", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5"), "nokia", "E5")
+    "gs", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5"), "nokia", "E5")
 
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
   val audit = List(Audit("864465028854206", new java.sql.Timestamp(new java.util.Date().getTime), Some(1)))

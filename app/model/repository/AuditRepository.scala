@@ -57,13 +57,13 @@ trait AuditRepository extends AuditTable with MobileRepository {
       val empty: ListBuffer[Int] = ListBuffer()
       for (i <- 1 to 12) {
         if (i < 10) {
-          val to = CommonUtils.getUtilDate(("0" + i.toString() + "/01/" + year))
-          val from = CommonUtils.getUtilDate(("0" + i.toString() + "/31/" + year))
+          val to = CommonUtils.getSqlDate(("0" + i.toString() + "/01/" + year))
+          val from = CommonUtils.getSqlDate(("0" + i.toString() + "/31/" + year))
           val s = mobiles.filter { mobile => mobile.registrationDate >= to && mobile.registrationDate <= from }
           empty += s.list.length
         } else {
-          val to = CommonUtils.getUtilDate((i.toString() + "/01/" + year))
-          val from = CommonUtils.getUtilDate((i.toString() + "/31/" + year))
+          val to = CommonUtils.getSqlDate((i.toString() + "/01/" + year))
+          val from = CommonUtils.getSqlDate((i.toString() + "/31/" + year))
           val s = mobiles.filter { mobile => mobile.registrationDate >= to && mobile.registrationDate <= from }
           empty += s.list.length
         }

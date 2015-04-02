@@ -12,8 +12,8 @@ class AuditRepoTest extends FunSuite {
   val auditTimestamp = Audit("123456789012345", timeStamp, Some(1))
   
    val mobileUser = Mobile(
-    "sushil", 1, 1, "123456789012345", "123456789012677", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "123456789012345", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
   //Tests insertion of a timeStamp
   test("AuditRepository: insertTimestamp ") {

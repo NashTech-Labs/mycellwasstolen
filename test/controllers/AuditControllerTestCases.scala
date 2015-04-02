@@ -21,8 +21,8 @@ class AuditControllerTestCases extends Specification with Mockito {
   val timestamp = Audit("864465028854206", new Timestamp(new java.util.Date().getTime))
   val auditList=List(Audit("864465028854206", new Timestamp(new java.util.Date().getTime),Some(1)))
   val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getUtilDate(), "+91 9839839830",
-    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
   val user = User("admin", "knol2013")
   val mockedAudit = mock[AuditRepository]
 

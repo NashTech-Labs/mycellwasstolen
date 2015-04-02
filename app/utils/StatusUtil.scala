@@ -5,7 +5,7 @@ import play.api.libs.json.Json
 import model.repository._
 
 /**
- * Provides commonly used database utilities 
+ * Provides commonly used database utilities
  */
 object StatusUtil {
 
@@ -17,7 +17,7 @@ object StatusUtil {
   val approved = Value("approved")
   val proofdemanded = Value("proofdemanded")
  }
- 
+
   /**
    * Maps the status to a slick Column Type
    */
@@ -32,4 +32,3 @@ object StatusUtil {
         }
     })
 }
-

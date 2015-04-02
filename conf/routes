@@ -20,8 +20,8 @@ GET    /isImeiExist                   controllers.MobileController.isImeiExist(i
 #Javascript Routes
 
 GET    /javascriptRoutes              controllers.Application.javascriptRoutes 
-GET    /mobileUser                    controllers.MobileController.getMobileUser(imeid: String,user:String)
-GET    /mobileStatus                  controllers.MobileController.mobileStatus
+GET    /mobileStatus                  controllers.MobileController.checkMobileStatus(imeid: String,user:String)
+GET    /mobileStatusForm              controllers.MobileController.mobileStatus
 GET    /mobileModel                   controllers.MobileController.getModels(id:Int)
 GET    /pending                       controllers.AdminController.pending(imeid: String)
 GET    /changeMobileRegType           controllers.AdminController.changeMobileRegType(imeid: String)
