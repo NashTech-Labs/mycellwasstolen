@@ -31,11 +31,7 @@ def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
 def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
-<<<<<<< HEAD
       routes.javascript.MobileController.checkMobileStatus,
-=======
-      routes.javascript.MobileController.checkStatus,
->>>>>>> 593546736364d9be5213d73f12641e86327f8ce8
       routes.javascript.MobileController.getModels,
       routes.javascript.MobileController.isImeiExist,
       routes.javascript.AdminController.pending,
