@@ -165,7 +165,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
       when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
       when(mockedAuditRepo.insertTimestamp(timestamp)) thenReturn (Right(Some(1)))
-      val result = mobileController.getMobileUser("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
+      val result = mobileController.checkStatus("864465028854206", "user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
       contentType(result) must beSome("application/json")
     }
@@ -178,7 +178,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
       when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
       when(mockedAuditRepo.insertTimestamp(timestamp)) thenReturn (Right(Some(1)))
-      val result = mobileController.getMobileUser("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
+      val result = mobileController.checkStatus("864465028854206", "user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
       contentType(result) must beSome("application/json")
     }
