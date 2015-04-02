@@ -159,7 +159,7 @@ trait MobileRepository extends MobileTable {
 // Mapping of mobile Table
 trait MobileTable extends BrandTable with ModelTable {
   import utils.StatusUtil.Status
-  private[MobileTable] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
+  private[repository] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O DBType ("VARCHAR(1000)"))
     def brandId: Column[Int] = column[Int]("mobile_brandId")

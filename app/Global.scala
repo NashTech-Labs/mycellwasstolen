@@ -23,13 +23,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object Global extends GlobalSettings {
 
-  override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
+  /**
+ * Loads all configurations from the config file when the application starts
+ */
+override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
   }
 
-  override def onStart(app: Application): Unit = {
+  /**
+ * Loads all credentials and create tables when application starts 
+ */
+override def onStart(app: Application): Unit = {
     Logger.info("Application has started")
     val bucketName = Play.application.configuration.getString("aws_bucket_name")
     val accessKey = Play.application.configuration.getString("aws_access_key")
@@ -48,11 +54,17 @@ object Global extends GlobalSettings {
     }
   }
 
-  override def onStop(app: Application): Unit = {
+  /**
+ * Performs task when application goes stop
+ */
+override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
-
   }
-  override def onHandlerNotFound(request: RequestHeader) = {
+  
+  /**
+ * Handle the fake requests to application
+ */
+override def onHandlerNotFound(request: RequestHeader) = {
     Future{
       play.api.mvc.Results.Ok(views.html.errorPage("page not found"))
     }

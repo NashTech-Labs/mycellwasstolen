@@ -4,6 +4,7 @@ import play.api.i18n.Messages
 import play.api.libs.mailer.MailerPlugin
 import play.api.libs.mailer.Email
 import model.repository.Mobile
+import play.api.Logger
 
 trait MailUtil {
 
@@ -53,11 +54,15 @@ trait MailUtil {
    * @param message
    */
   def sendMail(email: String, subject: String, message: String): Unit = {
-    val emailBuilder = Email(
-      subject,
-      Messages("default.email.title"),
-      Seq(email), bodyHtml = Some(message))
-    MailerPlugin.send(emailBuilder)
+    try {
+      val emailBuilder = Email(
+        subject,
+        Messages("default.email.title"),
+        Seq(email), bodyHtml = Some(message))
+      MailerPlugin.send(emailBuilder)
+    } catch {
+      case ex: Exception => Logger.error("MobileController:sendEmail failed please check current mail configuration")
+    }
   }
 }
 object MailUtil extends MailUtil

@@ -142,7 +142,6 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
     }
   }
 
-  // Admin page
   "logout Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
@@ -153,7 +152,7 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
   
   "redirect to audit page" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/auditpage"))
+      val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
       status(result) must equalTo(303)
     }
   }

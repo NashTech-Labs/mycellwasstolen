@@ -12,11 +12,9 @@ import utils.StatusUtil.Status
  */
 
 class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository with ModelRepository {
-
   val imeiInserted = "12345678901234"
   val brand = Brand("nokia", Some(1))
   val model = Model("N72", 1)
-
   val mobileUser = Mobile(
     "gauravs", 1, 1, "12345678901234", "12345678902134", new java.sql.Date(121230), "+91 9839839830",
     "gs@gmail.com", "stolen", Status.pending, "ddas asd", new java.sql.Date(121230), "gaurav.png", "Sigma", "Sigma454", Some(1))

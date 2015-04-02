@@ -26,6 +26,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
   /**
+   * l
    * @param status, mobile status(pending, approved and proofdemanded)
    * @return mobiles page with mobile user according to status
    */
@@ -42,6 +43,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * changes mobile status to approved
    * @param imeiId of mobile
    */
+
   def approve(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:approve - change status to approve : " + imeiId)
@@ -139,7 +141,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           sendEmail(updatedMobile, "changeMobileRegType")
           tweet(updatedMobile, "changeMobileRegType")
           Logger.info("AdminController changeMobileRegType : - true")
-          Ok("success")
+          Ok("successs")
         case _ =>
           Logger.info("AdminController changeMobileRegType : - false")
           Ok("error in change status")
@@ -158,7 +160,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
     } else {
       msg match {
         case "approved" =>
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage(mobileuser.imeiMeid))
+          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage((mobileuser.imeiMeid)))
         case "proofDemanded" =>
           mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
         case "delete" =>

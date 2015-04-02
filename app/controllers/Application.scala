@@ -26,7 +26,7 @@ def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
   }
 
   /**
- * Handle the calling of controllers methods from javascript ajax call
+ * Handle the calling of controllers actions from javascript ajax calls
  */
 def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._

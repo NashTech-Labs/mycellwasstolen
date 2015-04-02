@@ -55,7 +55,7 @@ trait ModelRepository extends ModelTable {
 }
 
 trait ModelTable extends BrandTable {
-  private[ModelTable] class Models(tag: Tag) extends Table[Model](tag, "models") {
+  private[repository] class Models(tag: Tag) extends Table[Model](tag, "models") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def brandId: Column[Int] = column[Int]("brandId")
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))

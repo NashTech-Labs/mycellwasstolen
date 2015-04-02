@@ -74,7 +74,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
 }
 
 trait AuditTable {
-  private[AuditTable] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
+  private[repository] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def mobileIMEID: Column[String] = column[String]("mobile_imeid", O.NotNull)
     def timestamp: Column[Timestamp] = column[Timestamp]("timestamp", O.NotNull)
