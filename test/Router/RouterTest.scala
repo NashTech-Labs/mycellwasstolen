@@ -20,13 +20,6 @@ import model.repository.AuditRepository
 
 class RouterTest extends Specification {
 
-  val date = new java.sql.Date(new java.util.Date().getTime())
-  val brand = Brand("nokia")
-  val model = Model("E5", 1)
-  val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "864465028854206", new java.sql.Date(new java.util.Date().getTime()), "+91 8375919908",
-    "ss@gmail.com", "stolen", Status.pending, "test", new java.sql.Date(new java.util.Date().getTime()), "sushil.png", "nokia", "E5")
-
   "respond to the index Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/"))
@@ -113,9 +106,19 @@ class RouterTest extends Specification {
   }
 
    // Admin Pages
-  "redirect to login" in {
+  "redirect to login page with error flash" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/login"))
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("error"->"message"))
+      status(result) must equalTo(OK)
+      contentType(result) must beSome("text/html")
+      charset(result) must beSome("utf-8")
+    }
+  }
+  
+  // Admin Pages
+  "redirect to login page with success flash" in {
+    running(FakeApplication()) {
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("success"->"message"))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
@@ -150,7 +153,7 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
   
   "redirect to audit page" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
+      val Some(result) = route(FakeRequest(GET, "/auditpage"))
       status(result) must equalTo(303)
     }
   }

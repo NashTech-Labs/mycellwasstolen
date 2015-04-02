@@ -5,7 +5,7 @@ import scala.slick.lifted.ProvenShape
 import utils.Connection
 import model.repository._
 import play.api.Logger
-import utils.StatusUtil._
+import utils._
 import scala.collection.mutable.ListBuffer
 import utils.StatusUtil.Status
 import java.sql.Date
@@ -154,19 +154,12 @@ trait MobileRepository extends MobileTable {
       }
     }
   }
-
-  def getRecordByDate(date: String): List[Int] = {
-    Connection.databaseObject().withSession { implicit session: Session =>
-      val empty: ListBuffer[Int] = ListBuffer()
-      empty.toList
-    }
-  }
 }
 
 // Mapping of mobile Table
 trait MobileTable extends BrandTable with ModelTable {
   import utils.StatusUtil.Status
-  private[MobileTable] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
+  private[repository] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O DBType ("VARCHAR(1000)"))
     def brandId: Column[Int] = column[Int]("mobile_brandId")
@@ -187,7 +180,7 @@ trait MobileTable extends BrandTable with ModelTable {
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
 
-    def fkeyBrand = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyBrand= foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
 
     def fkeyModel = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,

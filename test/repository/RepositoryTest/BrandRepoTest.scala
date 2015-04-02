@@ -60,3 +60,4 @@ class BrandRepoTest extends FunSuite  {
   }
 
 }
+

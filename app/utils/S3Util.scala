@@ -18,18 +18,11 @@ trait S3UtilComponent {
    * Store file to standard bucket on S3
    */
   def store(documentName: String, fileToSave: File) = {
-
-    amazonS3Client match {
-
-      case (_amazonS3Client) =>
         try {
           amazonS3Client.putObject(bucketName, documentName, fileToSave)
         } catch {
           case ex: Exception => Logger.error(ex.getMessage(), ex); false
         }
-      case _ => Logger.info("We could not connect to Amazon Server at this moment")
-      None
-    }
   }
 
   /**
@@ -45,21 +38,5 @@ trait S3UtilComponent {
         false
     }
   }
-
-  /**
-   * Checks if the file exists on the standard bucket of S3
-   */
-
-  /*def doesFileExist(fileKeyName: String): Boolean = {
-    try {
-      amazonS3Client.getObjectMetadata(bucketName, fileKeyName)
-      true
-    } catch {
-      case ex: Exception => Logger.error(ex.getMessage(), ex)
-      false
-    }
-  }*/
-
 }
-
 object S3Util extends S3UtilComponent

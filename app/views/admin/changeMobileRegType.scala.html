@@ -98,7 +98,9 @@
 						+ mobile.contactNo
 						+ '</td><td>'
 						+ mobile.regType
-						+'</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">change status</button></td><td>'
+
+						+ (mobile.regType == "Clean" ? '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to stolen</button></td><td>'
+								: '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to clean</button></td><td>')
 						+ image + '</td></tr></table></div>';
 				$("#mobileRecords").empty();
 				$("#mobileRecords").removeClass("alert alert-danger");
@@ -125,7 +127,7 @@
 				error : mobileAjaxError
 			};
 
-			jsRoutes.controllers.MobileController.getMobileUser(imeid).ajax(
+			jsRoutes.controllers.MobileController.getMobileUser(imeid,"admin").ajax(
 					mobileAjaxCallBack);
 		};
 		

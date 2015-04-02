@@ -13,7 +13,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils._
-import utils.UtilDate._
 import model.repository._
 import java.util.Date
 import java.sql.Timestamp
@@ -112,24 +111,22 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
-        val date = UtilDate.getDate()
+        val date = commonUtils.getUtilDate()
         val index = mobileuser.document.indexOf(".")
         val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, UtilDate.getDate(mobileuser.purchaseDate), mobileuser.contactNo,
+          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, commonUtils.getUtilDate(mobileuser.purchaseDate), mobileuser.contactNo,
           mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
           mobileuser.description, date, documentName, mobileuser.otherMobileBrand, mobileuser.otherMobileModel))
-        request.body.file("fileUpload").map { image =>
-          val fileToSave = image.ref.file.asInstanceOf[File]
-          s3Util.store(documentName, fileToSave)
-        }
         result match {
           case Right(Some(insertRecord: Int)) if insertRecord != Constants.ZERO =>
             val user = mobileRepo.getMobileUserByIMEID(mobileuser.imeiMeid)
             sendEmail(user.get, "registration")
+            request.body.file("fileUpload").map { image =>
+              val fileToSave = image.ref.file.asInstanceOf[File]
+              s3Util.store(documentName, fileToSave)
+            }
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
-          case Right(None) =>
-            Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
           case _ =>
             Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
         }
@@ -142,17 +139,22 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * @param msg type of mail
    */
   private def sendEmail(mobileuser: Mobile, msg: String) = {
-    msg match {
-      case "mobileRegistration" =>
-        if (mobileuser.regType == "stolen") {
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-            "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
-        } else {
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-            "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
-        }
-      case _ =>
-        Logger.info("MobileController:sendEmail -> failed")
+    val post = Play.current.configuration.getBoolean("Email.send")
+    if (!post.get) {
+      Logger.info("MobileController:sendEmail -> disabled")
+    } else {
+      msg match {
+        case "registration" =>
+          if (mobileuser.regType == "stolen") {
+            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
+          } else {
+            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
+          }
+        case _ =>
+          Logger.info("MobileController:sendEmail -> failed")
+      }
     }
   }
 
@@ -160,7 +162,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * Getting mobile details by imei id
    * @param imeid of mobile
    */
-  def getMobileUser(imeid: String): Action[AnyContent] = Action { implicit request =>
+  def getMobileUser(imeid: String, user: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileUser -> called")
     val data = mobileRepo.getMobileUserByIMEID(imeid)
     data match {
@@ -172,7 +174,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
           mobileData.regType, mobileData.otherMobileBrand, mobileData.otherMobileModel)
         implicit val resultWrites = Json.writes[MobileDetail]
         val obj = Json.toJson(mobileDetail)(resultWrites)
-        auditRepo.insertTimestamp(Audit(imeid, new Timestamp(new java.util.Date().getTime)))
+        if (user != "admin") {
+          auditRepo.insertTimestamp(Audit(imeid, new Timestamp(new java.util.Date().getTime)))
+        }
         Ok(Json.obj("status" -> "Ok", "mobileData" -> obj))
       case None =>
         Ok(Json.obj("status" -> "Error"))
@@ -226,50 +230,45 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   /**
    * Handle new mobile brand form submission and add new mobile brand
    */
-  def saveBrand: Action[AnyContent] = Action { implicit request =>
-    Logger.info("MobileController: brandRegisterForm")
-    Logger.info("brandregisterform" + brandform)
-    val email = request.session.get(Security.username).getOrElse("")
-    val user: Option[User] = Cache.getAs[User](email)
-    brandform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
-      brand => {
-        Logger.info("MobileNameController: saveBrand -> called")
-        val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
-        insertedBrand match {
-          case Right(Some(id)) =>
-            Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
-          case Right(None) =>
-            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
-          case _ =>
-            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
-        }
-      })
+  def saveBrand: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController: saveBrand -> called")
+      Logger.info("brandregisterform" + brandform)
+      val email = request.session.get(Security.username).getOrElse("")
+      val user: Option[User] = Cache.getAs[User](email)
+      brandform.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
+        brand => {
+          val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
+          insertedBrand match {
+            case Right(Some(id)) =>
+              Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
+            case _ =>
+              Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
+          }
+        })
   }
 
   /**
    * Handle new mobile brand model form submission and add new model
    */
-  def saveModel: Action[AnyContent] = Action { implicit request =>
-    Logger.info("createMobileModelController:saveModel -> called")
-    Logger.info("createmobilemodelform" + modelform)
-    val brands = brandRepo.getAllBrands
-    val email = request.session.get(Security.username).getOrElse("")
-    val user: Option[User] = Cache.getAs[User](email)
-    modelform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, brands, user)),
-      modell => {
-        Logger.info("createmobilemodelController:createmobilemodel - found valid data.")
-        val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
-        insertedModel match {
-          case Right(Some(id)) =>
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
-          case Right(None) =>
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
-          case _ =>
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
-        }
-      })
+  def saveModel: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController:saveModel -> called")
+      val brands = brandRepo.getAllBrands
+      val email = request.session.get(Security.username).getOrElse("")
+      val user: Option[User] = Cache.getAs[User](email)
+      modelform.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, brands, user)),
+        modell => {
+          val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
+          insertedModel match {
+            case Right(Some(id)) =>
+              Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
+            case _ =>
+              Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+          }
+        })
   }
 }
 

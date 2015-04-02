@@ -49,7 +49,7 @@ trait BrandRepository extends BrandTable {
   }
 }
 trait BrandTable {
-  private[BrandTable] class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
+  private[repository] class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def name: Column[String] = column[String]("name", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Brand] = (name, id) <> (Brand.tupled, Brand.unapply)

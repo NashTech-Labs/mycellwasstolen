@@ -16,15 +16,14 @@ import play.api.i18n.Messages
 
 object TwitterTweet {
   val MAX_TWITTER_SIZE = 140
-  
   def tweetForStolen(imeid: String): String = {
     Messages("messages.mobile.tweetForStolen", imeid, signature)
   }
-  
+
   def tweetForClean(imeid: String): String = {
     Messages("messages.mobile.tweetForClean", imeid, signature)
   }
-  
+
   def signature(): String = {
     Messages("messages.link")
   }

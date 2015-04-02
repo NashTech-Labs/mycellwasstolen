@@ -20,34 +20,30 @@ class MobileRegistrationTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
 
-  /*  "Testing Home Page" in {
-    running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
-
-      val driver = new FirefoxDriver
-      driver.manage().window().maximize()
-      driver.get(baseUrl)
-      driver.getPageSource.contains("Welcome to MCWS")
+   "Testing Home Page" in {
+    running(TestServer(port), FIREFOX) { browser =>
+      browser.webDriver.manage().window().maximize()
+      browser.goTo(baseUrl)
+      browser.title() must equalTo("Welcome to MCWS")
     }
-
   }
 
-    "Testing Add Mobile Brand" in {
-      running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
-      val driver = new FirefoxDriver
-      driver.manage().window().maximize()
-      driver.get(baseUrl)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
-      driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.findElementById("menuItem").click
-      driver.findElementById("brandForm").click
-      driver.findElementById("name").sendKeys("nokia")
-      driver.findElementByCssSelector(".btn.btn-primary").click
-      driver.findElementByCssSelector("BODY").getText().contains("Brand successfully added")
+  "Testing Add Mobile Brand" in {
+    running(TestServer(port), FIREFOX) { browser =>
+      browser.webDriver.manage().window().maximize()
+      browser.goTo(baseUrl)
+      browser.title() must equalTo("Welcome to MCWS")
+      browser.$("#adminPanel").click
+      browser.$("#email").text("admin")
+      browser.$("#password").text("knol2013")
+      browser.$(".btn.btn-primary").click
+      browser.$("#menuItem").click
+      browser.$("#brandForm").click
+      browser.$("#name").text("nokia")
+      browser.$(".btn.btn-primary").click
+      browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
     }
-
-}
+  }
 
   "Testing Add  Mobile Model" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
@@ -71,9 +67,9 @@ class MobileRegistrationTest extends Specification {
       driver.findElementByCssSelector("BODY").getText().contains("Mobile Model successfully added")
 
     }
-  }*/
+  }
 
-  /*"Testing MobileRegistration" in {
+  "Testing Stolen Mobile Registration" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
@@ -108,13 +104,13 @@ class MobileRegistrationTest extends Specification {
 
     }
   }
-*/
 
-  /*"Testing Secure Registration" in {
+  "Testing Secure Registration" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
       driver.get(baseUrl)
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
@@ -144,13 +140,14 @@ class MobileRegistrationTest extends Specification {
       driver.findElementByCssSelector("BODY").getText().contains("Mobile registered successfully")
 
     }
-  }*/
+  }
 
-  /*"Change Registration Type from stolen to clean" in {
+  "Change Registration Type from stolen to clean" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
       driver.get(baseUrl)
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
@@ -184,13 +181,14 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("changeRegType").click
       driver.findElementByCssSelector("BODY").getText().contains("registration type changed")
     }
-  }*/
+  }
 
-     /*"Proof Demanding a Mobile User" in {
+  "Proof Demanding a Mobile User" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
       driver.get(baseUrl)
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
@@ -220,15 +218,17 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("menuItem").click
       driver.findElementById("listOfRequest").click
       driver.findElementById("demandProof").click
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       driver.findElementByCssSelector("BODY").getText().contains("A Proof has been demanded from this user!")
     }
   }
-  */
-    "Approving a request" in {
+
+  "Approving a request" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
       driver.get(baseUrl)
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
       driver.findElementById("adminPanel").click
       driver.findElementById("email").sendKeys("admin")
       driver.findElementById("password").sendKeys("knol2013")
@@ -258,9 +258,11 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("menuItem").click
       driver.findElementById("listOfRequest").click
       driver.findElementById("approve").click
-      driver.findElementByCssSelector("BODY").getText().contains("A Proof has been demanded from this user!")
+      driver.findElementByCssSelector("BODY").getText().contains("Mobile has been approved successfully!")
     }
   }
-   
-    
+
+
 }
+  
+

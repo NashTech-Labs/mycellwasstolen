@@ -11,8 +11,7 @@ trait CommonUtils {
     val arr = imei.map(f => f.toString().toInt).toArray
     val len = arr.length
     val checksum = arr(len - 1)
-    if (len != 15)
-      false
+    if (len != 15) { false }
     var mul = 2
     var sum = 0
     var i = len - 2
@@ -28,9 +27,20 @@ trait CommonUtils {
     }
     var m10 = sum % 10
     if (m10 > 0) m10 = 10 - m10
-    if (m10 == checksum) true
+    if (m10 == checksum) { true }
     else
       false
+  }
+  
+  def utilDate = new java.text.SimpleDateFormat("MM/dd/yyyy")
+
+  def getUtilDate() = {
+    val currentDate = utilDate.format(new java.util.Date())
+    new java.sql.Date(utilDate.parse(currentDate).getTime())
+  }
+  
+  def getUtilDate(date:String) = {
+    new java.sql.Date(utilDate.parse(date).getTime())
   }
 }
 object CommonUtils extends CommonUtils
