@@ -99,7 +99,7 @@ class RouterTest extends Specification {
   
   "redirect mobile status form" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/mobileStatus"))
+      val Some(result) = route(FakeRequest(GET, "/mobileStatusForm"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/html")
     }

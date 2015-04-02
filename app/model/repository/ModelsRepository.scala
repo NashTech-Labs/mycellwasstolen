@@ -7,6 +7,7 @@ import utils.Connection
 import model.repository._
 import play.api.Logger
 import java.util.Date
+import scala.slick.lifted.ForeignKeyQuery
 
 trait ModelRepository extends ModelTable {
 

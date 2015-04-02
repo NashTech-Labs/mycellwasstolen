@@ -5,6 +5,8 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3.AmazonS3Client
 import java.io.File
 import play.api.Logger
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 
 trait S3UtilComponent {
 
@@ -15,27 +17,34 @@ trait S3UtilComponent {
   val amazonS3Client = new AmazonS3Client(mcwsAWSCredentials)
 
   /**
-   * Store file to standard bucket on S3
+   * Store file to standard bucket on amazonS3
+   * @param documentName, name of file
+   * @param fileToSave the file which you want to store
    */
-  def store(documentName: String, fileToSave: File) = {
-        try {
-          amazonS3Client.putObject(bucketName, documentName, fileToSave)
-        } catch {
-          case ex: Exception => Logger.error(ex.getMessage(), ex); false
-        }
+  def store(documentName: String, fileToSave: File): Future[Boolean] = {
+    Future {
+      try {
+        amazonS3Client.putObject(bucketName, documentName, fileToSave)
+        Logger.info(s"Successfully upload : [ Bucket : ${bucketName} ] [ document : ${documentName}]"); true
+      } catch {
+        case ex: Exception => Logger.info("UNABLE TO STORE FILE", ex); false
+      }
+    }
   }
 
   /**
-   * Delete file from standard bucket on S3
+   * Delete Object from standard bucket on amazonS3
+   * @param key key is the unique key of the object which you want to delete
    */
-  def delete(fileKeyName: String): Boolean = {
-    try {
-      amazonS3Client.deleteObject(bucketName, fileKeyName)
-      true
-    } catch {
-      case ex: Exception =>
-        Logger.error(ex.getMessage(), ex)
-        false
+  def delete(key: String): Future[Boolean] = {
+    Future {
+      try {
+        amazonS3Client.deleteObject(bucketName, key)
+        Logger.info(s" Successfully delete: [ Bucket : ${bucketName} ] [ Key : ${key}]"); true
+      } catch {
+        case ex: Exception =>
+          Logger.info("UNABLE TO DELETE FILE", ex); false
+      }
     }
   }
 }

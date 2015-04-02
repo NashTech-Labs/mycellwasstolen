@@ -31,13 +31,13 @@ class MobileControllerTestCases extends Specification with Mockito {
   val newmodel = Model("N72", 1)
   val model = List(newmodel)
   val modelById: Option[Model] = Some(newmodel)
-  val utildate=CommonUtils.getUtilDate()
+  val utildate=CommonUtils.getSqlDate()
   val user = User("admin", "knol2013")
   val username = "admin"
 
   val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "864465028854206", CommonUtils.getUtilDate(), "+91 8375919908",
-    "sushil@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getUtilDate(), "ss.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "864465028854206", CommonUtils.getSqlDate(), "+91 8375919908",
+    "sushil@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "ss.png", "nokia", "E5")
 
   val timestamp = new Audit("864465028854206", new Timestamp(new java.util.Date().getTime), Some(1))
 
@@ -109,7 +109,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
       val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedCommonUtil.getUtilDate())thenReturn(utildate)
+      when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
       val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
@@ -137,7 +137,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
       val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedCommonUtil.getUtilDate())thenReturn(utildate)
+      when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
       val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
@@ -158,27 +158,26 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 
-  "MobileControllerTesting: getMobileUser" in {
+  "MobileControllerTesting: checkMobileStatus" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedMobileRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(mobileUser))
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
       when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
-      when(mockedAuditRepo.insertTimestamp(timestamp)) thenReturn (Right(Some(1)))
-      val result = mobileController.checkStatus("864465028854206", "user")(FakeRequest().withSession(Security.username -> username))
+     val result = mobileController.checkMobileStatus("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
       contentType(result) must beSome("application/json")
     }
   }
 
-  "MobileControllerTesting: getMobileUser: failed" in {
+  "MobileControllerTesting: checkMobileStatus: failed" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedMobileRepo.getMobileUserByIMEID("864465028854206")).thenReturn(None)
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
       when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
       when(mockedAuditRepo.insertTimestamp(timestamp)) thenReturn (Right(Some(1)))
-      val result = mobileController.checkStatus("864465028854206", "user")(FakeRequest().withSession(Security.username -> username))
+      val result = mobileController.checkMobileStatus("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
       contentType(result) must beSome("application/json")
     }

@@ -129,7 +129,6 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
     implicit request =>
       Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
-      Logger.info("AdminController:changeMobileRegType - change Registration type: " + mobileUser)
       val regType = if (mobileUser.get.regType == "stolen") "Clean" else "stolen"
       val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
         mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
@@ -154,7 +153,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * @param mobileuser object of Mobile
    * @param msg type of mail
    */
-  private def sendEmail(mobileuser: Mobile, msg: String) = {
+  private def sendEmail(mobileuser: Mobile, msg: String): Unit = {
     val post = Play.current.configuration.getBoolean("Email.send")
     if (!post.get) {
       Logger.info("AdminController:tweet -> disabled")
@@ -167,17 +166,25 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
         case "delete" =>
           mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imeiMeid))
         case "changeMobileRegType" =>
-          if (mobileuser.regType == "stolen")
-            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS", mail.changeMobileRegTypeStolen(mobileuser.imeiMeid))
-          else
-            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS", mail.changeMobileRegTypeClean(mobileuser.imeiMeid))
+          if (mobileuser.regType == "stolen") {
+            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeStolen(mobileuser.imeiMeid))
+          } else {
+            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeClean(mobileuser.imeiMeid))
+          }
         case _ =>
           Logger.info("AdminController:sendEmail -> failed")
       }
     }
   }
 
-  private def tweet(mobileuser: Mobile, msg: String) = {
+  /**
+   * This function tweet the post on twitter page
+   * @param mobileuser object of mobile
+   * @param msg type of tweet
+   */
+  private def tweet(mobileuser: Mobile, msg: String): Unit = {
     val post = Play.current.configuration.getBoolean("Tweet.post")
     if (!post.get) {
       Logger.info("AdminController:tweet -> disabled")

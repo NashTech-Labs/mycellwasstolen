@@ -26,22 +26,21 @@ trait CommonUtils {
       if (mul == 2) mul = 1 else mul = 2
     }
     var m10 = sum % 10
-    if (m10 > 0) m10 = 10 - m10
+    if (m10 > 0) { m10 = 10 - m10 }
     if (m10 == checksum) { true }
     else
       false
   }
-  
-  def utilDate = new java.text.SimpleDateFormat("MM/dd/yyyy")
 
-  def getUtilDate() = {
+  def utilDate: java.text.SimpleDateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy")
+
+  def getSqlDate(): java.sql.Date = {
     val currentDate = utilDate.format(new java.util.Date())
     new java.sql.Date(utilDate.parse(currentDate).getTime())
   }
-  
-  def getUtilDate(date:String) = {
+
+  def getSqlDate(date: String): java.sql.Date = {
     new java.sql.Date(utilDate.parse(date).getTime())
   }
 }
 object CommonUtils extends CommonUtils
-

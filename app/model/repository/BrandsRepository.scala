@@ -8,7 +8,7 @@ import play.api.Logger
 import java.sql.Date
 
 trait BrandRepository extends BrandTable {
- 
+
   /**
    * Returns List of mobile Brands
    */
@@ -64,7 +64,7 @@ case class Brand(
   name: String,
   id: Option[Int] = None)
 
-//Represents a brand name  
+//Represents a brand name
 case class BrandForm(name: String)
 
 //Trait companion object

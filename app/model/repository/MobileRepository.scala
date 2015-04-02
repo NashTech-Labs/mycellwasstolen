@@ -227,7 +227,7 @@ case class MobileDetail(
 //Represents Registered Mobile Status in the database
 case class MobileStatus(imeiMeid: String)
 
-//Represents Mobile registration Form  
+//Represents Mobile registration Form
 case class MobileRegisterForm(
   userName: String,
   brandId: Int,
