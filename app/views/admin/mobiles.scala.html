@@ -64,14 +64,14 @@
 							<td>@mobile._1.regType</td>
 							<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
 							@if(typ=="pending"){
-							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Demand Proof</a></td>
-							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Approve</a></td>}
+							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>}
 							@if(typ=="proofdemanded"){
-							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm">Approve</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
 							}
 													   
-						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')">View</button></td>
-						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)">Delete</button></td>
+						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')" id="viewdesc">View</button></td>
+						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)" id = "delete" >Delete </button></td>
 			    		</tr>
                        }
                        </tbody>

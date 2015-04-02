@@ -185,7 +185,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
 
   private def tweet(mobileuser: Mobile, msg: String)={
     val post = Play.current.configuration.getBoolean("tweetsWithEmail.post")
-    if(post.get){
+    if(!post.get){
       Logger.info("AdminController:tweet -> disabled")
     }else{
     msg match {
