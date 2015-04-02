@@ -18,15 +18,15 @@ class MobileRegistrationTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
 
-  /*"Testing Home Page" in {
+  "Testing Home Page" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
       browser.title() must equalTo("Welcome to MCWS")
     }
-  }*/
+  }
 
-  /*"Testing Add Mobile Brand" in {
+  "Testing Add Mobile Brand" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
@@ -41,7 +41,7 @@ class MobileRegistrationTest extends Specification {
       browser.$(".btn.btn-primary").click
       browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
     }
-  }*/
+  }
 
   "Testing Add  Mobile Model" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
@@ -68,7 +68,7 @@ class MobileRegistrationTest extends Specification {
     }
   }
 
- /* "Testing Stolen Mobile Registration" in {
+  "Testing Stolen Mobile Registration" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
 
       val driver = new FirefoxDriver
@@ -205,5 +205,5 @@ class MobileRegistrationTest extends Specification {
 
       driver.findElementByCssSelector("BODY").getText().contains("")
     }
-  }*/
+  }
 }

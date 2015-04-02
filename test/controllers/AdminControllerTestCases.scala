@@ -1,7 +1,6 @@
 package controllers
 
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfter
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import model.repository._
@@ -37,6 +36,7 @@ class AdminControllerTestCases extends Specification with Mockito {
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
   val audit = List(Audit("864465028854206", new java.sql.Timestamp(new java.util.Date().getTime), Some(1)))
   val user = User("admin", "knol2013")
+  
   val mockedMail = mock[MailUtil]
   val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]
@@ -71,8 +71,7 @@ class AdminControllerTestCases extends Specification with Mockito {
       Cache.set("admin", user)
       when(mockedMobilRepo.changeStatusToApproveByIMEID("12345678901234")).thenReturn(Right(1))
       when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(cleanMobileUser))
-      mockedMail.sendMail(cleanMobileUser.imeiMeid + " <" + cleanMobileUser.email + ">",
-        "Registration Confirmed on MCWS", mockedMail.approvedMessage(cleanMobileUser.imeiMeid))
+      mockedMail.sendMail("s@gmail.com", "test", mockedMail.approvedMessage(cleanMobileUser.imeiMeid))
       val result = adminController.approve("12345678901234", StatusUtil.Status.approved.toString())(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(303)
     }
