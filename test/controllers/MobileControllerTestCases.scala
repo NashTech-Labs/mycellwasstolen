@@ -1,26 +1,26 @@
 package controllers
 
+import java.sql.Timestamp
+
 import org.mockito.Mockito._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+
+import model.repository._
 import play.api.Play.current
 import play.api.cache.Cache
+import play.api.libs.Files
+import play.api.libs.Files.TemporaryFile
+import play.api.mvc.MultipartFormData
+import play.api.mvc.MultipartFormData.BadPart
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.mvc.MultipartFormData.MissingFilePart
 import play.api.mvc.Security
 import play.api.test.FakeApplication
+import play.api.test.FakeHeaders
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import model.repository._
 import utils._
-import play.api.mvc.Request
-import play.api.mvc.MultipartFormData
-import play.api.libs.Files.TemporaryFile
-import play.api.mvc.MultipartFormData.FilePart
-import play.api.libs.Files
-import play.api.mvc.MultipartFormData.BadPart
-import play.api.mvc.MultipartFormData.MissingFilePart
-import play.api.test.FakeHeaders
-import play.mvc.Result
-import java.sql.Timestamp
 
 class MobileControllerTestCases extends Specification with Mockito {
 
