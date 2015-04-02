@@ -16,21 +16,21 @@ trait AuditRepository extends AuditTable with MobileRepository {
    * @param timestamp, object of Audit
    * @return auto generated id
    */
-  def insertTimestamp(timestamp: Audit): Either[String, Option[Int]] = {
+  def insertTimestamp(audit: Audit): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
         Logger.info("Called insertTimestamp")
-        Right(autoKeyAudits.insert(timestamp))
+        Right(autoKeyAudits.insert(audit))
       }
     } catch {
       case ex: Exception =>
-        Logger.info("Error in insert user" + ex.printStackTrace())
+        Logger.info("Error in insert audit record" + ex.printStackTrace())
         Left(ex.getMessage())
     }
   }
 
   /**
-   * Gets timestamp of a particular imei number
+   * Gets time stamp of a particular imei number
    * @param imeid of mobile
    * @return list of Audit object
    */
@@ -42,7 +42,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Get all timestamps records
+   * Get all time stamps records
    * @return list of object of Audit instances
    */
   def getAllTimestamps: List[Audit] = {
