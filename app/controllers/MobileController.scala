@@ -162,7 +162,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * Getting mobile details by imei id
    * @param imeid of mobile
    */
-  def getMobileUser(imeid: String, user: String): Action[AnyContent] = Action { implicit request =>
+  def checkStatus(imeid: String, user: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController: getMobileUser -> called")
     val data = mobileRepo.getMobileUserByIMEID(imeid)
     data match {
