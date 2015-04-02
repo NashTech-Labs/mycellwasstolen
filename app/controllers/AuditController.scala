@@ -16,6 +16,9 @@ import play.api.cache.Cache
 import play.twirl.api.Html
 import java.util.Calendar
 
+/**
+ * Contains behaviors to control for fetching audit reports
+ */
 class AuditController(auditRepo: AuditRepository) extends Controller with Secured {
 
   /**
@@ -74,4 +77,8 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       Ok(views.html.audit.analytics(user, recordsList, years))
   }
 }
+
+/**
+ * Lets other access all the methods defined in the class AuditController 
+ */
 object AuditController extends AuditController(AuditRepository)

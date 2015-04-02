@@ -13,16 +13,20 @@ import play.api.cache.Cache
 import play.api.Play.current
 import model.repository.User
 
+/**
+ * Contains application generated controllers javaScriptRoutes to make ajax calls
+ */
+
 class Application extends Controller {
 
   /**
- * Display the home page
- */
-def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val username=request.session.get(Security.username).getOrElse("None")
+   * Display the home page
+   */
+  def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+    val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
-    Ok(views.html.index("Welcome",user))
+    Ok(views.html.index("Welcome", user))
   }
 
   /**
@@ -40,4 +44,9 @@ def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit reques
       routes.javascript.AdminController.changeMobileRegType)).as("text/javascript")
   }
 }
+
+/**
+ * Lets other access all the methods defined in the class Application 
+ */
 object Application extends Application
+ 

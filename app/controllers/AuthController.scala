@@ -10,6 +10,10 @@ import play.api.i18n.Messages
 import play.api.mvc._
 import views.html
 
+
+/**
+ * Contains authorization specific controllers to authorize users 
+ */
 class AuthController extends Controller with Secured {
 
   /**
@@ -23,9 +27,9 @@ class AuthController extends Controller with Secured {
       }))
 
   /**
-   * Checking of admin login credentials
-   * @param username of admin
-   * @param password of admin
+   * Checks Admin's login credentials
+   * @param username of Admin
+   * @param password of Admin
    */
   def check(username: String, password: String): Boolean = {
     if (username == "admin" && password == "knol2013") {
@@ -36,7 +40,7 @@ class AuthController extends Controller with Secured {
   }
 
   /**
-   * Display the admin login form
+   * Displays the Admin login form
    */
   def login: Action[AnyContent] = Action { implicit request =>
     Ok(html.admin.login(loginForm))
@@ -53,7 +57,7 @@ class AuthController extends Controller with Secured {
   }
 
   /**
-   * Handle admin logout
+   * Handles admin logout
    */
   def logout: Action[AnyContent] = Action {
     Redirect(routes.AuthController.login).withNewSession.flashing(
@@ -62,13 +66,14 @@ class AuthController extends Controller with Secured {
 }
 
 /**
- * Handle login security
+ * Handles login security
  */
 trait Secured {
 
   /**
    * Gets user from request
    */
+  
   def username(request: RequestHeader): Option[String] = request.session.get(Security.username)
   def unauthorizedSimpleRequest(request: RequestHeader): Result = Results.Redirect(routes.AuthController.login)
   /**
@@ -90,4 +95,8 @@ trait Secured {
     }
   }
 }
+
+/**
+ * Lets other classes, packages, traits access all the behaviors defined in the class AuthController  
+ */
 object AuthController extends AuthController

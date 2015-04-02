@@ -6,6 +6,10 @@ import play.api.cache.Cache
 import play.api.Play.current
 import model.repository.User
 
+/**
+ * Defines controllers to handle page resources of application such as contact us, blog, FAQs etc.  
+ */
+
 class Resources extends Controller {
 
   /**
@@ -48,4 +52,8 @@ class Resources extends Controller {
     Ok(views.html.discussionforum(user))
   }
 }
+
+/**
+ * Lets other classes, packages, traits access all the behaviors defined in the class Resources  
+ */
 object Resources extends Resources

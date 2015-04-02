@@ -1,3 +1,6 @@
+/**
+ * Contains all the controllers of the application
+ */
 package controllers
 
 import model.repository._
@@ -16,6 +19,9 @@ import utils._
 import play.api.cache.Cache
 import play.twirl.api.Html
 
+/**
+ * Controls administrative tasks such as handling user requests, approving a request, request verification
+ */
 class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent) extends Controller with Secured {
 
   /**
@@ -26,9 +32,9 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
   /**
-   * l
+   * Renders MobileUser Page
    * @param status, mobile status(pending, approved and proofdemanded)
-   * @return mobiles page with mobile user according to status
+   * @return mobile page with mobile user according to status
    */
   def mobiles(status: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
@@ -42,6 +48,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   /**
    * changes mobile status to approved
    * @param imeiId of mobile
+   * @return Action redirecting to either of error or success page
    */
 
   def approve(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
@@ -67,8 +74,9 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   }
 
   /**
-   * Changes mobile status to proofdemanded
+   * Changes mobile status to "proofdemanded"
    * @param imeiId of mobile
+   * @return error or success pages
    */
   def proofDemanded(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
@@ -97,6 +105,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   /**
    * Changes mobile status to pending
    * @param imeiId of mobile
+   * @return success or error page
    */
   def pending(imeiId: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
@@ -124,7 +133,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   /**
    * Changes mobile status to clean or stolen
    * @param imeiId of mobile
-   */
+   * @return success or error page
+   **/
   def changeMobileRegType(imeiId: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
@@ -152,6 +162,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * This function sends mail to the mobile user
    * @param mobileuser object of Mobile
    * @param msg type of mail
+   * @return : Unit
    */
   private def sendEmail(mobileuser: Mobile, msg: String): Unit = {
     val post = Play.current.configuration.getBoolean("Email.send")
@@ -183,6 +194,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * This function tweet the post on twitter page
    * @param mobileuser object of mobile
    * @param msg type of tweet
+   * @return Unit
    */
   private def tweet(mobileuser: Mobile, msg: String): Unit = {
     val post = Play.current.configuration.getBoolean("Tweet.post")
@@ -209,6 +221,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   /**
    * Deletes existed mobile
    * @param imeid of mobile
+   * @return Unit
    */
   def deleteMobile(imeid: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
@@ -232,4 +245,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       }
   }
 }
+/**
+ * Lets other classes, traits, objects access all the behaviors defined in the class AdminController  
+ */
+
 object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)

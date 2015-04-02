@@ -21,7 +21,7 @@ trait BrandRepository extends BrandTable {
 
   /**
    * Inserts a new Brand record
-   * @param: Brand, Object of Brand
+   * @param Brand, Object of Brand
    * @return id of new inserted brand
    */
   def insertBrand(brand: Brand): Either[String, Option[Int]] = {
@@ -39,7 +39,7 @@ trait BrandRepository extends BrandTable {
 
   /**
    *  Returns object of mobile Brand
-   *  @param: id, id of brand
+   *  @param id, id of brand
    */
   def getBrandById(id: Int): Option[Brand] = {
     Connection.databaseObject().withSession { implicit session: Session =>
