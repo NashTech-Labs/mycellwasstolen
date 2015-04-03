@@ -14,7 +14,6 @@ GET    /discussionforum               controllers.Resources.discussionforum
 GET    /register-stolen-phone         controllers.MobileController.mobileRegistrationForm
 GET    /register-new-phone            controllers.MobileController.mobileRegistrationSecureForm
 POST   /mobileRegistration            controllers.MobileController.mobileRegistration
-
 GET    /isImeiExist                   controllers.MobileController.isImeiExist(imeiId: String)
 
 #Javascript Routes
@@ -42,7 +41,7 @@ POST   /createMobileModel             controllers.MobileController.saveModel
 
 #audit
 GET    /registrationRecord            controllers.AuditController.registrationRecordsByYear(date:String)
-GET    /admin/auditpage                     controllers.AuditController.auditPage
+GET    /admin/auditpage               controllers.AuditController.auditPage
 POST   /admin/auditIMEID              controllers.AuditController.timestampsByIMEI
 GET    /admin/auditAllRecords         controllers.AuditController.allTimestamps
 # Map static resources from the /public folder to the /assets URL path

@@ -4,11 +4,17 @@
 
 .carousel-panel {
 	margin-top: 20px;
+	padding: 20px;
 }
 
 .font-text {
 	color: blue;
 	font-size: 14px;
+}
+.mobiel-status{
+	text-align: center;
+border: 1px solid rgba(216, 216, 216, 0.48);
+padding: 7px;
 }
 
 .font-color-heading {
@@ -62,7 +68,7 @@
 }
 
 .well {
-	margin-top: 60px !important;
+	margin-top: 20px !important;
 }
 
 .text-margin {
@@ -81,11 +87,11 @@
 }
 
 .margin {
-	margin-top: 28px;
+	margin-top: 105px;
 }
 
 .social-margin {
-	margin-top: 27px;
+	margin-top: 65px;
 	margin-right: 40px;
 }
 

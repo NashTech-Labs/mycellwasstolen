@@ -3,7 +3,7 @@
 @main(title = "Welcome to MCWS", user) {
 
 	<div class="container margin">
-		<div id="carousel-example-generic" class="carousel slide"
+		<div id="carousel-example-generic" style="border: 2px solid rgba(113, 108, 112, 1);" class="carousel slide"
 			data-ride="carousel">
 			<!-- Indicators -->
 			<ol class="carousel-indicators">
@@ -17,11 +17,7 @@
 				<div class="item active">
 					<div class="carousel-panel">
 						<div class="col-md-4">							
-							<div class="panel panel-info">
-							  	<div class="panel-heading">
-							    	<h3 class="panel-title">We have been there as well</h3>
-							  	</div>
-							  	<div class="panel-body">
+							  	 	<h3>We have been there as well</h3><br>
 							    	Chances are that you are visiting this
 									page, because, you or someone close to you, has lost his/her cell
 									phone. The feeling of losing a cell phone is analogous to losing a
@@ -29,8 +25,6 @@
 									with its database of over 50,000 (and growing) lost / stolen cell
 									phones, is an attempt to break the cycle of cell phone thefts. Let
 									us see how the stolen cell phone process works.
-							  	</div>
-							</div>
 						</div>
 						<div class="col-md-8"><img src="@routes.Assets.at("images/without-mcws.png")" alt="..."></div>
 					</div>
@@ -39,11 +33,7 @@
 				<div class="item">
 					<div class="carousel-panel">
 						<div class="col-md-4">							
-							<div class="panel panel-success">
-							  	<div class="panel-heading">
-							    	<h3 class="panel-title">How does MCWS attempt to stop this?</h3>
-							  	</div>
-							  	<div class="panel-body">
+							  	   	<h3>How does MCWS attempt to stop this?</h3>
 							  		<p class="lead">Of course, with your help ...</p>
 								  	<p>Check out the diagram below. As soon
 									as you register your cell with MCWS, there are multiple things
@@ -55,8 +45,6 @@
 									database. This is not all, see why registering with MCWS is a
 									good idea.</p>
 							</div>
-							</div>
-						</div>
 						<div class="col-md-8"><img src="@routes.Assets.at("images/with-mcws.png")" alt="..."></div>
 					</div>
 					<div class="carousel-caption">...</div>
@@ -64,11 +52,7 @@
 				<div class="item">
 					<div class="carousel-panel">
 						<div class="col-md-5">							
-							<div class="panel panel-warning">
-							  	<div class="panel-heading">
-							    	<h3 class="panel-title">Why registering with MCWS is a good idea?</h3>
-							  	</div>
-							  	<div class="panel-body">
+							  			    	<h3>Why registering with MCWS is a good idea?</h3>
 								  	<p>This is an important question and we
 									are glad if you thought about it. The key answer is that this
 									data is shared.
@@ -99,8 +83,6 @@
 											immensely.
 										</li>
 									</ul>
-								</div>
-							</div>
 						</div>
 						<div class="col-md-7"><img src="@routes.Assets.at("images/why-mcws-good-idea.png")" alt="..."></div>
 					</div>
@@ -115,8 +97,22 @@
 			<a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
 				<span class="glyphicon glyphicon-chevron-right"></span>
 			</a>
+		</div><br><hr>
+		<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-3">
+		<img src="@routes.Assets.at("images/theif.jpg")" alt="...">
+		<p>
+<h4>Data</h4>
+Over 700,000 mobile phones are stolen every year</p></div>
+		<div class="col-md-4">
+		<img src="@routes.Assets.at("images/we_need_u.jpg")" alt="...">
+		<p><h4>Helpless</h4> Governments across the world are helpless to combat this menace without social help</p></div>
+		<div class="col-md-3">
+		<img src="@routes.Assets.at("images/maven.jpg")" alt="...">
+		<p>Participate in the Cell Maven drive and win free insurance for 5 years on your mobile</p></div>
+		<div class="col-md-1"></div>
 		</div>
 	
 	</div>
-
 }

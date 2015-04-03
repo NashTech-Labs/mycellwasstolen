@@ -1,5 +1,5 @@
-
 package Router
+
 import org.specs2.mutable.Specification
 import play.api.test.FakeApplication
 import play.api.test.FakeRequest
@@ -142,6 +142,7 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
     }
   }
 
+  // Admin page
   "logout Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
