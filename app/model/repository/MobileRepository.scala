@@ -30,7 +30,7 @@ trait MobileRepository extends MobileTable {
       }
     } catch {
       case ex: Exception =>
-        Logger.info("Error in insert user" + ex.printStackTrace())
+        Logger.info("Error in mobile registration" + ex.printStackTrace())
         Left(ex.getMessage())
     }
   }
