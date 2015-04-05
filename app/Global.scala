@@ -25,6 +25,10 @@ import model.convert.TablesEnum
 
 object Global extends GlobalSettings {
 
+  /**
+   * Loads all configurations from the configuration file when the application starts
+   */
+
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
@@ -32,6 +36,10 @@ object Global extends GlobalSettings {
   }
 
   def getValue(keyname: String) = Play.application.configuration.getString(keyname)
+
+  /**
+   * Loads all credentials and create tables when application starts
+   */
 
   override def onStart(app: Application): Unit = {
     Logger.info("Application has started")
@@ -77,10 +85,18 @@ object Global extends GlobalSettings {
     }
   }
 
+  /**
+   * Performs task when application goes stop
+   */
+
   override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
 
   }
+
+  /**
+   * Handle the fake requests to application
+   */
   override def onHandlerNotFound(request: RequestHeader) = {
     Future {
       Ok(views.html.errorPage("page not found"))
