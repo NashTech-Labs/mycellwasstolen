@@ -14,59 +14,76 @@ import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
 import model.repository.AuditRepository.audits
 import play.api.mvc.RequestHeader
+import play.api.mvc.Results._
 import play.mvc._
 import org.omg.CosNaming.NamingContextPackage.NotFound
 import views.html.defaultpages.notFound
 import play.api.mvc.Action
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import model.convert.TablesEnum
 
 object Global extends GlobalSettings {
 
-  /**
- * Loads all configurations from the config file when the application starts
- */
-override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
+  override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
   }
 
-  /**
- * Loads all credentials and create tables when application starts 
- */
-override def onStart(app: Application): Unit = {
-    Logger.info("Application has started")
-    val bucketName = Play.application.configuration.getString("aws_bucket_name")
-    val accessKey = Play.application.configuration.getString("aws_access_key")
-    val secretKey = Play.application.configuration.getString("aws_secret_key")
-    val userId = Play.application.configuration.getString("smtp.user")
-    val password = Play.application.configuration.getString("smtp.password")
-    try {
-      Connection.databaseObject.withSession { implicit session: Session =>
-        (brands.ddl ++ models.ddl ++ mobiles.ddl ++ audits.ddl).create
-        Logger.info("All tables have been created")
-      }
-    } catch {
-      case ex: Exception => Logger.info("please provide csvs in conf" + ex.printStackTrace())
+  def getValue(keyname: String) = Play.application.configuration.getString(keyname)
 
-        Logger.info("Table already exists in database")
+  override def onStart(app: Application): Unit = {
+    Logger.info("Application has started")
+    val bucketName = getValue("aws_bucket_name")
+    val accessKey = getValue("aws_access_key")
+    val secretKey = getValue("aws_secret_key")
+    val userId = getValue("smtp.user")
+    val password = getValue("smtp.password")
+
+    Connection.databaseObject.withSession { implicit session: Session =>
+      val allTables = Map("brands" -> brands, "models" -> models, "mobiles" -> mobiles, "audits" -> audits)
+        .filter(tablenameWithTable => MTable.getTables(tablenameWithTable._1).list.isEmpty)
+        .foreach {
+          _tablenameWithTable => _tablenameWithTable._2.ddl.create
+        }
+
+      val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
+        MTable.getTables("audits").list.isEmpty &&
+        MTable.getTables("models").list.isEmpty &&
+        MTable.getTables("brands").list.isEmpty
+      if (!allHasCreated) importDB
     }
   }
 
+  def getFileNameWithoutExt(filename: String): Option[String] = filename.split(".csv").toList.headOption.map(_.toUpperCase)
+
   /**
- * Performs task when application goes stop
- */
-override def onStop(app: Application): Unit = {
-    Logger.info("Application shutdown.......")
+   * Invoke CSV Reader if database table does not exists
+   * @param tableName:String
+   * @return Unit
+   */
+
+  def importDB = {
+    val filePath = Global.getClass().getClassLoader().getResource("csv")
+    new File(filePath.toURI()).listFiles foreach { file =>
+      getFileNameWithoutExt(file.getName).foreach { _fileName =>
+        import scala.util.control.Exception._
+        allCatch.opt(TablesEnum.withName(_fileName)).foreach {
+          validEnum => model.convert.readcsv.convert(file, validEnum)
+        }
+
+      }
+    }
   }
-  
-  /**
- * Handle the fake requests to application
- */
-override def onHandlerNotFound(request: RequestHeader) = {
-    Future{
-      play.api.mvc.Results.Ok(views.html.errorPage("page not found"))
+
+  override def onStop(app: Application): Unit = {
+    Logger.info("Application shutdown.......")
+
+  }
+  override def onHandlerNotFound(request: RequestHeader) = {
+    Future {
+      Ok(views.html.errorPage("page not found"))
     }
   }
 }
