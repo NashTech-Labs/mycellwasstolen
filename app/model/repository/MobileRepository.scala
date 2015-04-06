@@ -9,6 +9,7 @@ import utils._
 import scala.collection.mutable.ListBuffer
 import utils.StatusUtil.Status
 import java.sql.Date
+import scala.slick.lifted.ForeignKeyQuery
 
 /**
  * MobileRepository provides all concrete implementation of
@@ -180,10 +181,10 @@ trait MobileTable extends BrandTable with ModelTable {
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
 
-    def fkeyBrand= foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyBrand:ForeignKeyQuery[Brands, Brand]= foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
 
-    def fkeyModel = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyModel:ForeignKeyQuery[Models, Model] = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobiles = TableQuery[Mobiles]

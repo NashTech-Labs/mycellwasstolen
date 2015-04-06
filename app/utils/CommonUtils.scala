@@ -28,8 +28,9 @@ trait CommonUtils {
     var m10 = sum % 10
     if (m10 > 0) { m10 = 10 - m10 }
     if (m10 == checksum) { true }
-    else
+    else{
       false
+    }
   }
 
   def utilDate: java.text.SimpleDateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy")

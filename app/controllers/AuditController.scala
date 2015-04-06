@@ -79,6 +79,6 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
 }
 
 /**
- * Lets other access all the methods defined in the class AuditController 
+ * Lets other access all the methods defined in the class AuditController
  */
 object AuditController extends AuditController(AuditRepository)

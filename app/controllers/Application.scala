@@ -46,7 +46,6 @@ def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit reques
 }
 
 /**
- * Lets other access all the methods defined in the class Application 
+ * Lets other access all the methods defined in the class Application
  */
 object Application extends Application
- 
