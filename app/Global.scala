@@ -48,6 +48,8 @@ object Global extends GlobalSettings {
     val secretKey = getValue("aws_secret_key")
     val userId = getValue("smtp.user")
     val password = getValue("smtp.password")
+    val adminUsername = getValue("admin_username")
+    val adminPassword = getValue("admin_password")
 
     Connection.databaseObject.withSession { implicit session: Session =>
       val allTables = Map("brands" -> brands, "models" -> models, "mobiles" -> mobiles, "audits" -> audits)
@@ -56,11 +58,11 @@ object Global extends GlobalSettings {
           _tablenameWithTable => _tablenameWithTable._2.ddl.create
         }
 
-      val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
+      /*val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
         MTable.getTables("audits").list.isEmpty &&
         MTable.getTables("models").list.isEmpty &&
         MTable.getTables("brands").list.isEmpty
-      if (!allHasCreated) importDB
+      if (!allHasCreated) importDB*/
     }
   }
 
