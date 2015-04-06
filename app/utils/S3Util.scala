@@ -8,6 +8,9 @@ import play.api.Logger
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
+/**
+ * Contains amazons3 services for applications  
+ */
 trait S3UtilComponent {
 
   val bucketName = Play.current.configuration.getString("aws_bucket_name").get

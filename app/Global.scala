@@ -1,4 +1,3 @@
-import java.io.File
 import java.sql.Date
 import scala.slick.driver.PostgresDriver.simple._
 import com.typesafe.config.ConfigFactory
@@ -28,19 +27,17 @@ object Global extends GlobalSettings {
   /**
    * Loads all configurations from the configuration file when the application starts
    */
-
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     Logger.info("Application  configuration file is loading with " + mode.toString + "  mode")
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"${mode.toString.toLowerCase}.conf"))
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
   }
 
-  def getValue(keyname: String):Option[String] = Play.application.configuration.getString(keyname)
+  def getValue(keyname: String): Option[String] = Play.application.configuration.getString(keyname)
 
   /**
    * Loads all credentials and create tables when application starts
    */
-
   override def onStart(app: Application): Unit = {
     Logger.info("Application has started")
     val bucketName = getValue("aws_bucket_name")
@@ -74,29 +71,30 @@ object Global extends GlobalSettings {
    * @return Unit
    */
 
-  def importDB:Unit = {
+  def importDB: Unit = {
     try {
+      Logger.info("Global:importDB -> called")
       val filePath = Global.getClass().getClassLoader().getResource("csv")
       new File(filePath.toURI()).listFiles foreach { file =>
         getFileNameWithoutExt(file.getName).foreach { _fileName =>
           import scala.util.control.Exception._
           allCatch.opt(TablesEnum.withName(_fileName)).foreach {
             validEnum => model.convert.ReadCsv.convert(file, validEnum)
+
           }
         }
       }
     } catch {
       case ex: Exception => Logger.info("Please check the csv at the destination" + ex.printStackTrace)
+
     }
   }
 
   /**
    * Performs task when application goes stop
    */
-
   override def onStop(app: Application): Unit = {
     Logger.info("Application shutdown.......")
-
   }
 
   /**

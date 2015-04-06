@@ -1,5 +1,8 @@
 package utils
 
+/**
+ * Defines all constants here 
+ */
 trait Constants {
   val ZERO = 0
   val ONE = 1
