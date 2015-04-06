@@ -41,6 +41,7 @@ object ReadCsv extends CommonUtils {
         caseMobile
       }
       case `AUDITS` => {
+        caseAudits
       }
       case _ =>
         Logger.info("Table with this name does not exists in the system. Please check again")

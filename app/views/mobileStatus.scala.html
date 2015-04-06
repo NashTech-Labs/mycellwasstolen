@@ -1,3 +1,4 @@
+
 @(mobileStatusForm: Form[model.repository.MobileStatus], user: Option[model.repository.User])(implicit flash: Flash)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
@@ -137,7 +138,7 @@
 			else {
 				var notFound='<div class="alert alert-dismissible alert-danger" style="width:400px;">'
 					  +'<button type="button" class="close" data-dismiss="alert">×</button>'
-					  +'<strong>Not Found!</strong> This IMEI number is not registered yet.'
+					  +'<strong>Not Found!</strong> This IMEI number does not exist in the record.'
 					+'</div>'
 				$("#mobileRecords").html(notFound);
 				console.debug("Data no found");
@@ -161,8 +162,8 @@
 		};
 		
 	    $("#imeiMeid").rules("add", {
-	 			required : true
+	 			required : true,
+	 			number: true
 	 		});		
 </script>	           	
-	
 }

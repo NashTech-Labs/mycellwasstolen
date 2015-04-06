@@ -35,11 +35,8 @@
 						<li><a href="/faq">FAQs</a></li>
 						<li><a href="/discussionforum">Discussion Forum</a></li>
 						<li><a href="/contact-us">Contact-Us</a></li>
-						
 					</ul>
 					</li>
-				    @if(user == None){
-					<li class="@getActive("Admin Login", selectedMenu)"><a id="adminPanel" href="/login">Admin Login</a></li>}
 					@if(user != None) {
 					<li class="dropdown">
 					<a  id="menuItem" href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
