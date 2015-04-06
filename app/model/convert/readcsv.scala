@@ -17,6 +17,7 @@ import utils.Constants
 object TablesEnum extends Enumeration {
   val BRANDS, MODELS, MOBILES, AUDITS = Value
 }
+
 /**
  *  CSV Reader for files that are to be imported into DB
  */
@@ -60,7 +61,7 @@ object ReadCsv extends CommonUtils {
       val purchaseDate = getSqlDate(result(Constants.FIVE))
       val registerDate = getSqlDate(result(Constants.ELEVEN))
       MobileRepository.insertMobileUser(Mobile(result(Constants.ZERO), result(Constants.ONE).toInt, result(Constants.TWO).toInt,
-          result(Constants.THREE), result(Constants.FOUR),
+        result(Constants.THREE), result(Constants.FOUR),
         purchaseDate, result(Constants.SIX), result(Constants.SEVEN), result(Constants.EIGHT), status,
         result(Constants.TEN), registerDate, result(Constants.TEN),
         result(Constants.THIRTEEN), result(Constants.FOURTEEN)))
@@ -102,6 +103,7 @@ object ReadCsv extends CommonUtils {
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
       AuditRepository.insertTimestamp(Audit(result(Constants.ONE), Timestamp.valueOf(result(Constants.ZERO))))
+
     }
     auditReader.close()
   }
@@ -118,6 +120,5 @@ object ReadCsv extends CommonUtils {
       case ("proofdemanded") => Status(Constants.TWO)
       case ("pending")       => Status(Constants.ZERO)
     }
-
   }
 }

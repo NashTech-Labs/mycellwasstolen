@@ -5,7 +5,7 @@ import play.api.libs.json.Json
 import model.repository._
 
 /**
- * Provides commonly used database utilities
+ * Provides status utilities used in mobile table 
  */
 object StatusUtil {
 
