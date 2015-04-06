@@ -61,7 +61,7 @@ trait ModelTable extends BrandTable {
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Model] = (
       name, brandId, id) <> (Model.tupled, Model.unapply)
-    def fkey = foreignKey("brand_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkey:ForeignKeyQuery[Brands, Brand] = foreignKey("brand_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
     def modelIndex: scala.slick.lifted.Index = index("idx_model", (name), unique = true)
   }

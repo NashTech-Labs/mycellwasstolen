@@ -246,7 +246,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   }
 }
 /**
- * Lets other classes, traits, objects access all the behaviors defined in the class AdminController  
+ * Lets other classes, traits, objects access all the behaviors defined in the class AdminController
  */
 
 object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)
