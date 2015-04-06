@@ -127,7 +127,7 @@ class RouterTest extends Specification {
 
   "authenticate login" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "admin", "password" -> "knol2013").withHeaders(CONTENT_TYPE ->
+      val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "test", "password" -> "test").withHeaders(CONTENT_TYPE ->
         "application/x-www-form-urlencoded"))
       status(result) must equalTo(303)
 redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")      
@@ -142,7 +142,6 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
     }
   }
 
-  // Admin page
   "logout Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
@@ -153,7 +152,7 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
   
   "redirect to audit page" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
+      val Some(result) = route(FakeRequest(GET, "/auditpage"))
       status(result) must equalTo(303)
     }
   }

@@ -261,9 +261,5 @@ class MobileRegistrationTest extends Specification {
       driver.findElementByCssSelector("BODY").getText().contains("Mobile has been approved successfully!")
     }
   }
-
-
 }
-  
-
 */

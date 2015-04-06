@@ -21,7 +21,6 @@ object TablesEnum extends Enumeration {
 /**
  *  CSV Reader for files that are to be imported into DB
  */
-
 object ReadCsv extends CommonUtils {
   import TablesEnum._
   /**
@@ -37,7 +36,6 @@ object ReadCsv extends CommonUtils {
       case `MODELS` => {
         caseModels
       }
-
       case `MOBILES` => {
         caseMobile
       }
@@ -49,7 +47,6 @@ object ReadCsv extends CommonUtils {
         None
     }
   }
-
   /**
    * Inserts data into Mobile table
    */
@@ -72,7 +69,6 @@ object ReadCsv extends CommonUtils {
   /**
    * Insert data from CSV into Models table
    */
-
   def caseModels: Unit = {
     val modelReader = CSVReader.open(new FileReader("conf/csv/Models.csv"))
     val resultIterator = modelReader.iterator
@@ -97,13 +93,11 @@ object ReadCsv extends CommonUtils {
   /**
    * Insert data from CSV into Audit table
    */
-
   def caseAudits: Unit = {
     val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
       AuditRepository.insertTimestamp(Audit(result(Constants.ONE), Timestamp.valueOf(result(Constants.ZERO))))
-
     }
     auditReader.close()
   }
@@ -113,7 +107,6 @@ object ReadCsv extends CommonUtils {
    * @param status:String
    * @return Status.Value (approved, proof demanded, pending)
    */
-
   private def mobileStatus(status: String) = {
     status match {
       case ("approved")      => Status(Constants.ONE)

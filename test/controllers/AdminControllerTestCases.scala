@@ -28,6 +28,10 @@ class AdminControllerTestCases extends Specification with Mockito {
   val cleanMobileUser = Mobile(
     "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getSqlDate(), "+91 9839839830",
     "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
+    
+    val cleanMobileUser1 = Mobile(
+    "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getSqlDate(), "+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
   val mobileWithBrand = (Mobile(
     "gs", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
@@ -156,12 +160,23 @@ class AdminControllerTestCases extends Specification with Mockito {
     }
   }
 
-  "AdminControllerTesting: changeMobileRegType" in {
+  "AdminControllerTesting: changeMobileRegType of stolen mobile" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
       when(mockedMobilRepo.changeRegTypeByIMEID(stolenMobileUser1)).thenReturn(Right(1))
       val result = adminController.changeMobileRegType("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+      contentType(result) must beSome("text/plain")
+    }
+  }
+  
+  "AdminControllerTesting: changeMobileRegType of clean mobile" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedMobilRepo.getMobileUserByIMEID("12345678901234")).thenReturn(Some(cleanMobileUser))
+      when(mockedMobilRepo.changeRegTypeByIMEID(cleanMobileUser1)).thenReturn(Right(1))
+      val result = adminController.changeMobileRegType("12345678901234")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
