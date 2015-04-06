@@ -1,26 +1,29 @@
-name := "mycellwasstolen"
+name := """mycellwasstolen"""
 
 version := "1.0-SNAPSHOT"
 
-org.scalastyle.sbt.ScalastylePlugin.Settings
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-ScctPlugin.instrumentSettings
+scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
-   jdbc,
-   cache,
-   "com.typesafe.slick" %% "slick" % "1.0.1",
-   "postgresql" % "postgresql" % "9.1-901.jdbc4",
-    "net.liftweb" %% "lift-json" % "2.5-M4",
-   "org.scalatest" %   "scalatest_2.10" %  "2.0.M5b" %  "test",
-   "com.typesafe" %% "play-plugins-mailer" % "2.2.0",
-   "org.mockito" % "mockito-all" % "1.8.5" %  "test",
-   "junit"  %  "junit"  %  "4.11" %  "test",
-   "com.restfb" % "restfb" % "1.6.12",
-   "org.twitter4j" % "twitter4j-core" % "3.0.5",
-   "com.amazonaws" % "aws-java-sdk" % "1.6.10",
-   "net.sf.opencsv" % "opencsv" % "2.1",
-   "org.seleniumhq.selenium" % "selenium-java" % "2.40.0"%  "test")     
-
-play.Project.playScalaSettings
-
+  jdbc,
+  anorm,
+  cache,
+  ws,
+ "org.postgresql" % "postgresql" % "9.4-1200-jdbc4",
+ "com.typesafe.slick" %% "slick" % "2.1.0",
+ "net.liftweb" %% "lift-json" % "2.6",
+ "org.scalatest" %   "scalatest_2.11" %  "2.2.2" %  "test",
+ "com.typesafe.play" %% "play-mailer" % "2.4.0",
+ "org.mockito" % "mockito-all" % "1.8.5" %  "test",
+ "junit"  %  "junit"  %  "4.11" %  "test",
+ "com.restfb" % "restfb" % "1.6.12",
+ "org.twitter4j" % "twitter4j-core" % "4.0.2",
+ "com.amazonaws" % "aws-java-sdk" % "1.6.10",
+ "net.sf.opencsv" % "opencsv" % "2.1",
+ "org.seleniumhq.selenium" % "selenium-java" % "2.45.0"%  "test",
+  "com.h2database" % "h2" % "1.3.166" % "test",
+  "com.github.tototoshi" %% "scala-csv" % "1.2.1",
+   "org.scalastyle" %% "scalastyle" % "0.6.0"
+)

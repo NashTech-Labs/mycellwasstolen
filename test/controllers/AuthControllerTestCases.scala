@@ -2,8 +2,6 @@ package controllers
 
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-
-import model.users.MobileServiceComponent
 import play.api.test.FakeApplication
 import play.api.test.FakeRequest
 import play.api.test.Helpers.OK
@@ -11,11 +9,11 @@ import play.api.test.Helpers.contentType
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Helpers.running
 import play.api.test.Helpers.status
+import model.repository.MobileRepository
 
 class AuthControllerTestCases extends Specification with Mockito {
-  val mockedmobileServiceObject = mock[MobileServiceComponent]
-  val authController = new AuthController(mockedmobileServiceObject)
-  
+  val authController = new AuthController
+
   "login" in {
     val result = authController.login(FakeRequest())
     status(result) must equalTo(OK)
@@ -26,8 +24,7 @@ class AuthControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       val result = authController.authenticate(FakeRequest())
       status(result) must equalTo(400)
-      contentType(result) must beSome("text/html")
-      
+      contentType(result) must beSome("text/html") 
     }
   }
 
@@ -36,7 +33,5 @@ class AuthControllerTestCases extends Specification with Mockito {
       val result = authController.logout(FakeRequest())
       status(result) must equalTo(303)
     }
-
   }
-
 }

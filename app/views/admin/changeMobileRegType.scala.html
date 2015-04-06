@@ -1,4 +1,4 @@
-@(mobileStatusForm: Form[model.domains.Domain.MobileStatus], user: Option[model.domains.Domain.User])(implicit flash: Flash)
+@(mobileStatusForm: Form[model.repository.MobileStatus], user: Option[model.repository.User])(implicit flash: Flash)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
@@ -28,11 +28,6 @@
 				<div class="row">
 					
 						<div class="well">
-							<div class="panel panel-info">
-								<div class="panel-heading">
-									<h1 class="panel-title">Check Cell Status</h1>
-								</div>
-							</div>
 							<input type="text" id="imeiMeid" name="imeiMeid" placeholder="IMEI/MEID">
 							<div class="form-actions">
 							<br>
@@ -43,9 +38,6 @@
 							<div id="mobileRecords">
 							</div>
 						</div>
-					
-					<div class="col-lg-4">
-					</div>
 				</div>
 			</div>
 		</div>
@@ -106,7 +98,9 @@
 						+ mobile.contactNo
 						+ '</td><td>'
 						+ mobile.regType
-						+'</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">change status</button></td><td>'
+
+						+ (mobile.regType == "Clean" ? '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to stolen</button></td><td>'
+								: '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to clean</button></td><td>')
 						+ image + '</td></tr></table></div>';
 				$("#mobileRecords").empty();
 				$("#mobileRecords").removeClass("alert alert-danger");
@@ -133,7 +127,7 @@
 				error : mobileAjaxError
 			};
 
-			jsRoutes.controllers.MobileController.getImeiMeidList(imeid).ajax(
+			jsRoutes.controllers.MobileController.checkMobileStatus(imeid,"admin").ajax(
 					mobileAjaxCallBack);
 		};
 		

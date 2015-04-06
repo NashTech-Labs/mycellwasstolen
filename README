@@ -1,3 +1,4 @@
+This is your new Play application
+=================================
 
-1) Pass the Amazon S3 credentials for saving the images and 
-2) user id and password for email sending facility while executing the project.
+This file will be packaged with your application, when using `activator dist`.

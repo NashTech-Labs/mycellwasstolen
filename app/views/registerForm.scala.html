@@ -1,4 +1,4 @@
-@(regType: String, mobileRegistrationForm:Form[model.domains.Domain.MobileRegisterForm], brands:List[model.domains.Domain.Brand])
+@(regType: String, mobileRegistrationForm:Form[model.repository.MobileRegisterForm], brands:List[model.repository.Brand])
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f)}
 @helper.form(action =routes.MobileController.mobileRegistration, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
@@ -8,11 +8,10 @@
 
  input[type=text] { width: 200px;}
 
-
 </style>
 
 	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
-	@inputText(mobileRegistrationForm("userName"), '_label -> "Name")
+	@inputText(mobileRegistrationForm("userName"), '_label -> "User Name")
 
 	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
 	(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
@@ -41,14 +40,14 @@
 
 	@inputText(mobileRegistrationForm("email"), '_label -> "Email")
 
-	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID", 'maxlength -> 17)
+	@inputText(mobileRegistrationForm("imeiMeid"), '_label -> "Mobile IMEI/MEID", 'maxlength -> 15)
 
 	<div class="form-group">
 		<label class="col-sm-4 control-label"><input type="checkbox"
 			name="race" id="otherimei" value="other" />Other IMEI, specify<br /></label>
 		<div class="col-sm-6" >
 			<div style="visibility: hidden" id="race">
-				<input type="text" name="otherImeiMeid" maxlength="17" id="otherImeiMeid" />
+				<input type="text" name="otherImeiMeid" maxlength="15" id="otherImeiMeid" />
 			</div>
 		</div>
 	</div>
@@ -67,7 +66,7 @@
 <div class="form-group">
 	<div class="col-lg-10 col-lg-offset-4">
 		<button class="btn btn-primary" type="submit" onClick="setValue();">Submit</button>
-		<button class="btn btn-default" type="reset">Cancel</button>
+		<a href="/"  class="btn btn-default">Cancel</a>
 	</div>
 </div>
 }
@@ -127,7 +126,7 @@
 		$.each(data, function(i, d) {
 			$('#mobileModelId').append($('<option>', {
 				value : d.id,
-				text : d.mobileModel
+				text : d.name
 			}));
 		});
 		console.debug("Success of Ajax Call");
@@ -145,8 +144,7 @@
 			success : mobileAjaxSuccess,
 			error : mobileAjaxError
 		};
-
-		jsRoutes.controllers.MobileController.getMobileModels(brandId).ajax(
+		jsRoutes.controllers.MobileController.getModels(brandId).ajax(
 				mobileAjaxCallBack);
 	};
 
@@ -212,10 +210,10 @@
 		},
 		messages : {
 			imeiMeid : {
-				remote : "This imeiMeid is already exist."
+				remote : "Invalid imei Id or may be already exist."
 			},
 			otherImeiMeid : {
-				remote : "This imeiMeid is already exist."
+				remote : "Invalid imei Id or may be already exist."
 			}
 		}
 	});
@@ -248,7 +246,7 @@
 		var imeiMeid = document.getElementById("imeiMeid").value;
 		var pattern = /^[0-9]+$/;
 
-		if (imeiMeid.length > 13) {
+		if (imeiMeid.length == 15) {
 			if (pattern.test(imeiMeid)) {
 				return true;
 			} else {
@@ -258,7 +256,7 @@
 				return false;
 			}
 		} else {
-			alert("IMEI must be of minimum 14 digits !");
+			alert("IMEI must be 15 digits !");
 			imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
 			imei.focus();
 			return false;
@@ -274,7 +272,7 @@
 		var otherImeiMeid = document.getElementById("otherImeiMeid").value;
 		var pattern = /^[0-9]+$/;
 
-		if (otherImeiMeid.length > 13) {
+		if (otherImeiMeid.length == 15) {
 			if (pattern.test(otherImeiMeid)) {
 				return true;
 			} else {
@@ -284,7 +282,7 @@
 				return false;
 			}
 		} else {
-			alert("IMEI must be of minimum 14 digits !");
+			alert("IMEI must be of 15 digits !");
 			otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
 			otherImei.focus();
 			return false;
@@ -300,6 +298,4 @@
 		maxDate : new Date
 	})
 
-	
-	
 </script>

@@ -1,201 +1,252 @@
+/**
+ * Contains all the controllers of the application
+ */
 package controllers
 
-import model.users.MobileServiceComponent
-import play.api.mvc._
-import play.api.Logger
-import utils.Common
-import model.domains.Domain._
-import utils.TwitterTweet
-import model.users.MobileService
-import play.api.cache.Cache
-import play.api.Play.current
-import views.html
-import play.api.libs.json.Json
+import model.repository._
 import net.liftweb.json.DefaultFormats
-import net.liftweb.json.Serialization.write
-import play.api.libs.json.JsValue
-import net.liftweb.json.JObject
-import net.liftweb.json.JString
-import net.liftweb.json.JObject
-import net.liftweb.json.JString
-import net.liftweb.json.JField
 import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
+import net.liftweb.json.Serialization.write
+import play.api.Logger
+import play.api._
+import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.mvc._
+import play.api.Play.current
+import utils._
+import play.api.cache.Cache
+import play.twirl.api.Html
 
-class AdminController(mobileService: MobileServiceComponent) extends Controller with Secured {
+/**
+ * Controls administrative tasks such as handling user requests, approving a request, request verification
+ */
+class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent) extends Controller with Secured {
 
-  implicit val formats = DefaultFormats
+  /**
+   * Describes the mobile status form
+   */
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
-  def mobiles(status: String): EssentialAction = withAuth { username =>
+  /**
+   * Renders MobileUser Page
+   * @param status, mobile status(pending, approved and proofdemanded)
+   * @return mobile page with mobile user according to status
+   */
+  def mobiles(status: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
-      Logger.info("AdminController:mobiles method has been called.")
+      Logger.info("AdminController:mobiles -> called.")
       val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
+      val mobiles = mobileRepo.getAllMobilesUserWithBrandAndModel(status)
       Logger.info("mobiles Admin Controller::::" + mobiles)
-      if (mobiles.isEmpty) {
-        Ok(html.admin.mobiles(mobiles, user))
-      } else {
-        Logger.info("AdminController mobile list: - true")
-        Ok(html.admin.mobiles(mobiles, user))
-
-      }
-
+      Ok(views.html.admin.mobiles(status, mobiles, user))
   }
 
-  def mobilesForAjaxCall(status: String): EssentialAction = withAuth { username =>
+  /**
+   * changes mobile status to approved
+   * @param imeiId of mobile
+   * @return Action redirecting to either of error or success page
+   */
+
+  def approve(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
-      Logger.info("AdminController:mobiles method has been called.")
-      val user: Option[User] = Cache.getAs[User](username)
-      val mobiles = mobileService.getAllMobilesWithBrandAndModel(status)
-      Logger.info("concept test abcd::::" + mobiles)
-      if (!mobiles.isEmpty) {
-        Ok(write(mobiles)).as("application/json")
-      } else {
-        Logger.info("AuthController mobile list: - true")
-        Ok(Json.obj("status" -> "Error"))
+      Logger.info("AdminController:approve - change status to approve : " + imeiId)
+      val result = mobileRepo.changeStatusToApproveByIMEID(imeiId)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+          mobileUser match {
+            case Some(mobile) =>
+              sendEmail(mobileUser.get, "approved")
+              tweet(mobileUser.get, "approved")
+              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after approved")
+              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+          }
+        case _ =>
+          Logger.info("AdminController: - false")
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!")
       }
-
   }
 
-  def approve(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:approve - change status to approve : " + imeiId)
+  /**
+   * Changes mobile status to "proofdemanded"
+   * @param imeiId of mobile
+   * @return error or success pages
+   */
+  def proofDemanded(imeiId: String, page: String): Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
+      val result = mobileRepo.changeStatusToDemandProofByIMEID(imeiId)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+          mobileUser match {
+            case Some(mobile) =>
+              sendEmail(mobileUser.get, "proofDemanded")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "A Proof has been demanded from this user!")
+            case None =>
+              Logger.info("AdminController:approve - error in fetching record after proof demanded")
+              Redirect(routes.AdminController.mobiles(page)).flashing(
+                "success" -> "A Proof has been demanded from this user!")
+          }
+        case _ =>
+          Logger.info("AdminController: - No Record were inserted: method returned with left")
+          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
 
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController:mobileUser - change status to approve : " + mobileUser.get)
-    val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
-      mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
-      mobileUser.get.regType, model.domains.Domain.Status.approved, mobileUser.get.description,
-      mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
-      mobileUser.get.id)
-    val isExist = mobileService.changeStatusToApprove(updatedMobile)
-    if (isExist) {
-      Logger.info("AdminController: - true")
-      if (mobileUser.get.regType == "stolen") {
-        //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Stolen at mycellwasstolen.com")
-      } else {
-        //TwitterTweet.tweetAMobileRegistration(imeiId, "has been marked as Secure at mycellwasstolen.com")
       }
-      Ok("success")
-    } else {
-      Logger.info("AdminController: - false")
-      Ok("error")
-    }
   }
 
-  def proofDemanded(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:proofDemanded - change status to proofDemanded : " + imeiId)
-
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
-    val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType, model.domains.Domain.Status.proofdemanded, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
-    val isExist = mobileService.changeStatusToDemandProof(updatedMobile)
-    if (isExist) {
-      Logger.info("AdminController: - true")
-      Ok("success")
-    } else {
-      Logger.info("AdminController: - false")
-      Ok("error")
-    }
+  /**
+   * Changes mobile status to pending
+   * @param imeiId of mobile
+   * @return success or error page
+   */
+  def pending(imeiId: String): Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:pending - change status to pending : " + imeiId)
+      val result = mobileRepo.changeStatusToPendingByIMEID(imeiId)
+      result match {
+        case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+          Logger.info("AdminController: - true")
+          Ok("success")
+        case Left(message) =>
+          Logger.info("AdminController: - false")
+          Ok("error")
+      }
   }
 
-  def pending(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:pending - change status to pending : " + imeiId)
-
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController:mobileUser - change status to pending : " + mobileUser)
-    val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId, mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email, mobileUser.get.regType, model.domains.Domain.Status.pending, mobileUser.get.description, mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel, mobileUser.get.id)
-    val isExist = mobileService.changeStatusToPending(updatedMobile)
-    if (isExist) {
-      Logger.info("AdminController: - true")
-      Ok("success")
-    } else {
-      Logger.info("AdminController: - false")
-      Ok("error")
-    }
-  }
-
-  def sendMailForApprovedRequest(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-
-    Logger.info("AdminController:The request been approved of " + imeiId)
-
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    try {
-
-      Common.sendMail(mobileUser.get.imeiMeid + "<" + mobileUser.get.email + ">",
-        "Request Approved On MCWS", Common.approvedMessage(mobileUser.get.imeiMeid))
-
-      Logger.info("AuthController:-true")
-      Ok("success")
-    } catch {
-      case e: Exception =>
-        Logger.info("" + e.printStackTrace())
-        Logger.info("AuthController: - false")
-        Ok("error")
-
-    }
-
-  }
-
-  def sendMailForDemandProof(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:sendMailForDemandProof - sendMailForDemandProof : " + imeiId)
-
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController:mobileUser - change status to proofDemanded : " + mobileUser)
-    try {
-      Common.sendMail(mobileUser.get.imeiMeid + " <" + mobileUser.get.email + ">",
-        "Document Proof Request from MCWS", Common.demandProofMessage(mobileUser.get.imeiMeid))
-      Logger.info("AuthController: - true")
-      Ok("success")
-    } catch {
-      case e: Exception =>
-        Logger.info("" + e.printStackTrace())
-        Logger.info("AuthController: - false")
-        Ok("error")
-    }
-
-  }
-
-  def changeMobileRegTypeForm: EssentialAction = withAuth { username =>
+  /**
+   * Render change mobile status(clean or stolen) page
+   */
+  def changeMobileRegTypeForm: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-      Ok(html.admin.changeMobileRegType(mobilestatus, user))
+      Ok(views.html.admin.changeMobileRegType(mobilestatus, user))
   }
 
-  def changeMobileRegType(imeiId: String): Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
+  /**
+   * Changes mobile status to clean or stolen
+   * @param imeiId of mobile
+   * @return success or error page
+   **/
+  def changeMobileRegType(imeiId: String): Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
+      val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
+      val regType = if (mobileUser.get.regType == "stolen") "Clean" else "stolen"
+      val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
+        mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
+        regType, mobileUser.get.mobileStatus, mobileUser.get.description,
+        mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
+        mobileUser.get.id)
+      val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
+      result match {
+        case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
+          sendEmail(updatedMobile, "changeMobileRegType")
+          tweet(updatedMobile, "changeMobileRegType")
+          Logger.info("AdminController changeMobileRegType : - true")
+          Ok("successs")
+        case _ =>
+          Logger.info("AdminController changeMobileRegType : - false")
+          Ok("error in change status")
+      }
+  }
 
-    val mobileUser = mobileService.getMobileRecordByIMEID(imeiId)
-    Logger.info("AdminController changeMobileRegType - change Registration type: " + mobileUser)
-
-    val regType = if (mobileUser.get.regType == "stolen"){
-      "Clean"
-    }
-
-    else{
-      "stolen"
-    }
-
-    val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
-      mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
-      regType, mobileUser.get.mobileStatus, mobileUser.get.description,
-      mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
-      mobileUser.get.id)
-
-    val isExist = mobileService.changeRegTypeByIMEID(updatedMobile)
-    if (isExist) {
-      Logger.info("AdminController changeMobileRegType : - true")
-
-      Ok("success")
-
+  /**
+   * This function sends mail to the mobile user
+   * @param mobileuser object of Mobile
+   * @param msg type of mail
+   * @return : Unit
+   */
+  private def sendEmail(mobileuser: Mobile, msg: String): Unit = {
+    val post = Play.current.configuration.getBoolean("Email.send")
+    if (!post.get) {
+      Logger.info("AdminController:tweet -> disabled")
     } else {
-      Logger.info("AdminController changeMobileRegType : - false")
-      Ok("error")
+      msg match {
+        case "approved" =>
+          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage((mobileuser.imeiMeid)))
+        case "proofDemanded" =>
+          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
+        case "delete" =>
+          mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imeiMeid))
+        case "changeMobileRegType" =>
+          if (mobileuser.regType == "stolen") {
+            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeStolen(mobileuser.imeiMeid))
+          } else {
+            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeClean(mobileuser.imeiMeid))
+          }
+        case _ =>
+          Logger.info("AdminController:sendEmail -> failed")
+      }
     }
+  }
+
+  /**
+   * This function tweet the post on twitter page
+   * @param mobileuser object of mobile
+   * @param msg type of tweet
+   * @return Unit
+   */
+  private def tweet(mobileuser: Mobile, msg: String): Unit = {
+    val post = Play.current.configuration.getBoolean("Tweet.post")
+    if (!post.get) {
+      Logger.info("AdminController:tweet -> disabled")
+    } else {
+      msg match {
+        case "approved" =>
+          if (mobileuser.regType == "stolen") {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+          } else {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+          }
+        case "changeMobileRegType" =>
+          if (mobileuser.regType == "stolen") {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+          } else {
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+          }
+      }
+    }
+  }
+
+  /**
+   * Deletes existed mobile
+   * @param imeid of mobile
+   * @return Unit
+   */
+  def deleteMobile(imeid: String): Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:deleteMobile: " + imeid)
+      val mobileUser = mobileRepo.getMobileUserByIMEID(imeid)
+      mobileUser match {
+        case Some(mobile) =>
+          s3Util.delete(mobile.document)
+          val result = mobileRepo.deleteMobileUser(imeid)
+          result match {
+            case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
+              sendEmail(mobileUser.get, "delete")
+              Ok("Success of Delete ajax call")
+            case Left(msg) =>
+              Logger.info("AdminController:deleteMobile - error in deleting record" + msg)
+              Ok("Error of Delete ajax call")
+          }
+        case None =>
+          Logger.info("AdminController:deleteMobile - error in fetching record")
+          Ok("error in Delete ajax call")
+      }
   }
 }
-object AdminController extends AdminController(MobileService)
+/**
+ * Lets other classes, traits, objects access all the behaviors defined in the class AdminController  
+ */
+
+object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)

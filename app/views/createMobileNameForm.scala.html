@@ -1,4 +1,4 @@
-@(mobilenameform: Form[model.domains.Domain.BrandForm],user: Option[model.domains.Domain.User])(implicit flash: Flash)
+@(mobilenameform: Form[model.repository.BrandForm],user: Option[model.repository.User])(implicit flash: Flash)
 
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
@@ -29,7 +29,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="well form-horizontal">
-							@helper.form(action = routes.MobileController.saveMobileName, 'id ->"mobileNameForm") {
+							@helper.form(action = routes.MobileController.saveBrand, 'id ->"mobileNameForm") {
 								<fieldset>
 									@inputText(mobilenameform("name"), '_label -> "Mobile Brand")
 								</fieldset>

@@ -13,16 +13,3 @@ dist
 /.project
 /RUNNING_PID
 /.settings
-/target
-.classpath
-.project
-.settings/
-.target/
-.idea/
-.idea_modules/
-.cache
-.metadata/*
-src/main/webapp/css-generated/styles.css
-tmp/
-/bin
-Procfile

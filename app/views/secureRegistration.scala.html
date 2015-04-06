@@ -1,46 +1,36 @@
-@(mobileRegistrationForm: Form[model.domains.Domain.MobileRegisterForm], brands: List[model.domains.Domain.Brand], user: Option[model.domains.Domain.User])(implicit flash: Flash) 
+@(mobileRegistrationForm: Form[model.repository.MobileRegisterForm], brands: List[model.repository.Brand], user: Option[model.repository.User])(implicit flash: Flash) 
 
 @import helper._ 
 @main("Mycellwasstolen: Register Form",user){ 
-	<div class="container">
+<br><br>
+	<div class="container" style="padding-top: 20px;">
 		<div class="page-header">
 			<h2>Register New Phone</h2>
 		</div>
-		<div class="panel panel-success">
-			<div class="panel-heading">
-				<h3 class="panel-title">Please provide authentic IMEI proof</h3>
-			</div>
-			<div class="panel-body">
-				<div class="row">
-					@flash.get("ERROR").map { message =>
-						<div class="alert alert-dismissable alert-danger">
-							<strong>@message</strong>
-						</div>
+				@flash.get("ERROR").map { message =>
+						<div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                          <strong>@message</strong>
+                        </div>
 					}
-					
 					@flash.get("SUCCESS").map { message =>
-						<div class="alert alert-dismissable alert-success">
-							<strong>@message</strong>
-						</div>
+						<div class="alert alert-dismissible alert-success">
+                          <button type="button" class="close" data-dismiss="alert">×</button>
+                           <strong>@message</strong>
+                      </div
 					}
-				</div>
 				<div class="row">
 					<div class="col-lg-8">
+					<h4 style="color: rgba(20, 182, 3, 1);">Register and be safe</h4>
+					<p>Register your phone with us and Claim what is rightfully yours. </p>
 						<div class="well form-horizontal">
+						<h4 style="color: rgba(23, 110, 94, 1);">Please provide authentic IMEI proof</h4>
 							 @registerForm("clean", mobileRegistrationForm, brands)
 						</div>
 					</div>
-					<div class="col-lg-4">
-						<div class="well">
-							<div class="panel panel-warning">
-								<div class="panel-heading">
-									<h1 class="panel-title">Register and be safe</h1>
-								</div>
-								<div class="panel panel-info title-margin">
-									<div class="panel-heading">
-										<h1 class="panel-title">I want to declare my ownership</h1>
-									</div>
-									<div class="panel-body">
+					<div class="col-lg-4" style="padding-top: 60px;">
+										<h3 style="color: rgba(177, 109, 8, 1);">I want to declare my ownership</h3>
+									<div color="color: #811A13;">
 									 This is one of the best things you can do.
 									 Not only would your information be safe 
 									 with us but it would help us to inform 
@@ -51,12 +41,8 @@
 									 to you via an SMS / email immediately if 
 									 someone else tries to register the IMEI again.
 									</div>
+									<img style="margin-left: 65px;" src="@routes.Assets.at("images/claim.jpg")" alt="..." />
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-    </div>
 } 

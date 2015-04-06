@@ -1,275 +1,181 @@
-@(mobiles: List[(model.domains.Domain.Mobile,String,String)], user: Option[model.domains.Domain.User])(implicit flash: Flash)
+@(typ:String,users: List[(model.repository.Mobile,String,String)], user: Option[model.repository.User])(implicit flash: Flash)
 
-@import model.domains.Domain.Status
+@import utils.StatusUtil.Status
+
 @main("Mycellwasstolen",user) {
-
-	<div class="content-body span10">
-		<div class="well">
+	        <br><br><br>
+	        <div class="" style="margin: 10px;">
 			<div class="row">
-				<div class="span6" style="padding-left: 20px;">
-					<h3>@Messages("admin.requestapproval")</h3>
+				<div class="col-md-5">
+					<h3 style="">@Messages("admin.requestapproval")</h3>
 				</div>
-				<div id="loading" style="padding-left: 20px;" hidden="true"><img src="/assets/images/loading.gif" /></div>
-				<div class="span6">
-					<button class="btn btn-info" style="float: right; margin:2px;" id="pending_button" onclick="getMobilesByStatus('pending');" >Pending</button>
-					<button class="btn btn-info" style="float: right; margin:2px;" id="demanded_button" onclick="getMobilesByStatus('proofdemanded');" >Proof Demanded</button>
-					<button class="btn btn-info" style="float: right; margin:2px;" id="approved_button" onclick="getMobilesByStatus('approved');" >Approved</button>
+				<div id="loading col-md-4" style="padding-left: 20px;" hidden="true"><img src="@routes.Assets.at("images/loading.gif")"/></div>
+				<div class="col-md-3"  style="float: right; padding-top: 17px;">
+					<a id="pending_button" href="@routes.AdminController.mobiles("pending")" class="btn btn-success btn-sm">Pending</a>
+					<a id="demanded_button" href="@routes.AdminController.mobiles("proofdemanded")" class="btn btn-success btn-sm">Proof Demanded</a>
+					<a id="approved_button" href="@routes.AdminController.mobiles("approved")" class="btn btn-success btn-sm">Approved</a>
 				</div>
 			</div>
+			<hr>
+			<div class="row">
 			@flash.get("error").map { message =>
-                <div class="alert alert-error">
+                <div class="alert alert-error alert-dismissable col-md-12">
         			<strong>@message</strong>
       			</div>
             }
-            
             @flash.get("success").map { message =>
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissable col-md-12">
         			<strong>@message</strong>
       			</div>
 		}
-<div id="emptylistmessage">
-		@if(mobiles.size >= 0) {
-            	<table id="mobileTable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
-            		<thead>
-						<tr>
-							<th>@Messages("mobile.name")</th>
+		</div>
+		<div class="row">
+		<div class="col-md-12">
+			@if(users.size > 0) {
+            	<table id="userTable" class="table table-striped table-bordered" style="font-size: 16px;">
+                    <thead>
+                        <tr style="color: rgba(11, 81, 134, 1);">
+                            <th>@Messages("mobile.name")</th>
 							<th>@Messages("mobile.model")</th>
 							<th>@Messages("mobile.imei")</th>
 							<th>@Messages("mobile.purchaseDate")</th>
 							<th>@Messages("mobile.email")</th>
-							<th>@Messages("mobile.approval")</th>
 							<th>@Messages("mobile.status")</th>
 							<th>@Messages("mobile.proof")</th>
-							<th>@Messages("mobile.approve")</th>
+							@if(typ=="pending"){
 							<th>@Messages("mobile.demandProof")</th>
+							<th>@Messages("mobile.approve")</th>
+							}
+							@if(typ=="proofdemanded"){
+							<th>@Messages("mobile.approve")</th>
+							}
 							<th>@Messages("mobile.description")</th>
-						</tr>
-					</thead>
-					<tbody id="mobileData">
-           			@for(mobile <- mobiles) {
-			    		<tr>
+							<th>@Messages("mobile.delete")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       @for(mobile <- users) {
+                        <tr>
+                        <td>@mobile._1.userName</td>
 			    			<td>@mobile._2</td>
-			    			<td>@mobile._3</td>
 			    			<td>@mobile._1.imeiMeid</td>
-			    			<td>@mobile._1.purchaseDate</td>
-			    			<td>@mobile._1.email</td>
-			    			<td id="status_@mobile._1.imeiMeid">@mobile._1.mobileStatus</td>
-			    			<td>@mobile._1.regType</td>
-			    			<td>
-								<button class="btn btn-info" onclick="showDocumentProof('@mobile._1.document');">Get Proof</button> <!-- Modal -->
-					       </td>
-					       
-	    					<td>
-	    						<button title="Approve" class="btn btn-info" onClick="changeStatus('@mobile._1.imeiMeid');" id="approve_@mobile._1.imeiMeid" >Approve</button>
-	    					</td>
-	    				
-	    					<td>
-	    						<button title="Demand Proof" class="btn btn-info"  onClick="changeStatusToDemand('@mobile._1.imeiMeid');" id="demand_@mobile._1.imeiMeid" >Demand Proof</button>
-	    					</td>
-	    					<td>
-	    					<!-- <a href="#" id="pop_@mobile._1.imeiMeid" class="btn btn-primary" onmouseover="iniatializePopover(@mobile._1.imeiMeid);" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</a></td> -->
-			    		<button id="pop_@mobile._1.imeiMeid" class="btn btn-info" onmouseover="iniatializePopover('@mobile._1.imeiMeid');" data-toggle="popover" title="Description" data-content="@mobile._1.description">View</button></td>
+						    <td>@mobile._1.regDate</td>
+						    <td>@mobile._1.email</td>
+							<td>@mobile._1.regType</td>
+							<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
+							@if(typ=="pending"){
+							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>}
+							@if(typ=="proofdemanded"){
+							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+							}
+													   
+						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')" id="viewdesc">View</button></td>
+						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)" id = "delete" >Delete </button></td>
 			    		</tr>
-			    		
-                      }
-           			</tbody>
-            	</table>
-            }
-	</div>
-	</div>
-	</div>
-	<script type="text/javascript">
-	    var imeId = "";
-	    
-	    function changeStatusToDemand(imeid) {
-			imeId = imeid;
-			changeStatusToDemandProof(imeid);
-			sendMailForDemandProof(imeid); // for mail 
+                       }
+                       </tbody>
+                </table>
+		} else {
+			<div class="panel panel-default">
+			  <div class="panel-body" style="background: #FFCCCC">
+			    <em>No records!</em>
+			  </div>
+			</div>	
 		}
-	    
-	    var statusAjaxSuccessDemandProof = function(data) {
-			$("#demand_"+imeId).prop("disabled",true);
-			$("#demand_"+imeId).text('Proof Demanded');
-			console.debug("Success of Ajax Call for demand proof");
-			console.debug(data);
-		};
-		
-		var statusAjaxErrorDemandProof = function(err) {
-			console.debug("Error of ajax Call for demand proof");
-			console.debug(err);
-		};
-		
-		var changeStatusToDemandProof = function(imeid) {
-        	
-        	var statusAjaxCallBackDemandProof = {
-    			success: statusAjaxSuccessDemandProof,
-    			error: statusAjaxErrorDemandProof
-    		};
-        	
-        	jsRoutes.controllers.AdminController.proofDemanded(imeid).ajax(statusAjaxCallBackDemandProof);
-        };
-        
-        var sendMailForDemandProof=function(imeid){
-        	var statusAjaxCallBackForSendMail={
-        			success: statusAjaxSuccessForSendmail,
-        			error: statusAjaxErrorForSendmail	
-        	};
-        	jsRoutes.controllers.AdminController.sendMailForDemandProof(imeid).ajax(statusAjaxCallBackForSendMail)
-        };
-        
-        var statusAjaxSuccessForSendmail = function(data) {
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-		
-		var statusAjaxErrorForSendmail = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-        
-	    
-		function changeStatus(imeid) {
-			imeId = imeid;
-			changeStatusToApprove(imeid);
-			sendMailForApprovedRequest(imeid);
-		}
-		
-		var statusAjaxSuccess = function(data) {
-			$("#approve_"+imeId).prop("disabled",true);
-			$("#approve_"+imeId).text('approved');
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-		
-		var statusAjaxError = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-        
-        var changeStatusToApprove = function(imeid) {
-        	
-        	var statusAjaxCallBack = {
-    			success: statusAjaxSuccess,
-    			error: statusAjaxError
-    		};
-        	
-        	jsRoutes.controllers.AdminController.approve(imeid).ajax(statusAjaxCallBack);
-        };
+		</div>
+		</div>
+		</div>
+	
+	 
+	<!-- confirm modal dialog for delete mobile -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Delete mobile</h4>
+      </div>
+      <div class="modal-body" id="modalBody">Are you sure?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="deleteOk">Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<!-- model for description -->
+	<div class="modal fade" id="myModall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" id="descr">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-        var sendMailForApprovedRequest=function(imeid){
-        	var statusAjaxCallBackForSendMail={
-        			success: statusAjaxSuccessForSendmail,
-        			error: statusAjaxErrorForSendmail	
-        	};
-        	jsRoutes.controllers.AdminController.sendMailForApprovedRequest(imeid).ajax(statusAjaxCallBackForSendMail);
-        };
-        
-        var statusAjaxSuccessForSendmail = function(data) {
-			console.debug("Success of Ajax Call");
-			console.debug(data);
-		};
-		
-		var statusAjaxErrorForSendmail = function(err) {
-			console.debug("Error of ajax Call");
-			console.debug(err);
-		};
-
-
-
-        
-      //script for getting  mobile list by status
-      
-        function getMobilesByStatus(status){
-        	if(status=="approved"){
-        		document.getElementById("approved_button").disabled = true;
-        		document.getElementById("pending_button").disabled = false;
-        		document.getElementById("demanded_button").disabled = false;
-        			
-        	}
-        	else if(status=="proofdemanded"){
-        		document.getElementById("demanded_button").disabled = true;
-        		document.getElementById("approved_button").disabled = false;
-        		document.getElementById("pending_button").disabled = false;
-        	}
-        	else{
-        		document.getElementById("pending_button").disabled = true;
-        		document.getElementById("demanded_button").disabled = false;
-        		document.getElementById("approved_button").disabled = false;
-        	}
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/DT_bootstrap.css")">
+    <script src="@routes.Assets.at("javascripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/DT_bootstrap.js")" type="text/javascript"></script>
+    
+    <script type="text/javascript">    
+        $(document).ready(function() {
         	$("#loading").show();
-        	getMobileListByStatus(status);
-        }
-        
-        var statusAjaxSuccessForMobileList = function(data){
-        	
-      	 if (data.status == "Error"){
-      		$('#mobileData').empty();
-      		$('#mobileData').append("Requested Data are empty");
-        }
-      	 else{
-      		// console.log(data.toSource());
-      		 $('#mobileData').empty();
-      		 $.each(data, function(index, value){
-                var tBody= '<tr><td>'+(value._2.match(/~Other.*/) ? value._1.otherMobileBrand : value._2)+
-                '</td><td>'+(value._3.match(/~Other.*/) ? value._1.otherMobileModel :value._3)+
-                '</td><td>'+value._1.imeiMeid+
-                '</td><td>'+value._1.purchaseDate+
-                '</td><td>'+value._1.email+'</td><td>'
-                +value._1.mobileStatus.name+'</td><td>'
-                +value._1.regType+'</td><td><button class="btn btn-info" data-toggle="modal" data-target="#myModal_'+value._1.imeiMeid+'" onclick="showDocumentProof(\''+value._1.document+'\');"'
-                +'>Get Proof</button></td><td>'
-                //condition for disable approve button
-                +(value._1.mobileStatus.name=="approved"?'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus(\''+value._1.imeiMeid+'\');" disabled>Approved</button>':'<button title="Approve" class="btn btn-info" id="approve_'+value._1.imeiMeid+'" onclick="changeStatus(\''+value._1.imeiMeid+'\');">Approve</button>')
-                +((value._1.mobileStatus.name=="proofdemanded"||value._1.mobileStatus.name=="approved")?'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand(\''+value._1.imeiMeid+'\');" disabled >Demand Proof</button>':'</td><td><button title="Demand Proof" class="btn btn-info" id="demand_'+value._1.imeiMeid+'" onclick="changeStatusToDemand(\''+value._1.imeiMeid+'\');">Demand Proof</button>')
-                +'</td>'
-                +'<td><button id="pop_'+value._1.imeiMeid+'" class="btn btn-info" onmouseover="iniatializePopover(\''+value._1.imeiMeid+'\');" data-toggle="popover" title="Description" data-content="'+value._1.description+'">View</button></td>'
-                +'</tr>';
-                
-                $('#mobileData').append(tBody);
-      		});  
-      	}
-      	  console.debug("Success of Ajax Call for Mobile List By Status");
-  		  console.debug(data);
-  		  $("#loading").hide();
-        };
-        var statusAjaxErrorForMobileList=function(err){
-      	  console.debug("Error of ajax Call for Mobile List By Status");
-  		  console.debug(err);
-        };
-        
-        var getMobileListByStatus = function(status){
-      	  var statusAjaxCallBackForPendingList={
-      			  success: statusAjaxSuccessForMobileList,
-      			  error: statusAjaxErrorForMobileList
-      	  };
-      	  
-      	  jsRoutes.controllers.AdminController.mobilesForAjaxCall(status).ajax(statusAjaxCallBackForPendingList);
-        };
-        
-        function showDocumentProof(documentProofId){
-        	 var newWindow = window.open("", "pictureViewer", 
-        		        "location=no, directories=no, resizable=yes, fullscreen=no, " + 
-        		        "menubar=no, status=yes, toolbar=no, width=" + 
-        		        800 + ", height=" + 700 + ", scrollbars=no");
-        		    newWindow.document.writeln("<html>");
-        		    newWindow.document.writeln("<body style='margin: 0 0 0 0;'>");
-        		    newWindow.document.writeln("<a href='javascript:window.close();'>");
-        		    newWindow.document.writeln('<img src=https://s3.amazonaws.com/voyager-email-attachments/'+documentProofId+'  id="bigImage"/>');
-        		    newWindow.document.writeln("<br>");
-					newWindow.document.writeln( alt="Click to close");
-        		    newWindow.document.writeln("</a>");
-        		    newWindow.document.writeln("</body></html>");
-        		    newWindow.document.close();
-        }
-        
-        function iniatializePopover(imei){
-        	$(function (){
-				$("#pop_"+imei).popover({
-                placement : 'top'
-            });
-			});
-        }
-        
+            $('#userTable').dataTable( {
+                "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "sPaginationType": "bootstrap"    
+            } );    
+        } );  
+</script>		
+<script type="text/javascript">
+
+		function showDocumentProof(documentProofId) {
+			var newWindow = window.open("", "pictureViewer",
+					"location=no, directories=no, resizable=yes, fullscreen=no, "
+							+ "menubar=no, status=yes, toolbar=no, width="
+							+ 800 + ", height=" + 700 + ", scrollbars=no");
+			newWindow.document.writeln("<html>");
+			newWindow.document.writeln("<body style='margin: 0 0 0 0;'>");
+			newWindow.document.writeln("<a href='javascript:window.close();'>");
+			newWindow.document
+					.writeln('<img src=https://s3.amazonaws.com/voyager-email-attachments/'+documentProofId+'  id="bigImage"/>');
+			newWindow.document.writeln("<br>");
+			newWindow.document.writeln(alt = "Click to close");
+			newWindow.document.writeln("</a>");
+			newWindow.document.writeln("</body></html>");
+			newWindow.document.close();
+		}
+
+		function showDescription(desc) {
+			$('#myModall').modal('show');
+			$('#descr').html(desc);
+			}
+
+			function deleteMobileUser(imeid) {
+				$('#myModal').modal('show');
+				$("#deleteOk").bind('click', function(){
+					var statusAjaxCallBackForDeleteMobileUser = {
+							success : ajaxSuccess,
+							error : ajaxError
+						};
+						jsRoutes.controllers.AdminController.deleteMobile(imeid)
+								.ajax(statusAjaxCallBackForDeleteMobileUser);
+						$('#myModal').modal('hide');
+				});
+			}
+
+		var ajaxSuccess = function(data) {
+		  console.debug("Success of delete mobile Ajax Call");
+		  window.location.reload(true);
+		};
+		 
+		var ajaxError = function(error) {
+			console.debug("Error in delete mobile Ajax Call");
+		};
 	</script>
-}
+	}
