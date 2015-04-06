@@ -1,4 +1,4 @@
-package seleniumtest
+/*package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -266,3 +266,4 @@ class MobileRegistrationTest extends Specification {
 }
   
 
+*/

@@ -35,7 +35,7 @@ object Global extends GlobalSettings {
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
   }
 
-  def getValue(keyname: String) = Play.application.configuration.getString(keyname)
+  def getValue(keyname: String):Option[String] = Play.application.configuration.getString(keyname)
 
   /**
    * Loads all credentials and create tables when application starts
@@ -74,16 +74,19 @@ object Global extends GlobalSettings {
    * @return Unit
    */
 
-  def importDB = {
-    val filePath = Global.getClass().getClassLoader().getResource("csv")
-    new File(filePath.toURI()).listFiles foreach { file =>
-      getFileNameWithoutExt(file.getName).foreach { _fileName =>
-        import scala.util.control.Exception._
-        allCatch.opt(TablesEnum.withName(_fileName)).foreach {
-          validEnum => model.convert.readcsv.convert(file, validEnum)
+  def importDB:Unit = {
+    try {
+      val filePath = Global.getClass().getClassLoader().getResource("csv")
+      new File(filePath.toURI()).listFiles foreach { file =>
+        getFileNameWithoutExt(file.getName).foreach { _fileName =>
+          import scala.util.control.Exception._
+          allCatch.opt(TablesEnum.withName(_fileName)).foreach {
+            validEnum => model.convert.ReadCsv.convert(file, validEnum)
+          }
         }
-
       }
+    } catch {
+      case ex: Exception => Logger.info("Please check the csv at the destination" + ex.printStackTrace)
     }
   }
 
