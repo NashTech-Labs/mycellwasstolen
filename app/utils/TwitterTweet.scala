@@ -9,6 +9,9 @@ import play.api.i18n.Messages
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
+/**
+ * Provides twitter functionality for application
+ */
 trait TwitterTweet {
 
   //tweet message for stolen mobile
@@ -45,4 +48,3 @@ trait TwitterTweet {
   }
 }
 object TwitterTweet extends TwitterTweet
-
