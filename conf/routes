@@ -41,8 +41,8 @@ POST   /createMobileModel             controllers.MobileController.saveModel
 
 #audit
 GET    /registrationRecord            controllers.AuditController.registrationRecordsByYear(date:String)
-GET    /admin/auditpage               controllers.AuditController.auditPage
-POST   /admin/auditIMEID              controllers.AuditController.timestampsByIMEI
-GET    /admin/auditAllRecords         controllers.AuditController.allTimestamps
+GET    /auditpage                     controllers.AuditController.auditPage
+POST   /auditIMEID                    controllers.AuditController.timestampsByIMEI
+GET    /auditAllRecords               controllers.AuditController.allTimestamps
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                  controllers.Assets.at(path="/public", file)
