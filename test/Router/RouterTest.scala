@@ -69,26 +69,26 @@ class RouterTest extends Specification {
   "submit mobile registration " in {
     running(FakeApplication()) {
       val result = route(FakeRequest(POST, "/mobileRegistration").withFormUrlEncodedBody(
-       "userName" -> "sushil",
-      "brandId" -> "1",
-      "mobileModelId" -> "1",
-      "imeiMeid" -> "864465028854206",
-      "otherImeiMeid" -> "864465028854206",
-      "purchaseDate" -> "12-03-2013",
-      "contactNo" -> "8375919908",
-      "email" -> "s@gmail.com",
-      "regType" -> "stolen",
-      "document" -> "s.jpg",
-      "description" -> "test",
-      "otherMobileBrand" -> "nokia",
-      "otherMobileModel" -> "assha")).get
+        "userName" -> "sushil",
+        "brandId" -> "1",
+        "mobileModelId" -> "1",
+        "imeiMeid" -> "864465028854206",
+        "otherImeiMeid" -> "864465028854206",
+        "purchaseDate" -> "12-03-2013",
+        "contactNo" -> "8375919908",
+        "email" -> "s@gmail.com",
+        "regType" -> "stolen",
+        "document" -> "s.jpg",
+        "description" -> "test",
+        "otherMobileBrand" -> "nokia",
+        "otherMobileModel" -> "assha")).get
       status(result) must equalTo(400)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
     }
   }
 
-   // Java script routes
+  // Java script routes
   "JavascriptRoutes Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/javascriptRoutes"))
@@ -96,7 +96,7 @@ class RouterTest extends Specification {
       contentType(result) must beSome("text/javascript")
     }
   }
-  
+
   "redirect mobile status form" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/mobileStatusForm"))
@@ -105,20 +105,20 @@ class RouterTest extends Specification {
     }
   }
 
-   // Admin Pages
+  // Admin Pages
   "redirect to login page with error flash" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/login").withFlash("error"->"message"))
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("error" -> "message"))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
     }
   }
-  
+
   // Admin Pages
   "redirect to login page with success flash" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/login").withFlash("success"->"message"))
+      val Some(result) = route(FakeRequest(GET, "/login").withFlash("success" -> "message"))
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
@@ -127,10 +127,10 @@ class RouterTest extends Specification {
 
   "authenticate login" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "admin_username", "password" -> "admin_password").withHeaders(CONTENT_TYPE ->
+      val Some(result) = route(FakeRequest(POST, "/authenticate").withFormUrlEncodedBody("email" -> "test", "password" -> "test").withHeaders(CONTENT_TYPE ->
         "application/x-www-form-urlencoded"))
       status(result) must equalTo(303)
-redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")      
+      redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
     }
   }
 
@@ -142,7 +142,6 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
     }
   }
 
-  // Admin page
   "logout Action" in {
     running(FakeApplication()) {
       val Some(result) = route(FakeRequest(GET, "/logout"))
@@ -150,10 +149,10 @@ redirectLocation(result) must beSome.which(_ == "/admin/mobiles?status=pending")
       redirectLocation(result) must beSome.which(_ == "/login")
     }
   }
-  
+
   "redirect to audit page" in {
     running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/admin/auditpage"))
+      val Some(result) = route(FakeRequest(GET, "/auditpage"))
       status(result) must equalTo(303)
     }
   }

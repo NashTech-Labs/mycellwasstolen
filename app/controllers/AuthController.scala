@@ -36,7 +36,7 @@ class AuthController extends Controller with Secured {
     val adminUsername = Play.current.configuration.getString("admin_username").get
     val adminPassword = Play.current.configuration.getString("admin_password").get
     if (username == adminUsername && password == adminPassword) {
-      val user = User("admin", "1234")
+      val user = User(adminUsername, adminPassword)
       Cache.set(username, user, 60 * 60)
       true
     } else { false }

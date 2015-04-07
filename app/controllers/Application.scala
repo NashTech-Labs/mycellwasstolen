@@ -16,7 +16,6 @@ import model.repository.User
 /**
  * Contains application generated controllers javaScriptRoutes to make ajax calls
  */
-
 class Application extends Controller {
 
   /**

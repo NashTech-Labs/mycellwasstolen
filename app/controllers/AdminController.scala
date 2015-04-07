@@ -1,6 +1,4 @@
-/**
- * Contains all the controllers of the application
- */
+
 package controllers
 
 import model.repository._
@@ -245,8 +243,8 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
       }
   }
 }
+
 /**
  * Lets other classes, traits, objects access all the behaviors defined in the class AdminController
  */
-
 object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)
