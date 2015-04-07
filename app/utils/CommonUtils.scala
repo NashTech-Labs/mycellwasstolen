@@ -8,28 +8,17 @@ import java.sql.Timestamp
 trait CommonUtils {
 
   /**
-   * Check valid imei number or not
+   * Check valid IMEI number or not
    * @param imei number of mobile
    * @return true on valid, otherwise false
    */
 
   def validateImei(imei: String): Boolean = {
-    val result = luhnChecksum(imei)
-
+    val result = (imei.reverse.map { _.toString.toShort }.grouped(2) map
+      { t => t(0) + (if (t.length > 1) (t(1) * 2) % 10 + t(1) / 5 else 0) }).sum % 10
     if (result == 0) true
     else false
 
-  }
-
-  /**
-   *  convert IMEI as digits to identify checksum
-   *  @param imei:String
-   *  @return Int
-   */
-
-  private def luhnChecksum(imei: String): Int = {
-    (imei.reverse.map { _.toString.toShort }.grouped(2) map
-      { t => t(0) + (if (t.length > 1) (t(1) * 2) % 10 + t(1) / 5 else 0) }).sum % 10
   }
 
   /**
