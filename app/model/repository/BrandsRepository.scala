@@ -7,6 +7,9 @@ import model.repository._
 import play.api.Logger
 import java.sql.Date
 
+/**
+ * Define all data access layer methods of Mobile Brand 
+ */
 trait BrandRepository extends BrandTable {
 
   /**
@@ -33,7 +36,7 @@ trait BrandRepository extends BrandTable {
     } catch {
       case ex: Exception =>
         Logger.info("Error in insert mobile name" + ex.printStackTrace())
-        Left(ex.getMessage())
+        Left(ex.getMessage()) 
     }
   }
 
@@ -48,6 +51,10 @@ trait BrandRepository extends BrandTable {
     }
   }
 }
+
+/**
+ * Defines schema of Brand table 
+ */
 trait BrandTable {
   private[repository] class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -59,13 +66,21 @@ trait BrandTable {
   val brands = TableQuery[Brands]
   val autoKeyBrands = brands returning brands.map(_.id)
 }
-
+/**
+ * Represent a mobile Brand object which 
+ * contains name and a brand id 
+ */
 case class Brand(
   name: String,
   id: Option[Int] = None)
 
-//Represents a brand name
+/**
+ * Represents a mobile brand form
+ */
 case class BrandForm(name: String)
 
-//Trait companion object
+
+/**
+ * Wraps methods of the trait BrandRepository
+ */
 object BrandRepository extends BrandRepository

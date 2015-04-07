@@ -1,3 +1,4 @@
+
 package controllers
 
 import play.api.Routes
@@ -29,9 +30,9 @@ class Application extends Controller {
   }
 
   /**
- * Handle the calling of controllers actions from javascript ajax calls
- */
-def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+   * Handle the calling of controllers actions from javascript ajax calls
+   */
+  def javascriptRoutes: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     import routes.javascript._
     Ok(Routes.javascriptRouter("jsRoutes")(
       routes.javascript.MobileController.checkMobileStatus,
