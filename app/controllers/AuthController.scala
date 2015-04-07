@@ -31,7 +31,7 @@ class AuthController extends Controller with Secured {
    * @param username of Admin
    * @param password of Admin
    */
-  def check(username: String, password: String): Boolean = {
+  private def check(username: String, password: String): Boolean = {
 
     val adminUsername = Play.current.configuration.getString("admin_username").get
     val adminPassword = Play.current.configuration.getString("admin_password").get

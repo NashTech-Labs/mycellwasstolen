@@ -4,45 +4,49 @@
 
 # Home page
 GET    /                              controllers.Application.index
+
+#Resources
 GET    /contact-us                    controllers.Resources.contactUs
 GET    /blog                          controllers.Resources.blog
 GET    /faq                           controllers.Resources.faq
 GET    /discussionforum               controllers.Resources.discussionforum
 
-
-#registration
+#MobileController
 GET    /register-stolen-phone         controllers.MobileController.mobileRegistrationForm
 GET    /register-new-phone            controllers.MobileController.mobileRegistrationSecureForm
 POST   /mobileRegistration            controllers.MobileController.mobileRegistration
 GET    /isImeiExist                   controllers.MobileController.isImeiExist(imeiId: String)
+GET    /mobileStatusForm              controllers.MobileController.mobileStatus
+GET    /mobileStatus                  controllers.MobileController.checkMobileStatus(imeid: String,user:String)
+GET    /mobileModel                   controllers.MobileController.getModels(id:Int)
+GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
+POST   /saveMobileName                controllers.MobileController.saveBrand
+GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
+POST   /createMobileModel             controllers.MobileController.saveModel
 
 #Javascript Routes
-
 GET    /javascriptRoutes              controllers.Application.javascriptRoutes 
-GET    /mobileStatus                  controllers.MobileController.checkMobileStatus(imeid: String,user:String)
-GET    /mobileStatusForm              controllers.MobileController.mobileStatus
-GET    /mobileModel                   controllers.MobileController.getModels(id:Int)
+
+#Aunthentication
+GET    /login                         controllers.AuthController.login
+POST   /authenticate                  controllers.AuthController.authenticate
+GET    /logout                        controllers.AuthController.logout
+
+#AdminController
+GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
+GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)
+GET    /approve                       controllers.AdminController.approve(imeid: String,page:String)
+GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
 GET    /pending                       controllers.AdminController.pending(imeid: String)
 GET    /changeMobileRegType           controllers.AdminController.changeMobileRegType(imeid: String)
 GET    /delete                        controllers.AdminController.deleteMobile(imeid: String)
 
-#Admin
-GET    /login                         controllers.AuthController.login
-POST   /authenticate                  controllers.AuthController.authenticate
-GET    /logout                        controllers.AuthController.logout
-GET    /admin/mobiles                 controllers.AdminController.mobiles(status:String)
-GET    /admin/brandForm               controllers.MobileController.brandRegisterForm
-POST   /saveMobileName                controllers.MobileController.saveBrand
-GET    /proofDemanded                 controllers.AdminController.proofDemanded(imeid: String,page:String)
-GET    /approve                       controllers.AdminController.approve(imeid: String,page:String)
-GET    /admin/modelRegistrationForm   controllers.MobileController.modelRegistrationForm
-GET    /admin/changeMobileRegType     controllers.AdminController.changeMobileRegTypeForm
-POST   /createMobileModel             controllers.MobileController.saveModel
 
 #audit
 GET    /registrationRecord            controllers.AuditController.registrationRecordsByYear(date:String)
 GET    /auditpage                     controllers.AuditController.auditPage
 POST   /auditIMEID                    controllers.AuditController.timestampsByIMEI
 GET    /auditAllRecords               controllers.AuditController.allTimestamps
+
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                  controllers.Assets.at(path="/public", file)
