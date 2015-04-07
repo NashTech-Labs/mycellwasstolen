@@ -12,8 +12,8 @@ import play.api.test.FakeRequest
 import play.api.mvc.Security
 import utils._
 import play.api.mvc.Security
-import java.util.Date
-import java.util.Calendar
+import java.util.{ Date, Calendar }
+import play.api.test.WithApplication
 
 class AdminControllerTestCases extends Specification with Mockito {
 
@@ -28,8 +28,8 @@ class AdminControllerTestCases extends Specification with Mockito {
   val cleanMobileUser = Mobile(
     "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getSqlDate(), "+91 9839839830",
     "gs@gmail.com", "Clean", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
-    
-    val cleanMobileUser1 = Mobile(
+
+  val cleanMobileUser1 = Mobile(
     "sushil", 1, 1, "12345678901234", "123456789012678", CommonUtils.getSqlDate(), "+91 9839839830",
     "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
 
@@ -40,12 +40,12 @@ class AdminControllerTestCases extends Specification with Mockito {
   val getAllMobilesWithBrand: List[(Mobile, String, String)] = List(mobileWithBrand)
   val audit = List(Audit("864465028854206", new java.sql.Timestamp(new java.util.Date().getTime), Some(1)))
   val user = User("admin", "knol2013")
-  
+
   val mockedMail = mock[MailUtil]
   val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]
   val mockedAuditRepo = mock[AuditRepository]
-  val adminController = new AdminController(mockedMobilRepo, mockedAuditRepo, mockedMail,mockedS3Util)
+  val adminController = new AdminController(mockedMobilRepo, mockedAuditRepo, mockedMail, mockedS3Util)
 
   "AdminControllerTesting: mobiles" in {
     running(FakeApplication()) {
@@ -140,7 +140,7 @@ class AdminControllerTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/plain")
     }
   }
-  
+
   "AdminControllerTesting: pending -> failed" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
@@ -170,7 +170,7 @@ class AdminControllerTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/plain")
     }
   }
-  
+
   "AdminControllerTesting: changeMobileRegType of clean mobile" in {
     running(FakeApplication()) {
       Cache.set("admin", user)

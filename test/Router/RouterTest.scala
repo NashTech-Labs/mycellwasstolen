@@ -156,4 +156,11 @@ class RouterTest extends Specification {
       status(result) must equalTo(303)
     }
   }
+  
+  "redirect to mobiles page" in {
+    running(FakeApplication()) {
+      val Some(result) = route(FakeRequest(GET, "/admin/mobiles?status=pending"))
+      status(result) must equalTo(303)
+    }
+  }
 }

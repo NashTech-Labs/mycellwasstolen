@@ -20,7 +20,7 @@ class MobileRegistrationTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
 
-   "Testing Home Page" in {
+  "Testing Home Page" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
@@ -31,9 +31,9 @@ class MobileRegistrationTest extends Specification {
   "Testing Add Mobile Brand" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
-      browser.goTo(baseUrl+"/login")
-      browser.$("#email").text("admin_username")
-      browser.$("#password").text("admin_password")
+      browser.goTo(baseUrl + "/login")
+      browser.$("#email").text("test")
+      browser.$("#password").text("test")
       browser.$(".btn.btn-primary").click
       browser.$("#menuItem").click
       browser.$("#brandForm").click
@@ -47,9 +47,9 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.get(baseUrl + "/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -70,9 +70,9 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.get(baseUrl + "/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -105,10 +105,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
+      driver.get(baseUrl + "/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -141,10 +141,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
+      driver.get(baseUrl + "/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -173,7 +173,7 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("changeRegType").click
-      driver.findElementByCssSelector("BODY").getText().contains("registration type changed")
+      driver.findElementByCssSelector("BODY").getText().contains("Check Status")
     }
   }
 
@@ -181,10 +181,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
+      driver.get(baseUrl + "/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -220,10 +220,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl+"/login")
+      driver.get(baseUrl + "/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("email").sendKeys("admin_username")
-      driver.findElementById("password").sendKeys("admin_password")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
