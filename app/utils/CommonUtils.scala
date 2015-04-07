@@ -12,30 +12,24 @@ trait CommonUtils {
    * @param imei number of mobile
    * @return true on valid, otherwise false
    */
+
   def validateImei(imei: String): Boolean = {
-    val arr = imei.map(f => f.toString().toInt).toArray
-    val len = arr.length
-    val checksum = arr(len - 1)
-    if (len != 15) { false }
-    var mul = 2
-    var sum = 0
-    var i = len - 2
-    while (i >= 0) {
-      if ((arr(i) * mul) >= 10) {
-        sum += ((arr(i) * mul) / 10) + ((arr(i) * mul) % 10)
-        i = i - 1
-      } else {
-        sum += arr(i) * mul
-        i = i - 1
-      }
-      if (mul == 2) mul = 1 else mul = 2
-    }
-    var m10 = sum % 10
-    if (m10 > 0) { m10 = 10 - m10 }
-    if (m10 == checksum) { true }
-    else{
-      false
-    }
+    val result = luhnChecksum(imei)
+
+    if (result == 0) true
+    else false
+
+  }
+
+  /**
+   *  convert IMEI as digits to identify checksum
+   *  @param imei:String
+   *  @return Int
+   */
+
+  private def luhnChecksum(imei: String): Int = {
+    (imei.reverse.map { _.toString.toShort }.grouped(2) map
+      { t => t(0) + (if (t.length > 1) (t(1) * 2) % 10 + t(1) / 5 else 0) }).sum % 10
   }
 
   /**
