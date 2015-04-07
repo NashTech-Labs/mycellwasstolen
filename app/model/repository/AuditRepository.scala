@@ -11,7 +11,7 @@ import java.sql.Timestamp
 import scala.collection.mutable.ListBuffer
 
 /**
- * Contains audit functionality used in application
+ * Define all data access layer methods of Auditing records
  */
 trait AuditRepository extends AuditTable with MobileRepository {
   /*
@@ -93,10 +93,11 @@ trait AuditTable {
 }
 
 /**
- * Represents audit object
+ * Represents audit object which is used to report how many request 
+ * has been made against particular IMEI with timestamp 
  * @param mobuileIMEID, imei number of mobile
  * @param timestamp, date and time of audit
- * @id, auto incremented id
+ * @param id, auto incremented id
  */
 case class Audit(
   mobileIMEID: String,
@@ -109,4 +110,7 @@ case class Audit(
  */
 case class AuditForm(imeiMeid: String)
 
+/**
+ * Object Wraps methods of the trait AuditRepository
+ */
 object AuditRepository extends AuditRepository

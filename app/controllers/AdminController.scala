@@ -1,4 +1,6 @@
-
+/**
+ * Provides controller classes to control the application  
+ */
 package controllers
 
 import model.repository._
@@ -28,7 +30,6 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
-
   /**
    * Renders MobileUser Page
    * @param status, mobile status(pending, approved and proofdemanded)

@@ -12,8 +12,7 @@ import java.sql.Date
 import scala.slick.lifted.ForeignKeyQuery
 
 /**
- * MobileRepository provides all concrete implementation of
- * user mobile services
+ * Define all data access layer methods of MobileRegistration   
  */
 
 trait MobileRepository extends MobileTable {
@@ -157,7 +156,9 @@ trait MobileRepository extends MobileTable {
   }
 }
 
-// Mapping of mobile Table
+/**
+ * Defines schema of Mobile table 
+ */
 trait MobileTable extends BrandTable with ModelTable {
   import utils.StatusUtil.Status
   private[repository] class Mobiles(tag: Tag) extends Table[Mobile](tag, "mobiles") {
@@ -191,7 +192,10 @@ trait MobileTable extends BrandTable with ModelTable {
   val autoKeyMobiles = mobiles returning mobiles.map(_.id)
 
 }
-//Represents the Mobile registration Record
+
+/**
+ * Represents the Mobile registration Record
+ */
 case class Mobile(
   userName: String,
   brandId: Int,
@@ -210,7 +214,9 @@ case class Mobile(
   otherMobileModel: String,
   id: Option[Int] = None)
 
-//Represents the Mobile Details Record
+/**
+ * Represents the Mobile Details Record
+ */
 case class MobileDetail(
   userName: String,
   mobileName: String,
@@ -225,10 +231,14 @@ case class MobileDetail(
   otherMobileBrand: String,
   otherMobileModel: String)
 
-//Represents Registered Mobile Status in the database
+/**
+ * Represents Registered Mobile Status in the database
+ */
 case class MobileStatus(imeiMeid: String)
 
-//Represents Mobile registration Form
+/**
+ * Represents Mobile registration Form
+ */
 case class MobileRegisterForm(
   userName: String,
   brandId: Int,
@@ -244,10 +254,17 @@ case class MobileRegisterForm(
   otherMobileBrand: String,
   otherMobileModel: String)
 
+/**
+ * Represents a Models name  
+ */
 case class MobilesNameForm(mobileName: String)
+
+/**
+ * Represents a user with username and password
+ */
 case class User(email: String, password: String)
 
 /**
- * Companion Object extending the Same trait:
+ * Wraps the method of trait:MobileRepository
  */
 object MobileRepository extends MobileRepository

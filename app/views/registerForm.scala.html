@@ -5,12 +5,9 @@
 
 <fieldset>
 <style>
-
  input[type=text] { width: 200px;}
-
 </style>
-
-	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
+ 	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> <input type="hidden" name="regType" id="regType" value="@regType"> <input type="hidden" name="document" id="document" value="">
 	@inputText(mobileRegistrationForm("userName"), '_label -> "User Name")
 
 	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
