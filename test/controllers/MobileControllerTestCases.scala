@@ -310,6 +310,9 @@ class MobileControllerTestCases extends Specification with Mockito {
   "MobileControllerTesting: saveModel-> with invalid form data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
+       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
+      when(mockedModelRepo.getAllModelByBrandId(1)) thenReturn(List(Model("N73",1)))
+      when(mockedModelRepo.insertModel(any[Model])) thenReturn (Right(Some(1)))
       val result = mobileController.saveModel(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(400)
     }

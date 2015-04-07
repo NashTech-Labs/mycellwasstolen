@@ -1,4 +1,4 @@
-/*package seleniumtest
+package seleniumtest
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -31,11 +31,9 @@ class MobileRegistrationTest extends Specification {
   "Testing Add Mobile Brand" in {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
-      browser.goTo(baseUrl)
-      browser.title() must equalTo("Welcome to MCWS")
-      browser.$("#adminPanel").click
-      browser.$("#email").text("admin")
-      browser.$("#password").text("knol2013")
+      browser.goTo(baseUrl+"/login")
+      browser.$("#email").text("test")
+      browser.$("#password").text("test")
       browser.$(".btn.btn-primary").click
       browser.$("#menuItem").click
       browser.$("#brandForm").click
@@ -49,10 +47,9 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.get(baseUrl+"/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -73,10 +70,9 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.get(baseUrl+"/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -109,11 +105,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
+      driver.get(baseUrl+"/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -146,11 +141,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
+      driver.get(baseUrl+"/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -179,7 +173,7 @@ class MobileRegistrationTest extends Specification {
       driver.findElementById("imeiMeid").sendKeys("123456789012347")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("changeRegType").click
-      driver.findElementByCssSelector("BODY").getText().contains("registration type changed")
+      driver.findElementByCssSelector("BODY").getText().contains("Check Status")
     }
   }
 
@@ -187,11 +181,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
+      driver.get(baseUrl+"/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -227,11 +220,10 @@ class MobileRegistrationTest extends Specification {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
-      driver.get(baseUrl)
+      driver.get(baseUrl+"/login")
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-      driver.findElementById("adminPanel").click
-      driver.findElementById("email").sendKeys("admin")
-      driver.findElementById("password").sendKeys("knol2013")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.findElementById("menuItem").click
       driver.findElementById("brandForm").click
@@ -262,4 +254,3 @@ class MobileRegistrationTest extends Specification {
     }
   }
 }
-*/
