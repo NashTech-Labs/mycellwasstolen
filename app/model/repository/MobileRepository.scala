@@ -12,7 +12,7 @@ import java.sql.Date
 import scala.slick.lifted.ForeignKeyQuery
 
 /**
- * Define all data access layer methods of MobileRegistration   
+ * Define all data access layer methods of MobileRegistration
  */
 
 trait MobileRepository extends MobileTable {
@@ -157,7 +157,7 @@ trait MobileRepository extends MobileTable {
 }
 
 /**
- * Defines schema of Mobile table 
+ * Defines schema of Mobile table
  */
 trait MobileTable extends BrandTable with ModelTable {
   import utils.StatusUtil.Status
@@ -182,10 +182,10 @@ trait MobileTable extends BrandTable with ModelTable {
       regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
     def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
 
-    def fkeyBrand:ForeignKeyQuery[Brands, Brand]= foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyBrand: ForeignKeyQuery[Brands, Brand] = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
 
-    def fkeyModel:ForeignKeyQuery[Models, Model] = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyModel: ForeignKeyQuery[Models, Model] = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobiles = TableQuery[Mobiles]
@@ -255,7 +255,7 @@ case class MobileRegisterForm(
   otherMobileModel: String)
 
 /**
- * Represents a Models name  
+ * Represents a Models name
  */
 case class MobilesNameForm(mobileName: String)
 

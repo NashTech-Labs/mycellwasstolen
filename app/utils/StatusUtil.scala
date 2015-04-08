@@ -5,18 +5,18 @@ import play.api.libs.json.Json
 import model.repository._
 
 /**
- * Provides status utilities used in mobile table 
+ * Provides status utilities used in mobile table
  */
 object StatusUtil {
 
   /**
- *  Provides all types of Status
- */
- object Status extends Enumeration {
-  val pending = Value("pending")
-  val approved = Value("approved")
-  val proofdemanded = Value("proofdemanded")
- }
+   *  Provides all types of Status
+   */
+  object Status extends Enumeration {
+    val pending = Value("pending")
+    val approved = Value("approved")
+    val proofdemanded = Value("proofdemanded")
+  }
 
   /**
    * Maps the status to a slick Column Type

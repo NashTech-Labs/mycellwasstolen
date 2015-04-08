@@ -16,9 +16,11 @@ trait CommonUtils {
   def validateImei(imei: String): Boolean = {
     val result = (imei.reverse.map { _.toString.toShort }.grouped(2) map
       { t => t(0) + (if (t.length > 1) (t(1) * 2) % 10 + t(1) / 5 else 0) }).sum % 10
-    if (result == 0) true
-    else false
-
+    if (result == 0) {
+      true
+    } else {
+      false
+    }
   }
 
   /**

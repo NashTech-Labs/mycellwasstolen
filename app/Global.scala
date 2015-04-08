@@ -100,7 +100,7 @@ object Global extends GlobalSettings {
   /**
    * Handle the fake requests to application
    */
-  override def onHandlerNotFound(request: RequestHeader) = {
+  override def onHandlerNotFound(request: RequestHeader): Unit = {
     Future {
       Ok(views.html.errorPage("page not found"))
     }

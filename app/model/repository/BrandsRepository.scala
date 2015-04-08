@@ -1,5 +1,5 @@
 package model.repository
- import scala.slick.driver.PostgresDriver.simple._
+import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.driver
 import scala.slick.lifted.ProvenShape
 import utils.Connection
@@ -8,7 +8,7 @@ import play.api.Logger
 import java.sql.Date
 
 /**
- * Define all data access layer methods of Mobile Brand 
+ * Define all data access layer methods of Mobile Brand
  */
 trait BrandRepository extends BrandTable {
 
@@ -36,7 +36,7 @@ trait BrandRepository extends BrandTable {
     } catch {
       case ex: Exception =>
         Logger.info("Error in insert mobile name" + ex.printStackTrace())
-        Left(ex.getMessage()) 
+        Left(ex.getMessage())
     }
   }
 
@@ -53,7 +53,7 @@ trait BrandRepository extends BrandTable {
 }
 
 /**
- * Defines schema of Brand table 
+ * Defines schema of Brand table
  */
 trait BrandTable {
   private[repository] class Brands(tag: Tag) extends Table[Brand](tag, "brands") {
@@ -67,8 +67,8 @@ trait BrandTable {
   val autoKeyBrands = brands returning brands.map(_.id)
 }
 /**
- * Represent a mobile Brand object which 
- * contains name and a brand id 
+ * Represent a mobile Brand object which
+ * contains name and a brand id
  */
 case class Brand(
   name: String,
@@ -78,7 +78,6 @@ case class Brand(
  * Represents a mobile brand form
  */
 case class BrandForm(name: String)
-
 
 /**
  * Wraps methods of the trait BrandRepository

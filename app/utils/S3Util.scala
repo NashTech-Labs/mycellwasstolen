@@ -9,7 +9,7 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 
 /**
- * Contains amazons3 services for applications  
+ * Contains amazons3 services for applications
  */
 trait S3UtilComponent {
 

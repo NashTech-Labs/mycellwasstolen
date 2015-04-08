@@ -7,7 +7,7 @@ import model.repository.Mobile
 import play.api.Logger
 
 /**
- * Contains mailing functionality 
+ * Contains mailing functionality
  */
 trait MailUtil {
 

@@ -77,7 +77,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
 }
 
 /**
- * Defines schema of audits table 
+ * Defines schema of audits table
  */
 trait AuditTable {
   private[repository] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
@@ -93,8 +93,8 @@ trait AuditTable {
 }
 
 /**
- * Represents audit object which is used to report how many request 
- * has been made against particular IMEI with timestamp 
+ * Represents audit object which is used to report how many request
+ * has been made against particular IMEI with timestamp
  * @param mobuileIMEID, imei number of mobile
  * @param timestamp, date and time of audit
  * @param id, auto incremented id

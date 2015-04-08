@@ -1,5 +1,5 @@
 /**
- * Provides controller classes to control the application  
+ * Provides controller classes to control the application
  */
 package controllers
 
@@ -133,7 +133,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
    * Changes mobile status to clean or stolen
    * @param imeiId of mobile
    * @return success or error page
-   **/
+   */
   def changeMobileRegType(imeiId: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)

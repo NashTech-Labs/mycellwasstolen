@@ -6,7 +6,7 @@ import play.api.db._
 import play.api.Play.current
 
 object Connection extends {
-  
+
   /**
    * Returns Database object
    */

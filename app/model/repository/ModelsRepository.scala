@@ -10,7 +10,7 @@ import java.util.Date
 import scala.slick.lifted.ForeignKeyQuery
 
 /**
- * Define all data access layer methods of Mobile Model 
+ * Define all data access layer methods of Mobile Model
  */
 trait ModelRepository extends ModelTable {
 
@@ -58,7 +58,7 @@ trait ModelRepository extends ModelTable {
 }
 
 /**
- * Defines schema of Models table 
+ * Defines schema of Models table
  */
 trait ModelTable extends BrandTable {
   private[repository] class Models(tag: Tag) extends Table[Model](tag, "models") {
@@ -67,7 +67,7 @@ trait ModelTable extends BrandTable {
     def name: Column[String] = column[String]("modelName", O DBType ("VARCHAR(30)"))
     def * : scala.slick.lifted.ProvenShape[Model] = (
       name, brandId, id) <> (Model.tupled, Model.unapply)
-    def fkey:ForeignKeyQuery[Brands, Brand] = foreignKey("brand_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkey: ForeignKeyQuery[Brands, Brand] = foreignKey("brand_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
     def modelIndex: scala.slick.lifted.Index = index("idx_model", (name), unique = true)
   }
@@ -83,14 +83,14 @@ case class Model(
   brandId: Int,
   id: Option[Int] = None)
 
-  /**
-   * Represents a Model Form
-   */
+/**
+ * Represents a Model Form
+ */
 case class ModelForm(
   brandName: String,
   modelName: String)
 
 /**
- * Wraps all method of ModelRepository 
+ * Wraps all method of ModelRepository
  */
 object ModelRepository extends ModelRepository
