@@ -5,6 +5,7 @@ import play.api.libs.mailer.MailerPlugin
 import play.api.libs.mailer.Email
 import model.repository.Mobile
 import play.api.Logger
+import scala.util.Try
 
 /**
  * Contains mailing functionality
@@ -57,14 +58,13 @@ trait MailUtil {
    * @param message
    */
   def sendMail(email: String, subject: String, message: String): Unit = {
-    try {
+    Try {
       val emailBuilder = Email(
         subject,
         Messages("default.email.title"),
         Seq(email), bodyHtml = Some(message))
       MailerPlugin.send(emailBuilder)
-    } catch {
-      case ex: Exception => Logger.error("MailUtil:sendEmail -> failed" + ex)
+
     }
   }
 }

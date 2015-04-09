@@ -21,6 +21,7 @@ import play.api.mvc.Action
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import model.convert.TablesEnum
+import scala.util.Try
 
 object Global extends GlobalSettings {
 
@@ -72,7 +73,7 @@ object Global extends GlobalSettings {
    */
 
   def importDB: Unit = {
-    try {
+    Try {
       Logger.info("Global:importDB -> called")
       val filePath = Global.getClass().getClassLoader().getResource("csv")
       new File(filePath.toURI()).listFiles foreach { file =>
@@ -84,9 +85,6 @@ object Global extends GlobalSettings {
           }
         }
       }
-    } catch {
-      case ex: Exception => Logger.info("Please check the csv at the destination" + ex.printStackTrace)
-
     }
   }
 

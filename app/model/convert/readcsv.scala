@@ -50,7 +50,7 @@ object ReadCsv extends CommonUtils {
   /**
    * Inserts data into Mobile table
    */
-  def caseMobile: Unit = {
+  private def caseMobile: Unit = {
     val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
@@ -69,7 +69,7 @@ object ReadCsv extends CommonUtils {
   /**
    * Insert data from CSV into Models table
    */
-  def caseModels: Unit = {
+  private def caseModels: Unit = {
     val modelReader = CSVReader.open(new FileReader("conf/csv/Models.csv"))
     val resultIterator = modelReader.iterator
     resultIterator.foreach { result =>
@@ -81,7 +81,7 @@ object ReadCsv extends CommonUtils {
   /**
    * Insert data from CSV into Brands table
    */
-  def caseBrands: Unit = {
+  private def caseBrands: Unit = {
     val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
@@ -93,7 +93,7 @@ object ReadCsv extends CommonUtils {
   /**
    * Insert data from CSV into Audit table
    */
-  def caseAudits: Unit = {
+  private def caseAudits: Unit = {
     val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
