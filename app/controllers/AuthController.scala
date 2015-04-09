@@ -46,7 +46,7 @@ class AuthController extends Controller with Secured {
    * Displays the Admin login form
    */
   def login: Action[AnyContent] = Action { implicit request =>
-    Ok(html.admin.login(loginForm))
+    Ok(views.html.admin.contents.login(loginForm))
   }
 
   /**
@@ -54,9 +54,9 @@ class AuthController extends Controller with Secured {
    */
   def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.admin.login(formWithErrors)),
+      formWithErrors => BadRequest(views.html.admin.contents.login(formWithErrors)),
       user =>
-        Redirect(routes.AdminController.mobiles("pending")).withSession(Security.username -> user._1))
+        Redirect(routes.AdminController.index).withSession(Security.username -> user._1))
   }
 
   /**

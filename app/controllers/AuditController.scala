@@ -29,13 +29,13 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       "imeiMeid" -> nonEmptyText)(AuditForm.apply)(AuditForm.unapply))
 
   /**
-   * Display audit page
+   * Display timestamp page
    */
-  def auditPage: Action[AnyContent] = withAuth { username =>
+  def timestampPage: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val list = List()
-      Ok(views.html.audit.overviews("imeid", list, user))
+      Ok(views.html.admin.audits.mobileCheckStatusTimestamp("imeid", list, user))
   }
 
   /**
@@ -49,11 +49,11 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       timestampform.bindFromRequest().fold(
         hasErrors = { form =>
           val list = List()
-          Ok(views.html.audit.overviews("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
+          Ok(views.html.admin.audits.mobileCheckStatusTimestamp("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
         },
         success = { timestamp =>
           val list = auditRepo.getAllTimestampsByIMEID(timestamp.imeiMeid)
-          Ok(views.html.audit.overviews("imeid", list, user))
+          Ok(views.html.admin.audits.mobileCheckStatusTimestamp("imeid", list, user))
         })
   }
 
@@ -64,7 +64,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
       val list = auditRepo.getAllTimestamps
-      Ok(views.html.audit.overviews("all", list, user))
+      Ok(views.html.admin.audits.mobileCheckStatusTimestamp("all", list, user))
   }
 
   def registrationRecordsByYear(year: String): Action[AnyContent] = withAuth { username =>
@@ -74,7 +74,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       val monthList = List("Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec")
       val recordList = auditRepo.getRecordByDate(year)
       val recordsList = monthList zip recordList
-      Ok(views.html.audit.analytics(user, recordsList, years))
+      Ok(views.html.admin.audits.analytics(user, recordsList, years))
   }
 }
 

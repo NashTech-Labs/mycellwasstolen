@@ -11,6 +11,7 @@ import net.liftweb.json.Serialization.write
 import play.api.Logger
 import play.api._
 import play.api.Play.current
+import play.api.i18n.Messages
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
@@ -22,7 +23,8 @@ import play.twirl.api.Html
 /**
  * Controls administrative tasks such as handling user requests, approving a request, request verification
  */
-class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent) extends Controller with Secured {
+class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent)
+  extends Controller with Secured {
 
   /**
    * Describes the mobile status form
@@ -30,18 +32,117 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   val mobilestatus = Form(
     mapping(
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
+
+  /**
+   * Describes the new mobile brand form
+   */
+  val brandform = Form(
+    mapping(
+      "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
+
+  /**
+   * Describe the new mobile model form
+   */
+  val modelform = Form(
+    mapping(
+      "brandName" -> nonEmptyText,
+      "modelName" -> nonEmptyText)(ModelForm.apply)(ModelForm.unapply))
+
+  /**
+   * Display admin home page
+   */
+  def index: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("AdminController:index -> called")
+      val user: Option[User] = Cache.getAs[User](username)
+      Ok(views.html.admin.index("Admin home", user))
+  }
+  /**
+   * Display the new mobile brand registration form
+   */
+  def brandRegisterForm: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController:brandRegistrationForm -> called")
+      val user: Option[User] = Cache.getAs[User](username)
+      Ok(views.html.admin.contents.newBrandForm(brandform, user))
+  }
+
+  /**
+   * Handle new mobile brand form submission and add new mobile brand
+   */
+  def saveBrand: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController: saveBrand -> called")
+      Logger.info("brandregisterform" + brandform)
+      val email = request.session.get(Security.username).getOrElse("")
+      val user: Option[User] = Cache.getAs[User](email)
+      brandform.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.admin.contents.newBrandForm(formWithErrors, user)),
+        brand => {
+          if (brandRepo.getAllBrands.filter { x => x.name.equalsIgnoreCase(brand.name) }.isEmpty) {
+            val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
+            insertedBrand match {
+              case Right(Some(id)) =>
+                Redirect(routes.AdminController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
+              case _ =>
+                Redirect(routes.AdminController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
+            }
+          } else {
+            Redirect(routes.AdminController.brandRegisterForm).flashing("ERROR" -> "Brand allready exist")
+          }
+
+        })
+  }
+
+  /**
+   * Display the new mobile brand model registration form
+   */
+  def modelRegistrationForm: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController:modelRegistrationForm -> called")
+      val user: Option[User] = Cache.getAs[User](username)
+      val mobileBrands = brandRepo.getAllBrands
+      Ok(views.html.admin.contents.newModelForm(modelform, mobileBrands, user))
+  }
+
+  /**
+   * Handle new mobile brand model form submission and add new model
+   */
+  def saveModel: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+      Logger.info("MobileController:saveModel -> called")
+      val brands = brandRepo.getAllBrands
+      val email = request.session.get(Security.username).getOrElse("")
+      val user: Option[User] = Cache.getAs[User](email)
+      modelform.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.admin.contents.newModelForm(formWithErrors, brands, user)),
+        modell => {
+          if (modelRepo.getAllModelByBrandId(modell.brandName.toInt).filter { x => x.name.equalsIgnoreCase(modell.modelName) }.isEmpty) {
+            val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
+            insertedModel match {
+              case Right(Some(id)) =>
+                Redirect(routes.AdminController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
+              case _ =>
+                Redirect(routes.AdminController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
+            }
+          } else {
+            Redirect(routes.AdminController.modelRegistrationForm).flashing("ERROR" -> "Model Allready exist")
+          }
+        })
+  }
+
   /**
    * Renders MobileUser Page
    * @param status, mobile status(pending, approved and proofdemanded)
    * @return mobile page with mobile user according to status
    */
-  def mobiles(status: String): Action[AnyContent] = withAuth { username =>
+  def requestsList(status: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       Logger.info("AdminController:mobiles -> called.")
       val user: Option[User] = Cache.getAs[User](username)
       val mobiles = mobileRepo.getAllMobilesUserWithBrandAndModel(status)
       Logger.info("mobiles Admin Controller::::" + mobiles)
-      Ok(views.html.admin.mobiles(status, mobiles, user))
+      Ok(views.html.admin.contents.requestsList(status, mobiles, user))
   }
 
   /**
@@ -61,14 +162,14 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
             case Some(mobile) =>
               sendEmail(mobileUser.get, "approved")
               tweet(mobileUser.get, "approved")
-              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+              Redirect(routes.AdminController.requestsList(page)).flashing("success" -> "Mobile has been approved successfully!")
             case None =>
               Logger.info("AdminController:approve - error in fetching record after approved")
-              Redirect(routes.AdminController.mobiles(page)).flashing("success" -> "Mobile has been approved successfully!")
+              Redirect(routes.AdminController.requestsList(page)).flashing("success" -> "Mobile has been approved successfully!")
           }
         case _ =>
           Logger.info("AdminController: - false")
-          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!")
+          Redirect(routes.AdminController.requestsList(page)).flashing("error" -> "Something wrong!")
       }
   }
 
@@ -87,16 +188,16 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
           mobileUser match {
             case Some(mobile) =>
               sendEmail(mobileUser.get, "proofDemanded")
-              Redirect(routes.AdminController.mobiles(page)).flashing(
+              Redirect(routes.AdminController.requestsList(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
             case None =>
               Logger.info("AdminController:approve - error in fetching record after proof demanded")
-              Redirect(routes.AdminController.mobiles(page)).flashing(
+              Redirect(routes.AdminController.requestsList(page)).flashing(
                 "success" -> "A Proof has been demanded from this user!")
           }
         case _ =>
           Logger.info("AdminController: - No Record were inserted: method returned with left")
-          Redirect(routes.AdminController.mobiles(page)).flashing("error" -> "Something wrong!!")
+          Redirect(routes.AdminController.requestsList(page)).flashing("error" -> "Something wrong!!")
 
       }
   }
@@ -126,7 +227,7 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
   def changeMobileRegTypeForm: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-      Ok(views.html.admin.changeMobileRegType(mobilestatus, user))
+      Ok(views.html.admin.contents.changeMobileRegType(mobilestatus, user))
   }
 
   /**
@@ -248,4 +349,4 @@ class AdminController(mobileRepo: MobileRepository, auditRepo: AuditRepository, 
 /**
  * Lets other classes, traits, objects access all the behaviors defined in the class AdminController
  */
-object AdminController extends AdminController(MobileRepository, AuditRepository, MailUtil, S3Util)
+object AdminController extends AdminController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, MailUtil, S3Util)

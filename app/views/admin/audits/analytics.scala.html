@@ -1,0 +1,64 @@
+@* analytics Template File *@
+@(user: Option[model.repository.User],audits:List[(String,Int)],years:List[Int])(implicit flash: Flash)
+
+@views.html.admin.main("Registration Chart",user) {
+	<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                             <p>Registration records bar chart</p>
+                             <div class="dropdown" style="margin-top: -30px; margin-left: 210px;">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Year
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+  @for(year<-years){
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@routes.AuditController.registrationRecordsByYear(year.toString())">@year</a></li>
+  }
+  </ul>
+</div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            @if(audits.size>0){
+  <table class="highchart" data-graph-container-before="1" data-graph-type="column" style="display:none;" >
+  <thead>
+    <tr>
+    
+                            	<th>Month</th>
+							<th>Registration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(record <- audits) {
+                    <tr>
+                    <td>@record._1</td>
+                    <td>@record._2</td>
+                    </tr>
+                    }
+                    </tbody>
+</table>	
+  }else{
+  <div class="panel panel-default">
+			  <div class="panel-body" style="background: #FFCCCC">
+			    <em>No records!</em>
+			  </div>
+			</div>	
+  }
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                </div>
+                
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('table.highchart').highchartTable();
+	});
+</script>
+}
+

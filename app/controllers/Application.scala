@@ -26,7 +26,7 @@ class Application extends Controller {
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("USERNAME:::::" + user)
-    Ok(views.html.index("Welcome", user))
+    Ok(views.html.users.index("Welcome", user))
   }
 
   /**

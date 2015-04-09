@@ -25,6 +25,7 @@ import play.api.libs.Files
 class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
                        modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent, commonUtils: CommonUtils)
   extends Controller with Secured {
+
   /**
    * Describes the new mobile registration form (used in both stolen and secure mobile registration form)
    */
@@ -49,72 +50,36 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
 
   /**
-   * Describes the new mobile brand form
-   */
-  val brandform = Form(
-    mapping(
-      "name" -> nonEmptyText)(BrandForm.apply)(BrandForm.unapply))
-
-  /**
-   * Describe the new mobile model form
-   */
-  val modelform = Form(
-    mapping(
-      "brandName" -> nonEmptyText,
-      "modelName" -> nonEmptyText)(ModelForm.apply)(ModelForm.unapply))
-
-  /**
    * Display the new mobile registration form for stolen mobile
    */
-  def mobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
+  def stolenMobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
     Logger.info("MobileController:mobileRegistrationForm -> called")
     val mobileBrands = brandRepo.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
-    Ok(views.html.mobileRegistrationForm(mobileregistrationform, mobileBrands, user))
+    Ok(views.html.users.contents.stolenMobileRegistrationForm(mobileregistrationform, mobileBrands, user))
   }
 
   /**
    * Display the new secure mobile registration form
    */
-  def mobileRegistrationSecureForm: Action[AnyContent] = Action { implicit request =>
+  def secureMobileRegistrationForm: Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController:mobileRegistrationSecureForm -> called")
     val mobileBrands = brandRepo.getAllBrands
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
-    Ok(views.html.secureRegistration(mobileregistrationform, mobileBrands, user))
-  }
-
-  /**
-   * Display the new mobile brand registration form
-   */
-  def brandRegisterForm: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      Logger.info("MobileController:brandRegistrationForm -> called")
-      val user: Option[User] = Cache.getAs[User](username)
-      Ok(views.html.createMobileNameForm(brandform, user))
-  }
-
-  /**
-   * Display the new mobile brand model registration form
-   */
-  def modelRegistrationForm: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      Logger.info("MobileController:modelRegistrationForm -> called")
-      val user: Option[User] = Cache.getAs[User](username)
-      val mobileBrands = brandRepo.getAllBrands
-      Ok(views.html.createMobileModelForm(modelform, mobileBrands, user))
+    Ok(views.html.users.contents.secureMobileRegistrationForm(mobileregistrationform, mobileBrands, user))
   }
 
   /**
    * Handle the new mobile registration form submission and add new mobile
    */
-  def mobileRegistration: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
+  def saveMobileUser: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
     val mobileBrands = brandRepo.getAllBrands
     val user: Option[User] = Cache.getAs[User](username)
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.mobileRegistrationForm(formWithErrors, mobileBrands, user)),
+      formWithErrors => BadRequest(views.html.users.contents.stolenMobileRegistrationForm(formWithErrors, mobileBrands, user)),
       mobileuser => {
         val date = commonUtils.getSqlDate()
         val index = mobileuser.document.indexOf(".")
@@ -131,9 +96,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
               val fileToSave = image.ref.file.asInstanceOf[File]
               s3Util.store(documentName, fileToSave)
             }
-            Redirect(routes.MobileController.mobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
+            Redirect(routes.MobileController.stolenMobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
           case _ =>
-            Redirect(routes.MobileController.mobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
+            Redirect(routes.MobileController.stolenMobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
         }
       })
   }
@@ -203,11 +168,11 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   /**
    * Display mobile status form
    */
-  def mobileStatus: Action[AnyContent] = Action { implicit request =>
+  def mobileStatusForm: Action[AnyContent] = Action { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
     val user: Option[User] = Cache.getAs[User](username)
     Logger.info("mobileController:mobileStatus -> called")
-    Ok(views.html.mobileStatus(mobilestatus, user))
+    Ok(views.html.users.contents.mobileStatus(mobilestatus, user))
   }
 
   /**
@@ -231,63 +196,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       Ok("false")
     }
   }
-
-  /**
-   * Handle new mobile brand form submission and add new mobile brand
-   */
-  def saveBrand: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      Logger.info("MobileController: saveBrand -> called")
-      Logger.info("brandregisterform" + brandform)
-      val email = request.session.get(Security.username).getOrElse("")
-      val user: Option[User] = Cache.getAs[User](email)
-      brandform.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.createMobileNameForm(formWithErrors, user)),
-        brand => {
-          if (brandRepo.getAllBrands.filter { x => x.name.equalsIgnoreCase(brand.name) }.isEmpty) {
-            val insertedBrand = brandRepo.insertBrand(Brand(brand.name))
-            insertedBrand match {
-              case Right(Some(id)) =>
-                Redirect(routes.MobileController.brandRegisterForm).flashing("SUCCESS" -> Messages("messages.mobile.brand.added.success"))
-              case _ =>
-                Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> Messages("messages.mobile.brand.added.error"))
-            }
-          } else {
-            Redirect(routes.MobileController.brandRegisterForm).flashing("ERROR" -> "Brand allready exist")
-          }
-
-        })
-  }
-
-  /**
-   * Handle new mobile brand model form submission and add new model
-   */
-  def saveModel: Action[AnyContent] = withAuth { username =>
-    implicit request =>
-      Logger.info("MobileController:saveModel -> called")
-      val brands = brandRepo.getAllBrands
-      val email = request.session.get(Security.username).getOrElse("")
-      val user: Option[User] = Cache.getAs[User](email)
-      modelform.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.createMobileModelForm(formWithErrors, brands, user)),
-        modell => {
-          if (modelRepo.getAllModelByBrandId(modell.brandName.toInt).filter { x => x.name.equalsIgnoreCase(modell.modelName) }.isEmpty) {
-            val insertedModel = modelRepo.insertModel(Model(modell.modelName, modell.brandName.toInt))
-            insertedModel match {
-              case Right(Some(id)) =>
-                Redirect(routes.MobileController.modelRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.model.added.success"))
-              case _ =>
-                Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.model.added.error"))
-            }
-          } else {
-            Redirect(routes.MobileController.modelRegistrationForm).flashing("ERROR" -> "Model Allready exist")
-          }
-        })
-  }
 }
 
 /**
  * Lets other classes, packages, traits access all the behaviors defined in the class MobileController
  */
-
 object MobileController extends MobileController(MobileRepository, BrandRepository, ModelRepository, AuditRepository, MailUtil, S3Util, CommonUtils)

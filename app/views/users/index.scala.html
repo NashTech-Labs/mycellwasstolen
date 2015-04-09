@@ -1,0 +1,253 @@
+@(message: String, user: Option[model.repository.User]) 
+
+@views.html.users.main("home", user) {
+	
+	 <!-- start of home page -->
+	 <hr>
+	         <div class="row">
+<div class="col-md-1">
+<img src="@routes.Assets.at("user/images/logo.jpg")" alt="..."></div>
+<div class="col-md-4" style="padding-top: 33px;padding-left: 42px;">
+<h2 style="text-align: center; color: rgba(239, 0, 0, 1);display: inline; ">My cell was stolen</h2>
+<p style="font-style: oblique;">A social movement making the mobile space secure</p></div>
+<div class="col-md-3 social">
+<h5>Connect with us</h5>
+<a href="https://www.facebook.com/mycellwasstolen.mcws" target="blank"><img src="@routes.Assets.at("user/images/media_icons/fb.png")" alt="..."></a>
+<a href="http://www.mycellwasstolen.com/" target="blank"><img src="@routes.Assets.at("user/images/media_icons/linkedin.png")" alt="..."></a>
+<a href="https://twitter.com/mycellwasstolen" target="blank"><img src="@routes.Assets.at("user/images/media_icons/tw.png")" alt="..."></a>
+<a href="//plus.google.com/101596762455378096324" target="blank"><img src="@routes.Assets.at("user/images/media_icons/g+.png")" alt="..."></a>
+</div>
+<div class="col-md-4">
+<div class="input-group" style="width: 349px;padding-top: 33px;">
+      <input type="text" class="form-control" placeholder="Search for this site...">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button">Search</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+
+<hr style="border: 1px solid;">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-file"></i>Data</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Over 700,000 mobile phones are stolen every year.</p>
+                        <a href="#" class="btn btn-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-male"></i>Help me</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Governments across the world are helpless to combat this menace without social help.</p>
+                        <a href="#" class="btn btn-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-lock"></i>Register and be safe</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Register your stolen phone with us and make it unusable for the world and Claim what is rightfully yours.</p>
+                        <a href="#" class="btn btn-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Portfolio Section -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">Portfolio Heading</h2>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <a href="portfolio-item.html">
+                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <a href="portfolio-item.html">
+                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
+                </a>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <a href="portfolio-item.html">
+                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
+                </a>
+            </div>
+           
+        </div>
+        <!-- /.row -->
+
+        <!-- MCWS process Section -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">MCWS Process</h2>
+            </div>
+            <div class="col-md-6">
+            <h3 style="color: rgba(5, 130, 189, 1);">We have been there as well</h3>
+                <p>Chances are that you are visiting this
+									page, because, you or someone close to you, has lost his/her cell
+									phone. The feeling of losing a cell phone is analogous to losing a
+									part of your life. We have been in the same situation. This site
+									with its database of over 50,000 (and growing) lost / stolen cell
+									phones, is an attempt to break the cycle of cell phone thefts. Let
+									us see how the stolen cell phone process works.</p>
+            </div>
+            <div class="col-md-6">
+                <img class="img-responsive" src="@routes.Assets.at("user/images/without-mcws.png")" alt="">
+            </div>
+        </div>
+        <!-- /.row -->
+<hr>
+<div class="row">
+            <div class="col-md-6">
+                <h3 style="color: rgba(5, 130, 189, 1);">How does MCWS attempt to stop this?</h3>
+							  		<p>Of course, with your help ...<br>
+								  	Check out the diagram below. As soon
+									as you register your cell with MCWS, there are multiple things
+									which happen.
+									Once, the stolen cell information report is verified by
+									MCWS, an entry for the stolen cell IMEI is made in the MCWS
+									database. Any new buyer can immediately check the IMEI of the
+									cell phone that he is buying by checking the stolen registry
+									database. This is not all, see why registering with MCWS is a
+									good idea.</p><br>
+									<a href="/register-stolen-phone"  class="btn btn-success">Register stolen</a>
+									<a href="/register-new-phone"  class="btn btn-success">Register clean</a>
+            </div>
+            <div class="col-md-6">
+                <img class="img-responsive" src="@routes.Assets.at("user/images/with-mcws.png")" alt="">
+            </div>
+        </div>
+        <!-- /.row -->
+<hr>
+<div class="row">
+            <div class="col-md-6">
+                <h3 style="color: rgba(5, 130, 189, 1);">Why registering with MCWS is a good idea?</h3>
+								  	<p>This is an important question and we
+									are glad if you thought about it. The key answer is that this
+									data is shared.
+									</p>
+									<ul>
+										<li>
+											Since we share this with all the phone buyers, including
+											you and me, any new buyer would be able to punch in the MEIR
+											number and check from the MCWS database whether, the cell is
+											stolen or clean.
+										</li>
+										<li>
+											Since we share this data with all the carriers, across
+											multiple countries, they have ammunition to block the calls
+											originating from these cells.
+										</li>
+										<li>
+											Since we share this data with the local crime authorities,
+											they can quickly raid a second hand shop to see if they carry
+											stolen phones.
+										</li>
+										<li>
+											Since the stolen cell phone data is present over the
+											internet, your stolen phone is practically unusable across the
+											world. Last but not the least, you get an immense peace of
+											mind because no one would be able to use your stolen cell.
+											With your support the cell phone stealing would come down
+											immensely.
+										</li>
+									</ul><br>
+									<a href="/mobileStatusForm" class="btn btn-success" style="margin-left: 45px;">Check mobile status</a>
+            </div>
+            <div class="col-md-6">
+                <img class="img-responsive" src="@routes.Assets.at("user/images/why-mcws-good-idea.png")" alt="">
+            </div>
+        </div>
+        <!-- /.row -->
+        <hr style="border:1px solid;">
+<div class="row">
+		<div class="col-md-4" style=" ">
+		<a href="http://www.knoldus.com/home.knol" target="blank"><img src="@routes.Assets.at("user/images/knoldus.jpg")" alt="..."></a>
+		</div>
+		<div class="col-md-4">
+		<a href="https://typesafe.com" target="blank"><img src="@routes.Assets.at("user/images/typesafe.jpg")" alt="..."></a>
+		</div>
+		<div class="col-lg-4">
+		<h3 style="color: rgba(102, 76, 14, 1);">For any further information write to us at</h3>
+		<h4><a href="https://www.gmail.com/" target="blank">info@@mycellwasstolen.com</a></h4>
+		<div id="fb-root"></div> 
+		<script>
+			(function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id))
+					return;
+				js = d.createElement(s);
+				js.id = id;
+				js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=436035873185298";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+		<div class="g-plus" data-annotation="bubble" data-height="24" data-href="//plus.google.com/101596762455378096324" data-action="share"></div>
+
+                <!-- Place this tag after the last share tag. -->
+               <script type="text/javascript">
+																(function() {
+																	var po = document
+																			.createElement('script');
+																	po.type = 'text/javascript';
+																	po.async = true;
+																	po.src = 'https://apis.google.com/js/platform.js';
+																	var s = document
+																			.getElementsByTagName('script')[0];
+																	s.parentNode
+																			.insertBefore(
+																					po,
+																					s);
+																})();
+															</script>
+	    		<!-- Place this tag where you want the widget to render. -->
+				<div class="g-follow" data-annotation="bubble" data-height="24" data-href="//plus.google.com/101596762455378096324" data-rel="publisher">
+				</div>
+
+				<!-- Place this tag after the last widget tag. -->
+				<script type="text/javascript">
+					(function() {
+						var po = document.createElement('script');
+						po.type = 'text/javascript';
+						po.async = true;
+						po.src = 'https://apis.google.com/js/plusone.js';
+						var s = document.getElementsByTagName('script')[0];
+						s.parentNode.insertBefore(po, s);
+					})();
+				</script>
+				<script src="//platform.linkedin.com/in.js" type="text/javascript">
+					lang: en_US
+				</script>
+           		<script type="IN/Share" data-url="http://www.mycellwasstolen.com/" data-counter="right">
+				</script>
+		    	<span class="fb-like" data-href="https://www.facebook.com/mycellwasstolen.mcws" data-width="200" data-show-faces="false" data-send="true"></span>
+		    		<a href="https://twitter.com/mycellwasstolen" class="twitter-follow-button" data-show-count="true" data-size="large">Follow @{"@MCWS"}</a>
+				<script>
+					!function(d, s, id) {
+						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+								.test(d.location) ? 'http' : 'https';
+						if (!d.getElementById(id)) {
+							js = d.createElement(s);
+							js.id = id;
+							js.src = p + '://platform.twitter.com/widgets.js';
+							fjs.parentNode.insertBefore(js, fjs);
+						}
+					}(document, 'script', 'twitter-wjs');
+				</script>
+		    </div>
+        </div>
+}
