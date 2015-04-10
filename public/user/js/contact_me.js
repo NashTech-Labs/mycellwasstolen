@@ -1,21 +1,16 @@
-/*
-  Jquery Validation using jqBootstrapValidation
-   example is taken from jqBootstrapValidation docs 
-  */
 $(function() {
 
     $("input,textarea").jqBootstrapValidation({
         preventSubmit: true,
         submitError: function($form, event, errors) {
-            // something to have when submit produces an error ?
-            // Not decided if I need it yet
+            // additional error messages or events
         },
         submitSuccess: function($form, event) {
             event.preventDefault(); // prevent default submit behaviour
             // get values from FORM
             var name = $("input#name").val();
-            var phone = $("input#phone").val();
             var email = $("input#email").val();
+            var phone = $("input#phone").val();
             var message = $("textarea#message").val();
             var firstName = name; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
@@ -23,7 +18,7 @@ $(function() {
                 firstName = name.split(' ').slice(0, -1).join(' ');
             }
             $.ajax({
-                url: "./bin/contact_me.php",
+                url: "././mail/contact_me.php",
                 type: "POST",
                 data: {
                     name: name,
@@ -50,7 +45,7 @@ $(function() {
                     $('#success').html("<div class='alert alert-danger'>");
                     $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                         .append("</button>");
-                    $('#success > .alert-danger').append("<strong>Sorry " + firstName + " it seems that my mail server is not responding...</strong> Could you please email me directly to <a href='mailto:me@example.com?Subject=Message_Me from myprogrammingblog.com;>me@example.com</a> ? Sorry for the inconvenience!");
+                    $('#success > .alert-danger').append("<strong>Sorry " + firstName + ", it seems that my mail server is not responding. Please try again later!");
                     $('#success > .alert-danger').append('</div>');
                     //clear all fields
                     $('#contactForm').trigger("reset");

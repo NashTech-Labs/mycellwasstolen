@@ -100,7 +100,7 @@ object Global extends GlobalSettings {
    */
   override def onHandlerNotFound(request: RequestHeader) = {
     Future {
-      Ok(views.html.errorPage("page not found"))
+      Ok(views.html.users.contents.errorPage("page not found"))
     }
   }
 }
