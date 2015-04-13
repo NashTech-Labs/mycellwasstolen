@@ -232,7 +232,7 @@ fieldset[disabled] .btn-xl.active {
 
 @media(min-width:700px) {
     .navbar-default {
-        padding: 25px 0;
+        padding: 10px 0;
         border: 0;
         -webkit-transition: padding .3s;
         -moz-transition: padding .3s;
@@ -340,7 +340,7 @@ section h3.section-subheading {
 
 @media(min-width:768px) {
     section {
-        padding: 150px 0;
+        padding: 10px 0;
     }
 }
 
