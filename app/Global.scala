@@ -20,8 +20,8 @@ import views.html.defaultpages.notFound
 import play.api.mvc.Action
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import model.convert.TablesEnum
 import scala.util.Try
+import utils.TableEnums
 
 object Global extends GlobalSettings {
 
@@ -79,8 +79,8 @@ object Global extends GlobalSettings {
       new File(filePath.toURI()).listFiles foreach { file =>
         getFileNameWithoutExt(file.getName).foreach { _fileName =>
           import scala.util.control.Exception._
-          allCatch.opt(TablesEnum.withName(_fileName)).foreach {
-            validEnum => model.convert.ReadCsv.convert(file, validEnum)
+          allCatch.opt(TableEnums.withName(_fileName)).foreach {
+            validEnum => utils.ReadCSV.convert(file, validEnum)
 
           }
         }

@@ -1,34 +1,38 @@
-package model.convert
-
-import com.github.tototoshi.csv._
-import java.io._
-import java.util.ArrayList
-import model.repository._
-import utils.StatusUtil.Status
-import java.sql.Date
-import utils.CommonUtils
-import play.api.Logger
+package utils
+import java.io.File
+import java.io.FileReader
 import java.sql.Timestamp
-import utils.Constants
 
+import com.github.tototoshi.csv.CSVReader
+import com.github.tototoshi.csv.defaultCSVFormat
+
+import model.repository.Audit
+import model.repository.AuditRepository
+import model.repository.Mobile
+import model.repository.MobileRepository
+import model.repository.Model
+import model.repository.ModelRepository
+import play.api.Logger
+import utils.StatusUtil.Status
 /**
  * Value of table names to be used for scenario of matching
  */
-object TablesEnum extends Enumeration {
+
+object TableEnums extends Enumeration {
   val BRANDS, MODELS, MOBILES, AUDITS = Value
 }
 
 /**
  *  CSV Reader for files that are to be imported into DB
  */
-object ReadCsv extends CommonUtils {
-  import TablesEnum._
+object ReadCSV extends CommonUtils {
+  import TableEnums._
   /**
    * Read CSV and insert entries to the DB based on the table name
    * @param file:File, tableName:String
    * @return Unit
    */
-  def convert(file: File, tableName: TablesEnum.Value): Unit = {
+  def convert(file: File, tableName: TableEnums.Value): Unit = {
     tableName match {
       case `BRANDS` => {
         caseBrands
