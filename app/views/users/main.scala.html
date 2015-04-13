@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,11 +22,8 @@
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
 </head>
-
 <body id="page-top" class="index">
-
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,24 +36,26 @@
                 </button>
                 <a class="navbar-brand page-scroll" href="#page-top">MCWS</a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
+					<li>
+                        <a class="page-scroll" href="#contact">Home</a>
+                    </li>                    
                     <li>
-                        <a class="page-scroll" href="#services">Services</a>
+                        <a class="page-scroll" href="#services">Report Lost Phones</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="/check_mobile_status">Check phone status</a>
+                        <a class="page-scroll" href="#portfolio">Check Lost Phones</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="/register_stolen_phone">Register phone</a>
                     </li>
-                                        <li>
-                        <a class="page-scroll" href="#services">About</a>
+                    <li>
+                        <a class="page-scroll" href="#team">Team</a>
                     </li>
                 </ul>
             </div>
@@ -65,7 +63,6 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-
     <!-- Services Section -->
     <section id="services" style="margin-top: 100px;">
         <div class="container" style="box-shadow: 5px 5px 5px 5px #C0B6B6;padding: 10px;">
@@ -114,73 +111,15 @@
         <button class="btn btn-primary" type="button">Search</button>
       </span>
     </div><hr>
-    <img src="@routes.Assets.at("user/img/map.jpg")" alt="...">
+    <!-- Facebook like -->
+    @views.html.socialmedia.facebook("Facebook like")
+    <!-- Google Plus follow -->
+    @views.html.socialmedia.googlePlusFollow("Render google plus follow")	
+    <!-- Render Linked In -->
+    @views.html.socialmedia.linkedinShare("Render LinkedIn Share")
     <hr>
-    <div id="fb-root"></div> 
-		<script>
-			(function(d, s, id) {
-				var js, fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id))
-					return;
-				js = d.createElement(s);
-				js.id = id;
-				js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=436035873185298";
-				fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
-		</script>
-		<div class="g-plus" data-annotation="bubble" data-height="24" data-href="//plus.google.com/101596762455378096324" data-action="share"></div>
-
-                <!-- Place this tag after the last share tag. -->
-               <script type="text/javascript">
-																(function() {
-																	var po = document
-																			.createElement('script');
-																	po.type = 'text/javascript';
-																	po.async = true;
-																	po.src = 'https://apis.google.com/js/platform.js';
-																	var s = document
-																			.getElementsByTagName('script')[0];
-																	s.parentNode
-																			.insertBefore(
-																					po,
-																					s);
-																})();
-															</script>
-	    		<!-- Place this tag where you want the widget to render. -->
-				<div class="g-follow" data-annotation="bubble" data-height="24" data-href="//plus.google.com/101596762455378096324" data-rel="publisher">
-				</div>
-
-				<!-- Place this tag after the last widget tag. -->
-				<script type="text/javascript">
-					(function() {
-						var po = document.createElement('script');
-						po.type = 'text/javascript';
-						po.async = true;
-						po.src = 'https://apis.google.com/js/plusone.js';
-						var s = document.getElementsByTagName('script')[0];
-						s.parentNode.insertBefore(po, s);
-					})();
-				</script>
-				<script src="//platform.linkedin.com/in.js" type="text/javascript">
-					lang: en_US
-				</script>
-           		<script type="IN/Share" data-url="http://www.mycellwasstolen.com/" data-counter="right">
-				</script>
-		    	<span class="fb-like" data-href="https://www.facebook.com/mycellwasstolen.mcws" data-width="200" data-show-faces="false" data-send="true"></span>
-		    		<a href="https://twitter.com/mycellwasstolen" class="twitter-follow-button" data-show-count="true" data-size="medium">Follow</a>
-				<script>
-					!function(d, s, id) {
-						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
-								.test(d.location) ? 'http' : 'https';
-						if (!d.getElementById(id)) {
-							js = d.createElement(s);
-							js.id = id;
-							js.src = p + '://platform.twitter.com/widgets.js';
-							fjs.parentNode.insertBefore(js, fjs);
-						}
-					}(document, 'script', 'twitter-wjs');
-				</script>
-				<hr>
+    <!-- Render Twitter Feed Widget -->
+	@views.html.socialmedia.twitterFeedWidget("render feed widget")
         <h4>Links</h4>
         <a href="">How does it work</a><br>
         <a href="">Register stolen phone</a><br>
@@ -193,7 +132,6 @@
         </div>
         </div>
     </section>
-    
     <footer style="background-color: rgba(117, 119, 118, 1); margin-top: 30px;">
         <div class="container">
         <div class="row" style="text-align: left;">
@@ -257,26 +195,6 @@
     <script src="@routes.Assets.at("user/js/jqBootstrapValidation.js")"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script>
-		$(document).ready(function() {
-			$('.carousel').carousel();
-			$('#myCarousel').on('slide', function() {
-				$('.blocky').fadeOut(300);
-			})
-			$('#myCarousel').on('slid', function() {
-				$('.blocky').fadeIn(600).animate({
-					marginLeft : "+=15%"
-				}, 200).animate({
-					marginLeft : "-=15%"
-				}, 300).animate({
-					marginLeft : "+=4%"
-				}, 600).animate({
-					marginLeft : "-=4%"
-				},800);
-			})
-		});
-	</script>
-
+   <script src="@routes.Assets.at("user/js/myscript/carousell.js")"></script>
 </body>
-
 </html>
