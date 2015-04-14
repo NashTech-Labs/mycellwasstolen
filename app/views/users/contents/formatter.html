@@ -11,15 +11,18 @@
 <title>MCWS</title>
 
 <!-- Bootstrap Core CSS -->
-<link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
+<link href="@routes.Assets.at("
+	user/css/bootstrap.min.css")" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link href="@routes.Assets.at("user/css/agency.css")" rel="stylesheet">
+<link href="@routes.Assets.at(" user/css/agency.css")" rel="stylesheet">
 <!-- sticky sidebar CSS -->
 <!-- Custom CSS -->
-<link href="@routes.Assets.at("user/mycss/stickySidebar.css")" rel="stylesheet">
+<link href="@routes.Assets.at("
+	user/mycss/stickySidebar.css")" rel="stylesheet">
 <!-- Custom Fonts -->
-<link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet"
+<link href="@routes.Assets.at("
+	user/font-awesome/css/font-awesome.min.css")" rel="stylesheet"
 	type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
 	rel="stylesheet" type="text/css">
@@ -33,12 +36,12 @@
 	rel='stylesheet' type='text/css'>
 </head>
 <body id="page-top" class="index">
-
 	<!-- import facebook script -->
 	<script src="@routes.Assets.at("user/js/myscript/facebookLikeShareJs.js")"></script>
-
 	<!-- Sticky Side Bar -->
 	<div id="sidebar">
+		<h6>Connect with Us</h6>
+
 		<a href="https://twitter.com/share" class="twitter-share-button"
 			data-url="http://twitter.com/mycellwasstolen"
 			data-via="mycellwasstolen" data-size="large">Tweet</a>
@@ -50,14 +53,12 @@
 		<!-- Place this tag where you want the share button to render. -->
 		<div class="g-plus" data-action="share"
 			data-annotation="vertical-bubble" data-height="60"
-			data-href="https://plus.google.com/111233132925524877427/about">
-		</div>
-			<!-- Facebook Like and share -->
+			data-href="https://plus.google.com/111233132925524877427/about"></div>
+		<!-- Facebook Like and share -->
 		<div class="fb-like"
 			data-href="https://www.facebook.com/mycellwasstolen.mcws"
 			data-width="40" data-layout="box_count" data-action="like"
-			data-show-faces="false" data-share="true">
-		</div>
+			data-show-faces="false" data-share="true"></div>
 	</div>
 	<!-- Navigation bars -->
 	<nav class="navbar navbar-default navbar-fixed-top">
@@ -97,9 +98,7 @@
 			style="box-shadow: 5px 5px 5px 5px #C0B6B6; padding: 10px;">
 			<div class="row">
 				<div class="col-md-9">
-					@views.html.users.contents.carousell("render carousell") 
-					@content
-			    </div>
+					@views.html.users.contents.carousell("render carousell") @content</div>
 				<div class="col-md-3" style="border: 1px solid;">
 					<div class="row" style="margin-top: 5px;">
 						<div class="col-md-4" style="text-align: right;">
@@ -125,7 +124,8 @@
 					<!-- Facebook like -->
 					@views.html.socialmedia.facebook("Facebook like")
 					<!-- Google Plus follow -->
-					@views.html.socialmedia.googlePlusFollow("Render google plus follow")
+					@views.html.socialmedia.googlePlusFollow("Render google plus
+					follow")
 					<!-- Render Linked In -->
 					@views.html.socialmedia.linkedinShare("Render LinkedIn Share")
 					<!-- Render Twitter Feed Widget -->
@@ -140,10 +140,61 @@
 			</div>
 		</div>
 	</section>
-	<!-- Footer -->
-	@views.html.users.footer.footer("render footer")
+	<footer
+		style="background-color: rgba(117, 119, 118, 1); margin-top: 30px;">
+		<div class="container">
+			<div class="row" style="text-align: left;">
+				<div class="col-md-3 col-sm-6">
+					<h4>Services</h4>
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">How does it works</a><br> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">About us</a><br> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">Report</a><br> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">Contact us</a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<h4>Relations</h4>
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">Privacy policy</a><br> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">Terms of use</a><br> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<a href="">Advertise</a><br>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<h4>Follow with us on</h4>
+					<a href="http://www.linkedin.com/company/knoldus-software-llp-"
+						target="_blank"> <img alt="" src="@routes.Assets.at("user/img/facebook.png")"></a>&nbsp;&nbsp;&nbsp;
+					<a href="https://twitter.com/knolspeak" target="_blank"> <img
+						alt="" src="@routes.Assets.at("user/img/twitter.png")"></a>&nbsp;&nbsp;&nbsp;
+					<a href="http://blog.knoldus.com" target="_blank"> <img alt=""
+						src="@routes.Assets.at("user/img/linkedin.png")"></a>&nbsp;&nbsp;&nbsp;
+					<a href="http://blog.knoldus.com" target="_blank"> <img alt=""
+						src="@routes.Assets.at("user/img/g+.png")"></a>
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<h5>For any further information write to us</h5>
+					<br> <span class=" glyphicon glyphicon-envelope"
+						aria-hidden="true"></span>&nbsp;&nbsp; <a
+						href="https://www.gmail.com/" target="blank">info@@mycellwasstolen.com</a>
+				</div>
+			</div>
+			<hr style="border: 1px solid;">
+			<div class="row">
+				<div class="col-md-6">
+					<span class="copyright">Copyright &copy; Knoldus Software
+						LLP, Inc. 2013</span>
+				</div>
+				<div class="col-md-6"></div>
+			</div>
+		</div>
+	</footer>
 	<!-- jQuery -->
 	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
+
 	<!-- Bootstrap Core JavaScript -->
 	<script src="@routes.Assets.at("user/js/bootstrap.min.js")"></script>
 
@@ -154,6 +205,7 @@
 	<script src="@routes.Assets.at("user/js/cbpAnimatedHeader.js")"></script>
 	<!-- Contact Form JavaScript -->
 	<script src="@routes.Assets.at("user/js/jqBootstrapValidation.js")"></script>
+
 	<!-- Custom Theme JavaScript -->
 	<script src="@routes.Assets.at("user/js/myscript/carousell.js")"></script>
 	<!-- Sticky Side bar plugin -->
