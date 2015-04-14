@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+#sidebar {
+  width: 120px;
+  background-color: #ccc;
+  min-height: 200px;
+  margin: 10px 0 15px 0; /*controls the cutoff of the top and bottom limitations*/
+  padding: 15px 10px;
+  float: left; /* float right for a right aligned sidebar */
+}
