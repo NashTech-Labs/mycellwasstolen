@@ -14,18 +14,12 @@
 .light-color , .light-color a {color:#f7f7f7;text-decoration:none}
 
 .blocky {margin-left:6%;margin-top:15%;margin-bottom: 10%;}
-.blocky h1 p, .blocky h2 p{color: rgba(219, 147, 67, 1);
-font-size: 20px;
-padding-left: 18px;
-padding-right: 18px;}
-.blocky h1, .blocky h2 {background-color:rgba(0, 5, 0, 0.62);margin-top: 100px;
-border-radius: 0.2em;
-border: 3px solid rgba(255, 231, 231, 1);margin-left: 50px;display:inline;text-transform:none;font-weight:800;color:white;line-height:52px;}
-.blocky h1 span, .blocky h2 span{padding:20px;color:#fff;}
 
 /* end page slider*/
 
-
+.forminput{
+	width:275px;
+}
 body {
     overflow-x: hidden;
     font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
