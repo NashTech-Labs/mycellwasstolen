@@ -12,7 +12,6 @@
 
 <!-- Bootstrap Core CSS -->
 <link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
-
 <!-- Custom CSS -->
 <link href="@routes.Assets.at("user/css/agency.css")" rel="stylesheet">
 <!-- sticky sidebar CSS -->
@@ -32,33 +31,10 @@
 	href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700'
 	rel='stylesheet' type='text/css'>
 </head>
+
 <body id="page-top" class="index">
-
-	<!-- import facebook script -->
-	<script src="@routes.Assets.at("user/js/myscript/facebookLikeShareJs.js")"></script>
-
-	<!-- Sticky Side Bar -->
-	<div id="sidebar">
-		<a href="https://twitter.com/share" class="twitter-share-button"
-			data-url="http://twitter.com/mycellwasstolen"
-			data-via="mycellwasstolen" data-size="large">Tweet</a>
-		<script src="@routes.Assets.at("user/js/myscript/tweetWithCount.js")"></script>
-
-		<!-- Place this tag in your head or just before your close body tag. -->
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
-
-		<!-- Place this tag where you want the share button to render. -->
-		<div class="g-plus" data-action="share"
-			data-annotation="vertical-bubble" data-height="60"
-			data-href="https://plus.google.com/111233132925524877427/about">
-		</div>
-			<!-- Facebook Like and share -->
-		<div class="fb-like"
-			data-href="https://www.facebook.com/mycellwasstolen.mcws"
-			data-width="40" data-layout="box_count" data-action="like"
-			data-show-faces="false" data-share="true">
-		</div>
-	</div>
+	<!-- Sticky Side bar -->
+	@views.html.users.contents.stickySidebar("Render Sticky Side bar")
 	<!-- Render header  -->
 	@views.html.users.header.header("rendering header")
 	<!-- Services Section -->
@@ -72,44 +48,9 @@
 					<!-- render content passed to this page --> 
 					@content
 			    </div>
-				<div class="col-md-3" style="border: 1px solid;">
-					<div class="row" style="margin-top: 5px;">
-						<div class="col-md-4" style="text-align: right;">
-							<img src="@routes.Assets.at(" user/img/logo.png")" alt="...">
-						</div>
-						<div class="col-md-8" style="padding-top: 10px;">
-							<h5
-								style="text-align: center; color: rgba(239, 0, 0, 1); display: inline;">My
-								cell was stolen</h5>
-							<p style="font-style: oblique;">Making the mobile space
-								secure</p>
-						</div>
-					</div>
-					<hr>
-					<div class="input-group" style="width: 250px;">
-						<input type="text" class="form-control"
-							placeholder="Search for this site..."> <span
-							class="input-group-btn">
-							<button class="btn btn-primary" type="button">Search</button>
-						</span>
-					</div>
-					<hr>
-					<!-- Facebook like -->
-					@views.html.socialmedia.facebook("Facebook like")
-					<!-- Google Plus follow -->
-					@views.html.socialmedia.googlePlusFollow("Render google plus follow")
-					<!-- Render Linked In -->
-					@views.html.socialmedia.linkedinShare("Render LinkedIn Share")
-					<!-- Render Twitter Feed Widget -->
-					@views.html.socialmedia.twitterFeedWidget("render feed widget")
-					<h4>Links</h4>
-					<a href="">How does it work</a><br> <a href="">Register
-						stolen phone</a><br> <a href="">Check mobile imei</a><br> <a
-						href="">Rewards</a><br> <a href="">Win prizes</a><br>
-					<hr>
-					<h4>Popular post</h4>
+					<!-- Render Right Sidebar -->
+					@views.html.users.contents.rightSidebar("render Right Sidebar")	
 				</div>
-			</div>
 		</div>
 	</section>
 	<!-- Footer -->
@@ -118,7 +59,6 @@
 	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
 	<!-- Bootstrap Core JavaScript -->
 	<script src="@routes.Assets.at("user/js/bootstrap.min.js")"></script>
-
 	<!-- Plugin JavaScript -->
 	<script
 		src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
