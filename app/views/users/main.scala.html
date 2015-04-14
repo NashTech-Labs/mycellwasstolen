@@ -9,6 +9,8 @@
     <meta name="author" content="">
 
     <title>MCWS</title>
+    <script src="@routes.Assets.at("user/js/jquery.js")"></script>
+    <script src="@routes.Assets.at("user/js/jquery.validate.min.js")"></script>
 
     <!-- Bootstrap Core CSS -->
     <link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
@@ -65,7 +67,7 @@
     </nav>
     <!-- Services Section -->
     <section id="services" style="margin-top: 100px;">
-        <div class="container" style="box-shadow: 5px 5px 5px 5px #C0B6B6;padding: 10px;">
+        <div class="container" style="box-shadow: 10px 5px 5px 5px #C0B6B6;padding: 10px;">
         <div class="row">
         <div class="col-md-9">
 	
@@ -95,13 +97,20 @@
 </div>
         @content
         </div>
-        <div class="col-md-3" style="border: 1px solid;">
+        
+        <div class="col-md-3" style="border: 1px solid #E0DDDD;width: 282px;">
         <div class="row" style="margin-top: 5px;">
 <div class="col-md-4" style="text-align: right;">
 <img src="@routes.Assets.at("user/img/logo.png")" alt="..."></div>
 <div class="col-md-8" style="padding-top: 10px;">
 <h5 style="text-align: center; color: rgba(239, 0, 0, 1);display: inline; ">My cell was stolen</h5>
-<p style="font-style: oblique;">Making the mobile space secure</p></div>
+<div id="example">
+  <ul>
+    <li>Making mobile space secure</li>
+    <li>Register and be safe</li>
+    <li>Jai ho mcws.</li>
+  </ul>
+</div></div>
 		   </div>
 		   <hr>
 		   
@@ -111,12 +120,7 @@
         <button class="btn btn-primary" type="button">Search</button>
       </span>
     </div><hr>
-    <!-- Facebook like -->
-    @views.html.socialmedia.facebook("Facebook like")
-    <!-- Google Plus follow -->
-    @views.html.socialmedia.googlePlusFollow("Render google plus follow")	
-    <!-- Render Linked In -->
-    @views.html.socialmedia.linkedinShare("Render LinkedIn Share")
+    <img src="@routes.Assets.at("user/img/map.jpg")" alt="...">
     <hr>
     <!-- Render Twitter Feed Widget -->
 	@views.html.socialmedia.twitterFeedWidget("render feed widget")
@@ -127,7 +131,6 @@
         <a href="">Rewards</a><br>
         <a href="">Win prizes</a><br>
         <hr>
-        <h4>Popular post</h4>
         </div>
         </div>
         </div>
@@ -181,7 +184,7 @@
     </footer>
 
     <!-- jQuery -->
-    <script src="@routes.Assets.at("user/js/jquery.js")"></script>
+    
 
     <!-- Bootstrap Core JavaScript -->
     <script src="@routes.Assets.at("user/js/bootstrap.min.js")"></script>
@@ -196,5 +199,11 @@
 
     <!-- Custom Theme JavaScript -->
    <script src="@routes.Assets.at("user/js/myscript/carousell.js")"></script>
+   <script src="@routes.Assets.at("user/js/myscript/textSlide.js")"></script>
+   <script>
+   $(function() {
+	   $('#example').vTicker();
+	 });
+   </script> 
 </body>
 </html>
