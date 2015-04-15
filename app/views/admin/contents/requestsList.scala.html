@@ -39,7 +39,6 @@
                             <th>@Messages("mobile.name")</th>
 							<th>@Messages("mobile.model")</th>
 							<th>@Messages("mobile.imei")</th>
-							<th>@Messages("mobile.purchaseDate")</th>
 							<th>@Messages("mobile.email")</th>
 							<th>@Messages("mobile.status")</th>
 							<th>@Messages("mobile.proof")</th>
@@ -50,7 +49,6 @@
 							@if(typ=="proofdemanded"){
 							<th>@Messages("mobile.approve")</th>
 							}
-							<th>@Messages("mobile.description")</th>
 							<th>@Messages("mobile.delete")</th>
                         </tr>
                     </thead>
@@ -59,20 +57,18 @@
                         <tr>
                         <td>@mobile._1.userName</td>
 			    			<td>@mobile._2</td>
-			    			<td>@mobile._1.imeiMeid</td>
-						    <td>@mobile._1.regDate</td>
+			    			<td>@mobile._1.imei</td>
 						    <td>@mobile._1.email</td>
 							<td>@mobile._1.regType</td>
 							<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
 							@if(typ=="pending"){
-							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
-							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>}
+							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>}
 							@if(typ=="proofdemanded"){
-							<td><a href="@routes.AdminController.approve(mobile._1.imeiMeid,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
 							}
 													   
-						    <td><button class="btn btn-primary btn-sm" onclick="showDescription('@mobile._1.description')" id="viewdesc">View</button></td>
-						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imeiMeid)" id = "delete" >Delete </button></td>
+						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imei)" id = "delete" >Delete </button></td>
 			    		</tr>
                        }
                        </tbody>
@@ -108,19 +104,6 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- model for description -->
-	<div class="modal fade" id="myModall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body" id="descr">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
       <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script type="text/javascript">
     $(document).ready(function() {
@@ -147,11 +130,6 @@
 			newWindow.document.writeln("</body></html>");
 			newWindow.document.close();
 		}
-
-		function showDescription(desc) {
-			$('#myModall').modal('show');
-			$('#descr').html(desc);
-			}
 
 			function deleteMobileUser(imeid) {
 				$('#myModal').modal('show');

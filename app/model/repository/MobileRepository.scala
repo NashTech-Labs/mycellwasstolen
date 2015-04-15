@@ -42,9 +42,9 @@ trait MobileRepository extends MobileTable {
   def getMobileUserByIMEID(imeid: String): Option[Mobile] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       Logger.info("Calling getMobileRecordByIMEID" + imeid)
-      val query = (for { mobile <- mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile)
+      val query = (for { mobile <- mobiles if ((mobile.imei === imeid) || (mobile.otherImei === imeid)) } yield mobile)
       Logger.warn("Query generated is - " + query.selectStatement)
-      (for { mobile <- mobiles if ((mobile.imeiMeid === imeid) || (mobile.otherImeiMeid === imeid)) } yield mobile).firstOption
+      (for { mobile <- mobiles if ((mobile.imei === imeid) || (mobile.otherImei === imeid)) } yield mobile).firstOption
     }
   }
 
@@ -57,7 +57,7 @@ trait MobileRepository extends MobileTable {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Calling getMobileRecordByIMEID" + imeid)
-        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.approved))
+        Right(mobiles.filter(_.imei === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.approved))
       } catch {
         case ex: Exception =>
           Logger.info("Error in changeStatusToApprovedByIMEID: " + ex.printStackTrace())
@@ -75,7 +75,7 @@ trait MobileRepository extends MobileTable {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Calling getMobileRecordByIMEID" + imeid)
-        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.proofdemanded))
+        Right(mobiles.filter(_.imei === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.proofdemanded))
       } catch {
         case ex: Exception =>
           Logger.info("Error in changeStatusToDemandProofByIMEID: " + ex.printStackTrace())
@@ -92,7 +92,7 @@ trait MobileRepository extends MobileTable {
   def changeRegTypeByIMEID(mobileUser: Mobile): Either[String, Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
-        val updateQuery = mobiles.filter { mobile => mobile.imeiMeid === mobileUser.imeiMeid }
+        val updateQuery = mobiles.filter { mobile => mobile.imei === mobileUser.imei }
         Logger.info("updateQuery data:" + updateQuery)
         Right(updateQuery.update(mobileUser))
       } catch {
@@ -114,7 +114,7 @@ trait MobileRepository extends MobileTable {
       (for {
         mobile <- mobiles if (mobile.mobileStatus === Status.withName(status))
         brand <- brands if (brand.id === mobile.brandId)
-        model <- models if (model.id === mobile.mobileModelId)
+        model <- models if (model.id === mobile.modelId)
       } yield (mobile, brand.name, model.name)).list
     }
   }
@@ -128,7 +128,7 @@ trait MobileRepository extends MobileTable {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Calling getMobileRecordByIMEID" + imeid)
-        Right(mobiles.filter(_.imeiMeid === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.pending))
+        Right(mobiles.filter(_.imei === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.pending))
       } catch {
         case ex: Exception =>
           Logger.info("Error in changeStatusToPendingByIMEID: " + ex.printStackTrace())
@@ -146,7 +146,7 @@ trait MobileRepository extends MobileTable {
     Connection.databaseObject().withSession { implicit session: Session =>
       try {
         Logger.info("Delet mobile user:" + imeid)
-        Right(mobiles.filter(_.imeiMeid === imeid).delete)
+        Right(mobiles.filter(_.imei === imeid).delete)
       } catch {
         case ex: Exception =>
           Logger.info("Error in delete mobile: " + ex.printStackTrace())
@@ -165,27 +165,23 @@ trait MobileTable extends BrandTable with ModelTable {
     def id: Column[Option[Int]] = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
     def userName: Column[String] = column[String]("username", O DBType ("VARCHAR(1000)"))
     def brandId: Column[Int] = column[Int]("mobile_brandId")
-    def mobileModelId: Column[Int] = column[Int]("mobile_modelId")
-    def imeiMeid: Column[String] = column[String]("imei_meid", O DBType ("VARCHAR(1000)"))
-    def otherImeiMeid: Column[String] = column[String]("other_imei_meid", O DBType ("VARCHAR(1000)"))
-    def purchaseDate: Column[Date] = column[Date]("purchase_date")
+    def modelId: Column[Int] = column[Int]("mobile_modelId")
+    def imei: Column[String] = column[String]("imei_meid", O DBType ("VARCHAR(1000)"))
+    def otherImei: Column[String] = column[String]("other_imei_meid", O DBType ("VARCHAR(1000)"))
     def contactNo: Column[String] = column[String]("contact_no", O.NotNull, O DBType ("VARCHAR(1000)"))
     def email: Column[String] = column[String]("email", O DBType ("VARCHAR(1000)"))
     def regType: Column[String] = column[String]("type", O DBType ("VARCHAR(20)"))
     def mobileStatus: Column[Status.Value] = column[Status.Value]("status", O DBType ("VARCHAR(50)"))
-    def description: Column[String] = column[String]("description", O DBType ("VARCHAR(3000)"))
     def registrationDate: Column[Date] = column[Date]("registration_date", O.NotNull)
     def document: Column[String] = column[String]("document", O DBType ("VARCHAR(1000)"))
-    def otherMobileBrand: Column[String] = column[String]("otherMobileBrand", O DBType ("VARCHAR(1000)"))
-    def otherMobileModel: Column[String] = column[String]("otherMobileModel", O DBType ("VARCHAR(1000)"))
-    def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, mobileModelId, imeiMeid, otherImeiMeid, purchaseDate, contactNo, email,
-      regType, mobileStatus, description, registrationDate, document, otherMobileBrand, otherMobileModel, id) <> ((Mobile.apply _).tupled, Mobile.unapply)
-    def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imeiMeid), unique = true)
+    def * : scala.slick.lifted.ProvenShape[Mobile] = (userName, brandId, modelId, imei, otherImei, contactNo, email,
+      regType, mobileStatus, registrationDate, document,id) <> ((Mobile.apply _).tupled, Mobile.unapply)
+    def mobileIndex: scala.slick.lifted.Index = index("idx_imei", (imei), unique = true)
 
     def fkeyBrand: ForeignKeyQuery[Brands, Brand] = foreignKey("brandId_FK", brandId, brands)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
 
-    def fkeyModel: ForeignKeyQuery[Models, Model] = foreignKey("ModelId_FK", mobileModelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
+    def fkeyModel: ForeignKeyQuery[Models, Model] = foreignKey("ModelId_FK", modelId, models)(_.id.get, onUpdate = ForeignKeyAction.Restrict,
       onDelete = ForeignKeyAction.Cascade)
   }
   val mobiles = TableQuery[Mobiles]
@@ -199,19 +195,15 @@ trait MobileTable extends BrandTable with ModelTable {
 case class Mobile(
   userName: String,
   brandId: Int,
-  mobileModelId: Int,
-  imeiMeid: String,
-  otherImeiMeid: String,
-  purchaseDate: Date,
+  modelId: Int,
+  imei: String,
+  otherImei: String,
   contactNo: String,
   email: String,
   regType: String,
   mobileStatus: Status.Value,
-  description: String,
   regDate: Date,
   document: String,
-  otherMobileBrand: String,
-  otherMobileModel: String,
   id: Option[Int] = None)
 
 /**
@@ -219,17 +211,14 @@ case class Mobile(
  */
 case class MobileDetail(
   userName: String,
-  mobileName: String,
-  mobileModel: String,
-  imeiMeid: String,
-  otherImeiMeid: String,
+  brandName: String,
+  modelName: String,
+  imei: String,
+  otherImei: String,
   mobileStatus: String,
-  purchaseDate: String,
   contactNo: String,
   email: String,
-  regType: String,
-  otherMobileBrand: String,
-  otherMobileModel: String)
+  regType: String)
 
 /**
  * Represents Registered Mobile Status in the database
@@ -242,17 +231,13 @@ case class MobileStatus(imeiMeid: String)
 case class MobileRegisterForm(
   userName: String,
   brandId: Int,
-  mobileModelId: Int,
-  imeiMeid: String,
-  otherImeiMeid: String,
-  purchaseDate: String,
+  modelId: Int,
+  imei: String,
+  otherImei: String,
   contactNo: String,
   email: String,
   regType: String,
-  document: String,
-  description: String,
-  otherMobileBrand: String,
-  otherMobileModel: String)
+  document: String)
 
 /**
  * Represents a Models name

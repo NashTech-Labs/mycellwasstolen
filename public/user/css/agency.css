@@ -20,6 +20,13 @@
 .forminput{
 	width:275px;
 }
+
+ .collapse {
+     display: none;
+ }
+ .collapse.send-now {
+     display: block;
+ }
 body {
     overflow-x: hidden;
     font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;

@@ -10,6 +10,9 @@ GET    /login                   controllers.AuthController.login
 POST   /authenticate            controllers.AuthController.authenticate
 GET    /logout                  controllers.AuthController.logout
 
+#Javascript Routes
+GET    /javascriptRoutes        controllers.Application.javascriptRoutes
+
 #Admin
 GET    /admin                   controllers.AdminController.index
 GET    /new_brand               controllers.AdminController.brandRegisterForm
@@ -32,9 +35,6 @@ GET    /check_status            controllers.MobileController.checkMobileStatus(i
 GET    /check_mobile_status     controllers.MobileController.mobileStatusForm
 GET    /get_models              controllers.MobileController.getModels(id:Int)
 GET    /check_imei              controllers.MobileController.isImeiExist(imeiId: String)
-
-#Javascript Routes
-GET    /javascriptRoutes        controllers.Application.javascriptRoutes 
 
 #Audit
 GET    /timestamps              controllers.AuditController.timestampPage

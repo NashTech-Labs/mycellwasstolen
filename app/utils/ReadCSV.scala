@@ -55,19 +55,16 @@ object ReadCSV extends CommonUtils {
    * Inserts data into Mobile table
    */
   private def caseMobile: Unit = {
-    val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
+    /*val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
       val status = mobileStatus(result(Constants.NINE))
-      val purchaseDate = getSqlDate(result(Constants.FIVE))
       val registerDate = getSqlDate(result(Constants.ELEVEN))
       MobileRepository.insertMobileUser(Mobile(result(Constants.ZERO), result(Constants.ONE).toInt, result(Constants.TWO).toInt,
-        result(Constants.THREE), result(Constants.FOUR),
-        purchaseDate, result(Constants.SIX), result(Constants.SEVEN), result(Constants.EIGHT), status,
-        result(Constants.TEN), registerDate, result(Constants.TEN),
-        result(Constants.THIRTEEN), result(Constants.FOURTEEN)))
+        result(Constants.THREE), result(Constants.FOUR), result(Constants.SIX), result(Constants.SEVEN), result(Constants.EIGHT), status,
+        result(Constants.TEN),))
     }
-    mobilesReader.close()
+    mobilesReader.close()*/
   }
 
   /**

@@ -6,7 +6,7 @@
 <fieldset>
 <style>
 
- input[type=text] { width: 200px;}
+ input[type=text] { width: 300px;}
 
 </style>
 
@@ -19,37 +19,34 @@
 	false,'class->"form-control",'_error ->
 	mobileRegistrationForm("brandId").error.map(_.withMessage("Mobile Brand Required")))
 
-	@select(field=mobileRegistrationForm("mobileModelId"),options=None.toSeq,
+	@select(field=mobileRegistrationForm("modelId"),options=None.toSeq,
 	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",'class->"form-control",
 	'_showConstraints -> false,'_error ->
-	mobileRegistrationForm("mobileModelId").error.map(_.withMessage("Mobile Model Required")))
+	mobileRegistrationForm("modelId").error.map(_.withMessage("Mobile Model Required")))
 	
-	<div class="control-group">
-	<label class="col-sm-4 control-label" for="otherImeiCheckbox">IMEI number</label>
-            <label class="checkbox inline col-sm-2">
-                <input id="hide" type="radio" name="otherImeiCheckbox" checked="">Single 
-            </label>
-            <label class="checkbox inline col-sm-6">
-                <input id="show" type="radio" name="otherImeiCheckbox"> Dual
-            </label>
-        </div>
-        
-        @inputText(mobileRegistrationForm("imeiMeid"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
+	<div class="form-group">
+    <label class="col-sm-4 control-label">IMEI number</label>
+    <label class="radio-inline col-sm-2" style="padding-left: 50px">
+        <input type="radio" class="single" name="when" value="single" checked> <strong>Single</strong>
+    </label>
+    <label class="radio-inline col-sm-2">
+        <input type="radio" class="dual" name="when" value="dual"> <strong>Dual</strong>
+    </label>
+</div>
+<div class="col-sm-12">
+    <div class="collapse single">
+        @inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
+    </div>
+    
+    <div class="collapse dual">
+@inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
+@inputText(mobileRegistrationForm("otherImei"), '_label -> "IMEI 2", 'maxlength -> 15,'class->"form-control")
+</div>
+</div>
 	
-	<div class="controls">
-	       <div class="form-group collapse" id="check">
-		<label class="col-sm-4 control-label" for="otherImei">IMEI 2</label>
-		<div class="col-sm-6">
-			<input id="otherImei" class="form-control" type="text" value="" name="otherImei">
-		</div>
-	</div>
-	</div>
-
 	@inputText(mobileRegistrationForm("email"), '_label -> "Email",'class->"form-control")
 
 	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code", 'maxlength->17,'class->"form-control")
-
-	@textarea(field=mobileRegistrationForm("description"), args = 'rows ->3, 'cols -> 22, '_label->"Description",'class->"form-control")
  
  <div class="form-group">
 		<label class="col-sm-4 control-label" for="fileUpload">Document(Image)</label>
@@ -68,19 +65,19 @@
 </div>
 }
 
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="@routes.Assets.at("user/js/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("user/js/intlTelInput.min.js")" type="text/javascript"></script>
 <script type="text/javascript">
 	function setValue() {
 		var file = $("#fileUpload").val();
 		$("#document").val(file);
 	}
 
-	$(document).ready(function(){
-	    $('#show').click(function(){
-	          $('#check').collapse('show');
-	      });
-	    $('#hide').click(function(){
-	    	$('#check').collapse('hide');
-	      });
+	$('input[type=radio]').on('change', function () {
+	    if (!this.checked) return
+	    $('.collapse').not($('div.' + $(this).attr('class'))).slideUp();
+	    $('.collapse.' + $(this).attr('class')).slideDown();
 	});
 	
 	$("#contactNo").intlTelInput();
@@ -88,44 +85,19 @@
 	$(document).ready(function() {
 		$("#brandId").change(function() {
 			var brandId = $(this).val();
-			alert(brandId);
-			var mobileName = $("#brandId option:selected").text();
-			if (mobileName == "~Other") {
-				$('#form-group-otherbrand').show();
-				$('#otherMobileBrand').addClass('required');
-
-			} else {
-				$('#form-group-otherbrand').hide();
-				$('#form-group-othermodel').hide();
-				$('#otherMobileModel').removeClass('required');
-				$('#otherMobileBrand').removeClass('required');
-			}
 			mobileModels(brandId);
 		});
 	});
 
-	$("#mobileModelId").change(function() {
-		var mobileModelId = $(this).val();
-		var mobileModel = $("#mobileModelId option:selected").text();
-		if (mobileModel.match(/~Other.*/)) {
-			$('#form-group-othermodel').show();
-			$('#otherMobileModel').addClass('required');
-		} else {
-			$('#otherMobileModel').removeClass('required');
-			$('#form-group-othermodel').hide();
-		}
-
-	});
-
-	var mobileAjaxSuccess = function(data) {
-		$("#mobileModelId").empty();
-		$('#mobileModelId').append($('<option>', {
+	var modelAjaxSuccess = function(data) {
+		$("#modelId").empty();
+		$('#modelId').append($('<option>', {
 			value : "-- Choose Mobile Model --",
 			text : "-- Choose Mobile Model --"
 		}));
-		//console.log(data.toSource())
+		
 		$.each(data, function(i, d) {
-			$('#mobileModelId').append($('<option>', {
+			$('#modelId').append($('<option>', {
 				value : d.id,
 				text : d.name
 			}));
@@ -134,16 +106,15 @@
 		console.debug(data);
 	};
 
-	var mobileAjaxError = function(err) {
+	var modelAjaxError = function(err) {
 		console.debug("Error of ajax Call");
 		console.debug(err);
 	};
 
 	var mobileModels = function(brandId) {
-
 		var mobileAjaxCallBack = {
-			success : mobileAjaxSuccess,
-			error : mobileAjaxError
+			success : modelAjaxSuccess,
+			error : modelAjaxError
 		};
 		jsRoutes.controllers.MobileController.getModels(brandId).ajax(
 				mobileAjaxCallBack);
@@ -151,25 +122,25 @@
 
 	$("#mobileRegistrationForm").validate({
 		rules : {
-			imeiMeid : {
+			imei : {
 				required : true,
 				remote : {
-					url : '/isImeiExist',
+					url : '/check_imei',
 					type : 'GET',
 					data : {
 						imeiId : function() {
-							return $("#imeiMeid").val();
+							return $("#imei").val();
 						}
 					}
 				}
 			},
-			otherImeiMeid : {
+			otherImei : {
 				remote : {
-					url : '/isImeiExist',
+					url : '/check_imei',
 					type : 'GET',
 					data : {
 						imeiId : function() {
-							return $("#otherImeiMeid").val();
+							return $("#otherImei").val();
 						}
 					}
 				}
@@ -183,7 +154,7 @@
 				required : true,
 				maxlength : 100
 			},
-			mobileModelId : {
+			modelId : {
 				required : true,
 				maxlength : 100
 			},
@@ -195,25 +166,16 @@
 				required : true,
 				maxlength : 100
 			},
-			purchaseDate : {
-				required : true,
-				maxlength : 100
-
-			},
-			description : {
-				required : true,
-				maxlength : 500
-			},
 			fileUpload : {
 				required : true,
 				maxlength : 100
 			}
 		},
 		messages : {
-			imeiMeid : {
+			imei : {
 				remote : "Invalid imei Id or may be already exist."
 			},
-			otherImeiMeid : {
+			otherImei : {
 				remote : "Invalid imei Id or may be already exist."
 			}
 		}
@@ -233,12 +195,12 @@
 		return true;
 	}
 
-	$('#imeiMeid').change(function() {
+	$('#imei').change(function() {
 		return validateImeiMeid(this)
 	})
 
 	function validateImeiMeid(imei) {
-		var imeiMeid = document.getElementById("imeiMeid").value;
+		var imeiMeid = document.getElementById("imei").value;
 		var pattern = /^[0-9]+$/;
 
 		if (imeiMeid.length == 15) {
@@ -246,25 +208,25 @@
 				return true;
 			} else {
 				alert("IMEI is not in correct format");
-				imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
+				imei.form.elements['imei'].value = imei.form.elements['imei'].defaultValue;
 				imei.focus();
 				return false;
 			}
 		} else {
 			alert("IMEI must be 15 digits !");
-			imei.form.elements['imeiMeid'].value = imei.form.elements['imeiMeid'].defaultValue;
+			imei.form.elements['imei'].value = imei.form.elements['imei'].defaultValue;
 			imei.focus();
 			return false;
 		}
 
 	}
 
-	$('#otherImeiMeid').change(function() {
+	$('#otherImei').change(function() {
 		return validateOtherImeiMeid(this)
 	})
 
 	function validateOtherImeiMeid(otherImei) {
-		var otherImeiMeid = document.getElementById("otherImeiMeid").value;
+		var otherImeiMeid = document.getElementById("otherImei").value;
 		var pattern = /^[0-9]+$/;
 
 		if (otherImeiMeid.length == 15) {
@@ -272,13 +234,13 @@
 				return true;
 			} else {
 				alert("IMEI is not in correct format");
-				otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
+				otherImei.form.elements['otherImei'].value = otherImei.form.elements['otherImei'].defaultValue;
 				otherImei.focus();
 				return false;
 			}
 		} else {
 			alert("IMEI must be of 15 digits !");
-			otherImei.form.elements['otherImeiMeid'].value = otherImei.form.elements['otherImeiMeid'].defaultValue;
+			otherImei.form.elements['otherImei'].value = otherImei.form.elements['otherImei'].defaultValue;
 			otherImei.focus();
 			return false;
 		}

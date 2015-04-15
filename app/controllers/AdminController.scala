@@ -240,11 +240,9 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
       Logger.info("AdminController:changeMobileRegType - change Registration type : " + imeiId)
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeiId)
       val regType = if (mobileUser.get.regType == "stolen") "Clean" else "stolen"
-      val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.mobileModelId,
-        mobileUser.get.imeiMeid, mobileUser.get.otherImeiMeid, mobileUser.get.purchaseDate, mobileUser.get.contactNo, mobileUser.get.email,
-        regType, mobileUser.get.mobileStatus, mobileUser.get.description,
-        mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.otherMobileBrand, mobileUser.get.otherMobileModel,
-        mobileUser.get.id)
+      val updatedMobile = Mobile(mobileUser.get.userName, mobileUser.get.brandId, mobileUser.get.modelId,
+        mobileUser.get.imei, mobileUser.get.otherImei, mobileUser.get.contactNo, mobileUser.get.email,
+        regType, mobileUser.get.mobileStatus,mobileUser.get.regDate, mobileUser.get.document, mobileUser.get.id)
       val result = mobileRepo.changeRegTypeByIMEID(updatedMobile)
       result match {
         case Right(updatedRecord: Int) if updatedRecord != Constants.ZERO =>
@@ -271,18 +269,18 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
     } else {
       msg match {
         case "approved" =>
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage((mobileuser.imeiMeid)))
+          mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage((mobileuser.imei)))
         case "proofDemanded" =>
-          mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imeiMeid))
+          mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imei))
         case "delete" =>
-          mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imeiMeid))
+          mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imei))
         case "changeMobileRegType" =>
           if (mobileuser.regType == "stolen") {
-            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
-              mail.changeMobileRegTypeStolen(mobileuser.imeiMeid))
+            mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeStolen(mobileuser.imei))
           } else {
-            mail.sendMail(mobileuser.imeiMeid + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
-              mail.changeMobileRegTypeClean(mobileuser.imeiMeid))
+            mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
+              mail.changeMobileRegTypeClean(mobileuser.imei))
           }
         case _ =>
           Logger.info("AdminController:sendEmail -> failed")
@@ -304,15 +302,15 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
       msg match {
         case "approved" =>
           if (mobileuser.regType == "stolen") {
-            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imei))
           } else {
-            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imei))
           }
         case "changeMobileRegType" =>
           if (mobileuser.regType == "stolen") {
-            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imeiMeid))
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForStolen(mobileuser.imei))
           } else {
-            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imeiMeid))
+            TwitterTweet.tweetAMobileRegistration(TwitterTweet.tweetForClean(mobileuser.imei))
           }
       }
     }

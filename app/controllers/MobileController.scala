@@ -33,17 +33,13 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     mapping(
       "userName" -> nonEmptyText,
       "brandId" -> number,
-      "mobileModelId" -> number,
-      "imeiMeid" -> nonEmptyText,
-      "otherImeiMeid" -> text,
-      "purchaseDate" -> nonEmptyText,
+      "modelId" -> number,
+      "imei" -> nonEmptyText,
+      "otherImei" -> text,
       "contactNo" -> nonEmptyText,
       "email" -> email,
       "regType" -> nonEmptyText,
-      "document" -> nonEmptyText,
-      "description" -> nonEmptyText,
-      "otherMobileBrand" -> text,
-      "otherMobileModel" -> text)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
+      "document" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   val mobilestatus = Form(
     mapping(
@@ -83,14 +79,13 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       mobileuser => {
         val date = commonUtils.getSqlDate()
         val index = mobileuser.document.indexOf(".")
-        val documentName = mobileuser.imeiMeid + mobileuser.document.substring(index)
+        val documentName = mobileuser.imei + mobileuser.document.substring(index)
         val result = mobileRepo.insertMobileUser(Mobile(mobileuser.userName, mobileuser.brandId,
-          mobileuser.mobileModelId, mobileuser.imeiMeid, mobileuser.otherImeiMeid, commonUtils.getSqlDate(mobileuser.purchaseDate), mobileuser.contactNo,
-          mobileuser.email, mobileuser.regType, StatusUtil.Status.pending,
-          mobileuser.description, date, documentName, mobileuser.otherMobileBrand, mobileuser.otherMobileModel))
+          mobileuser.modelId, mobileuser.imei, mobileuser.otherImei, mobileuser.contactNo,
+          mobileuser.email, mobileuser.regType, StatusUtil.Status.pending, date, documentName))
         result match {
           case Right(Some(insertRecord: Int)) if insertRecord != Constants.ZERO =>
-            val user = mobileRepo.getMobileUserByIMEID(mobileuser.imeiMeid)
+            val user = mobileRepo.getMobileUserByIMEID(mobileuser.imei)
             sendEmail(user.get, "registration")
             request.body.file("fileUpload").map { image =>
               val fileToSave = image.ref.file.asInstanceOf[File]
@@ -116,11 +111,11 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       msg match {
         case "registration" =>
           if (mobileuser.regType == "stolen") {
-            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-              "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imeiMeid))
+            mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.stolenRegisterMessage(mobileuser.imei))
           } else {
-            mail.sendMail(mobileuser.imeiMeid + " <" + mobileuser.email + ">",
-              "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imeiMeid))
+            mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">",
+              "Registration Confirmed on MCWS", mail.cleanRegisterMessage(mobileuser.imei))
           }
         case _ =>
           Logger.info("MobileController:sendEmail -> failed")
@@ -138,10 +133,10 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     data match {
       case Some(mobileData) =>
         val brand = brandRepo.getBrandById(mobileData.brandId).get.name
-        val model = modelRepo.getModelById(mobileData.mobileModelId).get.name
-        val mobileDetail = MobileDetail(mobileData.userName, brand, model, mobileData.imeiMeid, mobileData.otherImeiMeid,
-          mobileData.mobileStatus.toString(), mobileData.purchaseDate.toString(), mobileData.contactNo, mobileData.email,
-          mobileData.regType, mobileData.otherMobileBrand, mobileData.otherMobileModel)
+        val model = modelRepo.getModelById(mobileData.modelId).get.name
+        val mobileDetail = MobileDetail(mobileData.userName, brand, model, mobileData.imei, mobileData.otherImei,
+          mobileData.mobileStatus.toString(), mobileData.contactNo, mobileData.email,
+          mobileData.regType)
         implicit val resultWrites = Json.writes[MobileDetail]
         val obj = Json.toJson(mobileDetail)(resultWrites)
         if (user != "admin") {

@@ -60,24 +60,24 @@
 					var image='<img src="/assets/images/Green.jpg"  alt="...gjkbjkhjk..."/>';
 				}
 				var mobileData = '<div id="mobile-status"><table class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Approval</th><th>Change to Pending</th><th>Mobile Name</th><th>Mobile Model</th><th>Contact No</th><th>Status</th><th>Change Status</th><th>Label</th></tr><tr><td>'
-						+ mobile.imeiMeid
+						+ mobile.imei
 						+ '</td><td>'
-						+ (mobile.otherImeiMeid == "" ? "None" : mobile.otherImeiMeid)
+						+ (mobile.otherImei == "" ? "None" : mobile.otherImei)
 						+ '</td><td>'
 						+mobile.mobileStatus
 						+'</td><td>'
-						+(mobile.mobileStatus == "approved" ? '<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imeiMeid+'\');">Change to Pending</button>':'<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imeiMeid+'\');" disabled>change to Pending</button>')
+						+(mobile.mobileStatus == "approved" ? '<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imei+'\');">Change to Pending</button>':'<button title="change approval" class="btn btn-info" id="changeApproval" onclick="changeStatusToPending(\''+mobile.imeiMeid+'\');" disabled>change to Pending</button>')
 						+'</td><td>'
-						+(mobile.mobileName.match(/~Other.*/) ? mobile.otherMobileBrand : mobile.mobileName)
+						+mobile.brandName
 						+ '</td><td>'
-						+(mobile.mobileModel.match(/~Other.*/) ? mobile.otherMobileModel : mobile.mobileModel)
+						+mobile.modelName
 						+ '</td><td>'
 						+ mobile.contactNo
 						+ '</td><td>'
 						+ mobile.regType
 
-						+ (mobile.regType == "Clean" ? '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to stolen</button></td><td>'
-								: '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imeiMeid+'\');">Change to clean</button></td><td>')
+						+ (mobile.regType == "Clean" ? '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imei+'\');">Change to stolen</button></td><td>'
+								: '</td><td><button title="change status" class="btn btn-info" id="changeRegType" onclick="toChangeRegType(\''+mobile.imei+'\');">Change to clean</button></td><td>')
 						+ image + '</td></tr></table></div>';
 				$("#mobileRecords").empty();
 				$("#mobileRecords").removeClass("alert alert-danger");
