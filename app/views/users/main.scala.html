@@ -10,7 +10,6 @@
 
     <title>MCWS</title>
     <script src="@routes.Assets.at("user/js/jquery.js")"></script>
-
     <!-- Bootstrap Core CSS -->
     <link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
 
@@ -41,17 +40,21 @@
 		<div class="container"
 			style="box-shadow: 5px 5px 5px 5px #C0B6B6; padding: 10px;">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-12">
 					<!-- Carousell -->
 					@views.html.users.contents.carousell("render carousell")
 					<!-- render content passed to this page --> 
-					@content
-			    </div>
-			    <div class="col-md-3" style="border: 1px ;">
-					<!-- Render Right Sidebar -->
-					@views.html.users.contents.rightSidebar("render Right Sidebar")
-					</div>	
 				</div>
+			</div>
+			<div class="row">
+			<div class="col-md-9">
+			@content
+			</div>
+			<div class="col-md-3">
+			<!-- Render Right Sidebar -->
+			@views.html.users.contents.rightSidebar("render Right Sidebar")	
+			</div>
+			</div>
 		</div>
 	</section>
 	<!-- Footer -->
