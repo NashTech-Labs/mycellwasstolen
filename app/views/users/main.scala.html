@@ -18,18 +18,11 @@
 <!-- Custom CSS -->
 <link href="@routes.Assets.at("user/mycss/stickySidebar.css")" rel="stylesheet">
 <!-- Custom Fonts -->
-<link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet"
-	type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-	rel="stylesheet" type="text/css">
-<link href='https://fonts.googleapis.com/css?family=Kaushan+Script'
-	rel='stylesheet' type='text/css'>
-<link
-	href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic'
-	rel='stylesheet' type='text/css'>
-<link
-	href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700'
-	rel='stylesheet' type='text/css'>
+<link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
 
 <body id="page-top" class="index">
@@ -42,15 +35,21 @@
 		<div class="container"
 			style="box-shadow: 5px 5px 5px 5px #C0B6B6; padding: 10px;">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-12">
 					<!-- Carousell -->
 					@views.html.users.contents.carousell("render carousell")
 					<!-- render content passed to this page --> 
-					@content
-			    </div>
-					<!-- Render Right Sidebar -->
-					@views.html.users.contents.rightSidebar("render Right Sidebar")	
 				</div>
+			</div>
+			<div class="row">
+			<div class="col-md-9">
+			@content
+			</div>
+			<div class="col-md-3">
+			<!-- Render Right Sidebar -->
+			@views.html.users.contents.rightSidebar("render Right Sidebar")	
+			</div>
+			</div>
 		</div>
 	</section>
 	<!-- Footer -->
