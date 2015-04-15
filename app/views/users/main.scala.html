@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-
     <title>MCWS</title>
     <script src="@routes.Assets.at("user/js/jquery.js")"></script>
     <!-- Bootstrap Core CSS -->
@@ -15,12 +14,9 @@
 
     <!-- Custom CSS -->
     <link href="@routes.Assets.at("user/css/agency.css")" rel="stylesheet">
-	
 	<!-- sticky sidebar CSS -->
     <link href="@routes.Assets.at("user/mycss/stickySidebar.css")" rel="stylesheet">
-    
     <link href="@routes.Assets.at("user/css/intlTelInput.css")" rel="stylesheet">
-    
     <!-- Custom Fonts -->
     <link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -29,7 +25,6 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
 </head>
-
 <body id="page-top" class="index">
 	<!-- Sticky Side bar -->
 	@views.html.users.contents.stickySidebar("Render Sticky Side bar")
@@ -39,15 +34,17 @@
 	<section id="services" style="margin-top: 100px;">
 		<div class="container"
 			style="box-shadow: 5px 5px 5px 5px #C0B6B6; padding: 10px;">
+			@if(string=="Home"){
 			<div class="row">
 				<div class="col-md-12">
 					<!-- Carousell -->
 					@views.html.users.contents.carousell("render carousell")
-					<!-- render content passed to this page --> 
 				</div>
 			</div>
+			}
 			<div class="row">
 			<div class="col-md-9">
+			<!-- render content passed to this page --> 
 			@content
 			</div>
 			<div class="col-md-3">
