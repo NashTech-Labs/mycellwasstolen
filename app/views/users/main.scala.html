@@ -46,11 +46,12 @@
 					<!-- render content passed to this page --> 
 				</div>
 			</div>
+			<br>
 			<div class="row">
 			<div class="col-md-9">
 			@content
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-3" style="border: 1px solid rgba(210, 206, 206, 1); width: 282px;">
 			<!-- Render Right Sidebar -->
 			@views.html.users.contents.rightSidebar("render Right Sidebar")	
 			</div>
@@ -75,6 +76,8 @@
 	<!-- Sticky Side bar plugin -->
 	<script src="@routes.Assets.at("user/js/stickyMojo.js")"></script>
 	<!-- sticky Side bar initialization -->
+	
+	<script src="@routes.Assets.at("user/js/myscript/textSlide.js")"></script>
 	<script>
    $(function() {
 	   $('#example').vTicker();
