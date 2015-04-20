@@ -22,6 +22,8 @@
 
 </head>
 
+<body id="page-top" class="index">
+
 <!-- Render header  -->
 	@views.html.users.header.header("rendering header")
 
@@ -37,5 +39,35 @@
 
 <!-- Render Dashboard Section -->
  @views.html.users.contents.dashboard("Render Dashboard")
+ 
+ <!-- Render Mobile Registration Section -->
+ @views.html.users.contents.registerMobile("Render Registration")
+ 
+ <!-- Footer -->
+	@views.html.users.footer.footer("render footer")
+	<!-- jQuery -->
+	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
+	<!-- Bootstrap Core JavaScript -->
+	<script src="@routes.Assets.at("user/js/bootstrap.min.js")"></script>
+	<!-- Plugin JavaScript -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+	<script src="@routes.Assets.at("user/js/classie.js")"></script>
+	<script src="@routes.Assets.at("user/js/cbpAnimatedHeader.js")"></script>
+	<!-- Contact Form JavaScript -->
+	<script src="@routes.Assets.at("user/js/jqBootstrapValidation.js")"></script>
+	<!-- Custom Theme JavaScript -->
+	<script src="@routes.Assets.at("user/js/myscript/carousell.js")"></script>
+	<!-- Sticky Side bar plugin -->
+	<script src="@routes.Assets.at("user/js/stickyMojo.js")"></script>
+	<!-- sticky Side bar initialization -->
+	<script>
+		$(function() {
+			$('#example').vTicker();
+		});
+	</script>
+	<script src="@routes.Assets.at("user/js/myscript/stickySideInit.js")"></script>
+ 
+</body>
+</html>
  
  
