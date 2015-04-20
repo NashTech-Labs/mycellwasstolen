@@ -1,0 +1,27 @@
+@* analytics Template File *@ @(user:
+Option[model.repository.User],years:List[Int])(implicit
+flash: Flash) @views.html.admin.main("Registrations",user) {
+<script src="@routes.Assets.at("admin/dist/js/highcharts.js")"></script>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4>Select Registration Year</h4>
+			<select id="selectYear" onchange="ajaxCall()">
+			@for(year<-years){
+			<option selected="selected">@year</option>
+			}
+			</select>					
+			</div>
+			<!-- /.panel-heading -->
+			<div class="panel-body">
+				<div id="container" style="width: 100%; height: 400px;"></div>
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+</div>
+<!-- High chart script -->
+<script src="@routes.Assets.at("admin/dist/js/myscripts/registrationBarChart.js")"></script>
+}
