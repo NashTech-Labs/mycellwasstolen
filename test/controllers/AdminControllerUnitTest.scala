@@ -56,6 +56,15 @@ class AdminControllerTestCases extends Specification with Mockito {
   val mockedModelRepo = mock[ModelRepository]
   val adminController = new AdminController(mockedMobilRepo, mockedBrandRepo, mockedModelRepo, mockedAuditRepo, mockedMail, mockedS3Util)
 
+  "MobileControllerTesting: index" in {
+    running(FakeApplication()) {
+      Cache.set(username, user)
+      val result = adminController.index(FakeRequest().withSession(Security.username -> username))
+      status(result) must equalTo(OK)
+      contentType(result) must beSome("text/html")
+    }
+  }
+  
   "MobileControllerTesting: brandRegisterForm" in {
     running(FakeApplication()) {
       Cache.set(username, user)

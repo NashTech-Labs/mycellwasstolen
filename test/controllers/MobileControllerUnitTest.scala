@@ -68,8 +68,7 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 
-
-  "MobileControllerTesting: mobileRegistration: with valid data" in {
+  "MobileControllerTesting: saveMobileUser: with valid data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
@@ -80,7 +79,7 @@ class MobileControllerTestCases extends Specification with Mockito {
         "otherImei" -> Seq("1234"),
         "contactNo" -> Seq("9958324567"),
         "email" -> Seq("reseamanish@gmail.com"),
-        "regType" -> Seq("clean"),
+        "regType" -> Seq("stolen"),
         "document" -> Seq("sushil.jpg"))
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
       val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
@@ -88,12 +87,12 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.stolenMobileRegistrationForm.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
   
-  "MobileControllerTesting: mobileRegistration: with valid data" in {
+  "MobileControllerTesting: saveMobileUser: with valid data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
@@ -112,12 +111,12 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.stolenMobileRegistrationForm.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
   
-   "MobileControllerTesting: mobileRegistration: error in registration" in {
+   "MobileControllerTesting: saveMobileUser: error in registration" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
@@ -136,20 +135,20 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Left("error"))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.stolenMobileRegistrationForm.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
 
-  "MobileControllerTesting: mobileRegistration: with bad data" in {
+  "MobileControllerTesting: saveMobileUser: with bad data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val multipartBody = MultipartFormData(Map[String, Seq[String]](), files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
-      val result = mobileController.stolenMobileRegistrationForm.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(400)
     }
   }
