@@ -74,6 +74,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
       empty.toList
     }
   }
+  
 }
 
 /**

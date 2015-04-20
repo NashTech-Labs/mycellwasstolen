@@ -1,8 +1,6 @@
 package model.repository
 
 import org.scalatest.FunSuite
-import model.repository.{Brand,Model}
-import model.repository.{ BrandRepository, ModelRepository }
 import play.api.test.Helpers._
 import utils.StatusUtil.Status
 import play.api.test.FakeApplication

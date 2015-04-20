@@ -4,12 +4,7 @@ import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import utils.Connection
 import org.scalatest.FunSuite
-import org.scalatest.BeforeAndAfterEach
-import model.repository.Brand
-import model.repository.{ BrandRepository, MobileRepository, ModelRepository }
-import model._
 import java.util.Date
-import org.scalatest.BeforeAndAfterAll
 
 class BrandRepoTest extends FunSuite  {
 
@@ -58,6 +53,4 @@ class BrandRepoTest extends FunSuite  {
       assert(valueToCompare === valueReturned)
     }
   }
-
 }
-

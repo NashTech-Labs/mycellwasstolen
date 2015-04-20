@@ -92,7 +92,7 @@ trait Secured {
         val cachedUser: Option[User] = Cache.getAs[User](id)
         cachedUser match {
           case Some(user: User) => f(id)(request)
-          case None             => onUnauthorized(request)
+          case None  => onUnauthorized(request)
         }
       }.getOrElse(unauthorizedSimpleRequest(request))
     }

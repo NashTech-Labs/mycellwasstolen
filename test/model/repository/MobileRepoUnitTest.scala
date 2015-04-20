@@ -1,8 +1,6 @@
 package model.repository
 
 import org.scalatest.FunSuite
-import model.repository.{ Brand, Mobile, Model }
-import model.repository.{ BrandRepository, MobileRepository, ModelRepository }
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import utils.StatusUtil.Status
@@ -18,8 +16,8 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
   val brand = Brand("nokia", Some(1))
   val model = Model("N72", 1)
   val mobileUser = Mobile(
-    "gauravs", 1, 1, "12345678901234", "12345678902134", new java.sql.Date(121230), "+91 9839839830",
-    "gs@gmail.com", "stolen", Status.pending, "ddas asd", new java.sql.Date(121230), "gaurav.png", "Sigma", "Sigma454", Some(1))
+    "gauravs", 1, 1, "12345678901234", "12345678902134", "+91 9839839830",
+    "gs@gmail.com", "stolen", Status.pending, new java.sql.Date(121230), "gaurav.png", Some(1))
 
   //Mobile Insertion Test 
   test("MobileRepository:insert and get mobile name successfully ") {

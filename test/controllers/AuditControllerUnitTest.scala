@@ -21,8 +21,8 @@ class AuditControllerTestCases extends Specification with Mockito {
   val timestamp = Audit("864465028854206", new Timestamp(new java.util.Date().getTime))
   val auditList=List(Audit("864465028854206", new Timestamp(new java.util.Date().getTime),Some(1)))
   val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "123456789012677", CommonUtils.getSqlDate(), "+91 9839839830",
-    "gs@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "gaurav.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "123456789012677","+91 9839839830",
+    "gs@gmail.com", "stolen", StatusUtil.Status.pending, CommonUtils.getSqlDate(), "gaurav.png")
   val user = User("admin", "knol2013")
   val mockedAudit = mock[AuditRepository]
 
@@ -31,7 +31,7 @@ class AuditControllerTestCases extends Specification with Mockito {
   "AuditControllerTesting: auditPage" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      val result = auditController.auditPage(FakeRequest().withSession(Security.username -> "admin"))
+      val result = auditController.timestampPage(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
     }
   }

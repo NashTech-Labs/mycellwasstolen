@@ -1,4 +1,4 @@
-package controllers
+/*package controllers
 
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
@@ -52,3 +52,4 @@ class ResourcesTestCases extends Specification with Mockito {
     }
   }
 }
+*/
