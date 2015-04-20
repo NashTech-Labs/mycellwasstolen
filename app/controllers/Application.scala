@@ -43,7 +43,6 @@ class Application extends Controller {
       routes.javascript.AdminController.changeMobileRegType)).as("text/javascript")
   }
 }
-
 /**
  * Lets other access all the methods defined in the class Application
  */

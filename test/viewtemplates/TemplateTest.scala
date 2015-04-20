@@ -15,9 +15,8 @@ import play.api.test.WithApplication
 import controllers.ReverseAdminController
 import controllers.ReverseMobileController
 import controllers.ReverseAuditController
-import controllers.ReverseResources
-import controllers.ReverseAuthController
 import controllers.ReverseApplication
+import controllers.ReverseAuthController
 
 class TemplateTest extends Specification{
   
@@ -25,13 +24,13 @@ class TemplateTest extends Specification{
 
    "get mobiles URL via ReverseAdminController" in new WithApplication {
       val testController = new ReverseAdminController()
-      testController.mobiles("pending").url must contain("mobiles")
+      testController.requestsList("pending").url must contain("mobiles")
 
       val javaScriptTest = new controllers.javascript.ReverseAdminController()
-      javaScriptTest.mobiles.name must contain("mobiles")
+      javaScriptTest.requestsList.name must contain("mobiles")
 
       val refTest = new controllers.ref.ReverseAdminController()
-      refTest.mobiles("test").toString must contain("mobiles")
+      refTest.requestsList("test").toString must contain("mobiles")
     }
    
    "get approve URL via ReverseAdminController" in new WithApplication {
@@ -88,56 +87,48 @@ class TemplateTest extends Specification{
       refTest.deleteMobile("123456789012347").toString must contain("delete")
     }
     
+    "get brandRegisterForm URL via ReverseAdminController" in new WithApplication {
+      val testController = new ReverseAdminController()
+      testController.brandRegisterForm .url must contain("brandForm")
+      
+      val refTest = new controllers.ref.ReverseAdminController()
+      refTest.brandRegisterForm.toString must contain("")
+    }
+     
+     "get modelRegistrationForm URL via ReverseAdminController" in new WithApplication {
+      val testController = new ReverseAdminController()
+      testController.modelRegistrationForm .url must contain("modelRegistrationForm")
+      
+      val refTest = new controllers.ref.ReverseAdminController()
+      refTest.modelRegistrationForm.toString must contain("")
+    }
+    
     //ReverseMobileController
     
     "get mobileRegistrationForm URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
-      testController.mobileRegistrationForm .url must contain("register-stolen-phone")
+      testController.secureMobileRegistrationForm().url must contain("register-stolen-phone")
       
        val refTest = new controllers.ref.ReverseMobileController()
-      refTest.mobileRegistrationForm.toString must contain("")
+      refTest.secureMobileRegistrationForm.toString must contain("")
     }
     
      "get mobileRegistrationSecureForm URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
-      testController.mobileRegistrationSecureForm .url must contain("register-new-phone")
+      testController.stolenMobileRegistrationForm().url must contain("register-new-phone")
       
       val refTest = new controllers.ref.ReverseMobileController()
-      refTest.mobileRegistrationSecureForm.toString must contain("")
-    }
-     
-     "get brandRegisterForm URL via ReverseMobileController" in new WithApplication {
-      val testController = new ReverseMobileController()
-      testController.brandRegisterForm .url must contain("brandForm")
-      
-      val refTest = new controllers.ref.ReverseMobileController()
-      refTest.brandRegisterForm.toString must contain("")
-    }
-     
-     "get modelRegistrationForm URL via ReverseMobileController" in new WithApplication {
-      val testController = new ReverseMobileController()
-      testController.modelRegistrationForm .url must contain("modelRegistrationForm")
-      
-      val refTest = new controllers.ref.ReverseMobileController()
-      refTest.modelRegistrationForm.toString must contain("")
+      refTest.stolenMobileRegistrationForm.toString must contain("")
     }
      
      "get mobileRegistration URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
-      testController.mobileRegistration .url must contain("mobileRegistration")
+      testController.saveMobileUser().url must contain("mobileRegistration")
 
       val refTest = new controllers.ref.ReverseMobileController()
-      refTest.mobileRegistration.toString must contain("mobileRegistration")
+      refTest.saveMobileUser().toString must contain("mobileRegistration")
     }
-     
-     "get mobileRegistration URL via ReverseMobileController" in new WithApplication {
-      val testController = new ReverseMobileController()
-      testController.mobileRegistration .url must contain("mobileRegistration")
-
-      val refTest = new controllers.ref.ReverseMobileController()
-      refTest.mobileRegistration.toString must contain("mobileRegistration")
-    }
-     
+          
      "get checkMobileStatus URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
       testController.checkMobileStatus("123456789012347","user") .url must contain("mobileStatus")
@@ -219,44 +210,6 @@ class TemplateTest extends Specification{
       refTest.registrationRecordsByYear("2015").toString must contain("registrationRecord")
     }
 
-     //ReverseResources
-     
-     "get blog URL via ReverseResources" in new WithApplication {
-      val testController = new ReverseResources()
-      testController.blog().url must contain("blog")
-      
-      val refTest = new controllers.ref.ReverseResources()
-      refTest.blog().toString must contain("blog")
-
-    }
-     
-     "get contactUs URL via ReverseResources" in new WithApplication {
-      val testController = new ReverseResources()
-      testController.contactUs().url must contain("contact-us")
-      
-      val refTest = new controllers.ref.ReverseResources()
-      refTest.contactUs().toString must contain("")
-
-    }
-     
-     "get faq URL via ReverseResources" in new WithApplication {
-      val testController = new ReverseResources()
-      testController.faq().url must contain("faq")
-      
-      val refTest = new controllers.ref.ReverseResources()
-      refTest.faq().toString must contain("faq")
-
-    }
-     
-     "get discussionforum URL via ReverseResources" in new WithApplication {
-      val testController = new ReverseResources()
-      testController.discussionforum().url must contain("discussionforum")
-      
-      val refTest = new controllers.ref.ReverseResources()
-      refTest.discussionforum().toString must contain("discussionforum")
-
-    }
-     
      //ReverseAuthController
      
      "get login URL via ReverseAuthcontroller" in new WithApplication {
@@ -303,4 +256,3 @@ class TemplateTest extends Specification{
       refTest.javascriptRoutes().toString must contain("")
     }
 }
-

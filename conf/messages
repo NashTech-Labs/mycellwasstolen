@@ -1,4 +1,3 @@
-
 #Application
 
 app.org.name=Knoldus Software LLP, 2013
@@ -73,7 +72,6 @@ messages.mobile.changeMobileRegTypeClean=Dear Mobile Owner, <br><br>We have rece
 messages.mobile.changeMobileRegTypeStolen=Dear Mobile Owner, <br><br>We have received your mail for changing the mobile status from clean to stolen for <b>IMEI - {0}</b> Your mobile status has been successfully changed to stolen. Please mail us if you have any other query on "cellsupport@mycellwasstolen.com"<br><br>{1}
 
 #admin
-
 admin.requestapproval=Request Approval page
 admin.audit=Mobile Audit page
 mobile.name=Name
