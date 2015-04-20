@@ -1,6 +1,6 @@
 @(message: String, user: Option[model.repository.User])
 
-@views.html.users.main("home", user) {
+@views.html.users.main("Home", user) {
 <!-- Check IMEI Panle  -->
 <div class="row">
 	<div class="col-lg-12 text-center">
@@ -18,7 +18,10 @@
 				displayed on the screen of the phone by entering
 			</p>
 		</h3>
-		<a class="page-scroll btn btn-xl" href="#portfolio">Search IMEI</a>
+		<a class="page-scroll btn btn-xl" href="#portfolio" data-toggle="modal" data-target="#myModal">Search IMEI</a>
 	</div>
 </div>
+
+<!-- Modal -->
+@views.html.users.contents.checkIMEIModal("Render Check IMEI Modal")
 }

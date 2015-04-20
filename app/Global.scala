@@ -24,7 +24,6 @@ import scala.util.Try
 import utils.TableEnums
 
 object Global extends GlobalSettings {
-
   /**
    * Loads all configurations from the configuration file when the application starts
    */
@@ -35,7 +34,6 @@ object Global extends GlobalSettings {
   }
 
   def getValue(keyname: String): Option[String] = Play.application.configuration.getString(keyname)
-
   /**
    * Loads all credentials and create tables when application starts
    */
@@ -56,11 +54,11 @@ object Global extends GlobalSettings {
           _tablenameWithTable => _tablenameWithTable._2.ddl.create
         }
 
-      /*val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
+      val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
         MTable.getTables("audits").list.isEmpty &&
         MTable.getTables("models").list.isEmpty &&
         MTable.getTables("brands").list.isEmpty
-      if (!allHasCreated) importDB*/
+      if (!allHasCreated) importDB
     }
   }
 
