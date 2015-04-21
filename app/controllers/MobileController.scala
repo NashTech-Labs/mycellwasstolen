@@ -40,11 +40,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "email" -> email,
       "regType" -> nonEmptyText,
       "document" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
-
-  val mobilestatus = Form(
-    mapping(
-      "imeiMeid" -> nonEmptyText)(MobileStatus.apply)(MobileStatus.unapply))
-
+      
   /**
    * Display the new mobile registration form for stolen mobile
    */
@@ -158,16 +154,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
     Logger.info("Mobile Models" + models)
     implicit val resultWrites = Json.writes[Model]
     Ok(Json.toJson(models))
-  }
-
-  /**
-   * Display mobile status form
-   */
-  def mobileStatusForm: Action[AnyContent] = Action { implicit request =>
-    val username = request.session.get(Security.username).getOrElse("None")
-    val user: Option[User] = Cache.getAs[User](username)
-    Logger.info("mobileController:mobileStatus -> called")
-    Ok(views.html.users.contents.mobileStatus(mobilestatus, user))
   }
 
   /**

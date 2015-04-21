@@ -5,11 +5,9 @@
 <head>
 
     <title>MCWS</title>
-    
+<script src="@routes.Assets.at("user/js/jquery.js")"></script>    
     <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
     <link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
-    
-
     <!-- Custom CSS -->
     <link href="@routes.Assets.at("user/css/freelancer.css")" rel="stylesheet">
     <link href="@routes.Assets.at("user/css/custom.css")" rel="stylesheet">
@@ -21,34 +19,31 @@
     <link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
 
 </head>
 
 <body id="page-top" class="index">
 
-<!-- Render header  -->
+   <!-- Render header  -->
 	@views.html.users.header.header("rendering header")
 
-
  <header>
-        <div class="container carousel slide" id="myCarousel">
-                   @views.html.users.contents.carousell("render carousell")
-                   	<a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
-					<a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
-                    <div class="intro-text">
-                        <hr class="star-light">
-                        <span class="skills">Let's Break The Cell Phone Theft Cycle</span>
+  @views.html.users.contents.carousell("render carousell")
     </header>
+    
+<!-- Render checkImei section -->
+ @views.html.users.contents.checkIMEIStatus("imei status")
+    
 
 <!-- Render Dashboard Section -->
  @views.html.users.contents.dashboard("Render Dashboard")
  
- <!-- Render Mobile Registration Section -->
- @views.html.users.contents.registerMobile("Render Registration")
- 
  <!-- Footer -->
 
 	@views.html.users.footer.footer("render footer")
+
+
 	<!-- jQuery -->
 	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
 	<!-- Bootstrap Core JavaScript -->
@@ -71,6 +66,7 @@
 		});
 	</script>
 	<script src="@routes.Assets.at("user/js/myscript/stickySideInit.js")"></script>
+ 
  
 </body>
 </html>

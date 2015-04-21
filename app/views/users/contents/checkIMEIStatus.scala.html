@@ -1,33 +1,61 @@
 @* checkIMEIModal Template File *@
-@(param: Any)
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="width:60%">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Search IMEI</h4>
-      </div>
-      <div class="modal-body">
-			
-							<div class= "row">
-							<div class= "col-md-8 col-xs-12 ">
-							<div>
-							<input type="text" class="form-control" id="imeiMeid" name="imeiMeid" placeholder="IMEI/MEID">
-							<div class="form-actions "> 
-							<br> <input type="submit" value="Check Status"
-							class="btn btn-primary" onClick="showMobileRecord();">
+@(title:String)
+
+<section>
+    <div class="container">
+    <h3>Check IMEI status</h3>
+    <h5>Ensure that you are not buying a lemon!</h5>
+    <p>A lemon cell is analogous to a <a href="http://en.wikipedia.org/wiki/Lemon_(automobile)">lemon automobile</a> where 
+									you find out problems, much after the purchase has been 
+									made. If you buy a cell phone, which has a stolen record, 
+									then you could get into multiple problems.<b>To check the cell
+									 phone status</b>, all you need is the IMEI/MEID number of the
+									  cell that you want to check. It is found printed inside 
+									  the battery compartment of the phone. It can also be 
+									  displayed on the screen of the phone by entering 
+									  <b>*#06#</b> onto the keypad on most phones. Blackberry users click 
+									  <a href="https://bis.na.blackberry.com/html/web/help/en/find_BB_PIN_IMEI_ESN_MEID_221674_11.html">here </a>.</p>
+								<br>
+								<h5 style="color: rgba(32, 75, 54, 1);">Coming Soon - Check IMEI by sending an <img src="@routes.Assets.at("user/img/msg.png")" alt="...">&nbsp;(premium service)</h5>
+								<hr>
+								    <!-- Button to trigger modal -->
+    <a href="#imeiStatusModal" class="portfolio-link" role="button"  data-toggle="modal"><button class="btn btn-success">Click here to check IMEI status</button></a>
+     
+    <!-- Modal -->
+    <div class="portfolio-modal modal fade" id="imeiStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="modal-body" style="text-align: left;">
+                            <h3 style="color: rgba(228, 137, 0, 1);">Check Status Of your IMEI number</h3>
+                            <hr>
+                            <p>Please Enter Mobile IMEI To Check Phone Status:</p>
+                             <div class= "row">
+							<div class= "col-md-4">
+							<input type="text" class="form-control" id="imei" name="imei" placeholder="Enter IMEI..."/>
+					        </div>
+					        <div class="col-md-4">
+							<button class="btn btn-warning" onClick="showMobileRecord()" id="showrecord">Search</button>
 							</div>
+							<div class="col-md-12" id="msg">
 							</div>
+							<div id="mobileRecords" class="col-md-12">
 							</div>
-							
-							</div>
-							<div class="row">
-							<div id="mobileRecords" class="col-md-12 col-xs-12">
-							</div>
-							</div>
-      </div>
+						  </div>
+						  <hr>
+						  <button class="btn btn-success" onClick="clearr()">Cancel</button>
+                        </div>
+                        <hr>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+
+    </div>
+    </section>
+
 <script src="@routes.Assets.at("user/javascripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>

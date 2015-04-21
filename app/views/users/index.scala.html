@@ -1,29 +1,5 @@
 @(message: String, user: Option[model.repository.User])
 
 @views.html.users.main("Home", user) {
-<!-- Check IMEI Panle  -->
-<div class="row">
-	<div class="col-lg-12 text-center">
 
-		<a class="page-scroll btn btn-xl" href="#portfolio" data-toggle="modal" data-target="#myModal">Search IMEI</a>
-		<h3 class="section-heading">Ensure that you are not buying a
-			lemon!!</h3>
-		<h3 class="section-subheading text-muted">
-			A lemon cell is analogous to a lemon automobile where you find out
-			problems, much after the purchase has been made. If you buy a cell
-			phone, which has a stolen record, then you could get into multiple
-			problems.
-			<p>
-				<b>To check the cell phone status</b> , all you need is the
-				IMEI/MEID number of the cell that you want to check. It is found
-				printed inside the battery compartment of the phone. It can also be
-				displayed on the screen of the phone by entering
-			</p>
-		</h3>
-		<a class="page-scroll btn btn-xl" data-toggle="modal" data-target="#myModal">Search IMEI</a>
-	</div>
-</div>
-
-<!-- Modal -->
-@views.html.users.contents.checkIMEIModal("Render Check IMEI Modal")
 }
