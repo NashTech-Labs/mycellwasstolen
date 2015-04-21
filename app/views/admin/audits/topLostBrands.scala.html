@@ -4,6 +4,16 @@
 <script src="@routes.Assets.at("admin/dist/js/highcharts.js")"></script>
 <div class="row">
 	<div class="col-lg-12">
+		<div class="panel-heading">
+			<h4>Select Top Lost Brands</h4>
+			<select id="selectBrand" onchange="ajaxCall()">
+			<option>1</option>
+			<option>2</option>
+			<option selected="selected">5</option>
+			<option>10</option>
+			<option>15</option>
+			</select>					
+			</div>
 		<div class="panel panel-default">
 				<div class="panel-body">
 				<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
