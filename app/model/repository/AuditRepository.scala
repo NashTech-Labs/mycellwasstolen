@@ -74,7 +74,46 @@ trait AuditRepository extends AuditTable with MobileRepository {
       empty.toList
     }
   }
-  
+
+  /**
+   * Returns List of top n lost brands with their lost_count from mobile table e.g.
+   * List(('A',1),('B', 4),('C',50).. ('N',N))
+   * (n< number of brands)
+   * @param n, number of brands
+   */
+  def getTopNLostBrands(n: Int): Option[List[(String,Float)]] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      //Get modelId with count from Mobile table as tuple value
+      mobiles.length.run>0 match{
+        case true =>{
+        	val countQuery = for {
+        		(id, c) <- mobiles groupBy (_.modelId)
+        	} yield id -> c.map(_.modelId).length
+        	//Joint  this (modelId,count(modelId)) tuple with model table to fetch brandId of each model  
+        	val brandQuery = for{
+        		mId <- models
+        		brands <- brands if(mId.brandId === brands.id)
+        			brandCount <- countQuery if (brandCount._1 === mId.id) 
+        	} yield (mId.name,brandCount._2)
+        	//Sort the list by Highest count of models and select from highest to lowest
+        	val topNCount = brandQuery.list.sortBy( (x)=> x._2).drop(brandQuery.list.size - n)
+        	val sumOfTopNCounts = topNCount.map( x => x._2).sum
+        	println("Top N is of : "+sumOfTopNCounts)
+        	val totalTheftCount = mobiles.length.run
+        	val otherModelsCount = totalTheftCount - sumOfTopNCounts
+        	val otherCountTuple = ("Others",otherModelsCount)
+        	val topNValuesWithOthers = otherCountTuple::topNCount
+        	val floatValues = topNValuesWithOthers.map(x=> (x._1,(x._2.toFloat/totalTheftCount.toFloat)*100)) 
+        	floatValues.foreach(println) 
+        	floatValues match{
+        	case x:List[(String,Float)] => Some(floatValues)
+        	case _ => None
+        	}
+        }
+        case false => None
+      }
+    }
+  }
 }
 
 /**
@@ -95,8 +134,8 @@ trait AuditTable {
 
 /**
  * Represents audit object which is used to report how many request
- * has been made against particular IMEI with timestamp
- * @param mobuileIMEID, imei number of mobile
+ * has been made against particular IMEI with TimeStamp
+ * @param mobuileIMEID, IMEI number of mobile
  * @param timestamp, date and time of audit
  * @param id, auto incremented id
  */
@@ -107,9 +146,10 @@ case class Audit(
 
 /**
  * Represents audit form
- * @param imeiMeid, imei number of mobile
+ * @param imeiMeid, IMEI number of mobile
  */
 case class AuditForm(imeiMeid: String)
+
 
 /**
  * Object Wraps methods of the trait AuditRepository

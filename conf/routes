@@ -41,8 +41,10 @@ GET    /registrations_record           controllers.AuditController.registrationR
 POST   /timestamp/imei                 controllers.AuditController.timestampsByIMEI
 GET    /timestamp/all                  controllers.AuditController.allTimestamps
 GET    /get_monthly_registrations      controllers.AuditController.getMonthlyRegistration(year:String)
-GET    /get_top_lost_brands            controllers.AuditController.topLostBrands
+GET    /top_lost_brands                controllers.AuditController.renderTopLostBrands
 GET    /registeration_growth_by_year   controllers.AuditController.getRegistrationByYears
+GET    /get_top_lost_brands_data       controllers.AuditController.topLostBrands(n: Int)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                   controllers.Assets.at(path="/public", file)

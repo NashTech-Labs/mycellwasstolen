@@ -24,17 +24,15 @@
     <label class="radio-inline col-sm-2" style="padding-left: 50px">
         <input type="radio" class="single" name="when" value="single" checked> <strong>Single</strong>
     </label>
+    
     <label class="radio-inline col-sm-2">
         <input type="radio" class="dual" name="when" value="dual"> <strong>Dual</strong>
     </label>
 </div>
-<div class="col-sm-12">
-    <div class="collapse single">
+
         @inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
-    </div>
-    
+    <div class="col-sm-12">
     <div class="collapse dual">
-@inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
 @inputText(mobileRegistrationForm("otherImei"), '_label -> "IMEI 2", 'maxlength -> 15,'class->"form-control")
 </div>
 </div>
@@ -142,6 +140,12 @@
 					}
 				}
 			},
+			brandId : {
+				required:true
+			},
+			modelId:{
+				required:true
+			},
 			email : {
 				required : true,
 				maxlength : 100,
@@ -151,17 +155,9 @@
 				required : true,
 				maxlength : 100
 			},
-			modelId : {
-				required : true,
-				maxlength : 100
-			},
-			brandId : {
-				required : true,
-				maxlength : 100
-			},
 			contactNo : {
 				required : true,
-				maxlength : 100
+				maxlength : 20
 			},
 			fileUpload : {
 				required : true,
@@ -169,12 +165,24 @@
 			}
 		},
 		messages : {
+			 email: {
+				required: "Please provide an email address",
+				email:"Please enter a valid email address"
+			 },	
 			imei : {
+				required:"Please provide an IMEI number of mobile",
 				remote : "Invalid imei Id or may be already exist."
 			},
 			otherImei : {
+				required:"Please provide an IMEI number of mobile",
 				remote : "Invalid imei Id or may be already exist."
-			}
+			},
+			brandId:{
+				required: "Please select a brand"
+				},
+				modelId:{
+					required: "Please select a model"
+					}
 		}
 	});
 
