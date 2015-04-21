@@ -90,7 +90,6 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
           } else {
             Redirect(routes.AdminController.brandRegisterForm).flashing("ERROR" -> "Brand allready exist")
           }
-
         })
   }
 

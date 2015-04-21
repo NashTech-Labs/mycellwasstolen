@@ -10,20 +10,18 @@
     <title>MCWS Admin</title>
     
     
-    
+    <script src="@routes.Assets.at("admin/bower_components/jquery/dist/jquery.min.js")"></script>
     <!-- Bootstrap Core CSS -->
     <link href="@routes.Assets.at("admin/bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
     <link href="@routes.Assets.at("admin/bower_components/metisMenu/dist/metisMenu.min.css")" rel="stylesheet">
     
-    @if(page=="Timestamps"){
     	<!-- DataTables CSS -->
     <link href="@routes.Assets.at("admin/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css")" rel="stylesheet">
 
     <!-- DataTables Responsive CSS -->
     <link href="@routes.Assets.at("admin/bower_components/datatables-responsive/css/dataTables.responsive.css")" rel="stylesheet">
-    }
 
     <!-- Timeline CSS -->
     <link href="@routes.Assets.at("admin/dist/css/timeline.css")" rel="stylesheet">
@@ -87,6 +85,8 @@
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="/registrations_record?year=2015">Registrations</a>
+                                    <a href="/get_top_lost_brands">Top Lost Brands</a>
+                                    <a href="/registeration_growth_by_year">Registration Growth By Year</a>
                                 </li>
                                 <li>
                                     <a href="/timestamps">Timestamps</a>
@@ -140,18 +140,16 @@
 
     </div>
     <!-- /#wrapper -->
-    <script src="@routes.Assets.at("admin/bower_components/jquery/dist/jquery.min.js")"></script>
+    
      <!-- Bootstrap Core JavaScript -->
     <script src="@routes.Assets.at("admin/bower_components/bootstrap/dist/js/bootstrap.min.js")"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="@routes.Assets.at("admin/bower_components/metisMenu/dist/metisMenu.min.js")"></script>
     
-  @if(page=="Timestamps"){
   	 <!-- DataTables JavaScript -->
     <script src="@routes.Assets.at("admin/bower_components/datatables/media/js/jquery.dataTables.min.js")"></script>
     <script src="@routes.Assets.at("admin/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js")"></script>  	
-  }
   
    <!-- Custom Theme JavaScript -->
     <script src="@routes.Assets.at("admin/dist/js/sb-admin-2.js")"></script> 

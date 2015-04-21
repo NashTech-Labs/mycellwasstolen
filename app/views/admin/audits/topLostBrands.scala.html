@@ -1,0 +1,18 @@
+@(user:Option[model.repository.User])
+@* analytics Template File *@ 
+ @views.html.admin.main("Top Lost Brands",user) {
+<script src="@routes.Assets.at("admin/dist/js/highcharts.js")"></script>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+				<div class="panel-body">
+				<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+</div>
+<!-- High chart script -->
+<script src="@routes.Assets.at("admin/dist/js/myscripts/topLostBrands.js")"></script>
+}

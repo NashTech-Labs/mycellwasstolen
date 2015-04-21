@@ -27,7 +27,7 @@
 				else{
 					var image='<img src="/assets/user/img/success.jpg"  height=20 width=20 alt="...Clean..."/>';
 				}
-				var mobileData = '<div id="mobile-status"><h4>This IMEI number has been approved successfully</h4><table class="table table-bordered" style="background-color: rgba(246, 235, 174, 0.49);"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
+				var mobileData = '<div id="mobile-status"><h4>This IMEI number has been approved successfully</h4><div class="table-responsive"><table class="table" style="background-color: rgba(246, 235, 174, 0.49);"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
 						+ mobile.imei
 						+ '</td><td>'
 						+ (mobile.otherImei == "" ? "None" : mobile.otherImei)
@@ -61,7 +61,7 @@
 						+ '</td><td>'
 						+ mobile.email
 						+'</td><td>'
-						+ image + '</td></tr></table></div>';
+						+ image + '</td></tr></table></div></div>';
 				$("#mobileRecords").empty();
 				$("#mobileRecords").removeClass("alert alert-danger");
 				$('#mobileRecords').html(mobileData);
@@ -92,7 +92,3 @@
 			jsRoutes.controllers.MobileController.checkMobileStatus(imeid,"user").ajax(
 					mobileAjaxCallBack);
 		};
-		
-	    $("#imeiMeid").rules("add", {
-	 			required : true
-	 		});		

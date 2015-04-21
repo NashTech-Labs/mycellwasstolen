@@ -1,11 +1,9 @@
 package controllers
 
 import java.sql.Timestamp
-
 import org.mockito.Mockito._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
-
 import model.repository._
 import play.api.Play.current
 import play.api.cache.Cache
@@ -36,8 +34,8 @@ class MobileControllerTestCases extends Specification with Mockito {
   val username = "admin"
 
   val mobileUser = Mobile(
-    "sushil", 1, 1, "864465028854206", "864465028854206", CommonUtils.getSqlDate(), "+91 8375919908",
-    "sushil@gmail.com", "stolen", StatusUtil.Status.pending, "test", CommonUtils.getSqlDate(), "ss.png", "nokia", "E5")
+    "sushil", 1, 1, "864465028854206", "864465028854206", "+91 8375919908",
+    "sushil@gmail.com", "stolen", StatusUtil.Status.pending, CommonUtils.getSqlDate(), "ss.png")
 
   val timestamp = new Audit("864465028854206", new Timestamp(new java.util.Date().getTime), Some(1))
 
@@ -54,7 +52,7 @@ class MobileControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.mobileRegistrationForm(FakeRequest())
+      val result = mobileController.stolenMobileRegistrationForm(FakeRequest())
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
     }
@@ -64,124 +62,93 @@ class MobileControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set(username, user)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.mobileRegistrationSecureForm(FakeRequest())
+      val result = mobileController.secureMobileRegistrationForm(FakeRequest())
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
     }
   }
 
-  "MobileControllerTesting: brandRegisterForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      val result = mobileController.brandRegisterForm(FakeRequest().withSession(Security.username -> username))
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "MobileControllerTesting: modelRegistrationForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.modelRegistrationForm(FakeRequest().withSession(Security.username -> username))
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "MobileControllerTesting: mobileRegistration: with valid data" in {
+  "MobileControllerTesting: saveMobileUser: with valid data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val validFormData = Map("userName" -> Seq("manish"),
         "brandId" -> Seq("1"),
-        "mobileModelId" -> Seq("1"),
-        "imeiMeid" -> Seq("123456789012347"),
-        "otherImeiMeid" -> Seq("1234"),
-        "purchaseDate" -> Seq("2015-03-31"),
+        "modelId" -> Seq("1"),
+        "imei" -> Seq("123456789012347"),
+        "otherImei" -> Seq("1234"),
         "contactNo" -> Seq("9958324567"),
         "email" -> Seq("reseamanish@gmail.com"),
-        "regType" -> Seq("pending"),
-        "document" -> Seq("sushil.jpg"),
-        "description" -> Seq("test"),
-        "otherMobileBrand" -> Seq("nodata "),
-        "otherMobileModel" -> Seq("nodata"))
+        "regType" -> Seq("stolen"),
+        "document" -> Seq("sushil.jpg"))
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
   
-  "MobileControllerTesting: mobileRegistration: with valid data" in {
+  "MobileControllerTesting: saveMobileUser: with valid data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val validFormData = Map("userName" -> Seq("manish"),
         "brandId" -> Seq("1"),
-        "mobileModelId" -> Seq("1"),
-        "imeiMeid" -> Seq("123456789012347"),
-        "otherImeiMeid" -> Seq("1234"),
-        "purchaseDate" -> Seq("2015-03-31"),
+        "modelId" -> Seq("1"),
+        "imei" -> Seq("123456789012347"),
+        "otherImei" -> Seq("1234"),
         "contactNo" -> Seq("9958324567"),
         "email" -> Seq("reseamanish@gmail.com"),
         "regType" -> Seq("pending"),
-        "document" -> Seq("sushil.jpg"),
-        "description" -> Seq("test"),
-        "otherMobileBrand" -> Seq("nodata "),
-        "otherMobileModel" -> Seq("nodata"))
+        "document" -> Seq("sushil.jpg"))
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
   
-   "MobileControllerTesting: mobileRegistration: error in registration" in {
+   "MobileControllerTesting: saveMobileUser: error in registration" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val validFormData = Map("userName" -> Seq("manish"),
         "brandId" -> Seq("1"),
-        "mobileModelId" -> Seq("1"),
-        "imeiMeid" -> Seq("123456789012347"),
-        "otherImeiMeid" -> Seq("1234"),
-        "purchaseDate" -> Seq("2015-03-31"),
+        "modelId" -> Seq("1"),
+        "imei" -> Seq("123456789012347"),
+        "otherImei" -> Seq("1234"),
         "contactNo" -> Seq("9958324567"),
         "email" -> Seq("reseamanish@gmail.com"),
         "regType" -> Seq("pending"),
-        "document" -> Seq("sushil.jpg"),
-        "description" -> Seq("test"),
-        "otherMobileBrand" -> Seq("nodata "),
-        "otherMobileModel" -> Seq("nodata"))
+        "document" -> Seq("sushil.jpg"))
       val multipartBody = MultipartFormData(validFormData, files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedCommonUtil.getSqlDate())thenReturn(utildate)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Left("error"))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
-      val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(303)
     }
   }
 
-  "MobileControllerTesting: mobileRegistration: with bad data" in {
+  "MobileControllerTesting: saveMobileUser: with bad data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
       val files = Seq[FilePart[TemporaryFile]](FilePart("file", "sushil.jpg", None, TemporaryFile("file", "spec")))
       val multipartBody = MultipartFormData(Map[String, Seq[String]](), files, Seq[BadPart](), Seq[MissingFilePart]())
-      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/mobileRegistration", FakeHeaders(), multipartBody)
+      val fakeRequest = FakeRequest[MultipartFormData[Files.TemporaryFile]]("POST", "/save_users", FakeHeaders(), multipartBody)
       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
-      val result = mobileController.mobileRegistration.apply(fakeRequest.withSession(Security.username -> username))
+      val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
       status(result) must equalTo(400)
     }
   }
@@ -191,7 +158,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       Cache.set(username, user)
       when(mockedMobileRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(mobileUser))
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
-      when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
+      when(mockedModelRepo.getModelById(mobileUser.modelId)).thenReturn(modelById)
      val result = mobileController.checkMobileStatus("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
       contentType(result) must beSome("application/json")
@@ -203,7 +170,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       Cache.set(username, user)
       when(mockedMobileRepo.getMobileUserByIMEID("864465028854206")).thenReturn(None)
       when(mockedBrandRepo.getBrandById(mobileUser.brandId)) thenReturn (brandById)
-      when(mockedModelRepo.getModelById(mobileUser.mobileModelId)).thenReturn(modelById)
+      when(mockedModelRepo.getModelById(mobileUser.modelId)).thenReturn(modelById)
       when(mockedAuditRepo.insertTimestamp(timestamp)) thenReturn (Right(Some(1)))
       val result = mobileController.checkMobileStatus("864465028854206","user")(FakeRequest().withSession(Security.username -> username))
       status(result) must equalTo(200)
@@ -224,7 +191,7 @@ class MobileControllerTestCases extends Specification with Mockito {
   "MobileControllerTesting: mobileStatus" in {
     running(FakeApplication()) {
       Cache.set(username, user)
-      val result = mobileController.mobileStatus(FakeRequest())
+      val result = mobileController.mobileStatusForm(FakeRequest())
       status(result) must equalTo(200)
       contentType(result) must beSome("text/html")
     }
@@ -269,85 +236,4 @@ class MobileControllerTestCases extends Specification with Mockito {
       contentType(result) must beSome("text/plain")
     }
   }
-
-  "MobileControllerTesting: saveBrand -> with invalid form data" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      val result = mobileController.saveBrand(FakeRequest().withSession(Security.username -> username))
-      status(result) must equalTo(400)
-    }
-  }
-
-  "MobileControllerTesting: saveBrand -> with valid form data and brand not exist" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn(List(Brand("sony")))
-      when(mockedBrandRepo.insertBrand(any[Brand])) thenReturn (Right(Some(1)))
-      val result = mobileController.saveBrand(FakeRequest().withFormUrlEncodedBody("name" -> "nokia").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-  
-  "MobileControllerTesting: saveBrand -> brand already exist" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn(List(Brand("nokia")))
-      val result = mobileController.saveBrand(FakeRequest().withFormUrlEncodedBody("name" -> "nokia").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-
-  "MobileControllerTesting: saveBrand -> error in insert brand" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn(List(Brand("sony")))
-      when(mockedBrandRepo.insertBrand(any[Brand])) thenReturn (Left("error"))
-      val result = mobileController.saveBrand(FakeRequest().withFormUrlEncodedBody("name" -> "nokia").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-
-  "MobileControllerTesting: saveModel-> with invalid form data" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-       when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedModelRepo.getAllModelByBrandId(1)) thenReturn(List(Model("N73",1)))
-      when(mockedModelRepo.insertModel(any[Model])) thenReturn (Right(Some(1)))
-      val result = mobileController.saveModel(FakeRequest().withSession(Security.username -> username))
-      status(result) must equalTo(400)
-    }
-  }
-
-  "MobileControllerTesting: saveModel-> with valid form data" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedModelRepo.getAllModelByBrandId(1)) thenReturn(List(Model("N73",1)))
-      when(mockedModelRepo.insertModel(any[Model])) thenReturn (Right(Some(1)))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "N72").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-  
-  "MobileControllerTesting: saveModel-> model already exist" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedModelRepo.getAllModelByBrandId(1)) thenReturn(List(Model("N72",1)))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "N72").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-
-  "MobileControllerTesting: saveModel-> error in inserting model" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      when(mockedModelRepo.getAllModelByBrandId(1)) thenReturn(List(Model("N72",1)))
-      when(mockedModelRepo.insertModel(any[Model])) thenReturn (Left("error"))
-      val result = mobileController.saveModel(FakeRequest().withFormUrlEncodedBody("brandName" -> "1", "modelName" -> "E5").withSession(Security.username -> username))
-      status(result) must equalTo(303)
-    }
-  }
-
 }

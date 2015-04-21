@@ -1,5 +1,6 @@
 @(mobileStatusForm: Form[model.repository.MobileStatus], user: Option[model.repository.User])(implicit flash: Flash)
 @import helper._
+@import helper.twitterBootstrap._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @views.html.users.main("Mycellwasstolen: Check Cell Status",user){
@@ -163,5 +164,4 @@
 	 			required : true
 	 		});		
 </script>	           	
-	
 }

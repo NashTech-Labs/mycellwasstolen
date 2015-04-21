@@ -3,44 +3,48 @@
 # ~~~~
 
 # Home page
-GET    /                        controllers.Application.index
+GET    /                               controllers.Application.index
 
 #Authentication
-GET    /login                   controllers.AuthController.login
-POST   /authenticate            controllers.AuthController.authenticate
-GET    /logout                  controllers.AuthController.logout
+GET    /login                          controllers.AuthController.login
+POST   /authenticate                   controllers.AuthController.authenticate
+GET    /logout                         controllers.AuthController.logout
 
 #Javascript Routes
-GET    /javascriptRoutes        controllers.Application.javascriptRoutes
+GET    /javascriptRoutes               controllers.Application.javascriptRoutes
 
 #Admin
-GET    /admin                   controllers.AdminController.index
-GET    /new_brand               controllers.AdminController.brandRegisterForm
-POST   /add_brand               controllers.AdminController.saveBrand
-GET    /new_model               controllers.AdminController.modelRegistrationForm
-POST   /add_model               controllers.AdminController.saveModel
-GET    /requests                controllers.AdminController.requestsList(status:String)
-GET    /demand_proof_request    controllers.AdminController.proofDemanded(imeid: String,page:String)
-GET    /approve                 controllers.AdminController.approve(imeid: String,page:String)
-GET    /pending                 controllers.AdminController.pending(imeid: String)
-GET    /change_mobile_status    controllers.AdminController.changeMobileRegTypeForm
-GET    /change_status           controllers.AdminController.changeMobileRegType(imeid: String)
-GET    /delete                  controllers.AdminController.deleteMobile(imeid: String)
+GET    /admin                          controllers.AdminController.index
+GET    /new_brand                      controllers.AdminController.brandRegisterForm
+POST   /add_brand                      controllers.AdminController.saveBrand
+GET    /new_model                      controllers.AdminController.modelRegistrationForm
+POST   /add_model                      controllers.AdminController.saveModel
+GET    /requests                       controllers.AdminController.requestsList(status:String)
+GET    /demand_proof_request           controllers.AdminController.proofDemanded(imeid: String,page:String)
+GET    /approve                        controllers.AdminController.approve(imeid: String,page:String)
+GET    /pending                        controllers.AdminController.pending(imeid: String)
+GET    /change_mobile_status           controllers.AdminController.changeMobileRegTypeForm
+GET    /change_status                  controllers.AdminController.changeMobileRegType(imeid: String)
+GET    /delete                         controllers.AdminController.deleteMobile(imeid: String)
 
 #Users
-GET    /register_stolen_phone   controllers.MobileController.stolenMobileRegistrationForm
-GET    /register_new_phone      controllers.MobileController.secureMobileRegistrationForm
-POST   /save_users              controllers.MobileController.saveMobileUser
-GET    /check_status            controllers.MobileController.checkMobileStatus(imeid: String,user:String)
-GET    /check_mobile_status     controllers.MobileController.mobileStatusForm
-GET    /get_models              controllers.MobileController.getModels(id:Int)
-GET    /check_imei              controllers.MobileController.isImeiExist(imeiId: String)
+GET    /register_stolen_phone          controllers.MobileController.stolenMobileRegistrationForm
+GET    /register_new_phone             controllers.MobileController.secureMobileRegistrationForm
+POST   /save_users                     controllers.MobileController.saveMobileUser
+GET    /check_status                   controllers.MobileController.checkMobileStatus(imeid: String,user:String)
+GET    /check_mobile_status            controllers.MobileController.mobileStatusForm
+GET    /get_models                     controllers.MobileController.getModels(id:Int)
+GET    /check_imei                     controllers.MobileController.isImeiExist(imeiId: String)
 
 #Audit
-GET    /timestamps              controllers.AuditController.timestampPage
-GET    /registrations_record    controllers.AuditController.registrationRecordsByYear(year:String)
-POST   /timestamp/imei          controllers.AuditController.timestampsByIMEI
-GET    /timestamp/all           controllers.AuditController.allTimestamps
+GET    /timestamps                     controllers.AuditController.timestampPage
+GET    /registrations_record           controllers.AuditController.registrationRecordsByYear(year:String)
+POST   /timestamp/imei                 controllers.AuditController.timestampsByIMEI
+GET    /timestamp/all                  controllers.AuditController.allTimestamps
+GET    /get_monthly_registrations      controllers.AuditController.getMonthlyRegistration(year:String)
+GET    /get_top_lost_brands            controllers.AuditController.topLostBrands
+GET    /registeration_growth_by_year   controllers.AuditController.getRegistrationByYears
 
 # Map static resources from the /public folder to the /assets URL path
-GET    /assets/*file            controllers.Assets.at(path="/public", file)
+GET    /assets/*file                   controllers.Assets.at(path="/public", file)
+

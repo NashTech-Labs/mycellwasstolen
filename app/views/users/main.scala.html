@@ -13,8 +13,10 @@
     <!-- Custom CSS -->
     <link href="@routes.Assets.at("user/css/freelancer.css")" rel="stylesheet">
     <link href="@routes.Assets.at("user/css/custom.css")" rel="stylesheet">
-    
-
+    <link href="@routes.Assets.at("user/css/agency.css")" rel="stylesheet">
+	<!-- sticky sidebar CSS -->
+    <link href="@routes.Assets.at("user/mycss/stickySidebar.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("user/css/intlTelInput.css")" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="@routes.Assets.at("user/font-awesome/css/font-awesome.min.css")" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -26,6 +28,7 @@
 
 <!-- Render header  -->
 	@views.html.users.header.header("rendering header")
+
 
  <header>
         <div class="container carousel slide" id="myCarousel">
@@ -44,6 +47,7 @@
  @views.html.users.contents.registerMobile("Render Registration")
  
  <!-- Footer -->
+
 	@views.html.users.footer.footer("render footer")
 	<!-- jQuery -->
 	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
@@ -60,6 +64,7 @@
 	<!-- Sticky Side bar plugin -->
 	<script src="@routes.Assets.at("user/js/stickyMojo.js")"></script>
 	<!-- sticky Side bar initialization -->
+	<script src="@routes.Assets.at("user/js/myscript/textSlide.js")"></script>
 	<script>
 		$(function() {
 			$('#example').vTicker();
