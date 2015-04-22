@@ -1,4 +1,4 @@
-package controllers
+/*package controllers
 
 import java.sql.Timestamp
 import org.mockito.Mockito._
@@ -237,3 +237,4 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 }
+*/

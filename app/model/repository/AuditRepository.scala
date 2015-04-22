@@ -14,11 +14,12 @@ import scala.collection.mutable.ListBuffer
  * Define all data access layer methods of Auditing records
  */
 trait AuditRepository extends AuditTable with MobileRepository {
-  /*
-   * Inserts new timestamp when an imei number check
+  /**
+   * Inserts new TimeStamps when an IMEI number is searched
    * @param timestamp, object of Audit
    * @return auto generated id
    */
+
   def insertTimestamp(audit: Audit): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -33,7 +34,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Gets time stamp of a particular imei number
+   * Gets TimeStamp of a particular IMEI number
    * @param imeid of mobile
    * @return list of Audit object
    */
@@ -45,7 +46,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Get all time stamps records
+   * Get all TimeStamps
    * @return list of object of Audit instances
    */
   def getAllTimestamps: List[Audit] = {
@@ -55,7 +56,12 @@ trait AuditRepository extends AuditTable with MobileRepository {
     }
   }
 
-  def getRecordByDate(year: String): List[Int] = {
+  /**
+   * @param year
+   * @return Number of Registrations per Month for the given year
+   * e.g.  List(1,2,3,4,5,6,7,8,0,23,12,23) for month JAN to DEC
+   */
+  def getRegistrationRecordsByYear(year: String): List[Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       val empty: ListBuffer[Int] = ListBuffer()
       for (i <- 1 to 12) {
@@ -93,13 +99,9 @@ trait AuditRepository extends AuditTable with MobileRepository {
             brands <- brands if (mId.brandId === brands.id)
             brandCount <- countQuery if (brandCount._1 === mId.id)
           } yield (mId.name, brandCount._2)
-          val topNCount = brandQuery.list.sortBy((x) => x._2).drop(brandQuery.list.size - n)
-          val sumOfTopNCounts = topNCount.map(x => x._2).sum
+          val topNCount = brandQuery.list.sortBy { case (modelName, modelCount) => modelCount }.drop(brandQuery.list.size - n)
           val totalTheftCount = mobiles.length.run
-          val otherModelsCount = totalTheftCount - sumOfTopNCounts
-          val otherCountTuple = ("Others", otherModelsCount)
-          val topNValuesWithOthers = otherCountTuple :: topNCount
-          val floatValues = topNValuesWithOthers.map(x => (x._1, (x._2.toFloat / totalTheftCount.toFloat) * 100))
+          val floatValues = topNCount.map({ case (modelName, modelCount) => (modelName, (modelCount.toFloat / totalTheftCount.toFloat) * 100) })
           floatValues match {
             case x: List[(String, Float)] => Some(floatValues)
             case _                        => None
