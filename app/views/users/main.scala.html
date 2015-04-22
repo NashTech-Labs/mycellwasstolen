@@ -1,4 +1,4 @@
-@(string: String, user: Option[model.repository.User])(content: Html)
+@(message: String, mobileRegistrationForm: Form[model.repository.MobileRegisterForm], brands: List[model.repository.Brand])(content: Html)
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +34,9 @@
     
 <!-- Render checkImei section -->
  @views.html.users.contents.checkIMEIStatus("imei status")
+ 
+ <!-- Render register imei section -->
+ @views.html.users.contents.imeiRegistration("imei status",mobileRegistrationForm,brands)
     
 
 <!-- Render Dashboard Section -->
@@ -42,7 +45,6 @@
  <!-- Footer -->
 
 	@views.html.users.footer.footer("render footer")
-
 
 	<!-- jQuery -->
 	<script src="@routes.Assets.at("user/js/jquery.js")"></script>
@@ -60,14 +62,7 @@
 	<script src="@routes.Assets.at("user/js/stickyMojo.js")"></script>
 	<!-- sticky Side bar initialization -->
 	<script src="@routes.Assets.at("user/js/myscript/textSlide.js")"></script>
-	<script>
-		$(function() {
-			$('#example').vTicker();
-		});
-	</script>
 	<script src="@routes.Assets.at("user/js/myscript/stickySideInit.js")"></script>
- 
- 
 </body>
 </html>
  

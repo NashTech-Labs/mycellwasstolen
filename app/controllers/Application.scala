@@ -13,6 +13,7 @@ import play.api._
 import play.api.cache.Cache
 import play.api.Play.current
 import model.repository.User
+import model.repository.BrandRepository
 
 /**
  * Contains application generated controllers javaScriptRoutes to make ajax calls
@@ -23,10 +24,8 @@ class Application extends Controller {
    * Display the home page
    */
   def index: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    val username = request.session.get(Security.username).getOrElse("None")
-    val user: Option[User] = Cache.getAs[User](username)
-    Logger.info("USERNAME:::::" + user)
-    Ok(views.html.users.index("Welcome", user))
+    val allBrands=BrandRepository.getAllBrands
+    Ok(views.html.users.index("Welcome",MobileController.mobileregistrationform,allBrands))
   }
 
   /**

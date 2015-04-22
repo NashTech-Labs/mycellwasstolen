@@ -1,12 +1,86 @@
-
 /*Home page*/
 /* home page slider*/
+html, body {
+	height: 100%;
+}
 
-.carousel,.item,.active{height:100%; height: 500px;}
-.fill{width:100%;height:100%;background-position:center;background-size:cover;}
-.carousel-inner{height:100%;}
-.carousel-control{top:49%;left:5px;width:50px;height:50px;margin-top:50px;font-size:70px;font-weight:100;line-height:30px;color:#333;text-align:center;background:transparent;border:0;}
-.light-color , .light-color a {color:#f7f7f7;text-decoration:none}
+.carousel, .item, .active {
+	height: 100%;
+}
 
-.blocky {margin-left:6%;margin-top:15%;margin-bottom: 10%;}
+.fill {
+	width: 100%;
+	height: 100%;
+	background-position: center;
+	background-size: cover;
+}
 
+.carousel-inner {
+	height: 100%;
+}
+
+.carousel-control {
+	top: 49%;
+	left: 5px;
+	width: 50px;
+	height: 50px;
+	margin-top: -20px;
+	font-size: 70px;
+	font-weight: 100;
+	line-height: 30px;
+	color: #333;
+	text-align: center;
+	background: transparent;
+	border: 0;
+}
+
+.inputField{
+	width: 58% !important;
+}
+
+.light-color, .light-color a {
+	color: #f7f7f7;
+	text-decoration: none
+}
+
+.blocky {
+	margin-left: 8%;
+	margin-top: 9%;
+}
+
+.blocky h1, .blocky h2 {
+	background-color: rgba(1, 240, 1, 0.5);
+	display: inline;
+	text-transform: none;
+	font-weight: 800;
+	color: white;
+	line-height: 52px;
+}
+
+.blocky h1 span, .blocky h2 span {
+	padding: 20px;
+	color: #fff;
+}
+
+.headline {
+	display: block;
+	margin: 10px 0px 25px;
+	border-bottom: 2px dotted #c8d2e0;
+}
+
+.headline h2, .headline h3, .headline h4 {
+	margin: 0px 0px -2px;
+	padding-bottom: 5px;
+	display: inline-block;
+	border-bottom: 3px solid #72C02C;
+}
+
+a {
+	color: #ffa500;
+	text-decoration: none;
+}
+
+.error {
+	color: rgba(213, 3, 3, 1);
+	font-weight: initial;
+}

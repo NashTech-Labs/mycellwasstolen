@@ -1,9 +1,11 @@
 @* checkIMEIModal Template File *@
 @(title:String)
 
-<section>
+<section id="imeiStatus">
     <div class="container">
+    <div class="headline">
     <h3>Check IMEI status</h3>
+    </div>
     <h5>Ensure that you are not buying a lemon!</h5>
     <p>A lemon cell is analogous to a <a href="http://en.wikipedia.org/wiki/Lemon_(automobile)">lemon automobile</a> where 
 									you find out problems, much after the purchase has been 
@@ -44,10 +46,8 @@
 							</div>
 						  </div>
 						  <hr>
-						  <button class="btn btn-success" onClick="clearr()">Cancel</button>
+						  <button class="btn btn-success" onClick="clearFields();">Close</button>
                         </div>
-                        <hr>
-                       
                     </div>
                 </div>
             </div>
@@ -56,6 +56,5 @@
 
     </div>
     </section>
-
-<script src="@routes.Assets.at("user/javascripts/jquery.validate.min.js")" type="text/javascript"></script>
+    
 <script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>

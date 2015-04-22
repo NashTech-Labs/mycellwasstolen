@@ -1,5 +1,5 @@
-@(message: String, user: Option[model.repository.User])
+@(message: String, mobileRegistrationForm: Form[model.repository.MobileRegisterForm], brands: List[model.repository.Brand])
 
-@views.html.users.main("Home", user) {
+@views.html.users.main("Home",mobileRegistrationForm,brands) {
 
 }
