@@ -1,6 +1,13 @@
 
 @(message: String)
-@views.html.users.main("Welcome to Play",user=None) {
+<html>
+<head>
+<title>Not found</title>
+<script src="@routes.Assets.at("user/js/jquery.js")"></script>    
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="@routes.Assets.at("user/css/bootstrap.min.css")" rel="stylesheet">
+</head>
+<body>
 <div class ="container">
 <div class="row" style="margin-top: 100px;">
 <div class="col-md-5">
@@ -15,4 +22,5 @@
 	</div>
 	</div>	
 </div>
-}
+</body>
+</html>

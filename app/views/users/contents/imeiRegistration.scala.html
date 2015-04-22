@@ -1,0 +1,39 @@
+@(title:String,mobileRegistrationForm: Form[model.repository.MobileRegisterForm], brands: List[model.repository.Brand]) 
+<section id="registerImei">
+<div class="container">
+<div class="headline">
+<h3>IMEI Registration</h3>
+</div>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <p>Chances are that you are visiting this page, because, you or someone close to you, has lost his/her cell phone. 
+                        The feeling of losing a cell phone is analogous to losing a part of your life. 
+                        We have been in the same situation. This site with its database of over 50,000 (and growing) lost / stolen cell phones, is an attempt to break the cycle of cell phone thefts.</p>
+                        <p>Register your mobile IMEI number with us and be safe.</p>
+                         <a href="#imeiRegisterModal" class="portfolio-link" role="button"  data-toggle="modal"><button class="btn btn-success">Click here to register IMEI number</button></a>             
+                    </div>
+                    <div class="col-sm-3">
+                        <img src="@routes.Assets.at("user/img/cell.jpg")" alt="">
+                    </div>
+                </div>
+                
+     <!-- Modal -->
+    <div class="portfolio-modal modal fade" id="imeiRegisterModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="modal-body" style="text-align: left;">
+                           <h3>Register your IMEI</h3>
+                           <div class="well form-horizontal">
+						<h4 style="color: rgba(23, 110, 94, 1);">Please provide authentic IMEI proof</h4>
+							 @registerForm("clean", mobileRegistrationForm, brands)
+						</div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>             
+</div>
+</section>

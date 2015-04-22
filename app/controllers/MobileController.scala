@@ -42,36 +42,14 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "document" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
 
   /**
-   * Display the new mobile registration form for stolen mobile
-   */
-  def stolenMobileRegistrationForm: Action[play.api.mvc.AnyContent] = Action { implicit request =>
-    Logger.info("MobileController:mobileRegistrationForm -> called")
-    val mobileBrands = brandRepo.getAllBrands
-    val username = request.session.get(Security.username).getOrElse("None")
-    val user: Option[User] = Cache.getAs[User](username)
-    Ok(views.html.users.contents.stolenMobileRegistrationForm(mobileregistrationform, mobileBrands, user))
-  }
-
-  /**
-   * Display the new secure mobile registration form
-   */
-  def secureMobileRegistrationForm: Action[AnyContent] = Action { implicit request =>
-    Logger.info("MobileController:mobileRegistrationSecureForm -> called")
-    val mobileBrands = brandRepo.getAllBrands
-    val username = request.session.get(Security.username).getOrElse("None")
-    val user: Option[User] = Cache.getAs[User](username)
-    Ok(views.html.users.contents.secureMobileRegistrationForm(mobileregistrationform, mobileBrands, user))
-  }
-
-  /**
    * Handle the new mobile registration form submission and add new mobile
    */
   def saveMobileUser: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     val username = request.session.get(Security.username).getOrElse("None")
-    val mobileBrands = brandRepo.getAllBrands
+    val brands = brandRepo.getAllBrands
     val user: Option[User] = Cache.getAs[User](username)
     mobileregistrationform.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.users.contents.stolenMobileRegistrationForm(formWithErrors, mobileBrands, user)),
+      formWithErrors => BadRequest("Invalid form data"),
       mobileuser => {
         val date = commonUtils.getSqlDate()
         val index = mobileuser.document.indexOf(".")
@@ -87,9 +65,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
               val fileToSave = image.ref.file.asInstanceOf[File]
               s3Util.store(documentName, fileToSave)
             }
-            Redirect(routes.MobileController.stolenMobileRegistrationForm).flashing("SUCCESS" -> Messages("messages.mobile.register.success"))
+            Ok("success")
           case _ =>
-            Redirect(routes.MobileController.stolenMobileRegistrationForm).flashing("ERROR" -> Messages("messages.mobile.register.error"))
+            Ok("error")
         }
       })
   }
