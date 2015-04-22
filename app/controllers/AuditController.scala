@@ -102,7 +102,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
   def topLostBrands(n: Int): Action[AnyContent] = withAuth { username =>
     implicit request =>
       //Define JSON writer for tuple
-      implicit def tuple2[A: Writes, B: Writes] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
+      implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
       val topN = auditRepo.getTopNLostBrands(n)
       topN match {
         case Some(ex: List[(String, Float)]) => {
@@ -110,7 +110,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
           Ok(play.api.libs.json.Json.toJson(topN))
         }
         case None =>
-          Ok(play.api.libs.json.Json.toJson(List(("NoData",0.0))))
+          Ok(play.api.libs.json.Json.toJson(List(("NoData", 0.0))))
       }
 
   }

@@ -23,7 +23,8 @@ import play.twirl.api.Html
 /**
  * Controls administrative tasks such as handling user requests, approving a request, request verification
  */
-class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil, s3Util: S3UtilComponent)
+class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, modelRepo: ModelRepository, auditRepo: AuditRepository, mail: MailUtil
+    , s3Util: S3UtilComponent)
   extends Controller with Secured {
 
   /**

@@ -96,7 +96,7 @@ object Global extends GlobalSettings {
   /**
    * Handle the fake requests to application
    */
-  override def onHandlerNotFound(request: RequestHeader) = {
+  override def onHandlerNotFound(request: RequestHeader):Future[play.api.mvc.Result] = {
     Future {
       Ok(views.html.users.contents.errorPage("page not found"))
     }
