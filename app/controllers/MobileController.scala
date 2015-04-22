@@ -19,7 +19,7 @@ import java.sql.Timestamp
 import play.api.libs.Files
 
 /**
-  * Contains controllers to handle user tasks such as rendering RegistrationForms, handling submits,
+ * Contains controllers to handle user tasks such as rendering RegistrationForms, handling submits,
  * sending Email Notification on type of registrations etc
  */
 class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
@@ -40,7 +40,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
       "email" -> email,
       "regType" -> nonEmptyText,
       "document" -> nonEmptyText)(MobileRegisterForm.apply)(MobileRegisterForm.unapply))
-      
+
   /**
    * Display the new mobile registration form for stolen mobile
    */
