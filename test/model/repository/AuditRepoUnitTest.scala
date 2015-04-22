@@ -52,14 +52,37 @@ class AuditRepoTest extends FunSuite {
       AuditRepository.insertTimestamp(auditTimestamp)
       val returnedValue = AuditRepository.getAllTimestamps
       assert(returnedValue === List(auditTimestamp))
-    }
+    } 
   }
-
+  //Test getRecordByDate 
   test("AuditRepository: getRecordByDate") {
     running(FakeApplication()) {
       MobileRepository.insertMobileUser(mobileUser)
-      val returnedValue = AuditRepository.getRecordByDate("2015")
+      val returnedValue = AuditRepository.getRegistrationRecordsByYear("2015")
       assert(returnedValue === List(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
     }
   }
+  
+  //Test getTopNLostBrands 
+  test("AuditRepository: getTopNLostBrands with Some Value of Mobile Record") {
+    running(FakeApplication()) {
+      BrandRepository.insertBrand(Brand("Sigma", Some(1)))
+      //Insert a Model Record
+      ModelRepository.insertModel((Model("Sigma454", 1)))
+      //Insert a Mobile Record first
+      val insertedMobile = MobileRepository.insertMobileUser((mobileUser))
+      val returnedValue = AuditRepository.getTopNLostBrands(1)
+      assert(returnedValue === Some(List(("Sigma454",100.toFloat))))
+    }
+  }
+  
+  //Test getTopNLostBrands 
+  test("AuditRepository: getTopNLostBrands with No Mobile Record") {
+    running(FakeApplication()) {
+      //Get TopNLost Brands without having any records in table
+      val returnedValue = AuditRepository.getTopNLostBrands(1)
+      assert(returnedValue === None)
+    }
+  }
+  
 }

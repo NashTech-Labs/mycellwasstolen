@@ -14,11 +14,12 @@ import scala.collection.mutable.ListBuffer
  * Define all data access layer methods of Auditing records
  */
 trait AuditRepository extends AuditTable with MobileRepository {
-  /*
-   * Inserts new timestamp when an imei number check
+  /**
+   * Inserts new TimeStamps when an IMEI number is searched
    * @param timestamp, object of Audit
    * @return auto generated id
    */
+
   def insertTimestamp(audit: Audit): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -33,7 +34,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Gets time stamp of a particular imei number
+   * Gets TimeStamp of a particular IMEI number
    * @param imeid of mobile
    * @return list of Audit object
    */
@@ -45,7 +46,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Get all time stamps records
+   * Get all TimeStamps
    * @return list of object of Audit instances
    */
   def getAllTimestamps: List[Audit] = {
@@ -55,7 +56,12 @@ trait AuditRepository extends AuditTable with MobileRepository {
     }
   }
 
-  def getRecordByDate(year: String): List[Int] = {
+  /**
+   * @param year
+   * @return Number of Registrations per Month for the given year
+   * e.g.  List(1,2,3,4,5,6,7,8,0,23,12,23) for month JAN to DEC
+   */
+  def getRegistrationRecordsByYear(year: String): List[Int] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       val empty: ListBuffer[Int] = ListBuffer()
       for (i <- 1 to 12) {
@@ -81,34 +87,25 @@ trait AuditRepository extends AuditTable with MobileRepository {
    * (n< number of brands)
    * @param n, number of brands
    */
-  def getTopNLostBrands(n: Int): Option[List[(String,Float)]] = {
+  def getTopNLostBrands(n: Int): Option[List[(String, Float)]] = {
     Connection.databaseObject().withSession { implicit session: Session =>
-      //Get modelId with count from Mobile table as tuple value
-      mobiles.length.run>0 match{
-        case true =>{
-        	val countQuery = for {
-        		(id, c) <- mobiles groupBy (_.modelId)
-        	} yield id -> c.map(_.modelId).length
-        	//Joint  this (modelId,count(modelId)) tuple with model table to fetch brandId of each model  
-        	val brandQuery = for{
-        		mId <- models
-        		brands <- brands if(mId.brandId === brands.id)
-        			brandCount <- countQuery if (brandCount._1 === mId.id) 
-        	} yield (mId.name,brandCount._2)
-        	//Sort the list by Highest count of models and select from highest to lowest
-        	val topNCount = brandQuery.list.sortBy( (x)=> x._2).drop(brandQuery.list.size - n)
-        	val sumOfTopNCounts = topNCount.map( x => x._2).sum
-        	println("Top N is of : "+sumOfTopNCounts)
-        	val totalTheftCount = mobiles.length.run
-        	val otherModelsCount = totalTheftCount - sumOfTopNCounts
-        	val otherCountTuple = ("Others",otherModelsCount)
-        	val topNValuesWithOthers = otherCountTuple::topNCount
-        	val floatValues = topNValuesWithOthers.map(x=> (x._1,(x._2.toFloat/totalTheftCount.toFloat)*100)) 
-        	floatValues.foreach(println) 
-        	floatValues match{
-        	case x:List[(String,Float)] => Some(floatValues)
-        	case _ => None
-        	}
+      mobiles.length.run > 0 match {
+        case true => {
+          val countQuery = for {
+            (id, c) <- mobiles groupBy (_.brandId)
+          } yield id -> c.map(_.modelId).length
+          val brandQuery = for {
+            mId <- models
+            brands <- brands if (mId.brandId === brands.id)
+            brandCount <- countQuery if (brandCount._1 === mId.id)
+          } yield (mId.name, brandCount._2)
+          val topNCount = brandQuery.list.sortBy { case (modelName, modelCount) => modelCount }.drop(brandQuery.list.size - n)
+          val totalTheftCount = mobiles.length.run
+          val floatValues = topNCount.map({ case (modelName, modelCount) => (modelName, (modelCount.toFloat / totalTheftCount.toFloat) * 100) })
+          floatValues match {
+            case x: List[(String, Float)] => Some(floatValues)
+            case _                        => None
+          }
         }
         case false => None
       }
@@ -149,7 +146,6 @@ case class Audit(
  * @param imeiMeid, IMEI number of mobile
  */
 case class AuditForm(imeiMeid: String)
-
 
 /**
  * Object Wraps methods of the trait AuditRepository

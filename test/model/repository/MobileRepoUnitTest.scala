@@ -144,7 +144,7 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       ModelRepository.insertModel((Model("Sigma454", 1)))
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser((mobileUser))
-      //Insert a Brand Record
+      //Fetch all Mobiles with Brand and Model
       val returnValueOnChange = MobileRepository.getAllMobilesUserWithBrandAndModel("pending")
       assert(returnValueOnChange.isEmpty == false)
     }

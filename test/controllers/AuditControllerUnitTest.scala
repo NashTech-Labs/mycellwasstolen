@@ -66,8 +66,51 @@ class AuditControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedAudit.insertMobileUser(mobileUser)).thenReturn(Right(Some(1)))
-      when(mockedAudit.getRecordByDate("2015")).thenReturn(List(1))
+      when(mockedAudit.getRegistrationRecordsByYear("2015")).thenReturn(List(1))
       val result = auditController.registrationRecordsByYear("2015")(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+    }
+  }
+  
+  "AuditControllerTesting: renderTopLostBrands" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      val result = auditController.renderTopLostBrands()(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+    }
+  }
+  
+  "AuditControllerTesting: topLostBrands with no data" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      val result = auditController.topLostBrands(1)(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+    }
+  }
+
+   "AuditControllerTesting: topLostBrands with mocked data" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedAudit.getTopNLostBrands(1)).thenReturn(Some(List(("Sigma454",100.toFloat))))
+      val result = auditController.topLostBrands(1)(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+    }
+  }
+   
+   "AuditControllerTesting: getRegistrationByYears" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedAudit.getRegistrationRecordsByYear("2012")).thenReturn(List(1,2,3,4,5,6,7,8,9,0,1,2))
+      val result = auditController.getRegistrationByYears(FakeRequest().withSession(Security.username -> "admin"))
+      status(result) must equalTo(200)
+    }
+  }
+   
+   "AuditControllerTesting: getRegistrationByYears" in {
+    running(FakeApplication()) {
+      Cache.set("admin", user)
+      when(mockedAudit.getRegistrationRecordsByYear("2012")).thenReturn(List(1,2,3,4,5,6,7,8,9,0,1,2))
+      val result = auditController.getMonthlyRegistration("2012")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
     }
   }

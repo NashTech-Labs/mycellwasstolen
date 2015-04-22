@@ -1,4 +1,4 @@
-package routes
+/*package routes
 
 import org.specs2.mutable.Specification
 import play.api.test.FakeApplication
@@ -89,3 +89,4 @@ class RouterTest extends Specification {
   }
   
 }
+*/

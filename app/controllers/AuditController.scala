@@ -1,21 +1,22 @@
 package controllers
 
-import model.repository._
-import net.liftweb.json.DefaultFormats
-import net.liftweb.json.JsonAST._
-import net.liftweb.json.JsonDSL._
-import net.liftweb.json.Serialization.write
-import play.api.Logger
-import play.api._
-import play.api.Play.current
-import play.api.data.Form
-import play.api.data.Forms.{ mapping, nonEmptyText }
-import play.api.mvc._
-import utils._
-import play.api.cache.Cache
-import play.twirl.api.Html
 import java.util.Calendar
+
+import model.repository.AuditForm
+import model.repository.AuditRepository
+import model.repository.User
+import play.api.Logger
+import play.api.Play.current
+import play.api.cache.Cache
+import play.api.data.Form
+import play.api.data.Forms.mapping
+import play.api.data.Forms.nonEmptyText
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import play.api.libs.json.Writes
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.Controller
+import play.api.mvc.Security
 
 /**
  * Contains behaviors to control for fetching audit reports
@@ -102,15 +103,18 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
   def topLostBrands(n: Int): Action[AnyContent] = withAuth { username =>
     implicit request =>
       //Define JSON writer for tuple
-      implicit def tuple2[A: Writes, B: Writes] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
+      implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
       val topN = auditRepo.getTopNLostBrands(n)
       topN match {
-        case Some(ex: List[(String, Float)]) => {
-          implicit val resultWrites = play.api.libs.json.Json.writes[BrandShare]
-          Ok(play.api.libs.json.Json.toJson(topN))
+        case Some(topLostBrands: List[(String, Float)]) => {
+          val sumOfTopNCounts = topLostBrands.map{case(model,modelCount) => modelCount}.sum
+          val otherCountTuple = ("Others", (100 - sumOfTopNCounts).toFloat)
+          val dataWithOthersShare = otherCountTuple::topLostBrands
+          implicit val resultWrites = play.api.libs.json.Json.writes[BrandShare] 
+          Ok(play.api.libs.json.Json.toJson(dataWithOthersShare))
         }
-        case None =>
-          Ok(play.api.libs.json.Json.toJson(List(("NoData",0.0))))
+        case _ =>
+          Ok(play.api.libs.json.Json.toJson(List(("NoData", 0.0))))
       }
 
   }
@@ -134,8 +138,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
 
   def getMonthlyRegistration(year: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("AuditController: getMonthlyData -> called.")
-    val topFive = auditRepo.getTopNLostBrands(4)
-    val recordList = auditRepo.getRecordByDate(year)
+    val recordList = auditRepo.getRegistrationRecordsByYear(year)
     val monthlyData = Monthly(recordList)
     implicit val resultWrites = play.api.libs.json.Json.writes[Monthly]
     Ok(play.api.libs.json.Json.toJson(monthlyData))
