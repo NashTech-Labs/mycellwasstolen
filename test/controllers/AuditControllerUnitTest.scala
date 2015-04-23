@@ -91,7 +91,7 @@ class AuditControllerTestCases extends Specification with Mockito {
    "AuditControllerTesting: topLostBrands with mocked data" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      when(mockedAudit.getTopNLostBrands(1)).thenReturn(Some(List(("Sigma454",100.toFloat))))
+      when(mockedAudit.getTopNLostBrands(1)).thenReturn(Some(List(("Sigma454",1)),1))
       val result = auditController.topLostBrands(1)(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
     }

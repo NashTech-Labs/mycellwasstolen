@@ -82,12 +82,13 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 
   /**
-   * Returns List of top n lost brands with their lost_count from mobile table e.g.
-   * List(('A',1),('B', 4),('C',50).. ('N',N))
+   * Returns List of top n lost brands with their lost_count from mobile table along with
+   * total theft  e.g.
+   * (List(('A',1),('B', 4),('C',50)('N',6)),numberOfRowsInMobile)
    * (n< number of brands)
    * @param n, number of brands
    */
-  def getTopNLostBrands(n: Int): Option[List[(String, Float)]] = {
+  def getTopNLostBrands(n: Int): Option[(List[(String, Int)],Int)] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       mobiles.length.run > 0 match {
         case true => {
@@ -101,9 +102,8 @@ trait AuditRepository extends AuditTable with MobileRepository {
           } yield (mId.name, brandCount._2)
           val topNCount = brandQuery.list.sortBy { case (modelName, modelCount) => modelCount }.drop(brandQuery.list.size - n)
           val totalTheftCount = mobiles.length.run
-          val floatValues = topNCount.map({ case (modelName, modelCount) => (modelName, (modelCount.toFloat / totalTheftCount.toFloat) * 100) })
-          floatValues match {
-            case x: List[(String, Float)] => Some(floatValues)
+          topNCount match {
+            case topNCounts: List[(String, Int)] => Some(topNCount,totalTheftCount)
             case _                        => None
           }
         }
@@ -112,6 +112,8 @@ trait AuditRepository extends AuditTable with MobileRepository {
     }
   }
 }
+
+
 
 /**
  * Defines schema of audits table

@@ -104,13 +104,15 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
     implicit request =>
       //Define JSON writer for tuple
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
-      val topN = auditRepo.getTopNLostBrands(n)
-      topN match {
-        case Some(topLostBrands: List[(String, Float)]) => {
-          val sumOfTopNCounts = topLostBrands.map{case(model,modelCount) => modelCount}.sum
-          val otherCountTuple = ("Others", (100 - sumOfTopNCounts).toFloat)
-          val dataWithOthersShare = otherCountTuple::topLostBrands
-          implicit val resultWrites = play.api.libs.json.Json.writes[BrandShare] 
+      auditRepo.getTopNLostBrands(n) match {
+        case Some((listofModelCount,totalTheft)) => {
+          val totalCounts = listofModelCount.map{case(model,modelCount) => modelCount}
+          val sumOfCounts = totalCounts.sum
+          val otherCounts = totalTheft - sumOfCounts
+          val floatValues = listofModelCount.map({ case (modelName, modelCount) => (modelName, (modelCount.toFloat / totalTheft.toFloat) * 100) })
+          val otherCountTuple = ("Others", otherCounts.toFloat/totalTheft.toFloat*100)
+          val dataWithOthersShare = otherCountTuple::floatValues
+          implicit val resultWrites = play.api.libs.json.Json.writes[BrandShare]
           Ok(play.api.libs.json.Json.toJson(dataWithOthersShare))
         }
         case _ =>

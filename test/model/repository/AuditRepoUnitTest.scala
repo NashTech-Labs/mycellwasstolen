@@ -72,7 +72,7 @@ class AuditRepoTest extends FunSuite {
       //Insert a Mobile Record first
       val insertedMobile = MobileRepository.insertMobileUser((mobileUser))
       val returnedValue = AuditRepository.getTopNLostBrands(1)
-      assert(returnedValue === Some(List(("Sigma454",100.toFloat))))
+      assert(returnedValue === Some(List(("Sigma454",1)),1))
     }
   }
   
