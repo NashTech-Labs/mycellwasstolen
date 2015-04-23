@@ -1,65 +1,13 @@
 /*Home page*/
 /* home page slider*/
-html, body {
-	height: 100%;
-}
 
-.carousel, .item, .active {
-	height: 100%;
-}
-
-.fill {
-	width: 100%;
-	height: 100%;
-	background-position: center;
-	background-size: cover;
-}
-
-.carousel-inner {
-	height: 100%;
-}
-
-.carousel-control {
-	top: 49%;
-	left: 5px;
-	width: 50px;
-	height: 50px;
-	margin-top: -20px;
-	font-size: 70px;
-	font-weight: 100;
-	line-height: 30px;
-	color: #333;
-	text-align: center;
-	background: transparent;
-	border: 0;
-}
-
-.inputField{
-	width: 58% !important;
-}
-
-.light-color, .light-color a {
-	color: #f7f7f7;
-	text-decoration: none
-}
-
-.blocky {
-	margin-left: 8%;
-	margin-top: 9%;
-}
-
-.blocky h1, .blocky h2 {
-	background-color: rgba(1, 240, 1, 0.5);
-	display: inline;
-	text-transform: none;
-	font-weight: 800;
-	color: white;
-	line-height: 52px;
-}
-
-.blocky h1 span, .blocky h2 span {
-	padding: 20px;
-	color: #fff;
+.carousel-caption {
+    color: #FFF !important;
+    text-align: left !important;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+    float: right !important;
+    padding-top: 50px !important;
+    margin-top: 50px !important;
 }
 
 .headline {
@@ -68,11 +16,29 @@ html, body {
 	border-bottom: 2px dotted #c8d2e0;
 }
 
+.inputField{
+	width: 300px;
+}
+
 .headline h2, .headline h3, .headline h4 {
 	margin: 0px 0px -2px;
 	padding-bottom: 5px;
 	display: inline-block;
 	border-bottom: 3px solid #72C02C;
+}
+
+.thumbnails-style{
+	padding: 10px;
+margin-bottom: 15px;
+}
+
+.thumbnails-style:hover { -moz-box-shadow: 0 0 10px #ccc; 
+-webkit-box-shadow: 0 0 10px #ccc; 
+box-shadow: 0 0 10px #ccc; 
+}
+
+.title{
+	color: rgba(218, 174, 22, 1);
 }
 
 a {
@@ -84,3 +50,21 @@ a {
 	color: rgba(213, 3, 3, 1);
 	font-weight: initial;
 }
+
+.sidebar{
+	margin-top: 106px;
+}
+
+.sidebar li i {
+    color: #72C02C;
+    font-size: 13px;
+    min-width: 15px;
+    margin-right: 8px;
+    text-align: center;
+    position: relative;
+}
+
+.sidebar li a{
+	color:#000000;
+}
+
