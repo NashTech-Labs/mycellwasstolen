@@ -4,6 +4,7 @@
 
 // clear all field on close button
 function clearForm() {
+	$("label.error").hide();
 	document.getElementById("mobileRegistrationForm").reset();
 	$('#imeiRegisterModal').modal('hide');
 }

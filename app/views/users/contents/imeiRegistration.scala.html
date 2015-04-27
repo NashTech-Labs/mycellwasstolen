@@ -1,21 +1,52 @@
 @(title:String,mobileRegistrationForm: Form[model.repository.MobileRegisterForm], brands: List[model.repository.Brand]) 
 <section id="registerImei">
-<div class="container">
 <div class="headline">
 <h3>IMEI Registration</h3>
 </div>
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-12">
                         <p>Chances are that you are visiting this page, because, you or someone close to you, has lost his/her cell phone. 
                         The feeling of losing a cell phone is analogous to losing a part of your life. 
                         We have been in the same situation. This site with its database of over 50,000 (and growing) lost / stolen cell phones, is an attempt to break the cycle of cell phone thefts.</p>
-                        <p>Register your mobile IMEI number with us and be safe.</p>
-                         <a href="#imeiRegisterModal" class="portfolio-link" role="button"  data-toggle="modal"><button class="btn btn-success">Click here to register IMEI number</button></a>             
-                    </div>
-                    <div class="col-sm-3">
-                        <img src="@routes.Assets.at("user/img/cell.jpg")" alt="">
+                        <p>Register your mobile IMEI number with us and be safe.</p><br>
+                         
+                         <a href="#imeiRegisterModal" class="portfolio-link" role="button"  data-toggle="modal"><button type="button" class="btn btn-success">
+  <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to register IMEI</button></a>             
                     </div>
                 </div>
+                <hr>
+                <div class="row">
+                <div class="col-md-4">
+                <div class="thumbnails-style">
+                <img class="img-responsive" src="@routes.Assets.at("user/img/keepmobilesafe.jpg")" alt="">
+                <div class="caption">
+                                <h4 class="title">Make it unusable</h4>
+                                <p style="font-size: 16px;">Register your stolen phone with us and make it unusable for the world.</p>
+                                 <p style="font-size: 16px;">Claim what is rightfully yours. </p>                           
+                            </div>
+                </div>
+                </div>
+                <div class="col-md-4">
+                <div class="thumbnails-style">
+                <img class="img-responsive" src="@routes.Assets.at("user/img/need-help.jpg")" alt="">
+                <div class="caption">
+                                <h4 class="title">Help Everyone</h4>
+                                <p style="font-size: 16px;">You can help the world by breaking the stolen cycle. Many of the stolen cell phones have landed with unsuspecting buyers who would rather not buy them had they known.</p>
+                                
+                            </div>
+                </div>
+                </div>
+                <div class="col-md-4">
+                <div class="thumbnails-style">
+                <img class="img-responsive" src="@routes.Assets.at("user/img/notification.jpg")" alt="">
+                <div class="caption">
+                                <h4 class="title">Get immediate notification</h4>
+                                <p style="font-size: 16px;">Not only would your information be safe with us but it would help us to inform you immediately if someone else tries to register your cell phone IMEI again.</p>
+                            </div>
+                </div>
+                </div>
+                </div>
+                <hr>
                 
      <!-- Modal -->
     <div class="portfolio-modal modal fade" id="imeiRegisterModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -24,10 +55,19 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="modal-body" style="text-align: left;">
-                           <h3>Register your IMEI</h3>
+                        <div class="col-md-7">
                            <div class="well form-horizontal">
 						<h4 style="color: rgba(23, 110, 94, 1);">Please provide authentic IMEI proof</h4>
 							 @registerForm("clean", mobileRegistrationForm, brands)
+						</div>
+						</div>
+						<div class="col-md-5">
+						<div class="headline">
+						<h3>It is pay back time for offenders</h3>
+						</div>
+			            <p>This is exactly the reason why this database exists. Please enter your details here and we could send you a confirmation mail as soon as your details reflect in our database.
+			             Please make sure that you upload a proof of purchase in your name and/or a police complaint. Once all the required information is available to us, your stolen cell IMEI would appear on the database in less than 24 hours. Within the next 72 hours, it would have reached the local authorities and cell phone service providers around the globe. You can view your stolen IMEI report once you are done.
+			            </p>
 						</div> 
                         </div>
                     </div>
@@ -35,5 +75,4 @@
             </div>
         </div>
     </div>             
-</div>
 </section>

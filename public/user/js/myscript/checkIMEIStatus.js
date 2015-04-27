@@ -5,7 +5,7 @@
 // clear all field on close button
 function clearFields() {
 	$('#msg').empty();
-	$('#imei').val("");
+	$('#imeiNum').val("");
 	$('#mobileRecords').empty();
 	$('#imeiStatusModal').modal('hide');
 }
@@ -15,8 +15,8 @@ function showMobileRecord() {
 	$('#msg').empty();
 	$('#mobileRecords').empty();
 	$()
-	var imeid = $('#imei').val();
-	if ($('#imei').val() == '') {
+	var imeid = $('#imeiNum').val();
+	if ($('#imeiNum').val() == '') {
 		var empty = '<label style="color:red;">Empty!   Please enter an IMEI number</label>'
 		$("#msg").html(empty);
 	} else {

@@ -2,7 +2,6 @@
 @(title:String)
 
 <section id="imeiStatus">
-    <div class="container">
     <div class="headline">
     <h3>Check IMEI status</h3>
     </div>
@@ -20,8 +19,9 @@
 								<br>
 								<h5 style="color: rgba(32, 75, 54, 1);">Coming Soon - Check IMEI by sending an <img src="@routes.Assets.at("user/img/msg.png")" alt="...">&nbsp;(premium service)</h5>
 								<hr>
-								    <!-- Button to trigger modal -->
-    <a href="#imeiStatusModal" class="portfolio-link" role="button"  data-toggle="modal"><button class="btn btn-success">Click here to check IMEI status</button></a>
+	
+	<a href="#imeiStatusModal" class="portfolio-link" role="button"  data-toggle="modal"><button type="button" class="btn btn-success">
+  <span class="glyphicon glyphicon-phone" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to check IMEI status</button></a>							    <!-- Button to trigger modal -->
      
     <!-- Modal -->
     <div class="portfolio-modal modal fade" id="imeiStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -35,7 +35,7 @@
                             <p>Please Enter Mobile IMEI To Check Phone Status:</p>
                              <div class= "row">
 							<div class= "col-md-4">
-							<input type="text" class="form-control" id="imei" name="imei" placeholder="Enter IMEI..."/>
+							<input type="text" class="form-control" id="imeiNum" name="imeiNum" placeholder="Enter IMEI..."/>
 					        </div>
 					        <div class="col-md-4">
 							<button class="btn btn-warning" onClick="showMobileRecord()" id="showrecord">Search</button>
@@ -54,7 +54,6 @@
         </div>
     </div>
 
-    </div>
     </section>
     
 <script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>

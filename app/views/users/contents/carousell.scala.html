@@ -1,39 +1,59 @@
 @* carousell Template File *@
 @(param: Any)
-<div id="myCarousel" class="carousel slide">
+<div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin-top: 95px; height: 400px;"> 
   <div class="carousel-inner">
-    <div class="active item">
-      <div class="fill" style="background-image:url('assets/example/bg1.jpg');">
-        <div class="container">
-          <div class="blocky"><h1 class="pull-left pull-middle light-color"><span><a href="#">Single Page App</a></span></h1></div>
-        </div>
+  <div class="item active"> <img src="@routes.Assets.at("user/img/b.jpg")" style="width:100%" data-src="" alt="First slide">
+    <div class="container" style="padding-top: 145px;">
+      <div class="carousel-caption">
+        <h3>Welcome in my cell was stolen</h3>
+        <p>Are you going to buy a cell? Please make sure it is safe.</p>
+        <button class="btn btn-warning fadeButton">Read more</button>
+      </div>
+      
+    </div>
+  </div>
+  <div class="item"> <img src="@routes.Assets.at("user/img/b.jpg")" style="width:100%" data-src="" alt="Second slide">
+    <div class="container" style="padding-top: 145px;" >
+      <div class="carousel-caption">
+        <h3>Welcome in my cell was stolen.</h3>
+        <p>Are you going to buy a cell? Please make sure it is safe.</p>
+        <button class="btn btn-warning fadeButton">Read more</button>
       </div>
     </div>
-    <div class="item">
-      <div class="fill" style="background-image:url('assets/example/bg_smartphones.jpg');">
-        <div class="container">
-          <div class="blocky"><h1 class="pull-left pull-middle light-color"><span><a href="#">Make Fast Updates</a></span></h1></div>
-        </div>
+  </div>
+  <div class="item"> <img src="@routes.Assets.at("user/img/g.jpg")" data-src="" alt="Third slide">
+    <div class="container" style="padding-top: 145px;">
+      <div class="carousel-caption">
+        <h3>Welcome in my cell was stolen</h3>
+        <p>Are you going to buy a cell? Please make sure it is safe.</p>
+        <button class="btn btn-warning fadeButton">Read more</button>
       </div>
     </div>
-    <div class="item">
-      <div class="fill" style="background-image:url('assets/example/bg_dogcat.jpg');">
-        <div class="container">
-          <div class="blocky"><h1 class="pull-left pull-middle light-color"><span><a href="#">About Your Brand</a></span></h1></div>
-        </div>
-      </div>
-    </div>
-	</div>
-  	<a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
-	<a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+  </div>
 </div>
+
+<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+  <span class="glyphicon glyphicon-chevron-left"></span>
+</a>
+
+<a class="right carousel-control" href="#myCarousel" data-slide="next">
+  <span class="glyphicon glyphicon-chevron-right"></span>
+</a>
   
-  <script>
-  $('.carousel').carousel();
-  $('#myCarousel').on('slide',function(){
-    $('.blocky').fadeOut(300);
-  });
-  $('#myCarousel').on('slid',function(){
-    $('.blocky').fadeIn(600).animate({marginLeft:"+=12%"},200).animate({marginLeft:"-=15%"},300).animate({marginLeft:"+=4%"},600);
-  });
+</div>
+  <script src="@routes.Assets.at("user/js/jquery.js")"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+		$('.carousel').carousel();
+		$('#myCarousel').on('slide.bs.carousel', function() {
+			$('.carousel-caption').fadeOut(900);
+		})
+		$('#myCarousel').on('slid.bs.carousel', function() {
+			$('.carousel-caption').css({"margin-left":"0px"}).fadeIn(800).animate({
+				marginLeft : "400px"
+			}, 2000);
+
+			$('.fadeButton').fadeIn(7000);
+		})
+	});
   </script>
