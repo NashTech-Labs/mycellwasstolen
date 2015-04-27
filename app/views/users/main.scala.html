@@ -30,7 +30,7 @@
   @views.html.users.contents.carousell("render carousell")
     </header>
     
-   <div class="container" style="width: 1453px;"> 
+   <div class="container"> 
    <div class="row">
    <div class="col-md-9">
     
@@ -40,33 +40,16 @@
  <!-- Render register imei section -->
  @views.html.users.contents.imeiRegistration("imei status",mobileRegistrationForm,brands)
     
+ 
+ </div>
+ <div class="col-md-3 sidebar">
+@views.html.users.contents.rightSidebar("render sidebar")            
+ </div>
+ </div>
 
 <!-- Render Dashboard Section -->
  @views.html.users.contents.dashboard("Render Dashboard")
  
- </div>
- <div class="col-md-3 sidebar">
- <div class="headline">
-    <h4>Why Choose Us</h4>
-    </div>
-    <p style="font-size: 16px;">Pellentesque fermentum, Vivamus imperdiet condimentum diam, eget placerat felis consectetur id.</p>
-    <ul class="list-unstyled">
-                        <li><a href="#"><i class="fa fa-check"></i>Check IMEI status</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>Register IMEI</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>Data records</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>View reports</a></li>
-                    </ul>
-                <br>
-                    
-   <div class="headline">
-    <h4>Latest Tweets</h4>
-    </div>
-    <br>
-    <div>
-    @views.html.socialmedia.twitterFeedWidget("tweets")
-         </div>            
- </div>
- </div>
  </div>
  <!-- Footer -->
 
@@ -80,8 +63,6 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 	<script src="@routes.Assets.at("user/js/classie.js")"></script>
 	<script src="@routes.Assets.at("user/js/cbpAnimatedHeader.js")"></script>
-	<!-- Contact Form JavaScript -->
-	<script src="@routes.Assets.at("user/js/jqBootstrapValidation.js")"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="@routes.Assets.at("user/js/freelancer.js")"></script>
 </body>

@@ -4,8 +4,9 @@
 
 // clear all field on close button
 function clearForm() {
-	$("label.error").hide();
 	document.getElementById("mobileRegistrationForm").reset();
+	$("label.error").hide();	
+	$(".error").removeClass('error');
 	$('#imeiRegisterModal').modal('hide');
 }
 
@@ -17,6 +18,9 @@ $("#mobileRegistrationForm").submit(function(event) {
 
 	// grab all form data
 	var formData = new FormData($(this)[0]);
+	
+	var regtype=$("input[name=regTypee]:checked").val();
+    $('#regType').val(regtype);
 
 	$.ajax({
 		url : '/save_users',
@@ -27,7 +31,9 @@ $("#mobileRegistrationForm").submit(function(event) {
 		contentType : false,
 		processData : false,
 		success : function(returndata) {
-			alert(returndata);
+			alert("Your IMEI number has beeen successfully added.");
+			$("label.error").hide();
+			document.getElementById("mobileRegistrationForm").reset();
 		}
 	});
 

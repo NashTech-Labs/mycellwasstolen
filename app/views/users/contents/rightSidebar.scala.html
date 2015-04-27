@@ -1,35 +1,21 @@
 @* rightSidebar Template File *@ 
 @(param: Any)
-	<div class="row" style="margin-top: 5px;">
-		<div class="col-md-4" style="text-align: right;">
-			<img src="@routes.Assets.at("user/img/logo.png")" alt="...">
-		</div>
-		<div class="col-md-8" style="padding-top: 10px;">
-			<h5
-				style="text-align: center; color: rgba(239, 0, 0, 1); display: inline;">My
-				cell was stolen</h5>
-			<div id="example">
-  <ul>
-    <li>A social movement to make mobile space secure</li>
-    <li>Ensure you are buying a clean phone</li>
-    <li>Register and be safe</li>
-  </ul>
-</div>
-		</div>
-	</div>
-	<hr>
-	<div class="input-group" style="width: 250px;">
-		<input type="text" class="form-control"
-			placeholder="Search for this site..."> <span
-			class="input-group-btn">
-			<button class="btn btn-primary" type="button">Search</button>
-		</span>
-	</div>
-	<hr>
-	<!-- Render Twitter Feed Widget -->
-	@views.html.socialmedia.twitterFeedWidget("render feed widget")
-	<h4>Links</h4>
-	<a href="">How does it work</a><br> <a href="">Register stolen
-		phone</a><br> <a href="">Check mobile imei</a><br> <a href="">Rewards</a><br>
-	<a href="">Win prizes</a><br>
-	<hr>
+ <div class="headline">
+    <h4>Why Choose Us</h4>
+    </div>
+    <p style="font-size: 16px;">Pellentesque fermentum, Vivamus imperdiet condimentum diam, eget placerat felis consectetur id.</p>
+    <ul class="list-unstyled">
+                        <li><a href="#"><i class="fa fa-check"></i>Check IMEI status</a></li>
+                        <li><a href="#"><i class="fa fa-check"></i>Register IMEI</a></li>
+                        <li><a href="#"><i class="fa fa-check"></i>Data records</a></li>
+                        <li><a href="#"><i class="fa fa-check"></i>View reports</a></li>
+                    </ul>
+                <br>
+                    
+   <div class="headline">
+    <h4>Latest Tweets</h4>
+    </div>
+    <br>
+    <div>
+    @views.html.socialmedia.twitterFeedWidget("tweets")
+         </div>

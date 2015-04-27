@@ -65,9 +65,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
               val fileToSave = image.ref.file.asInstanceOf[File]
               s3Util.store(documentName, fileToSave)
             }
-            Ok("success")
+            Ok("success").flashing("success"->"Your IMEI registration has been successfully added.")
           case _ =>
-            Ok("error")
+            Ok("error").flashing("error"->"Oops! Something wrong. Please try again.")
         }
       })
   }
