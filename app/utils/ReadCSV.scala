@@ -33,6 +33,8 @@ object ReadCSV extends CommonUtils {
    * @return Unit
    */
   def convert(file: File, tableName: TableEnums.Value): Unit = {
+    
+    Logger("ailu re")
     tableName match {
       case `BRANDS` => {
         caseBrands
@@ -51,20 +53,21 @@ object ReadCSV extends CommonUtils {
         None
     }
   }
+  
   /**
    * Inserts data into Mobile table
    */
   private def caseMobile: Unit = {
-    /*val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
+    val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
       val status = mobileStatus(result(Constants.NINE))
       val registerDate = getSqlDate(result(Constants.ELEVEN))
       MobileRepository.insertMobileUser(Mobile(result(Constants.ZERO), result(Constants.ONE).toInt, result(Constants.TWO).toInt,
         result(Constants.THREE), result(Constants.FOUR), result(Constants.SIX), result(Constants.SEVEN), result(Constants.EIGHT), status,
-        result(Constants.TEN),))
+        registerDate,result(Constants.TWELVE)))
     }
-    mobilesReader.close()*/
+    mobilesReader.close()
   }
 
   /**
@@ -83,7 +86,7 @@ object ReadCSV extends CommonUtils {
    * Insert data from CSV into Brands table
    */
   private def caseBrands: Unit = {
-    val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
+    val auditReader = CSVReader.open(new FileReader("conf/csv/Brands.csv"))
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
       AuditRepository.insertTimestamp(Audit(result(Constants.ONE), Timestamp.valueOf(result(Constants.ZERO))))

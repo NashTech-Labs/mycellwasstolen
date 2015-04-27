@@ -15,6 +15,7 @@ import play.api.mvc.Security
 import java.util.Date
 import java.util.Calendar
 import java.sql.Timestamp
+import model.analyticsServices.AnalyticsService
 
 class AuditControllerTestCases extends Specification with Mockito {
 
@@ -24,7 +25,7 @@ class AuditControllerTestCases extends Specification with Mockito {
     "sushil", 1, 1, "864465028854206", "123456789012677","+91 9839839830",
     "gs@gmail.com", "stolen", StatusUtil.Status.pending, CommonUtils.getSqlDate(), "gaurav.png")
   val user = User("admin", "knol2013")
-  val mockedAudit = mock[AuditRepository]
+  val mockedAudit = mock[AnalyticsService]
 
   val auditController = new AuditController(mockedAudit)
 
@@ -80,18 +81,10 @@ class AuditControllerTestCases extends Specification with Mockito {
     }
   }
   
-  "AuditControllerTesting: topLostBrands with no data" in {
+   "AuditControllerTesting: topLostBrands" in {
     running(FakeApplication()) {
       Cache.set("admin", user)
-      val result = auditController.topLostBrands(1)(FakeRequest().withSession(Security.username -> "admin"))
-      status(result) must equalTo(200)
-    }
-  }
-
-   "AuditControllerTesting: topLostBrands with mocked data" in {
-    running(FakeApplication()) {
-      Cache.set("admin", user)
-      when(mockedAudit.getTopNLostBrands(1)).thenReturn(Some(List(("Sigma454",1)),1))
+      when(mockedAudit.formatPieChartData(1)).thenReturn(List(("Sigma454",1.toFloat)))
       val result = auditController.topLostBrands(1)(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
     }

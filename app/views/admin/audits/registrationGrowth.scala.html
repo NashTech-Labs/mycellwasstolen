@@ -1,9 +1,11 @@
-@(user:Option[model.repository.User])
+@(user:Option[model.repository.User],year:Int)
 @* analytics Template File *@ 
  @views.html.admin.main("Registration Record Growth by Year",user) {
 <script src="@routes.Assets.at("admin/dist/js/highcharts.js")"></script>
 <div class="row">
 	<div class="col-lg-12">
+		<h4>Registration started from </h4>
+		<h4 id="minYear">@year</h4>
 		<div class="panel panel-default">
 			<!-- /.panel-heading -->
 			<div class="panel-body">

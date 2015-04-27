@@ -2,26 +2,20 @@ package controllers
 
 import java.util.Calendar
 
-import model.repository.AuditForm
-import model.repository.AuditRepository
-import model.repository.User
+import model.repository.{AuditForm,User}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.data.Forms.nonEmptyText
+import play.api.data.{Form}
+import play.api.data.Forms.{mapping,nonEmptyText}
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import play.api.libs.json.Writes
-import play.api.mvc.Action
-import play.api.mvc.AnyContent
-import play.api.mvc.Controller
-import play.api.mvc.Security
-
+import play.api.mvc.{Action,AnyContent,Controller,Security}
+import model.analyticsServices.AnalyticsService
 /**
  * Contains behaviors to control for fetching audit reports
  */
-class AuditController(auditRepo: AuditRepository) extends Controller with Secured {
+class AuditController(analyticService:AnalyticsService) extends Controller with Secured {
 
   /**
    * Represents a BrandShare Tuple
@@ -32,6 +26,11 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
    * Describe List of Registrations for a year
    */
   case class Monthly(data: List[Int])
+
+  /**
+   * Represents perDayRegistrationCount
+   */
+  case class RegistrationCount(registrationCounts: List[Int])
 
   /**
    * Describe mobile audit form
@@ -65,7 +64,7 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
           Ok(views.html.admin.audits.mobileCheckStatusTimestamp("imeid", list, user)).flashing("error" -> "Please correct the errors in the form")
         },
         success = { timestamp =>
-          val list = auditRepo.getAllTimestampsByIMEID(timestamp.imeiMeid)
+          val list = analyticService.getAllTimestampsByIMEID(timestamp.imeiMeid)
           Ok(views.html.admin.audits.mobileCheckStatusTimestamp("imeid", list, user))
         })
   }
@@ -76,13 +75,14 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
   def allTimestamps: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-      val list = auditRepo.getAllTimestamps
+      val list = analyticService.getAllTimestamps
       Ok(views.html.admin.audits.mobileCheckStatusTimestamp("all", list, user))
   }
 
   /**
    * Renders Registration Analytics
    */
+  
   def registrationRecordsByYear(year: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -100,47 +100,52 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
       Ok(views.html.admin.audits.topLostBrands(user))
   }
 
+  /**
+   * Handles AJAX call to fetch Brand Share in total mobile theft
+   * Returns brandShare JSON records in the form: [["Nokia",33.33],["Samsung",33.3],["Others",33.33%]]
+   */
   def topLostBrands(n: Int): Action[AnyContent] = withAuth { username =>
     implicit request =>
       //Define JSON writer for tuple
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
-      auditRepo.getTopNLostBrands(n) match {
-        case Some((listofModelCount,totalTheft)) => {
-          val totalCounts = listofModelCount.map{case(model,modelCount) => modelCount}
-          val sumOfCounts = totalCounts.sum
-          val otherCounts = totalTheft - sumOfCounts
-          val floatValues = listofModelCount.map({ case (modelName, modelCount) => (modelName, (modelCount.toFloat / totalTheft.toFloat) * 100) })
-          val otherCountTuple = ("Others", otherCounts.toFloat/totalTheft.toFloat*100)
-          val dataWithOthersShare = otherCountTuple::floatValues
-          implicit val resultWrites = play.api.libs.json.Json.writes[BrandShare]
-          Ok(play.api.libs.json.Json.toJson(dataWithOthersShare))
-        }
-        case _ =>
-          Ok(play.api.libs.json.Json.toJson(List(("NoData", 0.0))))
-      }
+          Ok(play.api.libs.json.Json.toJson(analyticService.formatPieChartData(n)))
+  }
 
+  /**
+   * Handles AJAX call to fetch perDay Registration count starting from a particular year
+   * Returns perDayRegistration JSON records in the form: [12,12,12,0,12,12,9,12,]
+   */
+  def getPerDayRegistrationCount: Action[AnyContent] = withAuth { username =>
+    implicit request =>
+    implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]
+    analyticService.getPerDayRegistration match{
+      case Some(registrationCounts) =>{
+    	  Ok(play.api.libs.json.Json.toJson(registrationCounts.map({case(date,count) =>count})))
+      }
+      case None =>{
+        Ok(play.api.libs.json.Json.toJson(List(0)))
+      }
+    }
   }
 
   /**
    * Renders registrationGrowthByYear Analytics
    */
-
   def getRegistrationByYears: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
-      val years = (2012 to Calendar.getInstance().get(Calendar.YEAR)).toList
-      Logger.info("---------toLostBrands called--------")
-      Ok(views.html.admin.audits.registrationGrowth(user))
+      Logger.info("----registrationGrowthByYear called ----")
+      val minimumYear = analyticService.getRegistrationStartingYear
+      Ok(views.html.admin.audits.registrationGrowth(user, minimumYear match { case Some(minYear) => minYear; case _ => 2012 }))
   }
 
   /**
    * Getting monthly data by Year id
    * @param year
    */
-
   def getMonthlyRegistration(year: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("AuditController: getMonthlyData -> called.")
-    val recordList = auditRepo.getRegistrationRecordsByYear(year)
+    val recordList = analyticService.getRegistrationRecordsByYear(year)
     val monthlyData = Monthly(recordList)
     implicit val resultWrites = play.api.libs.json.Json.writes[Monthly]
     Ok(play.api.libs.json.Json.toJson(monthlyData))
@@ -150,4 +155,4 @@ class AuditController(auditRepo: AuditRepository) extends Controller with Secure
 /**
  * Lets other access all the methods defined in the class AuditController
  */
-object AuditController extends AuditController(AuditRepository)
+object AuditController extends AuditController(AnalyticsService)

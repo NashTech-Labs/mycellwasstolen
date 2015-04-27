@@ -42,7 +42,7 @@ GET    /get_monthly_registrations      controllers.AuditController.getMonthlyReg
 GET    /top_lost_brands                controllers.AuditController.renderTopLostBrands
 GET    /registeration_growth_by_year   controllers.AuditController.getRegistrationByYears
 GET    /get_top_lost_brands_data       controllers.AuditController.topLostBrands(n: Int)
-
+GET   /get_per_day_registrations	   controllers.AuditController.getPerDayRegistrationCount
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                   controllers.Assets.at(path="/public", file)

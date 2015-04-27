@@ -19,7 +19,6 @@ trait AuditRepository extends AuditTable with MobileRepository {
    * @param timestamp, object of Audit
    * @return auto generated id
    */
-
   def insertTimestamp(audit: Audit): Either[String, Option[Int]] = {
     try {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -88,7 +87,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
    * (n< number of brands)
    * @param n, number of brands
    */
-  def getTopNLostBrands(n: Int): Option[(List[(String, Int)],Int)] = {
+  def getTopNLostBrands(n: Int): Option[(List[(String, Int)], Int)] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       mobiles.length.run > 0 match {
         case true => {
@@ -97,15 +96,52 @@ trait AuditRepository extends AuditTable with MobileRepository {
           } yield id -> c.map(_.modelId).length
           val brandQuery = for {
             mId <- models
-            brands <- brands if (mId.brandId === brands.id)
             brandCount <- countQuery if (brandCount._1 === mId.id)
           } yield (mId.name, brandCount._2)
-          val topNCount = brandQuery.list.sortBy { case (modelName, modelCount) => modelCount }.drop(brandQuery.list.size - n)
+          val topNCount = brandQuery.list.sortBy { case (modelName, modelCount) => modelCount }.takeRight(n)
           val totalTheftCount = mobiles.length.run
           topNCount match {
-            case topNCounts: List[(String, Int)] => Some(topNCount,totalTheftCount)
-            case _                        => None
+            case topNCounts: List[(String, Int)] => Some(topNCount, totalTheftCount)
+            case _                               => None
           }
+        }
+        case false => None
+      }
+    }
+  }
+
+  /**
+   * Returns a tuple of (List(date, registrationCount)
+   * first element of tuple signifies the date  of registrations and
+   * the second element of the tuple signifies registration for the date
+   */
+  def getPerDayRegistration: Option[List[(String, Int)]] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      mobiles.length.run > 0 match {
+        case true => {
+          val countQuery = for {
+            (date, dateCount) <- mobiles groupBy (_.registrationDate)
+          } yield date -> dateCount.map(_.registrationDate).length
+          val returnValue = countQuery.list.map({ case (date, dateCount) => (date.toString(), dateCount) })
+          Some(returnValue)
+        }
+        case false => None
+      }
+    }
+  }
+
+  /**
+   * Returns registration Starting Year
+   */
+  def getRegistrationStartingYear: Option[Int] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      mobiles.length.run > 0 match {
+        case true => {
+          val minQuery = for {
+            (date) <- mobiles.list.map( mobile => mobile.regDate)
+          } yield date
+          val returnValue = minQuery.map(date => date.toString().take(4).toInt).min
+          Some(returnValue)
         }
         case false => None
       }
@@ -113,10 +149,8 @@ trait AuditRepository extends AuditTable with MobileRepository {
   }
 }
 
-
-
 /**
- * Defines schema of audits table
+ * Defines schema of audits tablenew 
  */
 trait AuditTable {
   private[repository] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
