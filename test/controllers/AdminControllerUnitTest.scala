@@ -14,7 +14,6 @@ import play.api.test.FakeRequest
 import play.api.mvc.Security
 
 class AdminControllerTestCases extends Specification with Mockito {
-
   val stolenMobileUser = Mobile(
     "sushil", 1, 1, "864465028854206", "123456789012677", "+91 9839839830",
     "gs@gmail.com", "stolen", StatusUtil.Status.pending, CommonUtils.getSqlDate(), "gaurav.png")
@@ -46,8 +45,6 @@ class AdminControllerTestCases extends Specification with Mockito {
   val newmodel = Model("N72", 1)
   val model = List(newmodel)
   val modelById: Option[Model] = Some(newmodel)
-
-
   val mockedMail = mock[MailUtil]
   val mockedS3Util = mock[S3UtilComponent]
   val mockedMobilRepo = mock[MobileRepository]

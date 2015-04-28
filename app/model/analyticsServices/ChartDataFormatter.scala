@@ -7,7 +7,7 @@ import model.repository.{ BrandRepository, AuditRepository, ModelRepository, Mob
  * formatting chart data coming from the data access layer.
  */
 
-class AnalyticsService(mobileRepo: MobileRepository, brandRepo: BrandRepository, modelRepo: ModelRepository, auditRepo: AuditRepository) extends AuditRepository with ChartDataFormatter {
+class AnalyticsService(auditRepo: AuditRepository) extends AuditRepository with ChartDataFormatter {
 
   /**
    * @param n top Brands which has been lost the most
@@ -41,4 +41,4 @@ trait ChartDataFormatter {
   def formatPieChartData(n: Int): List[(String, Float)]
 }
 
-object AnalyticsService extends AnalyticsService(MobileRepository, BrandRepository, ModelRepository, AuditRepository)
+object AnalyticsService extends AnalyticsService(AuditRepository)
