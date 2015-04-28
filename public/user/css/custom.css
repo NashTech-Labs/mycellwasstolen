@@ -1,14 +1,41 @@
 /*Home page*/
 /* home page slider*/
 
-.carousel-caption {
-    color: #FFF !important;
-    text-align: left !important;
-    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
-    float: right !important;
-    padding-top: 50px !important;
-    margin-top: 50px !important;
-    animation: 0.6s ease-in 0.8s normal both 1 fromRightAnim1;
+ /* .carousel-inner .item {
+    width: 100%;
+    height: 400px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}  */
+
+.carousel .item {
+	width: 100%;
+    height: 400px;
+    left: 0 !important;
+    -webkit-transition: opacity 1s; 
+    -moz-transition: opacity 1s; 
+    -ms-transition: opacity 1s; 
+    -o-transition: opacity 1s; 
+    transition: opacity 1s;
+}
+
+.carousel-control {
+    background-image: none !important; /* remove background gradients on controls */
+}
+
+.purchase {
+    padding: 25px 0px 30px;
+    border-bottom: 2px solid #EEE;
+    border-top: 2px solid #EEE;
+    background-color: #f7f7f7;
+    margin-top: 10px;
+}
+
+.con{
+	margin-bottom: 50px; 
+	color: #e6e6fa;
 }
 
 .headline {

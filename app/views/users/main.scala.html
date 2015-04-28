@@ -11,6 +11,8 @@
     <!-- Custom CSS -->
     <link href="@routes.Assets.at("user/css/freelancer.css")" rel="stylesheet">
     <link href="@routes.Assets.at("user/css/custom.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("user/css/animate.min.css")" rel="stylesheet">
+    
 	<!-- sticky sidebar CSS -->
     <link href="@routes.Assets.at("user/css/intlTelInput.css")" rel="stylesheet">
     <!-- Custom Fonts -->
@@ -27,8 +29,23 @@
 	@views.html.users.header.header("rendering header")
 
  <header>
-  @views.html.users.contents.carousell("render carousell")
-    </header>
+ 	 @views.html.users.contents.carousell("render carousell")
+ </header>
+ 
+ <div class="purchase">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 animated fadeInLeft">
+                    <p>My Cell Was Stolen is a social movement to make mobile space secure. </p>
+                    <p style="font-size: 14px;">Chances are that you are visiting this page, because, you or someone close to you, has lost his/her cell phone. The feeling of losing a cell phone is analogous to losing a part of your life. We have been in the same situation. This site with its database of over 50,000 (and growing) lost / stolen cell phones,
+                     is an attempt to break the cycle of cell phone thefts.</p>
+                </div>            
+                <div class="col-md-3 animated fadeInRight">
+                   <img class="img-responsive" src="@routes.Assets.at("user/img/21.png")" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
     
    <div class="container"> 
    <div class="row">

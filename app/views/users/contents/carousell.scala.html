@@ -2,34 +2,35 @@
 @(param: Any)
 <div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin-top: 95px; height: 400px;"> 
   <div class="carousel-inner">
-  <div class="item active"> <img src="@routes.Assets.at("user/img/b.jpg")" style="width:100%" data-src="" alt="First slide">
+  <div class="item active" style="background-image:url('assets/user/img/image1.jpg');"> 
     <div class="container" style="padding-top: 145px;">
-      <div class="carousel-caption">
-        <h3>Welcome in my cell was stolen</h3>
-        <p>Are you going to buy a cell? Please make sure it is safe.</p>
-        <button class="btn btn-warning fadeButton">Read more</button>
+      <div class="carousel-caption con">
+        <h2>Buying an old phone?</h2>
+        <p>What if it belongs to someone else and has been reported lost?</p>
       </div>
-      
     </div>
   </div>
-  <div class="item"> <img src="@routes.Assets.at("user/img/b.jpg")" style="width:100%" data-src="" alt="Second slide">
+  
+  <div class="item" style="background-image:url('assets/user/img/image2.jpg');">
     <div class="container" style="padding-top: 145px;" >
-      <div class="carousel-caption">
-        <h3>Welcome in my cell was stolen.</h3>
-        <p>Are you going to buy a cell? Please make sure it is safe.</p>
-        <button class="btn btn-warning fadeButton">Read more</button>
+      <div class="carousel-caption con">
+        <h2>We are here to help you assure that you are not buying a phone form crooks!</h2>
+        <p>Just check out our lost IMEI database if someone has reported this IMEI as stolen</p>
+        <p>Just type your IMEI and hit check..</p>
+        <button class="btn btn-warning fadeButton">Check IMEI Status</button>
       </div>
     </div>
   </div>
-  <div class="item"> <img src="@routes.Assets.at("user/img/g.jpg")" data-src="" alt="Third slide">
+  
+  <div class="item" style="background-image:url('assets/user/img/image1.jpg');">
     <div class="container" style="padding-top: 145px;">
-      <div class="carousel-caption">
-        <h3>Welcome in my cell was stolen</h3>
-        <p>Are you going to buy a cell? Please make sure it is safe.</p>
-        <button class="btn btn-warning fadeButton">Read more</button>
+      <div class="carousel-caption con">
+        <h2>We are glad! We could help you in breaking this theft cycle</h2>
+        <p>WWW.mycellwasst0len</p>
       </div>
     </div>
   </div>
+  
 </div>
 
 <a class="left carousel-control" href="#myCarousel" data-slide="prev">
@@ -50,10 +51,9 @@
 		})
 		$('#myCarousel').on('slid.bs.carousel', function() {
 			$('.carousel-caption').css({"margin-left":"0px"}).fadeIn(800).animate({
-				marginLeft : "480px"
-			}, 2000);
-
-			$('.fadeButton').fadeIn(7000);
+                marginLeft : "200px"
+            }, 2000);
 		})
 	});
   </script>
+  
