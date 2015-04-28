@@ -2,20 +2,20 @@ package controllers
 
 import java.util.Calendar
 
-import model.repository.{AuditForm,User}
+import model.repository.{ AuditForm, User }
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.data.{Form}
-import play.api.data.Forms.{mapping,nonEmptyText}
+import play.api.data.{ Form }
+import play.api.data.Forms.{ mapping, nonEmptyText }
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import play.api.libs.json.Writes
-import play.api.mvc.{Action,AnyContent,Controller,Security}
+import play.api.mvc.{ Action, AnyContent, Controller, Security }
 import model.analyticsServices.AnalyticsService
 /**
  * Contains behaviors to control for fetching audit reports
  */
-class AuditController(analyticService:AnalyticsService) extends Controller with Secured {
+class AuditController(analyticService: AnalyticsService) extends Controller with Secured {
 
   /**
    * Represents a BrandShare Tuple
@@ -30,7 +30,7 @@ class AuditController(analyticService:AnalyticsService) extends Controller with 
   /**
    * Represents perDayRegistrationCount
    */
-  case class RegistrationCount(registrationCounts: List[Int])
+  case class RegistrationCount(registrationCounts: List[(String, Int)])
 
   /**
    * Describe mobile audit form
@@ -82,7 +82,7 @@ class AuditController(analyticService:AnalyticsService) extends Controller with 
   /**
    * Renders Registration Analytics
    */
-  
+
   def registrationRecordsByYear(year: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -108,7 +108,7 @@ class AuditController(analyticService:AnalyticsService) extends Controller with 
     implicit request =>
       //Define JSON writer for tuple
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
-          Ok(play.api.libs.json.Json.toJson(analyticService.formatPieChartData(n)))
+      Ok(play.api.libs.json.Json.toJson(analyticService.formatPieChartData(n)))
   }
 
   /**
@@ -117,15 +117,9 @@ class AuditController(analyticService:AnalyticsService) extends Controller with 
    */
   def getPerDayRegistrationCount: Action[AnyContent] = withAuth { username =>
     implicit request =>
-    implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]
-    analyticService.getPerDayRegistration match{
-      case Some(registrationCounts) =>{
-    	  Ok(play.api.libs.json.Json.toJson(registrationCounts.map({case(date,count) =>count})))
-      }
-      case None =>{
-        Ok(play.api.libs.json.Json.toJson(List(0)))
-      }
-    }
+      implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
+      implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]
+          Ok(play.api.libs.json.Json.toJson(analyticService.formatTimeSeriesChartData))
   }
 
   /**

@@ -94,7 +94,7 @@ class AuditRepoTest extends FunSuite {
       MobileRepository.insertMobileUser((mobileUser))
       //Get per day registration
       val returnedValue = AuditRepository.getPerDayRegistration
-      assert(returnedValue === Some(List((CommonUtils.getSqlDate().toString(), 1))))
+      assert(returnedValue === Some(List((CommonUtils.getSqlDate(),1))))
     }
   }
 

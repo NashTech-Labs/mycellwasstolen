@@ -1,14 +1,16 @@
 package model.repository
 
-import scala.slick.driver.PostgresDriver.simple._
+import java.sql.Timestamp
+import java.util.Date
+
+import scala.collection.mutable.ListBuffer
 import scala.slick.driver
+import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.lifted.ProvenShape
-import utils._
+
 import model.repository._
 import play.api.Logger
-import java.util.Date
-import java.sql.Timestamp
-import scala.collection.mutable.ListBuffer
+import utils._
 
 /**
  * Define all data access layer methods of Auditing records
@@ -115,14 +117,14 @@ trait AuditRepository extends AuditTable with MobileRepository {
    * first element of tuple signifies the date  of registrations and
    * the second element of the tuple signifies registration for the date
    */
-  def getPerDayRegistration: Option[List[(String, Int)]] = {
+  def getPerDayRegistration: Option[List[(java.sql.Date, Int)]] = {
     Connection.databaseObject().withSession { implicit session: Session =>
       mobiles.length.run > 0 match {
         case true => {
           val countQuery = for {
             (date, dateCount) <- mobiles groupBy (_.registrationDate)
           } yield date -> dateCount.map(_.registrationDate).length
-          val returnValue = countQuery.list.map({ case (date, dateCount) => (date.toString(), dateCount) })
+          val returnValue = countQuery.list.map({ case (date, dateCount) => (date, dateCount) })
           Some(returnValue)
         }
         case false => None
@@ -138,7 +140,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
       mobiles.length.run > 0 match {
         case true => {
           val minQuery = for {
-            (date) <- mobiles.list.map( mobile => mobile.regDate)
+            (date) <- mobiles.list.map(mobile => mobile.regDate)
           } yield date
           val returnValue = minQuery.map(date => date.toString().take(4).toInt).min
           Some(returnValue)
@@ -150,7 +152,7 @@ trait AuditRepository extends AuditTable with MobileRepository {
 }
 
 /**
- * Defines schema of audits tablenew 
+ * Defines schema of audits tablenew
  */
 trait AuditTable {
   private[repository] class Audits(tag: Tag) extends Table[Audit](tag, "audits") {
