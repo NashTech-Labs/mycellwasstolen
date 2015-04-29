@@ -1,76 +1,47 @@
-@* carousell Template File *@
- @(param: Any)
-  <!--  Dashboard on Home Page  --> 
+@* carousell Template File *@ @(param: Any)
+<!--  Dash board on Home Page  -->
 <div class="container">
- <section id="portfolio">
-           <div class="headline">
-<h3>Dashboard</h3>
+	<section id="portfolio">
+		<div class="headline">
+			<h3>Dashboard</h3>
+		</div>
+		<div class="row">
+			<div class="col-sm-4 portfolio-item">
+				<a href="#portfolioModal1" class="portfolio-link"
+					data-toggle="modal">
+					<div class="caption">
+						<div class="caption-content">
+							<i class="fa fa-search-plus fa-3x"></i>
+						</div>
+					</div> <img src="assets/user/img/dashBoradchart/dashboardPie.png"
+					class="img-responsive" alt="" style="border: 1px solid">
+				</a>
+			</div>
+			<div class="col-sm-4 portfolio-item">
+				<a href="#portfolioModal2" class="portfolio-link"
+					data-toggle="modal">
+					<div class="caption">
+						<div class="caption-content">
+							<i class="fa fa-search-plus fa-3x"></i>
+						</div>
+					</div> <img src="assets/user/img/dashBoradchart/dashboardBar.png" 
+					class="img-responsive" alt="" style="border: 1px solid">
+				</a>
+			</div>
+			<div class="col-sm-4 portfolio-item">
+				<a href="#portfolioModal3" class="portfolio-link"
+					data-toggle="modal">
+					<div class="caption">
+						<div class="caption-content">
+							<i class="fa fa-search-plus fa-3x"></i>
+						</div>
+					</div> <img src="assets/user/img/dashBoradchart/dashboardSpline.png" 
+					class="img-responsive" alt="" style="border: 1px solid">
+				</a>
+			</div>
+		</div>
+		</div>
+	</section>
 </div>
-            <div class="row">
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/cabin.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/cake.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/circus.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/game.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/safe.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="assets/user/img/portfolio/submarine.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-            </div>
-    </section>
-    </div>
-    
-    <!-- Analytics Modals -->
-    
-    @views.html.users.contents.analyticsModal("Render Analytics Modal")
+<!-- Analytics Modals -->
+@views.html.users.contents.analyticsModal(List(2012,2013,2014,2015))
