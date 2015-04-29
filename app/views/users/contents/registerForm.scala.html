@@ -9,6 +9,13 @@
 	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> 
 	<input type="hidden" name="regType" id="regType" value=""> 
 	<input type="hidden" name="document" id="document" value="">
+	<div class="form-group">
+		<label class="col-sm-4 control-label" >Registration Type</label>
+		<div class="col-sm-6">
+			<label class="radio-inline"><input type="radio" name="regTypee" value="stolen" checked>Stolen</label>
+            <label class="radio-inline"><input type="radio" name="regTypee" value="clean">Clean</label>
+		</div>
+	</div>
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name",'class->"form-control")
 	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
 	(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
@@ -47,14 +54,6 @@
 		<label class="col-sm-4 control-label" for="fileUpload">Document(Image)</label>
 		<div class="col-sm-6">
 			<input id="fileUpload" type="file" name="fileUpload">
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<label class="col-sm-4 control-label" >Registration Type</label>
-		<div class="col-sm-6">
-			<label class="radio-inline"><input type="radio" name="regTypee" value="stolen" checked>Stolen</label>
-            <label class="radio-inline"><input type="radio" name="regTypee" value="clean">Clean</label>
 		</div>
 	</div>
 	
