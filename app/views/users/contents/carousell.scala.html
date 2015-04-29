@@ -2,19 +2,19 @@
 @(param: Any)
 <div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin-top: 95px; height: 400px;"> 
   <div class="carousel-inner">
-  <div class="item active" style="background-image:url('assets/user/img/image1.jpg');"> 
+  <div class="item active" style="background-image:url('assets/user/img/bgg.jpg');"> 
     <div class="container" style="padding-top: 145px;">
       <div class="carousel-caption con">
-        <h2>Buying an old phone?</h2>
+        <h4>Buying an old phone?</h4>
         <p>What if it belongs to someone else and has been reported lost?</p>
       </div>
     </div>
   </div>
   
-  <div class="item" style="background-image:url('assets/user/img/image2.jpg');">
+  <div class="item" style="background-image:url('assets/user/img/bgg.jpg');">
     <div class="container" style="padding-top: 145px;" >
       <div class="carousel-caption con">
-        <h2>We are here to help you assure that you are not buying a phone form crooks!</h2>
+        <h4>We are here to help you assure that you are not buying a phone form crooks!</h4>
         <p>Just check out our lost IMEI database if someone has reported this IMEI as stolen</p>
         <p>Just type your IMEI and hit check..</p>
         <button class="btn btn-warning fadeButton">Check IMEI Status</button>
@@ -22,10 +22,10 @@
     </div>
   </div>
   
-  <div class="item" style="background-image:url('assets/user/img/image1.jpg');">
+  <div class="item" style="background-image:url('assets/user/img/bgg.jpg');">
     <div class="container" style="padding-top: 145px;">
       <div class="carousel-caption con">
-        <h2>We are glad! We could help you in breaking this theft cycle</h2>
+        <h4>We are glad! We could help you in breaking this theft cycle</h4>
         <p>WWW.mycellwasst0len</p>
       </div>
     </div>
@@ -46,13 +46,9 @@
   <script type="text/javascript">
   $(document).ready(function() {
 		$('.carousel').carousel();
-		$('#myCarousel').on('slide.bs.carousel', function() {
-			$('.carousel-caption').fadeOut(900);
-		})
+		
 		$('#myCarousel').on('slid.bs.carousel', function() {
-			$('.carousel-caption').css({"margin-left":"0px"}).fadeIn(800).animate({
-                marginLeft : "200px"
-            }, 2000);
+			$('.carousel-caption').fadeIn(800).addClass("animated fadeInDown");
 		})
 	});
   </script>

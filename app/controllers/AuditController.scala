@@ -2,16 +2,21 @@ package controllers
 
 import java.util.Calendar
 
-import model.repository.{ AuditForm, User }
+import model.analyticsServices.AnalyticsService
+import model.repository.AuditForm
+import model.repository.User
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.data.{ Form }
-import play.api.data.Forms.{ mapping, nonEmptyText }
+import play.api.data.Form
+import play.api.data.Forms.mapping
+import play.api.data.Forms.nonEmptyText
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import play.api.libs.json.Writes
-import play.api.mvc.{ Action, AnyContent, Controller, Security }
-import model.analyticsServices.AnalyticsService
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.Controller
+import play.api.mvc.Security
 /**
  * Contains behaviors to control for fetching audit reports
  */
@@ -104,7 +109,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
    * Handles AJAX call to fetch Brand Share in total mobile theft
    * Returns brandShare JSON records in the form: [["Nokia",33.33],["Samsung",33.3],["Others",33.33%]]
    */
-  def topLostBrands(n: Int): Action[AnyContent] = withAuth { username =>
+  def topLostBrands(n: Int): Action[AnyContent] = Action { 
     implicit request =>
       //Define JSON writer for tuple
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
