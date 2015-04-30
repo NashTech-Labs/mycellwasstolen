@@ -21,9 +21,8 @@ import play.api.mvc.Security
  * Contains behaviors to control for fetching audit reports
  */
 class AuditController(analyticService: AnalyticsService) extends Controller with Secured {
-
   /**
-   * Represents a BrandShare Tuple
+   * Represents a BrandShare Tuplehub.com/
    */
   case class BrandShare(brandShare: Option[List[(String, Float)]])
 
@@ -47,6 +46,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
   /**
    * Display TimeStamp page
    */
+      
   def timestampPage: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -130,6 +130,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
   /**
    * Renders registrationGrowthByYear Analytics
    */
+  
   def getRegistrationByYears: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)

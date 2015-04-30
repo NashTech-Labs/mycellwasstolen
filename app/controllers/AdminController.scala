@@ -272,8 +272,8 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
           mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.approvedMessage((mobileuser.imei)))
         case "proofDemanded" =>
           mail.sendMail(mobileuser.imei + " <" + mobileuser.email + ">", "Registration Confirmed on MCWS", mail.demandProofMessage(mobileuser.imei))
-        case "delete" =>
-          mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "Delete mobile registration from MCWS", mail.deleteMessage(mobileuser.imei))
+        case "spam" =>
+          mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "IMEI marked as Spam on MCWS", mail.spamMessage(mobileuser.imei))
         case "changeMobileRegType" =>
           if (mobileuser.regType == "stolen") {
             mail.sendMail(mobileuser.imei + "<" + mobileuser.email + ">", "Change mobile status from MCWS",
@@ -321,25 +321,25 @@ class AdminController(mobileRepo: MobileRepository, brandRepo: BrandRepository, 
    * @param imeid of mobile
    * @return Unit
    */
-  def deleteMobile(imeid: String): Action[AnyContent] = withAuth { username =>
+  def markMobileAsSpam(imeid: String): Action[AnyContent] = withAuth { username =>
     implicit request =>
-      Logger.info("AdminController:deleteMobile: " + imeid)
+      Logger.info("AdminController:markMobileAsSpam: " + imeid)
       val mobileUser = mobileRepo.getMobileUserByIMEID(imeid)
       mobileUser match {
         case Some(mobile) =>
           s3Util.delete(mobile.document)
-          val result = mobileRepo.deleteMobileUser(imeid)
+          val result = mobileRepo.changeStatusToSpamByIMEID(imeid)
           result match {
             case Right(deletedRecord: Int) if deletedRecord != Constants.ZERO =>
-              sendEmail(mobileUser.get, "delete")
-              Ok("Success of Delete ajax call")
+              sendEmail(mobileUser.get, "spam")
+              Ok("Success of Spam ajax call")
             case Left(msg) =>
               Logger.info("AdminController:deleteMobile - error in deleting record" + msg)
-              Ok("Error of Delete ajax call")
+              Ok("Error of Spam ajax call")
           }
         case None =>
           Logger.info("AdminController:deleteMobile - error in fetching record")
-          Ok("error in Delete ajax call")
+          Ok("error in Spam ajax call")
       }
   }
 }

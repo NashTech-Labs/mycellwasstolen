@@ -1,55 +1,60 @@
-@* carousell Template File *@
-@(param: Any)
-<div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin-top: 95px; height: 400px;"> 
-  <div class="carousel-inner">
-  <div class="item active" style="background-image:url('assets/user/img/bgg.jpg');"> 
-    <div class="container" style="padding-top: 145px;">
-      <div class="carousel-caption con">
-        <h4>Buying an old phone?</h4>
-        <p>What if it belongs to someone else and has been reported lost?</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="item" style="background-image:url('assets/user/img/bgg.jpg');">
-    <div class="container" style="padding-top: 145px;" >
-      <div class="carousel-caption con">
-        <h4>We are here to help you assure that you are not buying a phone form crooks!</h4>
-        <p>Just check out our lost IMEI database if someone has reported this IMEI as stolen</p>
-        <p>Just type your IMEI and hit check..</p>
-        <button class="btn btn-warning fadeButton">Check IMEI Status</button>
-      </div>
-    </div>
-  </div>
-  
-  <div class="item" style="background-image:url('assets/user/img/bgg.jpg');">
-    <div class="container" style="padding-top: 145px;">
-      <div class="carousel-caption con">
-        <h4>We are glad! We could help you in breaking this theft cycle</h4>
-        <p>WWW.mycellwasst0len</p>
-      </div>
-    </div>
-  </div>
-  
-</div>
+@* carousell Template File *@ @(param: Any)
+<div id="myCarousel" class="carousel slide" data-ride="carousel"
+	style="margin-top: 95px; height: 400px;">
+	<div class="carousel-inner">
+		<div class="item active"
+			style="background-image: url('assets/user/img/bgg.jpg');">
+			<div class="container" style="padding-top: 145px;">
+				<div class="carousel-caption con">
+					<h1>Buying an old phone?</h1>
+					<p style="font-size: 36px">What if it belongs to someone else
+						and has been reported lost?</p>
+				</div>
+			</div>
+		</div>
 
-<a class="left carousel-control" href="#myCarousel" data-slide="prev">
-  <span class="glyphicon glyphicon-chevron-left"></span>
-</a>
+		<div class="item"
+			style="background-image: url('assets/user/img/bgg.jpg');">
+			<div class="container" style="padding-top: 145px;">
+				<div class="carousel-caption con">
+					<p style="font-size: 36px">We are here to help you assure that
+						you are not buying a phone form crooks!
+					</h2>
+					<p style="font-size: 24px">Just check out our lost IMEI
+						database if someone has reported this IMEI as stolen</p>
+					<p style="font-size: 36px">Just type your IMEI and hit check..</p>
+					<button class="btn btn-warning fadeButton">Check IMEI
+						Status</button>
+				</div>
+			</div>
+		</div>
 
-<a class="right carousel-control" href="#myCarousel" data-slide="next">
-  <span class="glyphicon glyphicon-chevron-right"></span>
-</a>
-  
+		<div class="item"
+			style="background-image: url('assets/user/img/bgg.jpg');">
+			<div class="container" style="padding-top: 145px;">
+				<div class="carousel-caption con">
+					<p style="font-size: 36px">We are glad! We could help you in
+						breaking this theft cycle</p>
+					<h1>www.mycellwasstolen.com</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+		<span class="glyphicon glyphicon-chevron-left"></span>
+	</a> <a class="right carousel-control" href="#myCarousel" data-slide="next">
+		<span class="glyphicon glyphicon-chevron-right"></span>
+	</a>
+
 </div>
-  <script src="@routes.Assets.at("user/js/jquery.js")"></script>
-  <script type="text/javascript">
-  $(document).ready(function() {
+<script src="@routes.Assets.at("user/js/jquery.js")"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
 		$('.carousel').carousel();
-		
+
 		$('#myCarousel').on('slid.bs.carousel', function() {
 			$('.carousel-caption').fadeIn(800).addClass("animated fadeInDown");
 		})
 	});
-  </script>
-  
+</script>

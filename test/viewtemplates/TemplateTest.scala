@@ -1,4 +1,4 @@
-/*package viewtemplates;
+package viewtemplates;
 
 import org.specs2.mutable._
 import model.repository._
@@ -108,8 +108,7 @@ class TemplateTest extends Specification{
       refTest.saveModel.toString must contain("")
     }
      
-    //ReverseMobileController
-    
+    /*//ReverseMobileController
     "get mobileRegistrationForm URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
       testController.secureMobileRegistrationForm().url must contain("register_new_phone")
@@ -125,7 +124,7 @@ class TemplateTest extends Specification{
       val refTest = new controllers.ref.ReverseMobileController()
       refTest.stolenMobileRegistrationForm.toString must contain("")
     }
-     
+  */   
      "get mobileRegistration URL via ReverseMobileController" in new WithApplication {
       val testController = new ReverseMobileController()
       testController.saveMobileUser().url must contain("save_users")
@@ -168,6 +167,7 @@ class TemplateTest extends Specification{
        
         
    //ReverseAuditController
+       
      "get timestamps URL via ReverseAuditController" in new WithApplication {
       val testController = new ReverseAuditController()
       testController.timestampPage().url must contain("timestamps")
@@ -198,6 +198,14 @@ class TemplateTest extends Specification{
 
       val refTest = new controllers.ref.ReverseAuditController()
       refTest.registrationRecordsByYear("2015").toString must contain("")
+    }
+     
+     "get renderTopLostBrands URL via ReverseAuditController" in new WithApplication {
+      val testController = new ReverseAuditController()
+      testController.renderTopLostBrands() .url must contain("top_lost_brands")
+
+      val refTest = new controllers.ref.ReverseAuditController()
+      refTest.renderTopLostBrands().toString must contain("")
     }
 
      //ReverseAuthController
@@ -246,4 +254,3 @@ class TemplateTest extends Specification{
       refTest.javascriptRoutes().toString must contain("")
     }
 }
-*/

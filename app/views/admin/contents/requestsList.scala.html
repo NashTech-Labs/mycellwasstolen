@@ -9,6 +9,7 @@
 					<a id="pending_button" href="@routes.AdminController.requestsList("pending")" class="btn btn-success btn-sm">Pending</a>
 					<a id="demanded_button" href="@routes.AdminController.requestsList("proofdemanded")" class="btn btn-success btn-sm">Proof Demanded</a>
 					<a id="approved_button" href="@routes.AdminController.requestsList("approved")" class="btn btn-success btn-sm">Approved</a>
+					<a id="spams_button" href="@routes.AdminController.requestsList("spam")" class="btn btn-success btn-sm">Spams</a>
 				</div>
 			</div>
 			<div class="row">
@@ -23,7 +24,6 @@
       			</div>
 		}
 		</div>
-		
 		 <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -41,15 +41,25 @@
 							<th>@Messages("mobile.imei")</th>
 							<th>@Messages("mobile.email")</th>
 							<th>@Messages("mobile.status")</th>
-							<th>@Messages("mobile.proof")</th>
+							@if(typ=="approved"){
+								<th>@Messages("mobile.proof")</th>
+								<th>@Messages("mobile.spam")</th>
+							}
 							@if(typ=="pending"){
+							<th>@Messages("mobile.proof")</th>
 							<th>@Messages("mobile.demandProof")</th>
 							<th>@Messages("mobile.approve")</th>
+							<th>@Messages("mobile.spam")</th>
 							}
 							@if(typ=="proofdemanded"){
+							<th>@Messages("mobile.proof")</th>
 							<th>@Messages("mobile.approve")</th>
+							<th>@Messages("mobile.spam")</th>
 							}
-							<th>@Messages("mobile.delete")</th>
+							@if(typ=="spam"){
+							<th>@Messages("mobile.approve")</th>
+							<th>@Messages("mobile.demandProof")</th>
+							}
                         </tr>
                     </thead>
                     <tbody>
@@ -60,15 +70,25 @@
 			    			<td>@mobile._1.imei</td>
 						    <td>@mobile._1.email</td>
 							<td>@mobile._1.regType</td>
-							<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
-							@if(typ=="pending"){
-							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
-							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>}
-							@if(typ=="proofdemanded"){
-							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+							@if(typ=="approved"){
+								<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
+								<td><button class="btn btn-danger btn-sm" onclick="markMobileAsSpam(@mobile._1.imei)" id = "delete" >Mark as Spam</button></td>
 							}
-													   
-						    <td><button class="btn btn-danger btn-sm" onclick="deleteMobileUser(@mobile._1.imei)" id = "delete" >Delete </button></td>
+							@if(typ=="pending"){
+								<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
+							  <td><a href="@routes.AdminController.proofDemanded(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+							<td><button class="btn btn-danger btn-sm" onclick="markMobileAsSpam(@mobile._1.imei)" id = "delete" >Mark as Spam</button></td>
+							}
+							@if(typ=="proofdemanded"){
+								<td><button class="btn btn-primary btn-sm" onclick="showDocumentProof('@mobile._1.document')">Get Proof</button></td>
+							<td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+							<td><button class="btn btn-danger btn-sm" onclick="markMobileAsSpam(@mobile._1.imei)" id = "delete" >Mark as Spam</button></td>
+							}
+						    @if(typ=="spam"){
+						    <td><a href="@routes.AdminController.approve(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="approve">Approve</a></td>
+						    <td><a href="@routes.AdminController.proofDemanded(mobile._1.imei,typ)" class="btn btn-primary btn-sm" id="demandProof">Demand Proof</a></td>
+						    }
 			    		</tr>
                        }
                        </tbody>
@@ -92,12 +112,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete mobile</h4>
+        <h4 class="modal-title" id="myModalLabel">Mark Mobile as Spam?</h4>
       </div>
       <div class="modal-body" id="modalBody">Are you sure?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="deleteOk">Delete</button>
+        <button type="button" class="btn btn-primary" id="deleteOk">Mark Spam</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div><!-- /.modal-content -->
@@ -131,14 +151,14 @@
 			newWindow.document.close();
 		}
 
-			function deleteMobileUser(imeid) {
+			function markMobileAsSpam(imeid) {
 				$('#myModal').modal('show');
 				$("#deleteOk").bind('click', function(){
 					var statusAjaxCallBackForDeleteMobileUser = {
 							success : ajaxSuccess,
 							error : ajaxError
 						};
-						jsRoutes.controllers.AdminController.deleteMobile(imeid)
+						jsRoutes.controllers.AdminController.markMobileAsSpam(imeid)
 								.ajax(statusAjaxCallBackForDeleteMobileUser);
 						$('#myModal').modal('hide');
 				});

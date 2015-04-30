@@ -85,6 +85,24 @@ trait MobileRepository extends MobileTable {
   }
 
   /**
+   * Changes the status of registered mobile to "spam"
+   * @param mobileUser, Object of Mobile
+   * @return id of updated record
+   */
+    def changeStatusToSpamByIMEID(imeid: String): Either[String, Int] = {
+    Connection.databaseObject().withSession { implicit session: Session =>
+      try {
+        Logger.info("Calling getMobileRecordByIMEID" + imeid)
+        Right(mobiles.filter(_.imei === imeid).map(_.mobileStatus).update(utils.StatusUtil.Status.spam))
+      } catch {
+        case ex: Exception =>
+          Logger.info("Error in changeStatusToDemandProofByIMEID: " + ex.printStackTrace())
+          Left(ex.getMessage())
+      }
+    }
+  }
+
+  /**
    * Change registration type (Stolen or Clean)
    * @param mobileUser, Object of Mobile
    * @return id of updated record

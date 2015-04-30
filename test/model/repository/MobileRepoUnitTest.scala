@@ -99,7 +99,8 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       assert(returnValueOnChange === Right(1))
     }
   }
-  
+
+
   test("MobileRepository:changeStatusToDemandProofByIMEID -> failed") {
     running(FakeApplication()) {
       Connection.databaseObject().withSession { implicit session: Session =>
@@ -109,6 +110,32 @@ class MobileRepoTest extends FunSuite with MobileRepository with BrandRepository
       assert(returnValueOnChange.isLeft)
     }
   }
+
+  //Test the status change of Mobile from pending to spam
+  test("MobileRepository: change of Mobile from pending to spam: must return Right(1)") {
+	  running(FakeApplication()) {
+		  //Insert a brand to avoid FK violation while inserting mobile record
+		  BrandRepository.insertBrand(brand)
+		  //Insert a model to avoid FK violation while inserting mobile record
+		  ModelRepository.insertModel(model)
+		  //Insert a Mobile Record first
+		  val insertedMobile = MobileRepository.insertMobileUser(mobileUser)
+		  //Changes its status
+		  val returnValueOnChange = MobileRepository.changeStatusToSpamByIMEID(imeiInserted)
+		  assert(returnValueOnChange === Right(1))
+	  }
+  }
+  
+test("MobileRepository:changeStatusToSpamByIMEID -> failed") {
+    running(FakeApplication()) {
+      Connection.databaseObject().withSession { implicit session: Session =>
+        mobiles.ddl.drop
+      }
+      val returnValueOnChange = MobileRepository.changeStatusToSpamByIMEID(imeiInserted)
+      assert(returnValueOnChange.isLeft)
+    }
+  }
+
 
   //Test the status change of Mobile mobile registration (stolen or clean) 
   test("MobileRepository: Change registration type (Stolen or Clean): must return Right(1)") {

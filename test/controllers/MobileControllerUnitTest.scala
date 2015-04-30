@@ -1,4 +1,4 @@
-/*package controllers
+package controllers
 
 import java.sql.Timestamp
 import org.mockito.Mockito._
@@ -48,26 +48,6 @@ class MobileControllerTestCases extends Specification with Mockito {
   val mockedAuditRepo = mock[AuditRepository]
   val mobileController = new MobileController(mockedMobileRepo, mockedBrandRepo, mockedModelRepo, mockedAuditRepo, mockedMail, s3util,mockedCommonUtil)
 
-  "MobileControllerTesting: mobileRegistrationForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.stolenMobileRegistrationForm(FakeRequest())
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
-  "MobileControllerTesting: mobileRegistrationSecureForm" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      when(mockedBrandRepo.getAllBrands) thenReturn (brand)
-      val result = mobileController.secureMobileRegistrationForm(FakeRequest())
-      status(result) must equalTo(OK)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
   "MobileControllerTesting: saveMobileUser: with valid data" in {
     running(FakeApplication()) {
       Cache.set(username, user)
@@ -88,7 +68,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
       val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
-      status(result) must equalTo(303)
+      status(result) must equalTo(200)
     }
   }
   
@@ -112,7 +92,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Right(Some(1)))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
       val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
-      status(result) must equalTo(303)
+      status(result) must equalTo(200)
     }
   }
   
@@ -136,7 +116,7 @@ class MobileControllerTestCases extends Specification with Mockito {
       when(mockedMobileRepo.insertMobileUser(any[Mobile])).thenReturn(Left("error"))
       when(mockedMobileRepo.getMobileUserByIMEID("123456789012347")).thenReturn(Some(mobileUser))
       val result = mobileController.saveMobileUser.apply(fakeRequest.withSession(Security.username -> username))
-      status(result) must equalTo(303)
+      status(result) must equalTo(200)
     }
   }
 
@@ -188,15 +168,6 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 
-  "MobileControllerTesting: mobileStatus" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      val result = mobileController.mobileStatusForm(FakeRequest())
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
-    }
-  }
-
   "MobileControllerTesting: isImeiExist -> existed imeid" in {
     running(FakeApplication()) {
       Cache.set(username, user)
@@ -237,4 +208,3 @@ class MobileControllerTestCases extends Specification with Mockito {
     }
   }
 }
-*/

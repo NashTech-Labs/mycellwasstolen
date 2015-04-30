@@ -1,21 +1,19 @@
-@* rightSidebar Template File *@ 
-@(param: Any)
- <div class="headline">
-    <h4>Why Choose Us</h4>
-    </div>
-    <p style="font-size: 16px;">Pellentesque fermentum, Vivamus imperdiet condimentum diam, eget placerat felis consectetur id.</p>
-    <ul class="list-unstyled">
-                        <li><a href="#"><i class="fa fa-check"></i>Check IMEI status</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>Register IMEI</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>Data records</a></li>
-                        <li><a href="#"><i class="fa fa-check"></i>View reports</a></li>
-                    </ul>
-                <br>
-                    
-   <div class="headline">
-    <h4>Latest Tweets</h4>
-    </div>
-    <br>
-    <div>
-    @views.html.socialmedia.twitterFeedWidget("tweets")
-         </div>
+@* rightSidebar Template File *@ @(param: Any)
+<div class="headline">
+	<h4>Why Choose Us</h4>
+</div>
+<p style="font-size: 16px;">The sole reason would be information
+	that can help you avoid from misuse of our device in case you lose it.
+</p>
+<ul class="list-unstyled">
+	<li><a href="#"><i class="fa fa-check"></i>Check IMEI status</a></li>
+	<li><a href="#"><i class="fa fa-check"></i>Register IMEI</a></li>
+	<li><a href="#"><i class="fa fa-check"></i>Data records</a></li>
+	<li><a href="#"><i class="fa fa-check"></i>View reports</a></li>
+</ul>
+<br>
+<div class="headline">
+	<h4>Latest Tweets</h4>
+</div>
+<br>
+<div>@views.html.socialmedia.twitterFeedWidget("tweets")</div>

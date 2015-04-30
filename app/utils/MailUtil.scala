@@ -33,8 +33,8 @@ trait MailUtil {
   }
 
   // message for delete mobile user
-  def deleteMessage(imeid: String): String = {
-    Messages("messages.mobile.delete", imeid, signature)
+  def spamMessage(imeid: String): String = {
+    Messages("messages.mobile.spam", imeid, signature)
   }
 
   // message for change mobile registration to stolen

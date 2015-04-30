@@ -16,6 +16,7 @@ object StatusUtil {
     val pending = Value("pending")
     val approved = Value("approved")
     val proofdemanded = Value("proofdemanded")
+    val spam = Value("spam")
   }
 
   /**
@@ -29,6 +30,7 @@ object StatusUtil {
           case "pending"       => Status(0)
           case "approved"      => Status(1)
           case "proofdemanded" => Status(2)
+          case "spam"          => Status(3)
         }
     })
 }

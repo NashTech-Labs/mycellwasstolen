@@ -25,7 +25,7 @@ GET    /approve                        controllers.AdminController.approve(imeid
 GET    /pending                        controllers.AdminController.pending(imeid: String)
 GET    /change_mobile_status           controllers.AdminController.changeMobileRegTypeForm
 GET    /change_status                  controllers.AdminController.changeMobileRegType(imeid: String)
-GET    /delete                         controllers.AdminController.deleteMobile(imeid: String)
+GET    /delete                         controllers.AdminController.markMobileAsSpam(imeid: String)
 
 #Users
 POST   /save_users                     controllers.MobileController.saveMobileUser
@@ -42,7 +42,7 @@ GET    /get_monthly_registrations      controllers.AuditController.getMonthlyReg
 GET    /top_lost_brands                controllers.AuditController.renderTopLostBrands
 GET    /registeration_growth_by_year   controllers.AuditController.getRegistrationByYears
 GET    /get_top_lost_brands_data       controllers.AuditController.topLostBrands(n: Int)
-GET   /get_per_day_registrations	   controllers.AuditController.getPerDayRegistrationCount
+GET    /get_per_day_registrations      controllers.AuditController.getPerDayRegistrationCount
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                   controllers.Assets.at(path="/public", file)

@@ -1,4 +1,4 @@
-/*package routes
+package routes
 
 import org.specs2.mutable.Specification
 import play.api.test.FakeApplication
@@ -57,13 +57,6 @@ class RouterTest extends Specification {
     }
   }
 
-  "redirect mobile status form" in {
-    running(FakeApplication()) {
-      val Some(result) = route(FakeRequest(GET, "/check_mobile_status"))
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/html")
-    }
-  }
 
   // Admin routes
   
@@ -89,4 +82,3 @@ class RouterTest extends Specification {
   }
   
 }
-*/

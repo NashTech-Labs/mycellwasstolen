@@ -38,7 +38,7 @@ class Application extends Controller {
       routes.javascript.MobileController.getModels,
       routes.javascript.MobileController.isImeiExist,
       routes.javascript.AdminController.pending,
-      routes.javascript.AdminController.deleteMobile,
+      routes.javascript.AdminController.markMobileAsSpam,
       routes.javascript.AdminController.changeMobileRegType)).as("text/javascript")
   }
 }
