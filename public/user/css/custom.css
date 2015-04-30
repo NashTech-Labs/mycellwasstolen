@@ -10,10 +10,6 @@
     background-size: cover;
 }  
 
-#imeiStatusModal{
-	padding: 238px 100px 49px !important;
-}
-
 
 .purchase {
     padding: 25px 0px 30px;
@@ -85,6 +81,10 @@ a {
 
 .sidebar li a{
 	color:#000000;
+}
+
+#imeiStatusModal{
+	padding: 235px 222px 0 !important;
 }
 
 #topcontrol {
