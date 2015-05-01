@@ -21,12 +21,13 @@
 								<h5 style="color: rgba(32, 75, 54, 1);">Coming Soon - Check IMEI by sending an <img src="@routes.Assets.at("user/img/msg.png")" alt="...">&nbsp;(premium service)</h5>
 								<hr>
 	
-	<a href="#imeiStatusModal" class="portfolio-link animated bounceIn" role="button"  data-toggle="modal"><button type="button" class="btn btn-success">
-  <span class="glyphicon glyphicon-phone" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to check IMEI status</button></a>							    <!-- Button to trigger modal -->
+  <!-- Button to trigger modal -->
+	<a href="#imeiStatusModal" class="portfolio-link" role="button"><button type="button" class="btn md-trigger"  data-modal="modal-11">
+  <span class="glyphicon glyphicon-phone" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to check IMEI status</button></a>							    
      
     <!-- Modal -->
-    <div class="modal fade" id="imeiStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
+    <div class="md-modal md-effect-11" id="modal-11" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="md-content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -48,7 +49,7 @@
 							</div>
 						  </div>
 						  <hr>
-						  <button class="btn btn-success" onClick="clearFields();">Close</button>
+						  <button class="btn btn-success md-close" onClick="clearFields();">Close</button>
                         </div>
                     </div>
                 </div>
@@ -58,4 +59,14 @@
 
     </section>
     
-<script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>
+	<script>
+		// this is important for IEs
+		var polyfilter_scriptpath = '/user/js/modalStyling/';
+	</script>
+    
+	<script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>
+	<script src="@routes.Assets.at("user/js/modalStyling/modernizr.custom.js")"></script>
+	<script src="@routes.Assets.at("user/js/modalStyling/modalEffects.js")"></script>
+	<script src="@routes.Assets.at("user/js/modalStyling/cssParser.js")"></script>
+	<script src="@routes.Assets.at("user/js/modalStyling/css-filters-polyfill.js")"></script>    
+    
