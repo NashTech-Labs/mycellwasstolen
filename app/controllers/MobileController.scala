@@ -140,7 +140,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    */
   def isImeiExist(imeiId: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist -> called " + imeiId)
-    val result = CommonUtils.validateImei(imeiId)
       val isExist = mobileRepo.getMobileUserByIMEID(imeiId)
       if (!(isExist.isEmpty)) {
         Logger.info("MobileController:isImeiExist - true")
