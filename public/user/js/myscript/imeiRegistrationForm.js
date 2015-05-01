@@ -1,11 +1,10 @@
 /**
  * Contains AJAX form submit, form validation, and get mobile brands AJAX call.
  */
-
 // clear all field on close button
 function clearForm() {
 	document.getElementById("mobileRegistrationForm").reset();
-	$("label.error").hide();	
+	$("label.error").hide();
 	$(".error").removeClass('error');
 	$('#imeiRegisterModal').modal('hide');
 }
@@ -18,9 +17,9 @@ $("#mobileRegistrationForm").submit(function(event) {
 
 	// grab all form data
 	var formData = new FormData($(this)[0]);
-	
-	var regtype=$("input[name=regTypee]:checked").val();
-    $('#regType').val(regtype);
+
+	var regtype = $("input[name=regTypee]:checked").val();
+	$('#regType').val(regtype);
 
 	$.ajax({
 		url : '/save_users',
@@ -50,6 +49,7 @@ function setValue() {
 $('input[type=radio]').on('change', function() {
 	if (!this.checked)
 		return
+
 	$('.collapse').not($('div.' + $(this).attr('class'))).slideUp();
 	$('.collapse.' + $(this).attr('class')).slideDown();
 });
@@ -111,6 +111,7 @@ $("#mobileRegistrationForm").validate({
 					imeiId : function() {
 						return $("#imei").val();
 					}
+
 				}
 			}
 		},
@@ -155,12 +156,14 @@ $("#mobileRegistrationForm").validate({
 			email : "Please enter a valid email address"
 		},
 		imei : {
+
 			required : "Please provide an IMEI number of mobile",
-			remote : "Invalid imei Id or may be already exist."
+			remote : "IMEI already registered"
+
 		},
 		otherImei : {
 			required : "Please provide an IMEI number of mobile",
-			remote : "Invalid imei Id or may be already exist."
+			remote : "IMEI already registered"
 		},
 		brandId : {
 			required : "Please select a brand"
@@ -199,7 +202,15 @@ function validateImeiMeid(imei) {
 
 	if (imeiMeid.length == 15) {
 		if (pattern.test(imeiMeid)) {
-			return true;
+			if (Validate(imeiMeid)) {
+				return true;
+			} else {
+				alert("This is not a valid IMEI number. Please re-check.")
+				imei.form.elements['imei'].value = imei.form.elements['imei'].defaultValue;
+				imei.focus();
+				return false
+			}
+
 		} else {
 			alert("IMEI is not in correct format");
 			imei.form.elements['imei'].value = imei.form.elements['imei'].defaultValue;
@@ -212,7 +223,36 @@ function validateImeiMeid(imei) {
 		imei.focus();
 		return false;
 	}
+}
 
+// Luhn calculation
+function Calculate(Luhn) {
+	var sum = 0;
+	for (i = 0; i < Luhn.length; i++) {
+		sum += parseInt(Luhn.substring(i, i + 1));
+	}
+	var delta = new Array(0, 1, 2, 3, 4, -4, -3, -2, -1, 0);
+	for (i = Luhn.length - 1; i >= 0; i -= 2) {
+		var deltaIndex = parseInt(Luhn.substring(i, i + 1));
+		var deltaValue = delta[deltaIndex];
+		sum += deltaValue;
+	}
+	var mod10 = sum % 10;
+	mod10 = 10 - mod10;
+	if (mod10 == 10) {
+		mod10 = 0;
+	}
+	return mod10;
+}
+
+// Luhn validation
+function Validate(Luhn) {
+	var LuhnDigit = parseInt(Luhn.substring(Luhn.length - 1, Luhn.length));
+	var LuhnLess = Luhn.substring(0, Luhn.length - 1);
+	if (Calculate(LuhnLess) == parseInt(LuhnDigit)) {
+		return true;
+	}
+	return false;
 }
 
 // function for other IMEI change

@@ -141,7 +141,6 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
   def isImeiExist(imeiId: String): Action[AnyContent] = Action { implicit request =>
     Logger.info("MobileController:isImeiExist -> called " + imeiId)
     val result = CommonUtils.validateImei(imeiId)
-    if (result) {
       val isExist = mobileRepo.getMobileUserByIMEID(imeiId)
       if (!(isExist.isEmpty)) {
         Logger.info("MobileController:isImeiExist - true")
@@ -150,12 +149,8 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
         Logger.info("MobileController:isImeiExist - false")
         Ok("true")
       }
-    } else {
-      Logger.info("MobileController:isImeiExist - invalid IMEI number")
-      Ok("false")
     }
   }
-}
 
 /**
  * Lets other classes, packages, traits access all the behaviors defined in the class MobileController
