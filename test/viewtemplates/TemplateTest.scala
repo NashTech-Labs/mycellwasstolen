@@ -67,13 +67,13 @@ class TemplateTest extends Specification{
     
     "get deleteMobile URL via ReverseAdminController" in new WithApplication {
       val testController = new ReverseAdminController()
-      testController.deleteMobile("123456789012347") .url must contain("delete")
+      testController.markMobileAsSpam("123456789012347") .url must contain("delete")
       
        val javaScriptTest = new controllers.javascript.ReverseAdminController()
-      javaScriptTest.deleteMobile.name must contain("delete")
+      javaScriptTest.markMobileAsSpam.name must contain("mark")
 
       val refTest = new controllers.ref.ReverseAdminController()
-      refTest.deleteMobile("123456789012347").toString must contain("delete")
+      refTest.markMobileAsSpam("123456789012347").toString must contain("mark")
     }
     
     "get brandRegisterForm URL via ReverseAdminController" in new WithApplication {

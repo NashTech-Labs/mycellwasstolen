@@ -191,20 +191,10 @@ class MobileControllerTestCases extends Specification with Mockito {
   "MobileControllerTesting: isImeiExist -> valid imeid" in {
     running(FakeApplication()) {
       Cache.set(username, user)
-      mockedCommonUtil.validateImei("864465028854206")
       val result = mobileController.isImeiExist("864465028854206")(FakeRequest())
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
   }
   
-  "MobileControllerTesting: isImeiExist -> invalid imeid" in {
-    running(FakeApplication()) {
-      Cache.set(username, user)
-      mockedCommonUtil.validateImei("864465028854201")
-      val result = mobileController.isImeiExist("864465028854201")(FakeRequest())
-      status(result) must equalTo(200)
-      contentType(result) must beSome("text/plain")
-    }
-  }
 }

@@ -1,26 +1,30 @@
-import java.sql.Date
-import scala.slick.driver.PostgresDriver.simple._
-import com.typesafe.config.ConfigFactory
-import play.api._
 import java.io.File
-import utils.Connection
-import play.api.Play.current
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.slick.driver.PostgresDriver.simple.Session
+import scala.slick.driver.PostgresDriver.simple.ddlToDDLInvoker
+import scala.slick.driver.PostgresDriver.simple.tableQueryToTableQueryExtensionMethods
 import scala.slick.jdbc.meta.MTable
+import scala.util.Try
+import scala.util.control.Exception.allCatch
+
 import com.typesafe.config.ConfigFactory
-import scala.slick.driver.PostgresDriver.simple._
-import model.repository.ModelRepository.models
+
+import model.repository.AuditRepository.audits
 import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
-import model.repository.AuditRepository.audits
+import model.repository.ModelRepository.models
+import play.api.Application
+import play.api.Configuration
+import play.api.GlobalSettings
+import play.api.Logger
+import play.api.Mode
+import play.api.Play
+import play.api.Play.current
 import play.api.mvc.RequestHeader
-import play.api.mvc.Results._
-import play.mvc._
-import org.omg.CosNaming.NamingContextPackage.NotFound
-import views.html.defaultpages.notFound
-import play.api.mvc.Action
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
+import play.api.mvc.Results.Ok
+import utils.Connection
 import utils.TableEnums
 
 object Global extends GlobalSettings {

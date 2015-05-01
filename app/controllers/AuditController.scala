@@ -120,7 +120,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
    * Handles AJAX call to fetch perDay Registration count starting from a particular year
    * Returns perDayRegistration JSON records in the form: [12,12,12,0,12,12,9,12,]
    */
-  def getPerDayRegistrationCount: Action[AnyContent] = withAuth { username =>
+  def getPerDayRegistrationCount: Action[AnyContent] = Action {
     implicit request =>
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
       implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]

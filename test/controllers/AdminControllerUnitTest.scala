@@ -231,8 +231,8 @@ class AdminControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
-      when(mockedMobilRepo.deleteMobileUser("864465028854206")).thenReturn(Right(1))
-      val result = adminController.deleteMobile("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
+      when(mockedMobilRepo.changeStatusToSpamByIMEID("864465028854206")).thenReturn(Right(1))
+      val result = adminController.markMobileAsSpam("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
@@ -242,7 +242,7 @@ class AdminControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.getMobileUserByIMEID("864465028854207")).thenReturn(None)
-      val result = adminController.deleteMobile("864465028854207")(FakeRequest().withSession(Security.username -> "admin"))
+      val result = adminController.markMobileAsSpam("864465028854207")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
@@ -252,8 +252,8 @@ class AdminControllerTestCases extends Specification with Mockito {
     running(FakeApplication()) {
       Cache.set("admin", user)
       when(mockedMobilRepo.getMobileUserByIMEID("864465028854206")).thenReturn(Some(stolenMobileUser))
-      when(mockedMobilRepo.deleteMobileUser("864465028854206")).thenReturn(Left("error"))
-      val result = adminController.deleteMobile("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
+      when(mockedMobilRepo.changeStatusToSpamByIMEID("864465028854206")).thenReturn(Left("error"))
+      val result = adminController.markMobileAsSpam("864465028854206")(FakeRequest().withSession(Security.username -> "admin"))
       status(result) must equalTo(200)
       contentType(result) must beSome("text/plain")
     }
