@@ -1,21 +1,21 @@
 package controllers
 
+import java.sql.Timestamp
+import java.util.Date
 import org.mockito.Mockito._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
+import services.analytics
 import model.repository._
 import play.api.Play.current
 import play.api.cache.Cache
+import play.api.mvc.Security
+import play.api.mvc.Security
 import play.api.test.FakeApplication
-import play.api.test.Helpers._
 import play.api.test.FakeRequest
-import play.api.mvc.Security
+import play.api.test.Helpers._
 import utils._
-import play.api.mvc.Security
-import java.util.Date
-import java.util.Calendar
-import java.sql.Timestamp
-import model.analyticsServices.AnalyticsService
+import services.analytics.AnalyticsService
 
 class AuditControllerTestCases extends Specification with Mockito {
 

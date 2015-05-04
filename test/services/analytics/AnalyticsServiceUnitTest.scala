@@ -1,10 +1,10 @@
-package model.analyticsServices
+package services.analytics
 import model.repository.{ BrandRepository, AuditRepository, ModelRepository, MobileRepository }
 import org.specs2.mutable.Specification
 import org.specs2.mock.Mockito
-
+ 
 /**
- * Test Analytics Services
+ * Test Analytics Services 
  */
 class AnalyticsServicesUnit extends Specification with Mockito {
 
