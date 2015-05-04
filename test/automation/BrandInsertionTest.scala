@@ -1,4 +1,4 @@
-/*package automation
+package automation
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -22,17 +22,18 @@ class BrandInsertionTest extends Specification {
 
   "Testing Add Mobile Brand" in {
     running(TestServer(port), FIREFOX) { browser =>
-      browser.webDriver.manage().window().maximize()
-      browser.goTo(baseUrl + "/login")
-      browser.$("#email").text("test")
-      browser.$("#password").text("test")
-      browser.$(".btn.btn-primary").click
-      browser.$("#menuItem").click
-      browser.$("#brandForm").click
-      browser.$("#name").text("nokia")
-      browser.$(".btn.btn-primary").click
-      browser.$(".alert.alert-dismissable.alert-success").getText() must contain("Brand successfully added")
+      val driver = new FirefoxDriver
+      driver.manage().window().maximize()
+      driver.get(baseUrl + "/login")
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
+      driver.findElementByCssSelector(".btn.btn-success").click
+      driver.findElementById("forms").click
+      driver.findElementById("addNewBrand").click
+      driver.findElementById("name").sendKeys("nokia")
+      driver.findElementByCssSelector(".btn.btn-primary").click
+      driver.findElementByCssSelector("BODY").getText.contains("Brand successfully added")
     }
   }
 }
-*/

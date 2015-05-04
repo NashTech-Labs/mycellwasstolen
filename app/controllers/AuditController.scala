@@ -1,8 +1,7 @@
 package controllers
 
 import java.util.Calendar
-
-import model.analyticsServices.AnalyticsService
+import services.analytics
 import model.repository.AuditForm
 import model.repository.User
 import play.api.Logger
@@ -17,6 +16,7 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import play.api.mvc.Security
+import services.analytics.AnalyticsService
 /**
  * Contains behaviors to control for fetching audit reports
  */
@@ -120,7 +120,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
    * Handles AJAX call to fetch perDay Registration count starting from a particular year
    * Returns perDayRegistration JSON records in the form: [12,12,12,0,12,12,9,12,]
    */
-  def getPerDayRegistrationCount: Action[AnyContent] = withAuth { username =>
+  def getPerDayRegistrationCount: Action[AnyContent] = Action {
     implicit request =>
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
       implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]

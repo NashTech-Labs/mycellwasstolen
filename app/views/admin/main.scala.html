@@ -43,7 +43,7 @@
                     <span class="icon-bar"></span>
                 </button>
                <a class="navbar-brand" href="/admin"><i class="fa fa-dashboard fa-fw"></i>Admin</a>
-               <a class="navbar-brand" target="blank" href="/"><i class="fa fa-home fa-fw"></i> MCWS</a>
+               <a id="mcwsHome" class="navbar-brand" target="blank" href="/"><i class="fa fa-home fa-fw"></i> MCWS</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -92,10 +92,10 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i>Data<span class="fa arrow"></span></a>
+                            <a href="tables.html"><i class="fa fa-table fa-fw" id="data"></i>Data<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/requests?status=pending">Requests</a>
+                                    <a id="imeiRequests" href="/requests?status=pending">Requests</a>
                                 </li>
                                 <li>
                                     <a href="/change_mobile_status">Change mobile status</a>
@@ -103,13 +103,13 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Forms<span class="fa arrow"></span></a>
+                            <a id="forms" href="forms.html"><i class="fa fa-edit fa-fw"></i>Forms<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/new_brand">Add New Brand</a>
+                                    <a id="addNewBrand" href="/new_brand">Add New Brand</a>
                                 </li>
                                 <li>
-                                    <a href="/new_model">Add New Model</a>
+                                    <a id="addNewModel" href="/new_model">Add New Model</a>
                                 </li>
                             </ul>
                         </li>

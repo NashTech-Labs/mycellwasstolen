@@ -1,4 +1,4 @@
-/*package automation
+package automation
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -24,8 +24,7 @@ class HomePageTest extends Specification {
     running(TestServer(port), FIREFOX) { browser =>
       browser.webDriver.manage().window().maximize()
       browser.goTo(baseUrl)
-      browser.title() must equalTo("Welcome to MCWS")
+      browser.title() must equalTo("MCWS")
     }
   }
 }
-*/

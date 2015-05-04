@@ -3,22 +3,34 @@
  */
 package controllers
 
-import model.repository._
-import net.liftweb.json.DefaultFormats
-import net.liftweb.json.JsonAST._
-import net.liftweb.json.JsonDSL._
-import net.liftweb.json.Serialization.write
+import model.repository.AuditRepository
+import model.repository.Brand
+import model.repository.BrandForm
+import model.repository.BrandRepository
+import model.repository.Mobile
+import model.repository.MobileRepository
+import model.repository.MobileStatus
+import model.repository.Model
+import model.repository.ModelForm
+import model.repository.ModelRepository
+import model.repository.User
 import play.api.Logger
-import play.api._
+import play.api.Play
 import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.mvc._
-import play.api.Play.current
-import utils._
 import play.api.cache.Cache
-import play.twirl.api.Html
+import play.api.data.Form
+import play.api.data.Forms.mapping
+import play.api.data.Forms.nonEmptyText
+import play.api.i18n.Messages
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.Controller
+import play.api.mvc.Security
+import utils.Constants
+import utils.MailUtil
+import utils.S3Util
+import utils.S3UtilComponent
+import utils.TwitterTweet
 
 /**
  * Controls administrative tasks such as handling user requests, approving a request, request verification

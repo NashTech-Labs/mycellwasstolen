@@ -1,4 +1,4 @@
-package model.analyticsServices
+package services.analytics
 
 import model.repository.{ BrandRepository, AuditRepository, ModelRepository, MobileRepository }
 
