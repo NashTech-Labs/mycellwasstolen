@@ -1,4 +1,4 @@
-/*package automation
+package automation
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -16,11 +16,10 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 
-class ApprovingUserRequestTest extends Specification {
+class StolenMobileRegistrationTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
-
-  "Approving a request" in {
+  "Stolen Mobile Registration" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
       driver.manage().window().maximize()
@@ -40,6 +39,7 @@ class ApprovingUserRequestTest extends Specification {
       driver.findElementByCssSelector(".btn.btn-primary").click
       driver.get(baseUrl + "/#registerImei")
       driver.findElementById("registerIMEI").click
+      driver.findElementById("stolen").click()
       driver.findElementById("userName").sendKeys("test")
       new Select(driver.findElementById("brandId")).selectByVisibleText("nokia")
       new Select(driver.findElementById("modelId")).selectByVisibleText("Asha 200")
@@ -47,10 +47,16 @@ class ApprovingUserRequestTest extends Specification {
       driver.findElementById("email").sendKeys("reseamanish@gmail.com")
       driver.findElementById("contactNo").sendKeys("+91 1234567890")
       driver.findElementById("fileUpload").sendKeys("/home/knoldus/Pictures/selenium.png")
+      driver.findElementById("registerSubmit").click
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+      driver.findElementById("registerSubmit").click
+      driver.get(baseUrl + "/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-success").click
-      driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS)
-      driver.findElementByCssSelector("BODY").getText().contains("IMEI")
+      driver.findElementById("data").click
+      driver.findElementById("imeiRequests").click
+      driver.findElementByCssSelector("tbody").getText().contains("stolen")
     }
   }
 }
-*/
