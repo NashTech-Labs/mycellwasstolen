@@ -6,7 +6,7 @@ import org.specs2.mock.Mockito
 /**
  * Test Analytics Services 
  */
-class AnalyticsServicesUnit extends Specification with Mockito {
+class AnalyticsUnitTest extends Specification with Mockito {
 
   "MychartDataformatter" should {
 

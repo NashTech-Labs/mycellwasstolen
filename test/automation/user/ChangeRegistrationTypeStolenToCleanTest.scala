@@ -44,7 +44,7 @@ class ChangeRegistrationTypeStolenToCleanTest extends Specification {
       new Select(driver.findElementById("brandId")).selectByVisibleText("nokia")
       new Select(driver.findElementById("modelId")).selectByVisibleText("Asha 200")
       driver.findElementById("imei").sendKeys("123456789012347")
-      driver.findElementById("email").sendKeys("reseamanish@gmail.com")
+      driver.findElementById("email").sendKeys("teena@knoldus.com")
       driver.findElementById("contactNo").sendKeys("+91 1234567890")
       driver.findElementById("fileUpload").sendKeys("/home/knoldus/Pictures/selenium.png")
       driver.findElementById("registerSubmit").click
