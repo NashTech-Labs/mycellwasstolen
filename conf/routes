@@ -25,7 +25,7 @@ GET    /approve                        controllers.AdminController.approve(imeid
 GET    /pending                        controllers.AdminController.pending(imeid: String)
 GET    /change_mobile_status           controllers.AdminController.changeMobileRegTypeForm
 GET    /change_status                  controllers.AdminController.changeMobileRegType(imeid: String)
-GET    /delete                         controllers.AdminController.markMobileAsSpam(imeid: String)
+GET    /mark_as_spam                   controllers.AdminController.markMobileAsSpam(imeid: String)
 
 #Users
 POST   /save_users                     controllers.MobileController.saveMobileUser

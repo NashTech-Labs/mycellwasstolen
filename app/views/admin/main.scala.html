@@ -78,12 +78,12 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Analytics<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw" id="analytics"></i>Analytics<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/registrations_record?year=2015">Registrations</a>
-                                    <a href="/top_lost_brands">Top Lost Brands</a>
-                                    <a href="/registeration_growth_by_year">Registration Growth By Year</a>
+                                    <a id="barChart" href="/registrations_record?year=2015">Registrations</a>
+                                    <a id="pieChart" href="/top_lost_brands">Top Lost Brands</a>
+                                    <a id="timeSeriesChart" href="/registeration_growth_by_year">Registration Growth By Year</a>
                                 </li>
                                 <li>
                                     <a href="/timestamps">Timestamps</a>
@@ -98,7 +98,7 @@
                                     <a id="imeiRequests" href="/requests?status=pending">Requests</a>
                                 </li>
                                 <li>
-                                    <a href="/change_mobile_status">Change mobile status</a>
+                                    <a id="changeStatus" href="/change_mobile_status">Change mobile status</a>
                                 </li>
                             </ul>
                         </li>

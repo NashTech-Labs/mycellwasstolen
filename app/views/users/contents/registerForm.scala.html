@@ -16,8 +16,8 @@
 	<div class="form-group">
 		<label class="col-sm-4 control-label  " >Registration Type</label>
 		<div class="col-sm-6">
-			<label class="radio-inline"><input type="radio" name="regTypee" value="stolen" checked>Stolen</label>
-            <label class="radio-inline"><input type="radio" name="regTypee" value="clean">Clean</label>
+			<label class="radio-inline"><input type="radio" name="regTypee" value="stolen" checked id="stolen">Stolen</label>
+            <label class="radio-inline"><input type="radio" name="regTypee" value="clean" id="clean">Clean</label>
 		</div>
 	</div>
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name",'class->"form-control")
@@ -65,7 +65,7 @@
 <div class="form-group">
 	<div class="col-lg-10 col-lg-offset-4">
 		<button class="btn btn-success" type="submit" onClick="setValue();">Submit</button>
-<button class="btn btn-warning" type="reset" onClick="clearForm();">Close</button>
+ 		<button class="btn btn-warning" type="reset" onClick="clearForm();">Close</button>
 	</div>
 </div>
 }

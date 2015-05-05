@@ -1,4 +1,4 @@
-/*package automation
+package automation
 
 import scala.slick.driver.PostgresDriver.simple._
 import org.specs2.mutable.Specification
@@ -19,7 +19,6 @@ import org.openqa.selenium.WebElement
 class ApprovingUserRequestTest extends Specification {
   val port = 19001
   val baseUrl = "http://localhost:19001"
-
   "Approving a request" in {
     running(TestServer(port, FakeApplication(additionalConfiguration = inMemoryDatabase())), HTMLUNIT) { browser =>
       val driver = new FirefoxDriver
@@ -44,13 +43,20 @@ class ApprovingUserRequestTest extends Specification {
       new Select(driver.findElementById("brandId")).selectByVisibleText("nokia")
       new Select(driver.findElementById("modelId")).selectByVisibleText("Asha 200")
       driver.findElementById("imei").sendKeys("123456789012347")
-      driver.findElementById("email").sendKeys("reseamanish@gmail.com")
+      driver.findElementById("email").sendKeys("teena@knoldus.com")
       driver.findElementById("contactNo").sendKeys("+91 1234567890")
       driver.findElementById("fileUpload").sendKeys("/home/knoldus/Pictures/selenium.png")
+      driver.findElementById("registerSubmit").click
+      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+      driver.findElementById("registerSubmit").click
+      driver.get(baseUrl + "/login")
+      driver.findElementById("email").sendKeys("test")
+      driver.findElementById("password").sendKeys("test")
       driver.findElementByCssSelector(".btn.btn-success").click
-      driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS)
-      driver.findElementByCssSelector("BODY").getText().contains("IMEI")
+      driver.findElementById("data").click
+      driver.findElementById("imeiRequests").click
+      driver.findElementById("approve").click
+      driver.findElementByCssSelector("BODY").getText().contains("Mobile has been approved successfully!")
     }
   }
 }
-*/
