@@ -4,32 +4,37 @@
 @helper.form(action =routes.MobileController.saveMobileUser, 'id->"mobileRegistrationForm",'enctype -> "multipart/form-data") {
 <fieldset>
 <style>
- input[type=text] { width: 300px;}
+ input[type=text] { width: 250px;}
 </style>
-	<font color="red"><center>Note : All Fields Are Mandatory</center></font><br> 
+<div class="registrationHeader">
+  <h3 style="text-align: center">Take one step to report your IMEI</h3>
+	</div>	
+	<font color="red"><center>Note : All Fields Are Mandatory</center></font>
+
 	<input type="hidden" name="regType" id="regType" value=""> 
 	<input type="hidden" name="document" id="document" value="">
 	<div class="form-group">
-		<label class="col-sm-4 control-label" >Registration Type</label>
+		<label class="col-sm-4 control-label  " >Registration Type</label>
 		<div class="col-sm-6">
 			<label class="radio-inline"><input type="radio" name="regTypee" value="stolen" checked>Stolen</label>
             <label class="radio-inline"><input type="radio" name="regTypee" value="clean">Clean</label>
 		</div>
 	</div>
 	@inputText(mobileRegistrationForm("userName"), '_label -> "Name",'class->"form-control")
+	@inputText(mobileRegistrationForm("email"), '_label -> "Email",'class->"form-control")
 	@select(field=mobileRegistrationForm("brandId"),options=brands.map(x=>
 	(x.id.get.toString -> (x.name))).toSeq, '_label -> "Mobile Brand",
 	'_default -> "-- Choose Brand Name --", '_showConstraints ->
-	false,'class->"form-control inputField",'_error ->
+	false,'class->"form-control inputField  ",'_error ->
 	mobileRegistrationForm("brandId").error.map(_.withMessage("Mobile Brand Required")))
 
 	@select(field=mobileRegistrationForm("modelId"),options=None.toSeq,
-	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",'class->"form-control inputField",
+	'_label->"Mobile Model", '_default -> "-- Choose Mobile Model --",'class->"form-control inputField  ",
 	'_showConstraints -> false,'_error ->
 	mobileRegistrationForm("modelId").error.map(_.withMessage("Mobile Model Required")))
 	
 	<div class="form-group">
-    <label class="col-sm-4 control-label">IMEI number</label>
+    <label class="col-sm-4 control-label  ">IMEI number</label>
     <label class="radio-inline col-sm-2" style="padding-left: 50px">
         <input type="radio" class="single" name="when" value="single" checked> <strong>Single</strong>
     </label>
@@ -39,15 +44,13 @@
     </label>
 </div>
 
-        @inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control")
+        @inputText(mobileRegistrationForm("imei"), '_label -> "IMEI 1", 'maxlength -> 15,'class->"form-control", '_type -> "number")
     <div class="col-sm-12">
     <div class="collapse dual">
 @inputText(mobileRegistrationForm("otherImei"), '_label -> "IMEI 2", 'maxlength -> 15,'class->"form-control")
 </div>
 </div>
 	
-	@inputText(mobileRegistrationForm("email"), '_label -> "Email",'class->"form-control")
-
 	@inputText(mobileRegistrationForm("contactNo"), '_label -> "Mobile No.",'_type->"tel", 'pattern->"[0123456789+ ]{13,17}",'title->"Mobile number must be of 13 to 17 digit with code", 'maxlength->17,'class->"form-control")
  
  <div class="form-group">
@@ -61,7 +64,6 @@
 
 <div class="form-group">
 	<div class="col-lg-10 col-lg-offset-4">
-	    <hr>
 		<button class="btn btn-success" type="submit" onClick="setValue();">Submit</button>
 <button class="btn btn-warning" type="reset" onClick="clearForm();">Close</button>
 	</div>
