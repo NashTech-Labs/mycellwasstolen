@@ -48,14 +48,17 @@
                 <hr>
                 
      <!-- Modal -->
-    <div class="registerationModal modal fade" id="imeiRegisterModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bs-example-modal-lg registerationModal" aria-labelledby="myLargeModalLabel" id="imeiRegisterModal" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="registrationHeader modal-dialog modal-lg">
+  			<h3 style="text-align: center">Take one step to report your IMEI</h3>
                 <div class="row">
                     <div class="modal-content formContainer">
                         <div class="modal-body form-horizontal" style="text-align: left;">
 							 @registerForm("clean", mobileRegistrationForm, brands)
-						
+							
                         </div>
                     </div>
+                  </div>
             </div>
     </div>             
 </section>

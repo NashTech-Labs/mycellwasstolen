@@ -55,9 +55,6 @@
 	margin-bottom: 15px;
 }
 
-.registerationModal{
-	padding: 48px 75px 48px !important
-}
 
 .thumbnails-style:hover {
 -moz-box-shadow: 0 0 10px #ccc; 
@@ -87,6 +84,11 @@ a {
   color: #fff;
   font-weight: 600;
 }
+
+#mobileRegistrationForm{
+  color:#2c3e50;
+}
+
 
 .textField{
 	padding-top:6px;
