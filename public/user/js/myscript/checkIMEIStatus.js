@@ -63,7 +63,7 @@ var mobileAjaxSuccess = function(data) {
 			}
 			var mobileData = '<br><div id="mobile-status"><h4>This IMEI number has been approved successfully as '
 					+ mobile.regType
-					+ '.</h4><div class="table-responsive"><table class="table table-bordered" style="background-color: rgba(246, 235, 174, 0.49);"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
+					+ '.</h4><div class="table-responsive"><table class="table table-bordered" style="color: #2c3e50;"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
 					+ mobile.imei
 					+ '</td><td>'
 					+ (mobile.otherImei == "" ? "None" : mobile.otherImei)
@@ -85,7 +85,7 @@ var mobileAjaxSuccess = function(data) {
 			var image = '<img src="/assets/user/img/warning.png" alt="Not Approved"/>';
 			var mobileData = '<br><div id="mobile-status"><h4><font color="#F41616">This IMEI is registered as '
 					+ mobile.regType
-					+ ' Phone but has not been approved yet. </font></h4><table style="background-color: rgba(246, 235, 174, 0.49);" class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
+					+ ' Phone but has not been approved yet. </font></h4><table style="color: #2c3e50;" class="table table-bordered"><tr><th>IMEI</th><th>Other IMEI</th><th>Brand</th><th>Model</th><th>Contact No</th><th>Email</th><th>Label</th></tr><tr><td>'
 					+ mobile.imei
 					+ '</td><td>'
 					+ (mobile.otherImei == "" ? "None" : mobile.otherImei)
