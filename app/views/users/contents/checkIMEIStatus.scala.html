@@ -1,7 +1,6 @@
 @* checkIMEIModal Template File *@
 @(title:String)
 
-
 <section id="imeiStatus">
     <div class="headline">
     <h3>Check IMEI status</h3>
@@ -21,50 +20,41 @@
 								<h5 style="color: rgba(32, 75, 54, 1);">Coming Soon - Check IMEI by sending an <img src="@routes.Assets.at("user/img/msg.png")" alt="...">&nbsp;(premium service)</h5>
 								<hr>
 	
-  <!-- Button to trigger modal -->
-	<a href="#imeiStatusModal" class="portfolio-link" role="button"><button type="button"  id ="checkIMEI" class="btn md-trigger"  data-modal="modal-11">
-  <span class="glyphicon glyphicon-phone" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to check IMEI status</button></a>							    
+	<a href="#imeiStatusModal" class="portfolio-link" role="button"  data-toggle="modal"><button type="button" class="btn btn-success">
+  <span class="glyphicon glyphicon-phone" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Click here to check IMEI status</button></a>							    <!-- Button to trigger modal -->
      
     <!-- Modal -->
-    <div class="md-modal md-effect-11" id="modal-11" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="md-content">
+    <div class="portfolio-modal modal fade" id="imeiStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="statusModal modal-dialog">
+           <h3 style="text-align:center;">Check Status Of IMEI number</h3>
+          <div class="modal-content">
                 <div class="row">
-                    <div class="col-md-12 modalStyle">
+                    <div class="col-md-12">
                         <div class="modal-body" style="text-align: left;">
-                            <h3 style="color: rgba(228, 137, 0, 1);">Check Status Of IMEI number</h3>
-                            <hr>
-                            <p>Please Enter Mobile IMEI To Check Status:</p>
-                            <p style="font-size: 14px;">Enter numbers only,  no dashes (e.g. 1234567890123457)</p>
+                            <p class="statusText">Please Enter Mobile IMEI To Check Status:</p>
+                            <p style="font-size: 14px;" class="statusText">Enter numbers only,  no dashes (e.g. 1234567890123457)</p>
                              <div class= "row">
 							<div class= "col-md-4">
 							<input type="text" class="form-control" id="imeiNum" name="imeiNum" placeholder="Enter IMEI..."/>
 					        </div>
-					        <div class="col-md-4">
-							<button class="btn btn-warning" onClick="showMobileRecord()" id="showrecord">Search</button>
+					        <div class="col-md-4 successButton">
+							<button class="btn btn-success" onClick="showMobileRecord()" id="showrecord">Search</button>
 							</div>
 							<div class="col-md-12" id="msg">
 							</div>
 							<div id="mobileRecords" class="col-md-12">
 							</div>
 						  </div>
-						  <hr>
-						  <button class="btn btn-success md-close" onClick="clearFields();">Close</button>
+						  <div class="closeButton">
+						  <button class="btn btn-warning" onClick="clearFields();">Close</button>
+                          </div>
                         </div>
                     </div>
                 </div>
-        </div>
+                 </div>
+            </div>
     </div>
 
     </section>
     
-	<script>
-		// this is important for IEs
-		var polyfilter_scriptpath = '/user/js/modalStyling/';
-	</script>
-    
-	<script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>
-	<script src="@routes.Assets.at("user/js/modalStyling/modernizr.custom.js")"></script>
-	<script src="@routes.Assets.at("user/js/modalStyling/modalEffects.js")"></script>
-	<script src="@routes.Assets.at("user/js/modalStyling/cssParser.js")"></script>
-	<script src="@routes.Assets.at("user/js/modalStyling/css-filters-polyfill.js")"></script>    
-    
+<script src="@routes.Assets.at("user/js/myscript/checkIMEIStatus.js")"></script>

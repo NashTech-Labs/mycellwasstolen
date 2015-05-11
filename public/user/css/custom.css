@@ -1,32 +1,29 @@
 /*Home page*/
 /* home page slider*/
-
-  .carousel-inner .item {
-    width: 100%;
-    height: 400px;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}  
-
-
-.purchase {
-    padding: 25px 0px 30px;
-    border-bottom: 2px solid #EEE;
-    border-top: 2px solid #EEE;
-    background-color: #f7f7f7;
-    margin-top: 10px;
+.carousel-inner .item {
+	width: 100%;
+	height: 400px;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
 
+.purchase {
+	padding: 25px 0px 30px;
+	border-bottom: 2px solid #EEE;
+	border-top: 2px solid #EEE;
+	background-color: #f7f7f7;
+	margin-top: 10px;
+}
 
-.con{
-	margin-bottom: 50px; 
+.con {
+	margin-bottom: 50px;
 	color: #e6e6fa;
 }
 
-.formContainer{
-	padding:20px 20px 20px !important;
+.formContainer {
+	padding: 20px 20px 20px !important;
 }
 
 .headline {
@@ -35,7 +32,7 @@
 	border-bottom: 2px dotted #c8d2e0;
 }
 
-.inputField{
+.inputField {
 	width: 300px;
 }
 
@@ -46,23 +43,22 @@
 	border-bottom: 3px solid #72C02C;
 }
 
-.modalStyle{
+.modalStyle {
 	-webkit-box-sizing: border-box !important;
 }
 
-.thumbnails-style{
+.thumbnails-style {
 	padding: 10px;
 	margin-bottom: 15px;
 }
 
-
 .thumbnails-style:hover {
--moz-box-shadow: 0 0 10px #ccc; 
--webkit-box-shadow: 0 0 10px #ccc; 
-box-shadow: 0 0 10px #ccc; 
+	-moz-box-shadow: 0 0 10px #ccc;
+	-webkit-box-shadow: 0 0 10px #ccc;
+	box-shadow: 0 0 10px #ccc;
 }
 
-.title{
+.title {
 	color: rgba(218, 174, 22, 1);
 }
 
@@ -76,65 +72,83 @@ a {
 	font-weight: initial;
 }
 
-.registrationHeader{
-  margin-bottom: 10px;
-  font-size: 18px;
-  padding: 20px;
-  background-color: #2c3e50;
-  color: #fff;
-  font-weight: 600;
+.registrationHeader {
+	margin-bottom: 10px;
+	font-size: 18px;
+	padding: 20px;
+	background-color: #2c3e50;
+	color: #fff;
+	font-weight: 600;
 }
 
-#mobileRegistrationForm{
-  color:#2c3e50;
+#mobileRegistrationForm {
+	color: #2c3e50;
 }
 
-
-.textField{
-	padding-top:6px;
+.textField {
+	padding-top: 6px;
 }
-.sidebar{
+
+.sidebar {
 	margin-top: 106px;
 }
 
 .sidebar li i {
-    color: #72C02C;
-    font-size: 13px;
-    min-width: 15px;
-    margin-right: 8px;
-    text-align: center;
-    position: relative;
+	color: #72C02C;
+	font-size: 13px;
+	min-width: 15px;
+	margin-right: 8px;
+	text-align: center;
+	position: relative;
 }
 
-.sidebar li a{
-	color:#000000;
+.sidebar li a {
+	color: #000000;
 }
 
-#imeiStatusModal{
-	padding: 235px 222px 0 !important;
+.statusModal {
+	margin-bottom: 10px;
+	font-size: 18px;
+	padding: 20px;
+	background-color: #2c3e50;
+	color: #fff;
+	font-weight: 600;
+}
+
+.statusText {
+	color: #2c3e50;
+}
+
+.successButton{
+	padding-left:100px;
+}
+
+.closeButton {
+	padding-top: 10px;
 }
 
 #topcontrol {
-    color: #FFF;
-    z-index: 99;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    background: none repeat scroll 0% 0% #222;
-    position: relative;
-    right: 14px !important;
-    bottom: 11px !important;
-    border-radius: 3px !important;
+	color: #FFF;
+	z-index: 99;
+	width: 30px;
+	height: 30px;
+	font-size: 20px;
+	background: none repeat scroll 0% 0% #222;
+	position: relative;
+	right: 14px !important;
+	bottom: 11px !important;
+	border-radius: 3px !important;
 }
 
 #topcontrol:after {
-    top: -2px;
-    left: 8.5px;
-    content: "";
-    position: absolute;
-    text-align: center;
-    font-family: FontAwesome;
+	top: -2px;
+	left: 8.5px;
+	content: "";
+	position: absolute;
+	text-align: center;
+	font-family: FontAwesome;
 }
-#topcontrol:hover{
+
+#topcontrol:hover {
 	background-color: #01ad1b;
 }
