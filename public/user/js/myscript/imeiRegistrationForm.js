@@ -50,18 +50,25 @@ $('input[type=radio]').on('change', function() {
 	if (!this.checked)
 		return
 
+	
+
+		
+
+	
+
 	$('.collapse').not($('div.' + $(this).attr('class'))).slideUp();
 	$('.collapse.' + $(this).attr('class')).slideDown();
 });
 
 // international mobile number input function
-$("#contactNo").intlTelInput();
+/*$("#contactNo").intlTelInput();*/
 
 // function for mobile brand change
 $(document).ready(function() {
 	$("#brandId").change(function() {
 		var brandId = $(this).val();
 		mobileModels(brandId);
+		console.log("---brand id---" + brandId)
 	});
 });
 
@@ -82,6 +89,7 @@ var modelAjaxSuccess = function(data) {
 		value : "-- Choose Mobile Model --",
 		text : "-- Choose Mobile Model --"
 	}));
+	console.log("------")
 
 	$.each(data, function(i, d) {
 		$('#modelId').append($('<option>', {
