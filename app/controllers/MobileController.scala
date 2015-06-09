@@ -45,9 +45,7 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * Handle the new mobile registration form submission and add new mobile
    */
   def saveMobileUser: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
-    val username = request.session.get(Security.username).getOrElse("None")
     val brands = brandRepo.getAllBrands
-    val user: Option[User] = Cache.getAs[User](username)
     mobileregistrationform.bindFromRequest.fold(
       formWithErrors => BadRequest("Invalid form data"),
       mobileuser => {
@@ -65,9 +63,9 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
               val fileToSave = image.ref.file.asInstanceOf[File]
               s3Util.store(documentName, fileToSave)
             }
-            Ok("success").flashing("success"->"Your IMEI registration has been successfully added.")
+            Ok("success").flashing("success" -> "Your IMEI registration has been successfully added.")
           case _ =>
-            Ok("error").flashing("error"->"Oops! Something wrong. Please try again.")
+            Ok("error").flashing("error" -> "Oops! Something wrong. Please try again.")
         }
       })
   }
@@ -139,17 +137,17 @@ class MobileController(mobileRepo: MobileRepository, brandRepo: BrandRepository,
    * @param imeiId of mobile
    */
   def isImeiExist(imeiId: String): Action[AnyContent] = Action { implicit request =>
-    Logger.info("MobileController:isImeiExist -> called " + imeiId)  
-      val isExist = mobileRepo.getMobileUserByIMEID(imeiId)
-      if (!(isExist.isEmpty)) {
-        Logger.info("MobileController:isImeiExist - true")
-        Ok("false")
-      } else {
-        Logger.info("MobileController:isImeiExist - false")
-        Ok("true")
-      }
+    Logger.info("MobileController:isImeiExist -> called " + imeiId)
+    val isExist = mobileRepo.getMobileUserByIMEID(imeiId)
+    if (!(isExist.isEmpty)) {
+      Logger.info("MobileController:isImeiExist - true")
+      Ok("false")
+    } else {
+      Logger.info("MobileController:isImeiExist - false")
+      Ok("true")
     }
   }
+}
 
 /**
  * Lets other classes, packages, traits access all the behaviors defined in the class MobileController
