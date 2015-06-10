@@ -46,7 +46,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
   /**
    * Display TimeStamp page
    */
-      
+
   def timestampPage: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
@@ -109,7 +109,7 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
    * Handles AJAX call to fetch Brand Share in total mobile theft
    * Returns brandShare JSON records in the form: [["Nokia",33.33],["Samsung",33.3],["Others",33.33%]]
    */
-  def topLostBrands(n: Int): Action[AnyContent] = Action { 
+  def topLostBrands(n: Int): Action[AnyContent] = Action {
     implicit request =>
       //Define JSON writer for tuple
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
@@ -124,16 +124,17 @@ class AuditController(analyticService: AnalyticsService) extends Controller with
     implicit request =>
       implicit def tuple2[A: Writes, B: Writes]: Writes[(A, B)] = Writes[(A, B)](o => play.api.libs.json.Json.arr(o._1, o._2))
       implicit val resultWrites = play.api.libs.json.Json.writes[RegistrationCount]
-          Ok(play.api.libs.json.Json.toJson(analyticService.formatTimeSeriesChartData))
+      Ok(play.api.libs.json.Json.toJson(analyticService.formatTimeSeriesChartData))
   }
 
   /**
-   * Renders registrationGrowthByYear Analytics
+   * Renders-ionGrowthByYear Analytics
    */
-  
+
   def getRegistrationByYears: Action[AnyContent] = withAuth { username =>
     implicit request =>
       val user: Option[User] = Cache.getAs[User](username)
+      Logger.info("---user----" + user)
       Logger.info("----registrationGrowthByYear called ----")
       val minimumYear = analyticService.getRegistrationStartingYear
       Ok(views.html.admin.audits.registrationGrowth(user, minimumYear match { case Some(minYear) => minYear; case _ => 2012 }))
