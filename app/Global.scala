@@ -69,25 +69,26 @@ object Global extends GlobalSettings {
       Logger.info("--------allHasCreated-------" + allHasCreated)
     }
 
-    def getFileNameWithoutExt(filename: String): Option[String] = filename.split(".csv").toList.headOption.map(_.toUpperCase)
+  }
 
-    /*
+  def getFileNameWithoutExt(filename: String): Option[String] = filename.split(".csv").toList.headOption.map(_.toUpperCase)
+
+  /**
      * Invoke CSV Reader if database table does not exists
      * @param tableName:String
      * @return Unit
      */
 
-    def importDB: Unit = {
-      Try {
-        Logger.info("Global:importDB -> called")
-        val filePath = Global.getClass().getClassLoader().getResource("csv")
-        new File(filePath.toURI()).listFiles foreach { file =>
-          getFileNameWithoutExt(file.getName).foreach { _fileName =>
-            import scala.util.control.Exception._
-            allCatch.opt(TablesEnum.withName(_fileName)).foreach {
-              Logger.info("----------" + file)
-              validEnum => utils.ReadCsv.convert(file, validEnum)
-            }
+ private def importDB: Unit = {
+    Try {
+      Logger.info("Global:importDB -> called")
+      val filePath = Global.getClass().getClassLoader().getResource("csv")
+      new File(filePath.toURI()).listFiles foreach { file =>
+        getFileNameWithoutExt(file.getName).foreach { _fileName =>
+          import scala.util.control.Exception._
+          allCatch.opt(TablesEnum.withName(_fileName)).foreach {
+            Logger.info("----------" + file)
+            validEnum => utils.ReadCsv.convert(file, validEnum)
           }
         }
       }
