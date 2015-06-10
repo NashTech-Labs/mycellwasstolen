@@ -55,7 +55,9 @@ object Global extends GlobalSettings {
       val allTables = Map("brands" -> brands, "models" -> models, "mobiles" -> mobiles, "audits" -> audits)
         .filter(tablenameWithTable => MTable.getTables(tablenameWithTable._1).list.isEmpty)
         .foreach {
-          _tablenameWithTable => _tablenameWithTable._2.ddl.create
+          _tablenameWithTable =>
+            _tablenameWithTable._2.ddl.create
+            Logger.info("Table is created" + _tablenameWithTable)
         }
 
       val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
@@ -63,29 +65,29 @@ object Global extends GlobalSettings {
         MTable.getTables("models").list.isEmpty &&
         MTable.getTables("brands").list.isEmpty
       if (!allHasCreated) importDB
-      
+
       Logger.info("--------allHasCreated-------" + allHasCreated)
     }
-  }
 
-  def getFileNameWithoutExt(filename: String): Option[String] = filename.split(".csv").toList.headOption.map(_.toUpperCase)
+    def getFileNameWithoutExt(filename: String): Option[String] = filename.split(".csv").toList.headOption.map(_.toUpperCase)
 
-  /**
-   * Invoke CSV Reader if database table does not exists
-   * @param tableName:String
-   * @return Unit
-   */
+    /*
+     * Invoke CSV Reader if database table does not exists
+     * @param tableName:String
+     * @return Unit
+     */
 
-  def importDB: Unit = {
-    Try {
-      Logger.info("Global:importDB -> called")
-      val filePath = Global.getClass().getClassLoader().getResource("csv")
-      new File(filePath.toURI()).listFiles foreach { file =>
-        getFileNameWithoutExt(file.getName).foreach { _fileName =>
-          import scala.util.control.Exception._
-          allCatch.opt(TablesEnum.withName(_fileName)).foreach {
-            Logger.info("----------" + file)
-            validEnum => utils.ReadCsv.convert(file, validEnum)
+    def importDB: Unit = {
+      Try {
+        Logger.info("Global:importDB -> called")
+        val filePath = Global.getClass().getClassLoader().getResource("csv")
+        new File(filePath.toURI()).listFiles foreach { file =>
+          getFileNameWithoutExt(file.getName).foreach { _fileName =>
+            import scala.util.control.Exception._
+            allCatch.opt(TablesEnum.withName(_fileName)).foreach {
+              Logger.info("----------" + file)
+              validEnum => utils.ReadCsv.convert(file, validEnum)
+            }
           }
         }
       }
