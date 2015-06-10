@@ -62,7 +62,9 @@ object Global extends GlobalSettings {
         MTable.getTables("audits").list.isEmpty &&
         MTable.getTables("models").list.isEmpty &&
         MTable.getTables("brands").list.isEmpty
-      if (!allHasCreated) importDB
+      if (allHasCreated) importDB
+      
+      Logger.info("--------allHasCreated-------" + allHasCreated)
     }
   }
 
