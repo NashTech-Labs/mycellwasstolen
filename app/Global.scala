@@ -58,11 +58,11 @@ object Global extends GlobalSettings {
           _tablenameWithTable => _tablenameWithTable._2.ddl.create
         }
 
-      val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
-        MTable.getTables("audits").list.isEmpty &&
-        MTable.getTables("models").list.isEmpty &&
+      val allHasCreated = MTable.getTables("mobiles").list.isEmpty ||
+        MTable.getTables("audits").list.isEmpty ||
+        MTable.getTables("models").list.isEmpty ||
         MTable.getTables("brands").list.isEmpty
-      if (allHasCreated) importDB
+      if (!allHasCreated) importDB
       
       Logger.info("--------allHasCreated-------" + allHasCreated)
     }
