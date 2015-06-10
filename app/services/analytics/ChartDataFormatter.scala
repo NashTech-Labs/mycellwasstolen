@@ -32,18 +32,18 @@ class AnalyticsService(auditRepo: AuditRepository) extends AuditRepository with 
     }
   }
 
-/**
- * Converts a a tuple (YYYY-MM-DD,registrationCount) into high chart
- *  JSON data format (Date.UTC(YYYY,DD,MM),n) 
- */
-  
+  /**
+   * Converts a a tuple (YYYY-MM-DD,registrationCount) into high chart
+   *  JSON data format (Date.UTC(YYYY,DD,MM),n)
+   */
+
   def formatTimeSeriesChartData: List[(java.sql.Date, Int)] = {
     auditRepo.getPerDayRegistration match {
       case Some(countList) => {
-        countList.map { case (date, count) => (date,count) }
+        countList.map { case (date, count) => (date, count) }
       }
       case None =>
-        List((new java.sql.Date(0),0))
+        List((new java.sql.Date(0), 0))
     }
   }
 }
