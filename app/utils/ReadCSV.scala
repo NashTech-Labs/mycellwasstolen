@@ -50,16 +50,16 @@ object ReadCsv extends CommonUtils {
    * Inserts data into Mobile table
    */
   private def caseMobile: Unit = {
-    val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
+    val mobilesReader = CSVReader.open(new FileReader("/conf/csv/Mobiles.csv"))
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
       println(result)
-      val status = mobileStatus(result(8))
+    /*  val status = mobileStatus(result(8))
       val registerDate = getSqlDate(result(9))
       MobileRepository.insertMobileUser(Mobile(result(0), result(1).toInt, result(2).toInt,
         result(3), result(4),
         result(5), result(6), result(7), status,
-        registerDate, result(10)))
+        registerDate, result(10)))*/
     }
     mobilesReader.close()
   }
@@ -68,11 +68,11 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Models table
    */
   private def caseModels: Unit = {
-    val modelReader = CSVReader.open(new FileReader("conf/csv/Models.csv"))
+    val modelReader = CSVReader.open(new FileReader("/conf/csv/Models.csv"))
     val resultIterator = modelReader.iterator
     resultIterator.foreach { result =>
       println(result)
-      ModelRepository.insertModel(Model(result(Constants.ZERO), result(Constants.ONE).toInt))
+//      ModelRepository.insertModel(Model(result(Constants.ZERO), result(Constants.ONE).toInt))
     }
     modelReader.close()
   }
@@ -81,7 +81,7 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Brands table
    */
   private def caseBrands: Unit = {
-    val brandReader = CSVReader.open(new FileReader("conf/csv/Brands.csv"))
+    val brandReader = CSVReader.open(new FileReader("/conf/csv/Brands.csv"))
     val resultIterator = brandReader.iterator
 
     resultIterator.foreach { result =>
@@ -95,12 +95,12 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Audit table
    */
   private def caseAudits: Unit = {
-    val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
+    val auditReader = CSVReader.open(new FileReader("/conf/csv/Audits.csv"))
     println("-----Audits------" + auditReader)
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
       println(result)
-      AuditRepository.insertTimestamp(Audit(result(0), Timestamp.valueOf(result(1))))
+//      AuditRepository.insertTimestamp(Audit(result(0), Timestamp.valueOf(result(1))))
     }
     auditReader.close()
   }
