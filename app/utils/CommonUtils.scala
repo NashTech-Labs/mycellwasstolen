@@ -9,7 +9,7 @@ trait CommonUtils {
   /**
    * Return SimpleDateFormat in mm/dd/yyyy format
    */
-  def utilDate: java.text.SimpleDateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy")
+  def utilDate: java.text.SimpleDateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd")
 
   /**
    * Return current sql date
