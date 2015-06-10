@@ -77,8 +77,8 @@ object Global extends GlobalSettings {
      * @return Unit
      */
 
-    def importDB: Unit = {
-      Try {
+    def importDB = {
+      try {
         Logger.info("Global:importDB -> called")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
         new File(filePath.toURI()).listFiles foreach { file =>
@@ -90,6 +90,9 @@ object Global extends GlobalSettings {
             }
           }
         }
+      } catch {
+        case ex: Exception =>  Logger.error("----CSV files have not been imported------" + ex.printStackTrace())
+        
       }
     }
 
