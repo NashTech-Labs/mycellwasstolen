@@ -81,6 +81,8 @@ object Global extends GlobalSettings {
       try {
         Logger.info("Global:importDB -> called")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
+        val files = new File(filePath.toURI()).listFiles
+        Logger.info("-------Existing files in CSV folder--------" + files)
         new File(filePath.toURI()).listFiles foreach { file =>
           getFileNameWithoutExt(file.getName).foreach { _fileName =>
             import scala.util.control.Exception._
