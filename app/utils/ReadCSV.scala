@@ -51,16 +51,15 @@ object ReadCsv extends CommonUtils {
    */
   private def caseMobile: Unit = {
     val mobilesReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Mobiles.csv"))
-    println("-----mobiles reader-----" + mobilesReader)
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
-      val status = mobileStatus(result(Constants.NINE))
-      val purchaseDate = getSqlDate(result(Constants.FIVE))
-      val registerDate = getSqlDate(result(Constants.ELEVEN))
-      MobileRepository.insertMobileUser(Mobile(result(Constants.ZERO), result(Constants.ONE).toInt, result(Constants.TWO).toInt,
-        result(Constants.THREE), result(Constants.FOUR),
-        result(Constants.FIVE), result(Constants.SIX), result(Constants.SEVEN), status,
-        registerDate, result(Constants.TEN)))
+      println(result)
+      val status = mobileStatus(result(8))
+      val registerDate = getSqlDate(result(9))
+      MobileRepository.insertMobileUser(Mobile(result(0), result(1).toInt, result(2).toInt,
+        result(3), result(4),
+        result(5), result(6), result(7), status,
+        registerDate, result(10)))
     }
     mobilesReader.close()
   }
@@ -72,6 +71,7 @@ object ReadCsv extends CommonUtils {
     val modelReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Models.csv"))
     val resultIterator = modelReader.iterator
     resultIterator.foreach { result =>
+      println(result)
       ModelRepository.insertModel(Model(result(Constants.ZERO), result(Constants.ONE).toInt))
     }
     modelReader.close()
@@ -98,7 +98,7 @@ object ReadCsv extends CommonUtils {
     println("-----Audits------" + auditReader)
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
-      println(result(0))
+      println(result)
       AuditRepository.insertTimestamp(Audit(result(0), Timestamp.valueOf(result(1))))
     }
     auditReader.close()
@@ -111,9 +111,9 @@ object ReadCsv extends CommonUtils {
    */
   private def mobileStatus(status: String) = {
     status match {
-      case ("approved")      => Status(Constants.ONE)
-      case ("proofdemanded") => Status(Constants.TWO)
-      case ("pending")       => Status(Constants.ZERO)
+      case ("approved")      => Status(1)
+      case ("proofdemanded") => Status(2)
+      case ("pending")       => Status(0)
     }
   }
 }
