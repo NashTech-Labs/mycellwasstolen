@@ -83,6 +83,7 @@ object ReadCsv extends CommonUtils {
   private def caseBrands: Unit = {
     val brandReader = CSVReader.open(new FileReader("conf/csv/Brands.csv"))
     val resultIterator = brandReader.iterator
+
     resultIterator.foreach { result =>
       println(result(0))
       BrandRepository.insertBrand(Brand(result(0)))
