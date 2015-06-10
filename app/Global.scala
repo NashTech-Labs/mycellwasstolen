@@ -25,7 +25,7 @@ import play.api.Play.current
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results.Ok
 import utils.Connection
-import utils.TableEnums
+import utils.TablesEnum
 
 object Global extends GlobalSettings {
   /**
@@ -58,11 +58,11 @@ object Global extends GlobalSettings {
           _tablenameWithTable => _tablenameWithTable._2.ddl.create
         }
 
-     /* val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
+      val allHasCreated = MTable.getTables("mobiles").list.isEmpty &&
         MTable.getTables("audits").list.isEmpty &&
         MTable.getTables("models").list.isEmpty &&
         MTable.getTables("brands").list.isEmpty
-      if (!allHasCreated) importDB*/
+      if (!allHasCreated) importDB
     }
   }
 
@@ -81,9 +81,9 @@ object Global extends GlobalSettings {
       new File(filePath.toURI()).listFiles foreach { file =>
         getFileNameWithoutExt(file.getName).foreach { _fileName =>
           import scala.util.control.Exception._
-          allCatch.opt(TableEnums.withName(_fileName)).foreach {
-            validEnum => utils.ReadCSV.convert(file, validEnum)
-
+          allCatch.opt(TablesEnum.withName(_fileName)).foreach {
+            Logger.info("----------" + file)
+            validEnum => utils.ReadCsv.convert(file, validEnum)
           }
         }
       }
@@ -100,7 +100,7 @@ object Global extends GlobalSettings {
   /**
    * Handle the fake requests to application
    */
-  override def onHandlerNotFound(request: RequestHeader):Future[play.api.mvc.Result] = {
+  override def onHandlerNotFound(request: RequestHeader): Future[play.api.mvc.Result] = {
     Future {
       Ok(views.html.users.contents.errorPage("page not found"))
     }
