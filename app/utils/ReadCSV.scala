@@ -50,7 +50,7 @@ object ReadCsv extends CommonUtils {
    * Inserts data into Mobile table
    */
   private def caseMobile: Unit = {
-    val mobilesReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Mobiles.csv"))
+    val mobilesReader = CSVReader.open(new FileReader("conf/csv/Mobiles.csv"))
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
       println(result)
@@ -68,7 +68,7 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Models table
    */
   private def caseModels: Unit = {
-    val modelReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Models.csv"))
+    val modelReader = CSVReader.open(new FileReader("conf/csv/Models.csv"))
     val resultIterator = modelReader.iterator
     resultIterator.foreach { result =>
       println(result)
@@ -81,7 +81,7 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Brands table
    */
   private def caseBrands: Unit = {
-    val brandReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Brands.csv"))
+    val brandReader = CSVReader.open(new FileReader("conf/csv/Brands.csv"))
     val resultIterator = brandReader.iterator
     resultIterator.foreach { result =>
       println(result(0))
@@ -94,7 +94,7 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Audit table
    */
   private def caseAudits: Unit = {
-    val auditReader = CSVReader.open(new FileReader("/home/ujali/mcws/mycellwasstolen/conf/csv/Audits.csv"))
+    val auditReader = CSVReader.open(new FileReader("conf/csv/Audits.csv"))
     println("-----Audits------" + auditReader)
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
