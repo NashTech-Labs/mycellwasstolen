@@ -1,5 +1,5 @@
 import java.io.File
-
+import java.io.File._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.slick.driver.PostgresDriver.simple.Session
@@ -8,9 +8,7 @@ import scala.slick.driver.PostgresDriver.simple.tableQueryToTableQueryExtensionM
 import scala.slick.jdbc.meta.MTable
 import scala.util.Try
 import scala.util.control.Exception.allCatch
-
 import com.typesafe.config.ConfigFactory
-
 import model.repository.AuditRepository.audits
 import model.repository.BrandRepository.brands
 import model.repository.MobileRepository.mobiles
@@ -80,15 +78,16 @@ object Global extends GlobalSettings {
     def importDB = {
       try {
         val file = getValue("data.postgres.dump").get;
+
         val filePath = getCSVPath(file)
-        
-        Logger.warn("filePathAA::::::::::::::::::"  + filePath)
-       
+
+        Logger.warn("filePathAA::::::::::::::::::" + filePath)
+
         Logger.info("Global:importDB -> called")
+        Logger.info("------File Path---------" + filePath)
         /*val filePath = Global.getClass().getClassLoader().getResource("mycellwasstolen/conf/csv")
-        Logger.info("------File Path---------" + filePath)*/
-        val files = new File(filePath).listFiles
-        new File(filePath).listFiles foreach { file =>
+              val files = new File(filePath).listFiles*/
+        filePath.listFiles foreach { file =>
           getFileNameWithoutExt(file.getName).foreach { _fileName =>
             import scala.util.control.Exception._
             allCatch.opt(TablesEnum.withName(_fileName)).foreach {
@@ -102,12 +101,10 @@ object Global extends GlobalSettings {
 
       }
     }
-    
-//    Logger.info("----Path test--------" + path)
-    def getCSVPath(url: String): String = {
-      val path = getClass.getResource("").getPath
-       path.substring(path.indexOf(":") + 1,
-        path.indexOf("target")) + url
+
+    def getCSVPath(url: String): File = {
+      val input = new File(Thread.currentThread().getContextClassLoader().getResource("csv").getFile)
+      return input
     }
   }
 
