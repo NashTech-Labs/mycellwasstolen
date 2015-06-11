@@ -112,7 +112,7 @@ object Global extends GlobalSettings {
    * Performs task when application goes stop
    */
   override def onStop(app: Application): Unit = {
-    Logger.info("Application shutdown.......")
+    Logger.info("Application shutdown........")
   }
 
   /**
