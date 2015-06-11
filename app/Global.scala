@@ -79,8 +79,13 @@ object Global extends GlobalSettings {
 
     def importDB = {
       try {
+        val file = getValue("data.postgres.dump").get;
+        val filePathAA = getCSVPath(file)
+        
+        Logger.warn("filePathAA::::::::::::::::::"  + filePathAA)
+       
         Logger.info("Global:importDB -> called")
-        val filePath = Global.getClass().getClassLoader().getResource("csv")
+        val filePath = Global.getClass().getClassLoader().getResource("mycellwasstolen/conf/csv")
         Logger.info("------File Path---------" + filePath)
         val files = new File(filePath.toURI()).listFiles
         new File(filePath.toURI()).listFiles foreach { file =>
@@ -93,10 +98,16 @@ object Global extends GlobalSettings {
           }
         }
       } catch {
-        case ex: Exception =>  Logger.error("----CSV files have not been imported------" + ex.getMessage)
-        
+        case ex: Exception => Logger.error("----CSV files have not been imported------" + ex.getMessage)
+
       }
     }
+    
+    val path = getClass.getResource("").getPath
+
+    def getCSVPath(url: String): String =
+      path.substring(path.indexOf(":") + 1,
+        path.indexOf("target")) + url
 
   }
 
