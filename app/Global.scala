@@ -103,7 +103,7 @@ object Global extends GlobalSettings {
     }
 
     def getCSVPath(url: String): File = {
-      val input = new File(Thread.currentThread().getContextClassLoader().getResource("csv").getFile)
+      val input = new File(Thread.currentThread().getContextClassLoader().getResource("conf/csv").getFile)
       return input
     }
   }
