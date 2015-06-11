@@ -80,7 +80,7 @@ object Global extends GlobalSettings {
     def importDB = {
       try {
         Logger.info("Global:importDB -> called")
-        val filePath = Global.getClass().getClassLoader().getResource("conf/csv")
+        val filePath = Global.getClass().getClassLoader().getResource("csv")
         Logger.info("------File Path---------" + filePath)
         val files = new File(filePath.toURI()).listFiles
         new File(filePath.toURI()).listFiles foreach { file =>
@@ -93,7 +93,7 @@ object Global extends GlobalSettings {
           }
         }
       } catch {
-        case ex: Exception =>  Logger.error("----CSV files have not been imported------" + ex.printStackTrace())
+        case ex: Exception =>  Logger.error("----CSV files have not been imported------" + ex.getMessage)
         
       }
     }
