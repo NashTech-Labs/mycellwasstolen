@@ -81,6 +81,7 @@ object Global extends GlobalSettings {
       try {
         Logger.info("Global:importDB -> called")
         val filePath = Global.getClass().getClassLoader().getResource("csv")
+        Logger.info("------File Path---------" + filePath)
         val files = new File(filePath.toURI()).listFiles
         Logger.info("-------Existing files in CSV folder--------" + files)
         new File(filePath.toURI()).listFiles foreach { file =>
