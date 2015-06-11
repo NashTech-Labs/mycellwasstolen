@@ -80,15 +80,15 @@ object Global extends GlobalSettings {
     def importDB = {
       try {
         val file = getValue("data.postgres.dump").get;
-        val filePathAA = getCSVPath(file)
+        val filePath = getCSVPath(file)
         
-        Logger.warn("filePathAA::::::::::::::::::"  + filePathAA)
+        Logger.warn("filePathAA::::::::::::::::::"  + filePath)
        
         Logger.info("Global:importDB -> called")
-        val filePath = Global.getClass().getClassLoader().getResource("mycellwasstolen/conf/csv")
-        Logger.info("------File Path---------" + filePath)
-        val files = new File(filePath.toURI()).listFiles
-        new File(filePath.toURI()).listFiles foreach { file =>
+        /*val filePath = Global.getClass().getClassLoader().getResource("mycellwasstolen/conf/csv")
+        Logger.info("------File Path---------" + filePath)*/
+        val files = new File(filePath).listFiles
+        new File(filePath).listFiles foreach { file =>
           getFileNameWithoutExt(file.getName).foreach { _fileName =>
             import scala.util.control.Exception._
             allCatch.opt(TablesEnum.withName(_fileName)).foreach {
@@ -103,12 +103,12 @@ object Global extends GlobalSettings {
       }
     }
     
-    val path = getClass.getResource("").getPath
-
-    def getCSVPath(url: String): String =
-      path.substring(path.indexOf(":") + 1,
+//    Logger.info("----Path test--------" + path)
+    def getCSVPath(url: String): String = {
+      val path = getClass.getResource("").getPath
+       path.substring(path.indexOf(":") + 1,
         path.indexOf("target")) + url
-
+    }
   }
 
   /**
