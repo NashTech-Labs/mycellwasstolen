@@ -79,19 +79,15 @@ object Global extends GlobalSettings {
       try {
         val file = getValue("data.postgres.dump").get;
 
-        val filePath = getCSVPath(file)
-
-        Logger.warn("filePathAA::::::::::::::::::" + filePath)
+        val filePath = getOpenCSVPath(file)
 
         Logger.info("Global:importDB -> called")
         Logger.info("------File Path---------" + filePath)
-        /*val filePath = Global.getClass().getClassLoader().getResource("mycellwasstolen/conf/csv")
-              val files = new File(filePath).listFiles*/
-        filePath.listFiles foreach { file =>
+        new File(filePath).listFiles foreach { file =>
           getFileNameWithoutExt(file.getName).foreach { _fileName =>
             import scala.util.control.Exception._
             allCatch.opt(TablesEnum.withName(_fileName)).foreach {
-              Logger.info("----------" + file)
+              Logger.info("----------" + _fileName)
               validEnum => utils.ReadCsv.convert(file, validEnum)
             }
           }
@@ -102,9 +98,10 @@ object Global extends GlobalSettings {
       }
     }
 
-    def getCSVPath(url: String): File = {
-      val input = new File(Thread.currentThread().getContextClassLoader().getResource("conf/csv").getFile)
-      return input
+    def getOpenCSVPath(url: String) = {
+      val path = getClass.getResource("").getPath
+      path.substring(path.indexOf(":") + 1,
+        path.indexOf("target")) + url
     }
   }
 
