@@ -54,7 +54,7 @@ object ReadCsv extends CommonUtils {
     val resultIterator = mobilesReader.iterator
     resultIterator.foreach { result =>
       println(result)
-    /*  val status = mobileStatus(result(8))
+      /*  val status = mobileStatus(result(8))
       val registerDate = getSqlDate(result(9))
       MobileRepository.insertMobileUser(Mobile(result(0), result(1).toInt, result(2).toInt,
         result(3), result(4),
@@ -72,7 +72,7 @@ object ReadCsv extends CommonUtils {
     val resultIterator = modelReader.iterator
     resultIterator.foreach { result =>
       println(result)
-//      ModelRepository.insertModel(Model(result(Constants.ZERO), result(Constants.ONE).toInt))
+      //      ModelRepository.insertModel(Model(result(Constants.ZERO), result(Constants.ONE).toInt))
     }
     modelReader.close()
   }
@@ -81,6 +81,7 @@ object ReadCsv extends CommonUtils {
    * Insert data from CSV into Brands table
    */
   private def caseBrands: Unit = {
+    Logger.info("================Case Brands===================")
     val brandReader = CSVReader.open(new FileReader("mycellwasstolen/conf/csv/Brands.csv"))
     val resultIterator = brandReader.iterator
 
@@ -100,7 +101,7 @@ object ReadCsv extends CommonUtils {
     val resultIterator = auditReader.iterator
     resultIterator.foreach { result =>
       println(result)
-//      AuditRepository.insertTimestamp(Audit(result(0), Timestamp.valueOf(result(1))))
+      //      AuditRepository.insertTimestamp(Audit(result(0), Timestamp.valueOf(result(1))))
     }
     auditReader.close()
   }
