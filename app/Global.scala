@@ -99,6 +99,7 @@ object Global extends GlobalSettings {
     }
 
     def getOpenCSVPath(url: String) = {
+      Logger.info("------getOpenCSVPath Opening---------" + url)
       val path = getClass.getResource("").getPath
       Logger.info("------getOpenCSVPath---------" + path)
       path.substring(path.indexOf(":") + 1,
