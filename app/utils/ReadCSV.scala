@@ -82,7 +82,7 @@ object ReadCsv extends CommonUtils {
    */
   private def caseBrands: Unit = {
     Logger.info("================Case Brands===================")
-    val brandReader = CSVReader.open(new FileReader("mycellwasstolen/conf/csv/Brands.csv"))
+    val brandReader = CSVReader.open(new FileReader("mycellwasstolen/target/scala-2.11/classes/csv/Brands.csv"))
     val resultIterator = brandReader.iterator
 
     resultIterator.foreach { result =>

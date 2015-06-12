@@ -78,7 +78,7 @@ object Global extends GlobalSettings {
     def importDB = {
       try {
         val file = getValue("data.postgres.dump").get;
-        Logger.info("------File Path---------" + file)
+        Logger.info("------File---------" + file)
         val filePath = getOpenCSVPath(file)
 
         Logger.info("Global:importDB -> called")
