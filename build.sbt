@@ -26,4 +26,5 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.3.166" % "test",
   "com.github.tototoshi" %% "scala-csv" % "1.2.1",
    "org.scalastyle" %% "scalastyle" % "0.6.0"
+
 )
